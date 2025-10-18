@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 class BaseViewModel: ObservableObject {
-    
+    /*
     func getThrowableDataCall<T>(
         dataCall: @escaping () async throws -> T,
         onSuccess: @escaping (T) -> Void,
@@ -54,5 +54,5 @@ class BaseViewModel: ObservableObject {
                 }
             }
         }
-    }
+    }*/
 }

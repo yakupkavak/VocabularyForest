@@ -1,0 +1,60 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Calendar" : {
+
+    },
+    "Feed" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "I’m ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırım"
+          }
+        }
+      }
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "Nice to meet you!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanıştığımıza sevindim!"
+          }
+        }
+      }
+    },
+    "Settings" : {
+
+    },
+    "Shall we begin?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shall we begin?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırsan başlayalım mı?"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}
