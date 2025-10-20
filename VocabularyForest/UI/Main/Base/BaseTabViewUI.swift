@@ -42,8 +42,10 @@ struct BaseTabViewUI: View {
         .fullScreenCover(isPresented: $isAddLibraryPresented) {
             AddLibraryUI(isPresenting: $isAddLibraryPresented)
         }
+        .background(.backgroundSystem)
     }
 }
+
 extension BaseTabViewUI {
     enum Tab {
         case feed,history,task,tree,user

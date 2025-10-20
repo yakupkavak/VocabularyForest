@@ -18,7 +18,7 @@ struct MainView: View {
     
     var body: some View {
         if hasCompletedOnboarding {
-            BaseTabViewUI()
+            BaseTabViewUI().background(.backgroundSystem)
         }else {
             OnboardingUI()
         }

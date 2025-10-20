@@ -15,25 +15,43 @@ struct VocabularyTextField: View {
     @Binding var isSelected: Bool
     var placeholder: String
     var title: String
-    var imageHead: String?
-    var imageFoot: String?
+    var imageHead: String? = nil
+    var imageFoot: String? = nil
     
     // MARK: - VIEW
     
     var body: some View {
-        HStack{
-            TextField(placeholder, text: $userInput).padding()               .textFieldStyle(PlainTextFieldStyle())
-        }.padding()
+        TextField(placeholder, text: $userInput)
+            .padding(.vertical, 16)
+            .padding(.horizontal)
+            .textFieldStyle(PlainTextFieldStyle())
             .background(Color.white)
-            .border(isSelected ? .selectedBorder : .gray)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(isSelected ? .selectedBorder : .gray, lineWidth: 1.5)
+            )
             .overlay(alignment: .topLeading){
-                Text(title).padding(8).font(.system(size: 20, weight: .medium)).background(.backgroundSystem).offset(x: 28, y: -20)
+                Text(title)
+                    .font(.system(size: 18, weight: .medium))
+                    .background(
+                        VStack(spacing: 0) {
+                            Color.backgroundSystem
+                                .frame(height: 12)
+                            Color.white
+                        }
+                    )
+                    .offset(x: 16, y: -12)
             }
             .overlay(alignment: .topTrailing) {
-                Image(imageHead ?? "").resizable().scaledToFit().frame(width: 50).offset(x: -20,y: -23)
+                Image(imageHead ?? "")
+                    .resizable().scaledToFit().frame(width: 50)
+                    .offset(x: -20,y: -23)
             }
             .overlay(alignment: .bottomTrailing) {
-                Image(imageFoot ?? "").resizable().scaledToFit().frame(width: 30).offset(x: -30,y: 7)
+                Image(imageFoot ?? "")
+                    .resizable().scaledToFit().frame(width: 30)
+                    .offset(x: -30,y: 7)
             }
     }
 }
@@ -44,6 +62,6 @@ struct VocabularyTextField: View {
     
     VStack {
         VocabularyTextField(userInput: $input, isSelected: $selected, placeholder: "English word", title: "English",imageHead: "elephanthead", imageFoot: "elephantfoot")
-    }.frame(minHeight: 0, maxHeight: .infinity).padding()
-
+    }.frame(minHeight: 0, maxHeight: .infinity).padding().background(.backgroundSystem)
+    
 }
