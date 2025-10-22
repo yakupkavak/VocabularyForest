@@ -14,16 +14,17 @@ struct VocabularyTextField: View {
     @Binding var userInput: String
     @Binding var isSelected: Bool
     var placeholder: String
-    var title: String
+    var title: String? = nil
     var imageHead: String? = nil
     var imageFoot: String? = nil
     
     // MARK: - VIEW
     
     var body: some View {
-        TextField(placeholder, text: $userInput)
+        TextField(placeholder, text: $userInput, axis: .vertical)
             .padding(.vertical, 16)
             .padding(.horizontal)
+            .lineLimit(nil)
             .textFieldStyle(PlainTextFieldStyle())
             .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 16))
@@ -32,16 +33,18 @@ struct VocabularyTextField: View {
                     .stroke(isSelected ? .selectedBorder : .gray, lineWidth: 1.5)
             )
             .overlay(alignment: .topLeading){
-                Text(title)
-                    .font(.system(size: 18, weight: .medium))
-                    .background(
-                        VStack(spacing: 0) {
-                            Color.backgroundSystem
-                                .frame(height: 12)
-                            Color.white
-                        }
-                    )
-                    .offset(x: 16, y: -12)
+                if let title {
+                    Text(title)
+                        .font(.system(size: 18, weight: .medium))
+                        .background(
+                            VStack(spacing: 0) {
+                                Color.backgroundSystem
+                                    .frame(height: 12)
+                                Color.white
+                            }
+                        )
+                        .offset(x: 16, y: -12)
+                }
             }
             .overlay(alignment: .topTrailing) {
                 Image(imageHead ?? "")

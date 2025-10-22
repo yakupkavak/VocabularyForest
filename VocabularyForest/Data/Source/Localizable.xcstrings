@@ -4,10 +4,13 @@
     "Add" : {
 
     },
-    "Başlık" : {
+    "Calendar" : {
 
     },
-    "Calendar" : {
+    "Cancel" : {
+
+    },
+    "Create" : {
 
     },
     "Feed" : {
@@ -40,6 +43,12 @@
           }
         }
       }
+    },
+    "Search for a language" : {
+
+    },
+    "Select Language" : {
+
     },
     "Settings" : {
 
