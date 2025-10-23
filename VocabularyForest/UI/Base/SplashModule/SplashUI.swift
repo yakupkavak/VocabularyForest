@@ -10,7 +10,8 @@ import SwiftUI
 struct SplashUI: View {
     
     @State var isActive: Bool = false
-    
+    @Environment(\.managedObjectContext) private var viewContext
+
     var body: some View {
         ZStack {
             if(self.isActive){

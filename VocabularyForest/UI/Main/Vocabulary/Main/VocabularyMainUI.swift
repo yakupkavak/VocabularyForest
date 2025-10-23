@@ -6,21 +6,12 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct VocabularyMainUI: View {
     
     //MARK: - PROPERTIES
-    
-    @State private var vocabularyTf = ""
-    @State private var meaningTf = ""
-    @State private var sentenceTf = ""
-    @State private var descriptionTf = ""
-    @State private var bookcaseName = ""
-    @State private var selectedSpeech: SpeechModel? = nil
-    @State private var vocabularyLanguage: Language? = nil
-    @State private var meaningLanguage: Language? = nil
-    @State private var currentBookcase = "Japonya"
-    @State private var showInitalize = true
+
     @State private var activeSheet: SheetTypes? = nil
     @FocusState private var focusedField: Field?
     @StateObject private var viewModel = VocabularyMainViewModel()
@@ -32,7 +23,7 @@ struct VocabularyMainUI: View {
             Color.backgroundSystem
                             .ignoresSafeArea()
             VStack {
-                if showInitalize {
+                if viewModel.showInitalize {
                     initalizeHeader
                     initalizeUser
                 }else {
@@ -42,24 +33,12 @@ struct VocabularyMainUI: View {
                 Spacer()
             }.frame(minHeight: 0, maxHeight: .infinity)
         }
-        .onChange(of: viewModel.updateUI) { preferences in
-            if let preferences {
-                
-            }
-        }
-        .onChange(of: viewModel.showInitalize) { initalize in
-            if let initalize {
-                if initalize {
-                    showInitalize = true
-                }
-            }
-        }
         .sheet(item: $activeSheet) { sheetType in
             switch sheetType {
             case .learning:
-                SelectLanguageUI(selectedLanguage: $vocabularyLanguage)
+                SelectLanguageUI(selectedLanguage: $viewModel.learningLanguage)
             case .meaning:
-                SelectLanguageUI(selectedLanguage: $meaningLanguage)
+                SelectLanguageUI(selectedLanguage: $viewModel.meaningLanguage)
             }
         }
     }
@@ -72,8 +51,9 @@ private extension VocabularyMainUI {
         VStack(alignment: .leading ,spacing: 20) {
             tvDefault(text: "Bookcase name")
             VocabularyTextField(
-                userInput: $bookcaseName,
+                userInput: $viewModel.bookcaseName,
                 isSelected: .constant(focusedField == .bookcaseName),
+                isEmpty: $viewModel.emptyInitialBookcase,
                 placeholder: "Daily words, hobbies, etc.",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
@@ -83,24 +63,32 @@ private extension VocabularyMainUI {
                 activeSheet = .learning
             }) {
                 LanguageRowUI(
-                    language: vocabularyLanguage,
+                    isEmpty: $viewModel.emptyInitialVocabularyLanguage,
+                    language: viewModel.learningLanguage,
                     placeholder: "Select learning language"
                 )
-            }
+            }.buttonStyle(.plain)
             tvDefault(text: "Meaning language")
             Button(action: {
                 activeSheet = .meaning
             }) {
                 LanguageRowUI(
-                    language: meaningLanguage,
+                    isEmpty: $viewModel.emptyInitialMeaningLanguage,
+                    language: viewModel.meaningLanguage,
                     placeholder: "Select meaning language"
                 )
-            }
+            }.buttonStyle(.plain)
             Spacer()
-            Image("elephant").resizable().scaledToFit().frame(width: 100)
+            HStack{
+                Spacer()
+                LottieView(animation: .named("meditationSloth"))
+                    .playing(loopMode: .loop).resizable().frame(maxWidth: 250)
+                Spacer()
+            }
+            
             Spacer()
             Button {
-                createBookcase()
+                viewModel.checkAndCreateBookcase()
             } label: {
                 Text("Create").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
             }.tint(Color.unselectedButton).buttonStyle(.bordered)
@@ -111,24 +99,27 @@ private extension VocabularyMainUI {
     var textFields: some View {
         VStack(spacing: 20) {
             VocabularyTextField(
-                userInput: $vocabularyTf,
+                userInput: $viewModel.bookLearningWord,
                 isSelected: .constant(focusedField == .vocabulary),
+                isEmpty: $viewModel.emptyBookLearningWord,
                 placeholder: "What are you learning (Required)",
-                title: vocabularyLanguage?.name,
+                title: viewModel.learningLanguage?.name,
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             ).focused($focusedField, equals: .vocabulary)
             
             VocabularyTextField(
-                userInput: $meaningTf,
+                userInput: $viewModel.bookMeaningWord,
                 isSelected: .constant(focusedField == .meaning),
+                isEmpty: $viewModel.emptyBookMeaningWord,
                 placeholder: "Meaning of that (Required)",
-                title: meaningLanguage?.localizedName
+                title: viewModel.meaningLanguage?.localizedName
             ).focused($focusedField, equals: .meaning)
             
             VocabularyTextField(
-                userInput: $descriptionTf,
+                userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
+                isEmpty: .constant(false),
                 placeholder: "Write the description",
                 title: "Description",
                 imageHead: "elephanthead",
@@ -136,8 +127,9 @@ private extension VocabularyMainUI {
             ).focused($focusedField, equals: .description)
             
             VocabularyTextField(
-                userInput: $sentenceTf,
+                userInput: $viewModel.bookExampleSentence,
                 isSelected: .constant(focusedField == .sentence),
+                isEmpty: .constant(false),
                 placeholder: "Example sentence",
                 title: "Sentence"
             ).focused($focusedField, equals: .sentence)
@@ -146,7 +138,7 @@ private extension VocabularyMainUI {
     var initalizeHeader: some View {
         HStack{
             Spacer()
-            tvHint(text: "Crate bookcase")
+            tvSubtitle(text: "Crate bookcase")
             Spacer()
         }
     }
@@ -157,14 +149,14 @@ private extension VocabularyMainUI {
                 Button {
                     print("Boockase")
                 } label: {
-                    tvTitle(text: currentBookcase)
+                    tvTitle(text: viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
                 }.foregroundStyle(.tint)
                 tvHint(text: "Bookcase")
             }
             Spacer()
         }.overlay(alignment: .trailing) {
             Button {
-                print("Added")
+                viewModel.checkAndCreateBook()
             } label: {
                 Text("Add")
             }.offset(x: -24)
@@ -183,15 +175,12 @@ private extension VocabularyMainUI {
 // MARK: - HELPERS
 
 private extension VocabularyMainUI {
-    func createBookcase() {
-        
-    }
+    
 }
 
 // MARK: - CONSTANTS
 
 private extension VocabularyMainUI {
-    
     struct SpeechModel {
         var type: PartOfSpeech
         var color: Color
@@ -215,7 +204,6 @@ private extension VocabularyMainUI {
         case learningLanguage
         case meaningLanguage
     }
-
 }
 
 #Preview {

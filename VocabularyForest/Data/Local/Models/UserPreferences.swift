@@ -7,6 +7,6 @@
 
 struct UserPreferences: Equatable {
     var bookcase: String
-    var learningLanguage: String
-    var meaningLanguage: String
+    var learningLanguageCode: String
+    var meaningLanguageCode: String
 }

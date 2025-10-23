@@ -13,6 +13,7 @@ struct VocabularyTextField: View {
     
     @Binding var userInput: String
     @Binding var isSelected: Bool
+    @Binding var isEmpty: Bool
     var placeholder: String
     var title: String? = nil
     var imageHead: String? = nil
@@ -30,7 +31,7 @@ struct VocabularyTextField: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(isSelected ? .selectedBorder : .gray, lineWidth: 1.5)
+                    .stroke(isEmpty ? .errorBorder : (isSelected ? .selectedBorder : .gray), lineWidth: 1.5)
             )
             .overlay(alignment: .topLeading){
                 if let title {
@@ -64,7 +65,7 @@ struct VocabularyTextField: View {
     @State var selected = false
     
     VStack {
-        VocabularyTextField(userInput: $input, isSelected: $selected, placeholder: "English word", title: "English",imageHead: "elephanthead", imageFoot: "elephantfoot")
+        VocabularyTextField(userInput: $input, isSelected: $selected, isEmpty: .constant(true), placeholder: "English word", title: "English",imageHead: "elephanthead", imageFoot: "elephantfoot")
     }.frame(minHeight: 0, maxHeight: .infinity).padding().background(.backgroundSystem)
     
 }

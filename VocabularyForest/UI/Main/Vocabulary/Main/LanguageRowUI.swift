@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct LanguageRowUI: View {
+    
+    // MARK: - PROPERTIES
+    
+    @Binding var isEmpty: Bool
     var language: Language?
     var placeholder: String
+    
+    // MARK: - VIEW
     
     var body: some View {
         HStack {
@@ -18,18 +24,18 @@ struct LanguageRowUI: View {
                     .foregroundStyle(.primary)
             } else {
                 Text(placeholder)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.gray)
             }
             Spacer()
             Image(systemName: "chevron.up.chevron.down")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.gray)
         }
         .padding()
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(isEmpty ? .errorBorder : .gray, lineWidth: 1.5)
         }
     }
 }

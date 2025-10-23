@@ -10,11 +10,18 @@ import CoreData
 
 @main
 struct VocabularyForestApp: App {
-    let persistenceController = PersistenceController.shared
-
+    
+    // MARK: - PROPERTIES
+    
+    @Environment(\.scenePhase) var scenePhase
+    
+    // MARK: - VIEWS
+    
     var body: some Scene {
         WindowGroup {
-            SplashUI().background(.backgroundSystem)
+            SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
+                CoreDataManager.shared.save()
+            }
         }
     }
 }

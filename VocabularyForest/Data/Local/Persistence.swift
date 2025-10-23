@@ -14,10 +14,19 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+        let sampleBookcase = Bookcase(context: viewContext)
+        sampleBookcase.name = "Örnek Kitaplık (Preview)"
+        sampleBookcase.createdDate = Date()
+        sampleBookcase.learningLanguage = "ja"
+        sampleBookcase.meaningLanguage = "tr"
+        
+        let sampleBook = Book(context: viewContext)
+        sampleBook.learningWord = "Konnichiwa"
+        sampleBook.meaningWord = "Merhaba"
+        sampleBook.createdDate = Date()
+        sampleBook.exampleSentence = "Konnichiwa, sensei!"
+        sampleBook.bookcase = sampleBookcase
+        
         do {
             try viewContext.save()
         } catch {
@@ -53,5 +62,17 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func saveContext() {
+        let context = container.viewContext
+
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                fatalError("Error: \(error.localizedDescription)")
+            }
+        }
     }
 }
