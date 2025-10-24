@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B5F2EA8C43A0063F4D8 /* Lottie */; };
+		37D84B882EAA272A0063F4D8 /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B872EAA272A0063F4D8 /* Toasts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
+				37D84B882EAA272A0063F4D8 /* Toasts in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				37267F0D2E927B8E0019D139 /* Kingfisher */,
 				37D84B5F2EA8C43A0063F4D8 /* Lottie */,
+				37D84B872EAA272A0063F4D8 /* Toasts */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -107,6 +110,7 @@
 			packageReferences = (
 				37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				37D84B5E2EA8C43A0063F4D8 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -368,6 +372,14 @@
 				minimumVersion = 4.5.2;
 			};
 		};
+		37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunghyun-k/swiftui-toasts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -380,6 +392,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 37D84B5E2EA8C43A0063F4D8 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		37D84B872EAA272A0063F4D8 /* Toasts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */;
+			productName = Toasts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

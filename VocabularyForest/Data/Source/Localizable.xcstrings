@@ -4,7 +4,7 @@
     "Add" : {
 
     },
-    "Calendar" : {
+    "Bookcases" : {
 
     },
     "Cancel" : {
@@ -44,6 +44,9 @@
         }
       }
     },
+    "Quizes" : {
+
+    },
     "Search for a language" : {
 
     },
@@ -69,6 +72,9 @@
           }
         }
       }
+    },
+    "yakup" : {
+
     }
   },
   "version" : "1.1"

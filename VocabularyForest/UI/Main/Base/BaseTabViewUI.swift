@@ -27,7 +27,12 @@ struct BaseTabViewUI: View {
             
             VocabularyMainUI()
                 .tabItem {
-                    Label("Calendar", systemImage: "calendar")
+                    Label("Bookcases", systemImage: "calendar")
+                }.tag(Tab.history)
+            
+            VocabularyMainUI()
+                .tabItem {
+                    Label("Quizes", systemImage: "calendar")
                 }.tag(Tab.history)
             
             VocabularyMainUI().tabItem {
@@ -40,7 +45,7 @@ struct BaseTabViewUI: View {
         .navigationBarBackButtonHidden()
         .accentColor(.blue)
         .fullScreenCover(isPresented: $isAddLibraryPresented) {
-            AddLibraryUI(isPresenting: $isAddLibraryPresented)
+            //AddLibraryUI(isPresenting: $isAddLibraryPresented)
         }
         .background(.backgroundSystem)
     }
