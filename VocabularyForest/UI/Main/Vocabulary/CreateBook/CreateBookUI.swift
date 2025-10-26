@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-struct VocabularyMainUI: View {
+struct CreateBookUI: View {
     
     //MARK: - PROPERTIES
 
     @FocusState private var focusedField: Field?
-    @StateObject private var viewModel = VocabularyMainViewModel()
-    
+    @StateObject private var viewModel = CreateBookViewModel()
+    @State private var showSelectBookcase = false
+    @State private var selectedBookcase: BookcaseModel? = nil
+
     //MARK: - VIEWS
 
     var body: some View {
@@ -28,14 +30,20 @@ struct VocabularyMainUI: View {
                     textFields
                 }
                 Spacer()
-            }.frame(minHeight: 0, maxHeight: .infinity)
+            }.frame(minHeight: 0, maxHeight: .infinity).sheet(isPresented: $showSelectBookcase) {
+                SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $selectedBookcase)
+            }.onChange(of: selectedBookcase) { selectedBookcaseModel in
+                if let selectedBookcaseModel {
+                    viewModel.fetchBookWithModel(bookcaseModel: selectedBookcaseModel)
+                }
+            }
         }
     }
 }
 
 // MARK: - COMPONENTS
 
-private extension VocabularyMainUI {
+private extension CreateBookUI {
     var textFields: some View {
         VStack(spacing: 20) {
             VocabularyTextField(
@@ -80,7 +88,7 @@ private extension VocabularyMainUI {
             Spacer()
             VStack{
                 Button {
-                    print("Boockase")
+                    selectBookcase()
                 } label: {
                     tvTitle(text: viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
                 }.foregroundStyle(.tint)
@@ -107,13 +115,15 @@ private extension VocabularyMainUI {
 
 // MARK: - HELPERS
 
-private extension VocabularyMainUI {
-    
+private extension CreateBookUI {
+    private func selectBookcase() {
+        showSelectBookcase.toggle()
+    }
 }
 
 // MARK: - CONSTANTS
 
-private extension VocabularyMainUI {
+private extension CreateBookUI {
     enum Field: Hashable {
         case vocabulary
         case meaning
@@ -126,5 +136,5 @@ private extension VocabularyMainUI {
 }
 
 #Preview {
-    VocabularyMainUI()
+    CreateBookUI()
 }

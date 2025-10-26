@@ -102,6 +102,20 @@ class CoreDataManager {
         return book
     }
     
+    func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        let request = NSFetchRequest<Book>(entityName: "Book")
+        request.sortDescriptors = sortDescriptors ?? [
+            NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+        ]
+        request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+        do {
+            return try viewContext.fetch(request)
+        } catch {
+            print("Books couldn't fetched -> \(error)")
+            return nil
+        }
+    }
+    
     func deleteBook(book: Book) {
         viewContext.delete(book)
         save()

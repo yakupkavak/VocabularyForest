@@ -47,7 +47,13 @@
     "Quizes" : {
 
     },
+    "Search Bookcases" : {
+
+    },
     "Search for a language" : {
+
+    },
+    "Select Bookcase" : {
 
     },
     "Select Language" : {
@@ -73,7 +79,7 @@
         }
       }
     },
-    "yakup" : {
+    "Show Meaning" : {
 
     }
   },

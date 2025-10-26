@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class VocabularyMainViewModel: ObservableObject {
+class CreateBookViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
@@ -46,11 +46,11 @@ class VocabularyMainViewModel: ObservableObject {
             return
         }
         if let bookcase = coreDataManager.fetchBookcase(name: lastBookcaseName) {
-            fetchBookInfo(bookcase: bookcase)
+            fetchBookWithCoreData(bookcase: bookcase)
         }
     }
     
-    private func fetchBookInfo(bookcase: Bookcase) {
+    private func fetchBookWithCoreData(bookcase: Bookcase) {
         currentBookcase = bookcase
         learningLanguage = LanguageData.allLanguages.first(where: {(language: Language) in
             return language.id == bookcase.unwrappedLearningLanguage
@@ -59,6 +59,12 @@ class VocabularyMainViewModel: ObservableObject {
             return language.id == bookcase.unwrappedmeaningLanguage
             
         })
+    }
+    
+    func fetchBookWithModel(bookcaseModel: BookcaseModel){
+        if let bookcase = coreDataManager.fetchBookcase(name: bookcaseModel.bookcaseName) {
+            fetchBookWithCoreData(bookcase: bookcase)
+        }
     }
     
     @objc private func refreshBookcase(){
@@ -99,6 +105,7 @@ class VocabularyMainViewModel: ObservableObject {
         guard let currentBookcase else {
             return
         }
-        coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, in: currentBookcase)
+        let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, in: currentBookcase)
+        print("created book -> \(book)")
     }
 }

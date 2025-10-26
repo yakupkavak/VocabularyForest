@@ -9,8 +9,13 @@ import SwiftUI
 
 struct SplashUI: View {
     
+    // MARK: PROPERTIES
+    
     @State var isActive: Bool = false
     @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject private var bookcaseRouter: BookcaseRouter
+    
+    // MARK: VIEWS
 
     var body: some View {
         ZStack {

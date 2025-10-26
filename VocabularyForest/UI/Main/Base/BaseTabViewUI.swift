@@ -11,6 +11,7 @@ struct BaseTabViewUI: View {
     
     // MARK: - PROPERTIES
     
+    @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @StateObject private var viewModel = BaseTabViewModel()
     @StateObject var tabbarController = TabBarController()
     @State private var selectedTab: Tab = .feed
@@ -20,22 +21,32 @@ struct BaseTabViewUI: View {
 
     var body: some View {
         TabView(selection: $selectedTab, content: {
-            VocabularyMainUI()
+            CreateBookUI()
                 .tabItem {
                     Label("Feed", systemImage: "house")
                 }.tag(Tab.feed)
             
-            VocabularyMainUI()
-                .tabItem {
+            NavigationStack(path: $bookcaseRouter.navPath) {
+                BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
+                    switch destination {
+                    case .bookcaseDetail(let bookcaseName):
+                        BookcaseDetailUI(bookcaseName: bookcaseName)
+                    case .bookcaseList:
+                        BookcaseFeedUI()
+                    case .createBookcase:
+                        CreateBootcaseUI()
+                    }
+                }.tabbarVisibility(visibility: tabbarController.isVisible)
+            }.tabItem {
                     Label("Bookcases", systemImage: "calendar")
                 }.tag(Tab.history)
             
-            VocabularyMainUI()
+            CreateBookUI()
                 .tabItem {
                     Label("Quizes", systemImage: "calendar")
                 }.tag(Tab.history)
             
-            VocabularyMainUI().tabItem {
+            CreateBookUI().tabItem {
                 Label("Settings", systemImage: "settings")
             }.tag(Tab.user)
         })
@@ -44,9 +55,6 @@ struct BaseTabViewUI: View {
         }
         .navigationBarBackButtonHidden()
         .accentColor(.blue)
-        .fullScreenCover(isPresented: $isAddLibraryPresented) {
-            //AddLibraryUI(isPresenting: $isAddLibraryPresented)
-        }
         .background(.backgroundSystem)
     }
 }

@@ -12,4 +12,9 @@ extension View {
     func getRect() -> CGRect {
         UIScreen.main.bounds
     }
+    func tabbarVisibility(visibility: Bool) -> some View{
+        self.toolbar(visibility ? .visible : .hidden, for: .tabBar).animation(.default, value: visibility)
+    }
 }
+
+

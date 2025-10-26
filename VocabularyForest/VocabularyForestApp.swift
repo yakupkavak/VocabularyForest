@@ -14,6 +14,7 @@ struct VocabularyForestApp: App {
     // MARK: - PROPERTIES
     
     @Environment(\.scenePhase) var scenePhase
+    @StateObject private var routerBookcase = BookcaseRouter()
     
     // MARK: - VIEWS
     
@@ -21,7 +22,7 @@ struct VocabularyForestApp: App {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
                 CoreDataManager.shared.save()
-            }
+            }.environmentObject(routerBookcase)
         }
     }
 }
