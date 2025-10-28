@@ -30,11 +30,19 @@ struct BaseTabViewUI: View {
                 BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
                     switch destination {
                     case .bookcaseDetail(let bookcaseName):
-                        BookcaseDetailUI(bookcaseName: bookcaseName)
+                        BookcaseDetailUI(bookcaseName: bookcaseName).onAppear {
+                            tabbarController.hideTabbar()
+                        }.onDisappear {
+                            tabbarController.showTabbar()
+                        }
                     case .bookcaseList:
                         BookcaseFeedUI()
                     case .createBookcase:
-                        CreateBootcaseUI()
+                        CreateBootcaseUI().onAppear {
+                            tabbarController.hideTabbar()
+                        }.onDisappear {
+                            tabbarController.showTabbar()
+                        }
                     }
                 }.tabbarVisibility(visibility: tabbarController.isVisible)
             }.tabItem {

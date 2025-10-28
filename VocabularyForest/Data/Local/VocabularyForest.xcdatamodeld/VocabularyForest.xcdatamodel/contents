@@ -5,7 +5,9 @@
         <attribute name="descriptionWord" optional="YES" attributeType="String"/>
         <attribute name="exampleSentence" optional="YES" attributeType="String"/>
         <attribute name="learningWord" optional="YES" attributeType="String"/>
+        <attribute name="longMemory" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="meaningWord" optional="YES" attributeType="String"/>
+        <attribute name="shortMemory" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="bookcase" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bookcase" inverseName="books" inverseEntity="Bookcase"/>
     </entity>
     <entity name="Bookcase" representedClassName="Bookcase" syncable="YES">

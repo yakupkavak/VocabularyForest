@@ -39,4 +39,11 @@ struct tvHint: View {
         Text(text).font(.footnote)
     }
 }
+struct tvGrayHint: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.footnote).foregroundStyle(.gray)
+    }
+}
 

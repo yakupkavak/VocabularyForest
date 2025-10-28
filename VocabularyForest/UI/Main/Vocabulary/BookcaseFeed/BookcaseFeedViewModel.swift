@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class BookcaseFeedViewModel: ObservableObject {
     
@@ -24,5 +25,12 @@ class BookcaseFeedViewModel: ObservableObject {
     
     func fetchBookcases(){
         bookcases = manager.fetchBookcases() ?? []
+    }
+    
+    func deleteBookcase(indexSet: IndexSet){
+        let bookcasesToDelete = indexSet.map { bookcases[$0] }
+        for deleteBookcase in bookcasesToDelete {
+            manager.deleteBookcase(bookcase: deleteBookcase)
+        }
     }
 }

@@ -24,6 +24,8 @@ struct BookcaseFeedUI: View {
                     BookcaseRow(bookcase: bookcase).onTapGesture {
                         bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcase.unwrappedName))
                     }
+                }.onDelete { indexSet in
+                    viewModel.deleteBookcase(indexSet: indexSet)
                 }
             }
         }

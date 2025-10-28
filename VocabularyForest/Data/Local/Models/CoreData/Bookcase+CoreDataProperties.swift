@@ -45,11 +45,40 @@ extension Bookcase {
         return booksSet.sorted {
             $0.unwrappedDate < $1.unwrappedDate
         }
-        
+    }
+    
+    public var longMemoryBooksCount: Int {
+        let booksSet = books as? Set<Book> ?? []
+        return booksSet.filter({
+            $0.longMemory == true
+        }).count
+    }
+    
+    public var shortMemoryBooksCount: Int {
+        let booksSet = books as? Set<Book> ?? []
+        return booksSet.filter({
+            $0.shortMemory == true
+        }).count
+    }
+    
+    public var totalBooksCount: Int {
+        let booksSet = books as? Set<Book> ?? []
+        return booksSet.count
+    }
+    
+    public var longMemoryBooks: [Book] {
+        let booksSet = books as? Set<Book> ?? []
+        return Array(booksSet)
+    }
+    
+    public var shortMemoryBooks: [Book] {
+        let booksSet = books as? Set<Book> ?? []
+        return Array(booksSet)
     }
 }
 
 // MARK: Generated accessors for books
+
 extension Bookcase {
 
     @objc(addBooksObject:)

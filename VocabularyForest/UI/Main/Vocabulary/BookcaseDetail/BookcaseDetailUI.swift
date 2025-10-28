@@ -55,7 +55,9 @@ private extension BookcaseDetailUI {
                 tvDefault(text: book.unwrappedLearningWord)
                 Spacer()
             }
-            tvDefault(text: book.unwrappedDescriptionWord)
+            if let description = book.descriptionWord {
+                tvDefault(text: description)
+            }
             if showMeaning.wrappedValue{
                 tvDefault(text: book.unwrappedMeaningWord)
                     .transition(.opacity.combined(with: .scale))

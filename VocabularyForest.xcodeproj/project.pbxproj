@@ -10,10 +10,12 @@
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B5F2EA8C43A0063F4D8 /* Lottie */; };
 		37D84B882EAA272A0063F4D8 /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B872EAA272A0063F4D8 /* Toasts */; };
+		37FD1D862EB08CA500E06653 /* Book+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37FD1D852EB08CA500E06653 /* Book+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		37FD1D852EB08CA500E06653 /* Book+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Book+CoreDataProperties.swift"; path = "VocabularyForest/Data/Local/Models/CoreData/Book+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -41,6 +43,7 @@
 		37267D172E90E9D90019D139 = {
 			isa = PBXGroup;
 			children = (
+				37FD1D852EB08CA500E06653 /* Book+CoreDataProperties.swift */,
 				37267D222E90E9D90019D139 /* VocabularyForest */,
 				37267D212E90E9D90019D139 /* Products */,
 			);
@@ -137,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37FD1D862EB08CA500E06653 /* Book+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

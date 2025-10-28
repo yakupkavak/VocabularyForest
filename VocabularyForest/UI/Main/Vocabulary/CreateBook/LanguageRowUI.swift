@@ -32,10 +32,6 @@ struct LanguageRowUI: View {
         }
         .padding()
         .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay {
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(isEmpty ? .errorBorder : .gray, lineWidth: 1.5)
-        }
+        .borderRadius(borderColor: isEmpty ? .errorBorder : .gray, lineWidth: 1.5)
     }
 }
