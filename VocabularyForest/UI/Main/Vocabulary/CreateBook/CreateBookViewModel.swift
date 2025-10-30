@@ -21,6 +21,7 @@ class CreateBookViewModel: ObservableObject {
     @Published var bookDescription = ""
     @Published var emptyBookLearningWord = false
     @Published var emptyBookMeaningWord = false
+    @Published var toastMessageModel: CreateBookToastType = .none
     @Published var bookcasesList: [Bookcase] = []
     private var coreDataManager = CoreDataManager.shared
     
@@ -67,7 +68,15 @@ class CreateBookViewModel: ObservableObject {
         }
     }
     
-    @objc private func refreshBookcase(){
+    @objc private func refreshBookcase(notification: NSNotification){
+        guard let notificationBookcaseName = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseName] as? String else {
+            return
+        }
+        guard let newBookcase = coreDataManager.fetchBookcase(name: notificationBookcaseName) else {
+            return
+        }
+        currentBookcase = newBookcase
+        toastMessageModel = .firstBookcaseCreated
         if let newBookcases = coreDataManager.fetchBookcases() {
             if(bookcasesList.isEmpty){
                 UserDefaults.standard.set(

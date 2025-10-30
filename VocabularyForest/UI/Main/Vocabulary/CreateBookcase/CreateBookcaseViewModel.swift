@@ -18,7 +18,6 @@ class CreateBookcaseViewModel: ObservableObject {
     @Published var bookcaseName = ""
     @Published var learningLanguage: Language? = nil
     @Published var meaningLanguage: Language? = nil
-    @Published var createdBookcase: Bookcase? = nil
     private var coreDataManager = CoreDataManager.shared
 
     // MARK: - INIT
@@ -35,9 +34,9 @@ class CreateBookcaseViewModel: ObservableObject {
             learningLanguage: learningLanguage,
             meaningLanguage: meaningLanguage
         )
+        let dic = ["\(BookcaseNotificationConstants.createdBookcaseName)":"\(bookcaseName)"]
         UserDefaults.standard.setValue(bookcase.unwrappedName, forKey: BookcaseConstants.bookcase)
-        NotificationCenter.default.post(name: .didCreateBookcase, object: nil)
-        createdBookcase = bookcase
+        NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: dic)
     }
     
     func checkAndCreateBookcase(){

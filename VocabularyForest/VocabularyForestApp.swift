@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import Toasts
 
 @main
 struct VocabularyForestApp: App {
@@ -23,7 +24,7 @@ struct VocabularyForestApp: App {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
                 CoreDataManager.shared.save()
-            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase)
+            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase)        .installToast(position: .bottom)
         }
     }
 }

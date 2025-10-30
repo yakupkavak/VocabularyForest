@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import Toasts
 
 struct CreateBookUI: View {
     
     //MARK: - PROPERTIES
-
+    
+    @EnvironmentObject private var createBookRouter: CreateBookRouter
+    @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
     @StateObject private var viewModel = CreateBookViewModel()
-    @EnvironmentObject private var createBookRouter: CreateBookRouter
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
 
@@ -36,6 +38,15 @@ struct CreateBookUI: View {
             }.onChange(of: selectedBookcase) { selectedBookcaseModel in
                 if let selectedBookcaseModel {
                     viewModel.fetchBookWithModel(bookcaseModel: selectedBookcaseModel)
+                }
+            }.onChange(of: viewModel.toastMessageModel) { model in
+                switch model {
+                case .firstBookcaseCreated:
+                    presentToast(ToastValue(message: "Congratulations!"))
+                case .newBookCreated:
+                    presentToast(ToastValue(message: "Congratulations! You’ve created your first book!"))
+                case .none:
+                    print("none create book")
                 }
             }
         }
