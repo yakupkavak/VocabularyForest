@@ -43,12 +43,16 @@ struct SelectBookcaseUI: View {
                         )
                     dismiss()
                 }) {
-                    BookcaseRow(bookcase: bookcase)
+                    BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel())
                         .foregroundStyle(.primary)
-                }
-            }
+                }.listRowSeparator(.hidden).listRowInsets(.init())
+            }.background(.backgroundSystem)
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
             .navigationTitle("Select Bookcase")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(.backgroundSystem, for: .navigationBar)
             .searchable(text: $searchText, prompt: "Search Bookcases")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -57,6 +61,7 @@ struct SelectBookcaseUI: View {
                     }
                 }
             }
+            
         }
     }
 }

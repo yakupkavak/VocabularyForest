@@ -6,7 +6,7 @@
 //
 
 func getRandomAnimalModel() -> AnimalBodyModel {
-    let animals = [("elephantHead", "elephantFoot"), ("lionHead","lionFoot")]
+    let animals = [("elephanthead", "elephantfoot"), ("cowhead","cowfoot"), ("pandahead","pandafoot")]
     if let randomAnimal = animals.randomElement() {
         return AnimalBodyModel(head: randomAnimal.0, foot: randomAnimal.1)
     }

@@ -15,14 +15,15 @@ struct VocabularyForestApp: App {
     
     @Environment(\.scenePhase) var scenePhase
     @StateObject private var routerBookcase = BookcaseRouter()
-    
+    @StateObject private var routerCreateBookcase = CreateBookRouter()
+
     // MARK: - VIEWS
     
     var body: some Scene {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
                 CoreDataManager.shared.save()
-            }.environmentObject(routerBookcase)
+            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase)
         }
     }
 }

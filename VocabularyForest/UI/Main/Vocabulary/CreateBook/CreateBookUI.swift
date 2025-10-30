@@ -13,6 +13,7 @@ struct CreateBookUI: View {
 
     @FocusState private var focusedField: Field?
     @StateObject private var viewModel = CreateBookViewModel()
+    @EnvironmentObject private var createBookRouter: CreateBookRouter
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
 
@@ -24,7 +25,7 @@ struct CreateBookUI: View {
                             .ignoresSafeArea()
             VStack {
                 if viewModel.bookcasesList.isEmpty {
-                    CreateBootcaseUI()
+                    CreateBookcaseUI()
                 }else {
                     defaultHeader
                     textFields
@@ -91,23 +92,26 @@ private extension CreateBookUI {
                     selectBookcase()
                 } label: {
                     tvTitle(text: viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
-                }.foregroundStyle(.tint)
-                tvHint(text: "Bookcase")
+                }.foregroundStyle(.clickableButton)
             }
             Spacer()
         }.overlay(alignment: .trailing) {
             Button {
                 viewModel.checkAndCreateBook()
             } label: {
-                Text("Add")
+                Text("Add").foregroundStyle(.title)
             }.offset(x: -24)
         }
         .overlay(alignment: .leading) {
             Button {
                 print("Boockase")
             } label: {
-                //TODO: - Add bookcase icon
-                Image(systemName: "heart.fill").resizable().scaledToFit().frame(minWidth: 20, maxWidth: 34)
+                Button {
+                    createBookcase()
+                } label: {
+                    Image("bookcase").resizable().scaledToFit().frame(minWidth: 20, maxWidth: 34)
+                }
+                
             }.offset(x: 24)
         }
     }
@@ -118,6 +122,9 @@ private extension CreateBookUI {
 private extension CreateBookUI {
     private func selectBookcase() {
         showSelectBookcase.toggle()
+    }
+    func createBookcase(){
+        createBookRouter.navigate(to: .createBookcase)
     }
 }
 

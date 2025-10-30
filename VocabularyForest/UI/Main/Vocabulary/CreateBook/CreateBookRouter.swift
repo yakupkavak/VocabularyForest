@@ -1,14 +1,14 @@
 //
-//  BookcaseFeedRouter.swift
+//  CreateBookRouter.swift
 //  VocabularyForest
 //
-//  Created by Yakup Kavak on 25.10.2025.
+//  Created by Yakup Kavak on 29.10.2025.
 //
 
 import SwiftUI
 import Combine
 
-final class BookcaseRouter: ObservableObject {
+final class CreateBookRouter: ObservableObject {
     
     // MARK: - PROPERTIES
     
@@ -34,10 +34,8 @@ final class BookcaseRouter: ObservableObject {
     }
 }
 
-extension BookcaseRouter {
+extension CreateBookRouter {
     public enum Destination: Codable, Hashable {
-        case bookcaseList
-        case bookcaseDetail(bookcase: String)
         case createBookcase
     }
 }

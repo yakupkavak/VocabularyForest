@@ -14,7 +14,8 @@ struct SplashUI: View {
     @State var isActive: Bool = false
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
-    
+    @EnvironmentObject private var createBookRouter: CreateBookRouter
+
     // MARK: VIEWS
 
     var body: some View {

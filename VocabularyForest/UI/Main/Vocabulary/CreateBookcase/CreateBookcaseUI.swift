@@ -8,7 +8,7 @@
 import SwiftUI
 import Lottie
 
-struct CreateBootcaseUI: View {
+struct CreateBookcaseUI: View {
     
     // MARK: - PROPERTIES
     
@@ -20,7 +20,6 @@ struct CreateBootcaseUI: View {
     
     var body: some View {
         VStack() {
-            initalizeHeader
             initalizeUser
         }.sheet(item: $activeSheet) { sheetType in
             switch sheetType {
@@ -30,12 +29,15 @@ struct CreateBootcaseUI: View {
                 SelectLanguageUI(selectedLanguage: $viewModel.meaningLanguage)
             }
         }
+        .background(.backgroundSystem)
+        .navigationTitle("Create bookcase")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 // MARK: - VIEW COMPONENTS
 
-private extension CreateBootcaseUI {
+private extension CreateBookcaseUI {
     var initalizeUser: some View {
         VStack(alignment: .leading ,spacing: 16) {
             tvDefault(text: "Bookcase name")
@@ -85,18 +87,11 @@ private extension CreateBootcaseUI {
             Spacer()
         }.padding(24)
     }
-    var initalizeHeader: some View {
-        HStack{
-            Spacer()
-            tvSubtitle(text: "Create your bookcase")
-            Spacer()
-        }
-    }
 }
 
 // MARK: - CONSTANTS
 
-private extension CreateBootcaseUI {
+private extension CreateBookcaseUI {
     enum SheetTypes: Identifiable {
         case learning
         case meaning
@@ -117,5 +112,5 @@ private extension CreateBootcaseUI {
 }
 
 #Preview {
-    CreateBootcaseUI()
+    CreateBookcaseUI()
 }

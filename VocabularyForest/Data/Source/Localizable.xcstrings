@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%%%lld" : {
+
+    },
     "Add" : {
 
     },
@@ -11,6 +14,9 @@
 
     },
     "Create" : {
+
+    },
+    "Create bookcase" : {
 
     },
     "Feed" : {

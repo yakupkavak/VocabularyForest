@@ -13,6 +13,7 @@ struct BookcaseRow: View {
     // MARK: - PROPERTIES
     
     var bookcase: Bookcase
+    var animalModel: AnimalBodyModel
     
     // MARK: - UI
     
@@ -22,8 +23,18 @@ struct BookcaseRow: View {
             languageLine
             bottomLine
         }.padding().borderRadius(borderColor: .gray).padding().overlay(alignment: .bottomTrailing) {
-            MemoryProgressBar(percentage: Int(Double(bookcase.longMemoryBooksCount) / Double(bookcase.totalBooksCount) * 100), width: 45).offset(x: -32, y: -32)
+            if bookcase.longMemoryBooksCount > 0 {
+                MemoryProgressBar(percentage: Int(Double(bookcase.longMemoryBooksCount) / Double(bookcase.totalBooksCount) * 100), width: 45).offset(x: -32, y: -32)
+            }else {
+                MemoryProgressBar(percentage: 0, width: 45).offset(x: -32, y: -32)
+            }
         }
+        .overlay(alignment: .topTrailing) {
+            Image(animalModel.head)
+                .resizable().scaledToFit().frame(width: 40)
+                .offset(x: -30,y: 0)
+        }
+        .background(.backgroundSystem)
     }
 }
 
@@ -39,9 +50,9 @@ private extension BookcaseRow {
             } label: {
                 Image("ellipsis_vertical").resizable().scaledToFit().frame(width: 32)
             }.buttonStyle(.plain)
-
+            
         }
-
+        
     }
     var languageLine: some View {
         HStack{
@@ -49,7 +60,7 @@ private extension BookcaseRow {
             Spacer()
             
         }
-
+        
     }
     var bottomLine: some View {
         HStack(alignment: .center){
@@ -59,7 +70,7 @@ private extension BookcaseRow {
             Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
             Spacer()
         }.padding(.top, -8)
-
+        
     }
 }
 
@@ -79,7 +90,7 @@ private extension BookcaseRow {
         sampleBook.shortMemory = i % 2 == 0 ? false : true
         sampleBook.bookcase = sampleBookcase
     }
-
-    return BookcaseRow(bookcase: sampleBookcase)
+    
+    return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel())
 }
 
