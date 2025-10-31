@@ -25,8 +25,7 @@ struct BookcaseDetailUI: View {
     
     @State private var showMeaning = false
     @State private var showEmptyText = false
-    @State private var searchText = ""
-    @StateObject private var viewModel:  BookcaseDetailViewModel
+    @StateObject private var viewModel: BookcaseDetailViewModel
     @FocusState private var searchBarIsFocused: Bool
     var bookcaseName: String
     
@@ -42,19 +41,23 @@ struct BookcaseDetailUI: View {
     // MARK: - VIEWS
 
     var body: some View {
-        ZStack {
-            Color.backgroundSystem.ignoresSafeArea().onTapGesture {
-                searchBarIsFocused = false
+        VStack(spacing: 0) {
+            if viewModel.createdAnyBook {
+                header
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
             if viewModel.books.isEmpty {
-                emptyBooks
-            }else {
-                VStack {
-                    header
-                    bookArray
+                emptyBooks.onDisappear {
+                    showEmptyText = false
                 }
+                .transition(.opacity.combined(with: .scale))
+            } else {
+                bookArray
+                    .transition(.opacity)
             }
-        }
+        }.padding(.top, 8)
+        .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBook)
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.books.isEmpty)
         .navigationTitle(viewModel.bookcaseName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -128,7 +131,7 @@ private extension BookcaseDetailUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $searchText, placeholder: "Search word").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Search word").focused($searchBarIsFocused)
         }.padding(.horizontal,32)
     }
     var emptyBooks: some View {
@@ -141,11 +144,11 @@ private extension BookcaseDetailUI {
                             .strokeBorder(.title, lineWidth: 4)
                     }
             }
-            TalkingBallons(foregroundColor: .title, delayMultiplier: 1.5)
+            TalkingBallons(foregroundColor: .title, delayMultiplier: 1.0)
             LottieView(animation: .named("growingPlant"))
                 .playing(loopMode: .playOnce).resizable().frame(maxWidth: 250).frame(maxHeight: 300)
         }.onAppear {
-            withAnimation(Animation.spring(duration: 1.0).delay(1.8)) {
+            withAnimation(Animation.spring(duration: 1.0).delay(1.2)) {
                      self.showEmptyText = true
                 }
         }.padding(.bottom, 32)

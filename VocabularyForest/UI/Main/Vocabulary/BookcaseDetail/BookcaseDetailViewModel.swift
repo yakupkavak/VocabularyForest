@@ -6,14 +6,19 @@
 //
 
 import Combine
+import Foundation
 
 final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
     @Published var books: [Book] = []
+    @Published var searchText = ""
+    @Published var createdAnyBook = false
     private var bookcase: Bookcase? = nil
     private var dataManager = CoreDataManager.shared
+    private var allBooks: [Book] = []
+    private var cancellables = Set<AnyCancellable>()
     var bookcaseName: String
     
     // MARK: - INIT
@@ -28,13 +33,51 @@ final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - HELPERS
     
+    private func setListener(){
+        $searchText
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .sink { [weak self] (newSearchText) in
+                guard let self else { return }
+                filterBooks(searchText: newSearchText)
+            }
+            .store(in: &cancellables)
+    }
+    private func filterBooks(searchText: String) {
+        if searchText.isEmpty {
+            self.books = self.allBooks
+            return
+        }
+        let lowercasedText = searchText.lowercased()
+        self.books = self.allBooks.filter { (book: Book) -> Bool in
+            return book.unwrappedLearningWord.lowercased().contains(lowercasedText) ||
+                   book.unwrappedMeaningWord.lowercased().contains(lowercasedText) ||
+                   (book.descriptionWord ?? "").lowercased().contains(lowercasedText) ||
+                   (book.exampleSentence ?? "").lowercased().contains(lowercasedText)
+        }
+    }
     private func fetchBookcase(bookcaseName: String){
         bookcase = dataManager.fetchBookcase(name: bookcaseName)
     }
-    
+    func deleteBook(at offsets: IndexSet) {
+        let booksToDelete = offsets.map { self.books[$0] }
+        for book in booksToDelete {
+            dataManager.deleteBook(book: book)
+            if let index = allBooks.firstIndex(of: book) {
+                allBooks.remove(at: index)
+            }
+        }
+        if allBooks.isEmpty{
+            createdAnyBook = false
+        }
+        filterBooks(searchText: self.searchText)
+    }
     func fetchBooks(bookcase: Bookcase){
         books = dataManager.fetchBooks(bookcase: bookcase) ?? []
-        print("books -> \(books)")
+        allBooks = books
+        if !books.isEmpty{
+            createdAnyBook = true
+            setListener()
+        }
     }
 
 }
