@@ -70,7 +70,6 @@ private extension BookcaseRow {
             Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
             Spacer()
         }.padding(.top, -8)
-        
     }
 }
 

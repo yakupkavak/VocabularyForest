@@ -22,17 +22,20 @@ struct BookcaseFeedUI: View {
     // MARK: - VIEWS
     
     var body: some View {
-        VStack{
-            header
-            if viewModel.bookcases.isEmpty {
-                emptyList
-            }else {
-                bookcaseList
-            }
-        }.background(.backgroundSystem)
-            .ignoresSafeArea(.keyboard).onTapGesture {
+        ZStack {
+            Color.backgroundSystem.ignoresSafeArea().onTapGesture {
                 searchBarIsFocused = false
             }
+            VStack{
+                if viewModel.bookcases.isEmpty {
+                    emptyList
+                }else {
+                    header
+                    bookcaseList
+                }
+            }.ignoresSafeArea(.keyboard)
+        }
+        
     }
 }
 
@@ -70,10 +73,12 @@ private extension BookcaseFeedUI {
     }
     var bookcaseList: some View {
         List{
-            ForEach(viewModel.bookcases, id: \.self) { bookcase in
-                BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel()).onTapGesture {
+            ForEach(viewModel.bookcases, id: \.id) { bookcase in
+                BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel())
+                    .contentShape(Rectangle())
+                    .onTapGesture {
                     bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcase.unwrappedName))
-                }
+                    }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
             }.onDelete { indexSet in

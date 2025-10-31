@@ -76,6 +76,7 @@ class CreateBookViewModel: ObservableObject {
             return
         }
         currentBookcase = newBookcase
+        toastMessageModel = .none
         toastMessageModel = .firstBookcaseCreated
         if let newBookcases = coreDataManager.fetchBookcases() {
             if(bookcasesList.isEmpty){
@@ -115,6 +116,17 @@ class CreateBookViewModel: ObservableObject {
             return
         }
         let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, in: currentBookcase)
-        print("created book -> \(book)")
+        bookLearningWord = ""
+        bookMeaningWord = ""
+        bookExampleSentence = ""
+        bookDescription = ""
+
+        toastMessageModel = .newBookCreated
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if self.toastMessageModel == .newBookCreated {
+                self.toastMessageModel = .none
+            }
+        }
     }
 }

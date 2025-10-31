@@ -13,6 +13,10 @@ struct Language: Identifiable, Hashable {
     
     var localizedName: String {
         let currentLocale = Locale.current
+        if self.id.contains("-"),
+           currentLocale.language.languageCode?.identifier == "en" {
+            return self.name
+        }
         if let systemName = currentLocale.localizedString(forIdentifier: self.id) {
             return systemName
         } else {

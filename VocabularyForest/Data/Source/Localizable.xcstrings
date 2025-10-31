@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    ":" : {
+
+    },
+    "%@" : {
+
+    },
     "%%%lld" : {
 
     },
@@ -17,6 +23,12 @@
 
     },
     "Create bookcase" : {
+
+    },
+    "Description" : {
+
+    },
+    "Example" : {
 
     },
     "Feed" : {
@@ -84,9 +96,6 @@
           }
         }
       }
-    },
-    "Show Meaning" : {
-
     }
   },
   "version" : "1.1"

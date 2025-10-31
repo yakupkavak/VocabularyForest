@@ -8,9 +8,15 @@
 import SwiftUI
 import Toasts
 
+// MARK: - CREATE BOOK TYPE ENUM
+
+enum CreateBookToastType {
+    case firstBookcaseCreated, newBookCreated, none
+}
+
 struct CreateBookUI: View {
     
-    //MARK: - PROPERTIES
+    // MARK: - PROPERTIES
     
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @Environment(\.presentToast) var presentToast
@@ -19,7 +25,7 @@ struct CreateBookUI: View {
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
 
-    //MARK: - VIEWS
+    // MARK: - VIEWS
 
     var body: some View {
         ZStack {
@@ -35,7 +41,9 @@ struct CreateBookUI: View {
                 Spacer()
             }.frame(minHeight: 0, maxHeight: .infinity).sheet(isPresented: $showSelectBookcase) {
                 SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $selectedBookcase)
-            }.onChange(of: selectedBookcase) { selectedBookcaseModel in
+            }
+            .addToastSafeAreaObserver()
+            .onChange(of: selectedBookcase) { selectedBookcaseModel in
                 if let selectedBookcaseModel {
                     viewModel.fetchBookWithModel(bookcaseModel: selectedBookcaseModel)
                 }
@@ -44,7 +52,7 @@ struct CreateBookUI: View {
                 case .firstBookcaseCreated:
                     presentToast(ToastValue(message: "Congratulations!"))
                 case .newBookCreated:
-                    presentToast(ToastValue(message: "Congratulations! You’ve created your first book!"))
+                    presentToast(ToastValue(message: "Book created!"))
                 case .none:
                     print("none create book")
                 }
@@ -143,13 +151,9 @@ private extension CreateBookUI {
 
 private extension CreateBookUI {
     enum Field: Hashable {
-        case vocabulary
-        case meaning
-        case sentence
-        case description
-        case bookcaseName
-        case learningLanguage
-        case meaningLanguage
+        case vocabulary, meaning, sentence
+        case description, bookcaseName
+        case learningLanguage, meaningLanguage
     }
 }
 
