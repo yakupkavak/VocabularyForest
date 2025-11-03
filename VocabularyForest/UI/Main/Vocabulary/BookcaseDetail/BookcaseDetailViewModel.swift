@@ -35,12 +35,12 @@ final class BookcaseDetailViewModel: ObservableObject {
     
     private func setListener(){
         $searchText
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .sink { [weak self] (newSearchText) in
-                guard let self else { return }
-                filterBooks(searchText: newSearchText)
-            }
-            .store(in: &cancellables)
+        .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+        .sink { [weak self] (newSearchText) in
+            guard let self else { return }
+            filterBooks(searchText: newSearchText)
+        }
+        .store(in: &cancellables)
     }
     private func filterBooks(searchText: String) {
         if searchText.isEmpty {
@@ -68,6 +68,13 @@ final class BookcaseDetailViewModel: ObservableObject {
         }
         if allBooks.isEmpty{
             createdAnyBook = false
+        }
+        filterBooks(searchText: self.searchText)
+    }
+    func deleteBookModel(at book: Book) {
+        dataManager.deleteBook(book: book)
+        if let index = allBooks.firstIndex(of: book) {
+            allBooks.remove(at: index)
         }
         filterBooks(searchText: self.searchText)
     }

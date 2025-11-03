@@ -1,14 +1,14 @@
 //
-//  VocabularyMainViewModel.swift
+//  EditBookViewModel.swift
 //  VocabularyForest
 //
-//  Created by Yakup Kavak on 21.10.2025.
+//  Created by Yakup Kavak on 3.11.2025.
 //
 
 import Foundation
 import Combine
 
-class CreateBookViewModel: ObservableObject {
+class EditBookViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
@@ -21,8 +21,7 @@ class CreateBookViewModel: ObservableObject {
     @Published var bookDescription = ""
     @Published var emptyBookLearningWord = false
     @Published var emptyBookMeaningWord = false
-    @Published var toastMessageModel: CreateBookToastType = .none
-    @Published var bookcasesList: [Bookcase] = []
+    @Published var toastMessageModel: EditBookToastType = .none
     private var coreDataManager = CoreDataManager.shared
     
     // MARK: - INITALIZE
@@ -30,12 +29,6 @@ class CreateBookViewModel: ObservableObject {
     init(){
         fetchUserPreferences()
         fetchBookcases()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(refreshBookcase),
-            name: .didCreateBookcase,
-            object: nil
-        )
     }
     
     // MARK: - HELPERS
@@ -59,26 +52,6 @@ class CreateBookViewModel: ObservableObject {
         }
     }
     
-    @objc private func refreshBookcase(notification: NSNotification){
-        guard let notificationBookcaseName = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseName] as? String else {
-            return
-        }
-        guard let newBookcase = coreDataManager.fetchBookcase(name: notificationBookcaseName) else {
-            return
-        }
-        updateCurrentBookcase(bookcase: newBookcase)
-        toastMessageModel = .none
-        toastMessageModel = .firstBookcaseCreated
-        if let newBookcases = coreDataManager.fetchBookcases() {
-            if(bookcasesList.isEmpty){
-                UserDefaults.standard.set(
-                    newBookcases.first?.unwrappedName,forKey: BookcaseConstants.bookcase
-                )
-            }
-            bookcasesList = newBookcases
-        }
-    }
-    
     private func updateCurrentBookcase(bookcase: Bookcase){
         currentBookcase = bookcase
         learningLanguage = LanguageData.allLanguages.first(where: {(language: Language) in
@@ -90,7 +63,6 @@ class CreateBookViewModel: ObservableObject {
     }
     
     func fetchBookcases(){
-        bookcasesList = coreDataManager.fetchBookcases() ?? []
     }
     
     func checkAndCreateBook() {

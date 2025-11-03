@@ -15,7 +15,6 @@ struct BookcaseFeedUI: View {
     
     @StateObject private var viewModel = BookcaseFeedViewModel()
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
-    @State private var searchText = ""
     @State private var showEmptyText = false
     @FocusState private var searchBarIsFocused: Bool
 
@@ -23,19 +22,29 @@ struct BookcaseFeedUI: View {
     
     var body: some View {
         ZStack {
-            Color.backgroundSystem.ignoresSafeArea().onTapGesture {
-                searchBarIsFocused = false
-            }
-            VStack{
-                if viewModel.bookcases.isEmpty {
-                    emptyList
-                }else {
-                    header
-                    bookcaseList
+            Color.backgroundSystem
+                .ignoresSafeArea()
+                .onTapGesture {
+                    searchBarIsFocused = false
                 }
-            }.ignoresSafeArea(.keyboard)
+            VStack(spacing: 0) {
+                if viewModel.createdAnyBookcase {
+                    header
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                if viewModel.bookcases.isEmpty {
+                    noneDataView
+                } else {
+                    bookcaseList
+                        .transition(.opacity)
+                }
+            }
         }
-        
+        .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBookcase)
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.bookcases.isEmpty)
+        .onAppear {
+            viewModel.fetchBookcases()
+        }
     }
 }
 
@@ -49,23 +58,23 @@ private extension BookcaseFeedUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $searchText, placeholder: "Search bookcase").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Search bookcase").focused($searchBarIsFocused)
         }.padding(.horizontal,32)
     }
-    var emptyList: some View {
+    var noneDataView: some View {
         VStack(spacing: 24){
             Spacer()
-            if showEmptyText {
-                tvDefault(text: "We couldn't find any bookcase", color: .brown300).padding(24)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 16)
-                            .strokeBorder(.title, lineWidth: 4)
-                    }
-            }
+            tvDefault(text: "We couldn't find any bookcase", color: .brown300)
+                .padding(24)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(.title, lineWidth: 4)
+                }.opacity(showEmptyText ? 1.0 : 0.0 )
             TalkingBallons(foregroundColor: .title, delayMultiplier: 1.5)
             LottieView(animation: .named("growingPlant"))
                 .playing(loopMode: .playOnce).resizable().frame(maxWidth: 250).frame(maxHeight: 300)
-        }.onAppear {
+        }
+        .onAppear {
             withAnimation(Animation.spring(duration: 1.0).delay(1.8)) {
                      self.showEmptyText = true
                 }
@@ -73,16 +82,23 @@ private extension BookcaseFeedUI {
     }
     var bookcaseList: some View {
         List{
-            ForEach(viewModel.bookcases, id: \.id) { bookcase in
-                BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel())
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcase.unwrappedName))
-                    }
+            ForEach(viewModel.bookcases, id: \.id) { bookcaseDisplayItem in
+                BookcaseRow(bookcase: bookcaseDisplayItem.bookcase, animalModel: bookcaseDisplayItem.animalModel, onEdit: {
+                    
+                }, onDelete: {
+                    viewModel.deleteBookcase(item: bookcaseDisplayItem)
+                })
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName))
+                }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
+                .onDisappear {
+                    print("disapper")
+                }
             }.onDelete { indexSet in
-                viewModel.deleteBookcase(indexSet: indexSet)
+                viewModel.deleteBookcaseIndex(offsets: indexSet)
             }
         }.scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)

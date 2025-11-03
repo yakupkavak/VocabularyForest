@@ -1,30 +1,33 @@
 //
-//  FeedUI.swift
+//  EditBookUI.swift
 //  VocabularyForest
 //
-//  Created by Yakup Kavak on 4.10.2025.
+//  Created by Yakup Kavak on 3.11.2025.
 //
 
 import SwiftUI
 import Toasts
+internal import CoreData
 
-// MARK: - CREATE BOOK TYPE ENUM
+// MARK: - EDIT BOOK TYPE ENUM
 
-enum CreateBookToastType {
+enum EditBookToastType {
     case firstBookcaseCreated, newBookCreated, none
 }
 
-struct CreateBookUI: View {
+
+struct EditBookUI: View {
     
     // MARK: - PROPERTIES
     
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
-    @StateObject private var viewModel = CreateBookViewModel()
+    @StateObject private var viewModel = EditBookViewModel()
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
-
+    var book: Book
+    
     // MARK: - VIEWS
 
     var body: some View {
@@ -32,16 +35,10 @@ struct CreateBookUI: View {
             Color.backgroundSystem
                             .ignoresSafeArea()
             VStack {
-                if viewModel.bookcasesList.isEmpty {
-                    CreateBookcaseUI()
-                }else {
-                    defaultHeader
-                    textFields
-                }
+                defaultHeader
+                textFields
                 Spacer()
-            }.frame(minHeight: 0, maxHeight: .infinity).sheet(isPresented: $showSelectBookcase) {
-                SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $selectedBookcase)
-            }
+            }.frame(minHeight: 0, maxHeight: .infinity)
             .addToastSafeAreaObserver()
             .onChange(of: selectedBookcase) { selectedBookcaseModel in
                 if let selectedBookcaseModel {
@@ -65,7 +62,7 @@ struct CreateBookUI: View {
 
 // MARK: - COMPONENTS
 
-private extension CreateBookUI {
+private extension EditBookUI {
     var textFields: some View {
         VStack(spacing: 20) {
             VocabularyTextField(
@@ -140,7 +137,7 @@ private extension CreateBookUI {
 
 // MARK: - HELPERS
 
-private extension CreateBookUI {
+private extension EditBookUI {
     private func selectBookcase() {
         showSelectBookcase.toggle()
     }
@@ -151,7 +148,7 @@ private extension CreateBookUI {
 
 // MARK: - CONSTANTS
 
-private extension CreateBookUI {
+private extension EditBookUI {
     enum Field: Hashable {
         case vocabulary, meaning, sentence
         case description, bookcaseName
@@ -160,5 +157,18 @@ private extension CreateBookUI {
 }
 
 #Preview {
-    CreateBookUI()
+    let context = CoreDataManager.preview.viewContext
+    let sampleBookcase = Bookcase(context: context)
+    sampleBookcase.name = "Örnek Kitaplık (Preview)"
+    sampleBookcase.createdDate = Date()
+    sampleBookcase.learningLanguage = "ja"
+    sampleBookcase.meaningLanguage = "tr"
+    let sampleBook = Book(context: context)
+    sampleBook.bookcase = sampleBookcase
+    sampleBook.exampleSentence = "example"
+    sampleBook.learningWord = "learning"
+    sampleBook.descriptionWord = "description"
+    sampleBook.longMemory = true
+    
+    return EditBookUI(book: sampleBook)
 }

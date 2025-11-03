@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-internal import CoreData
+import CoreData
 
 struct BookcaseRow: View {
     
@@ -14,6 +14,8 @@ struct BookcaseRow: View {
     
     var bookcase: Bookcase
     var animalModel: AnimalBodyModel
+    var onEdit: () -> Void
+    var onDelete: () -> Void
     
     // MARK: - UI
     
@@ -45,14 +47,21 @@ private extension BookcaseRow {
         HStack{
             tvSubtitle(text: bookcase.unwrappedName)
             Spacer()
-            Button {
-                print("update book")
+            Menu {
+                Button(action: onEdit) {
+                    Label("Düzenle", systemImage: "pencil")
+                }
+                Button(role: .destructive, action: onDelete) {
+                    Label("Sil", systemImage: "trash")
+                }
             } label: {
-                Image("ellipsis_vertical").resizable().scaledToFit().frame(width: 32)
-            }.buttonStyle(.plain)
-            
+                Image("ellipsis_vertical")
+                    .resizable().scaledToFit().frame(width: 32)
+                    .padding(5)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
-        
     }
     var languageLine: some View {
         HStack{
@@ -90,6 +99,7 @@ private extension BookcaseRow {
         sampleBook.bookcase = sampleBookcase
     }
     
-    return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel())
+    return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel(), onEdit: { print("edit") } , onDelete: {print("delete")}
+    )
 }
 

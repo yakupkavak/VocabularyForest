@@ -11,14 +11,6 @@ import Lottie
 
 // TODO: - DELEGATE AND PROTOCOL ILE HABERLEŞME
 
-// MARK: - CONSTANTS
-
-private extension BookcaseDetailUI {
-    enum Constant {
-        static let frameWidth: CGFloat = 100
-    }
-}
-
 struct BookcaseDetailUI: View {
     
     // MARK: - PROPERTIES
@@ -69,57 +61,18 @@ struct BookcaseDetailUI: View {
             }
         }
         .frame(maxWidth: .greatestFiniteMagnitude)
-        .background(.backgroundSystem)
+        .background(
+            Color.backgroundSystem
+                .ignoresSafeArea()
+                .onTapGesture {
+                    searchBarIsFocused = false
+                }
+        )
     }
 }
 
 // MARK: - VIEW BUILDER FUNCTIONS
 
-private extension BookcaseDetailUI {
-    @ViewBuilder
-    func bookRow(book: Book, showMeaning: Binding<Bool>, bookNumber: Int) -> some View {
-        VStack(alignment: .leading){
-            HStack(alignment: .top){
-                Text("\(book.bookcase?.unwrappedLearningLanguage.getCountryName() ?? "Learning")").frame(width: Constant.frameWidth, alignment: .leading)
-                Text(":")
-                tvDefault(text: book.unwrappedLearningWord)
-                Spacer()
-            }
-            if showMeaning.wrappedValue{
-                HStack(alignment: .top){
-                    Text("\(book.bookcase?.unwrappedmeaningLanguage.getCountryName() ?? "Meaning")").frame(width: Constant.frameWidth, alignment: .leading)
-                    Text(":")
-                    tvDefault(text: book.unwrappedMeaningWord)
-                    Spacer()
-                }
-            }
-            if let description = book.descriptionWord {
-                HStack(alignment: .top){
-                    Text("Description").frame(width: Constant.frameWidth, alignment: .leading)
-                    Text(":")
-                    tvDefault(text: description)
-                    Spacer()
-                }
-            }
-            if let example = book.exampleSentence {
-                HStack(alignment: .top){
-                    Text("Example").frame(width: Constant.frameWidth, alignment: .leading)
-                    Text(":")
-                    tvDefault(text: example)
-                    Spacer()
-                }
-            }
-        }.animation(.spring(response: 0.3, dampingFraction: 0.6), value: showMeaning.wrappedValue)
-            .frame(maxWidth: .greatestFiniteMagnitude)
-            .padding()
-            .borderRadius(borderColor: .unselectedButton)
-            .padding()
-            .background(.backgroundSystem)
-            .overlay(alignment: .topTrailing, content: {
-                Image(book.longMemory ? "longMemoryIcon" : "shortMemoryIcon").resizable().scaledToFit().frame(width: 24).offset(x: -24, y: 24)
-            })
-    }
-}
 
 // MARK: VIEW COMPONENTS
 
@@ -156,16 +109,18 @@ private extension BookcaseDetailUI {
     var bookArray: some View {
         List {
             ForEach(Array(viewModel.books.enumerated()), id: \.element) { index, book in
-                bookRow(
+                BookRow(
                     book: book,
                     showMeaning: $showMeaning,
-                    bookNumber: index + 1
+                    bookNumber: index + 1,
+                    onEdit: bookRowEdit,
+                    onDelete: { book in bookRowDelete(book: book) }
                 ).onAppear {
                     print(book)
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
-            }//.onDelete(perform: viewModel.deleteBook)
+            }
         }
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
@@ -177,6 +132,12 @@ private extension BookcaseDetailUI {
 private extension BookcaseDetailUI {
     func onClickBookcaseIcon() {
         
+    }
+    func bookRowEdit(){
+        print("ed,t")
+    }
+    func bookRowDelete(book: Book){
+        viewModel.deleteBookModel(at: book)
     }
 }
 

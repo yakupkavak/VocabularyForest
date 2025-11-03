@@ -43,7 +43,7 @@ struct SelectBookcaseUI: View {
                         )
                     dismiss()
                 }) {
-                    BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel())
+                    BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel(), onEdit: {}, onDelete: {})
                         .foregroundStyle(.primary)
                 }.listRowSeparator(.hidden).listRowInsets(.init())
             }.background(.backgroundSystem)

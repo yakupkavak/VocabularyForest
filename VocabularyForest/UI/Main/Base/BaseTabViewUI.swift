@@ -72,7 +72,7 @@ struct BaseTabViewUI: View {
                     Label("Bookcases", systemImage: "calendar")
                 }.tag(Tab.bookcases).tint(.clickableButton)
             
-            CreateBookUI()
+            LearningFeedUI()
                 .tabItem {
                     Label("Quizes", systemImage: "calendar")
                 }.tag(Tab.quiz)

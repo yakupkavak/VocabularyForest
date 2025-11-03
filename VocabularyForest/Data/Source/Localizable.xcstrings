@@ -25,7 +25,16 @@
     "Create bookcase" : {
 
     },
+    "Delete" : {
+
+    },
     "Description" : {
+
+    },
+    "Düzenle" : {
+
+    },
+    "Edit" : {
 
     },
     "Example" : {
@@ -96,6 +105,9 @@
           }
         }
       }
+    },
+    "Sil" : {
+
     }
   },
   "version" : "1.1"
