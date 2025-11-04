@@ -1,0 +1,16 @@
+//
+//  QuizRowModel.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 3.11.2025.
+//
+
+struct QuizRowModel{
+    let leftImage: String
+    let rightImage: String
+    let quizType: QuizType
+}
+
+enum QuizType{
+    case flashCard
+}

@@ -8,11 +8,19 @@
 import Foundation
 import SwiftUI
 
+struct tvMainTitle: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300)
+    }
+}
+
 struct tvTitle: View {
     var text: String
     
     var body: some View{
-        Text(text).font(.title)
+        Text(text).font(.system(size: 20, weight: .bold)).foregroundStyle(.brown300)
     }
 }
  
