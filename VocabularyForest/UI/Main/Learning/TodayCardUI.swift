@@ -12,6 +12,8 @@ struct CardFront : View {
     // MARK: PROPERTIES
 
     let meaningWord: String
+    let exampleSentence: String
+    let descriptionSentence: String
     let width : CGFloat
     let height : CGFloat
     @Binding var degree : Double
@@ -25,21 +27,40 @@ struct CardFront : View {
                 .frame(width: width, height: height)
                 .shadow(color: .gray, radius: 2, x: 0, y: 0)
 
-            VStack(spacing: 24){
+            VStack(spacing: 8){
                 Image(systemName: "suit.club.fill")
                     .resizable()
                     .frame(width: 80, height: 80)
                     .foregroundColor(Color(hex: "#F2CB05"))
-                
-                Text(meaningWord).frame(maxWidth: 100).padding(10).background(.thickMaterial.opacity(0.5)).clipShape(
-                    RoundedRectangle(cornerRadius: 16)
-                ).overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
-                }.zIndex(2.0).foregroundStyle(Color(hex:"#F2CB05"))
+                if !meaningWord.isEmpty {
+                    FrontCardText(text: meaningWord).zIndex(2.0).padding(.vertical)
+                }
+                if !descriptionSentence.isEmpty {
+                    FrontCardText(text: descriptionSentence).zIndex(2.0)
+                }
+                if !exampleSentence.isEmpty {
+                    FrontCardText(text: exampleSentence).zIndex(2.0)
+                }
             }
            
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
+    }
+}
+
+private extension CardFront {
+    
+    struct FrontCardText: View {
+        
+        var text: String
+        
+        var body: some View {
+            Text(text).frame(maxWidth: 150).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+                RoundedRectangle(cornerRadius: 16)
+            ).overlay {
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
+            }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2)
+        }
     }
 }
 
@@ -80,21 +101,21 @@ struct CardBack : View {
                 ZStack{
                     Image(systemName: "seal.fill")
                         .resizable()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 50, height: 50)
                         .foregroundColor(Color(hex: "#F2CB05").opacity(0.7))
 
                     Image(systemName: "seal")
                         .resizable()
-                        .frame(width: 120, height: 120)
+                        .frame(width: 110, height: 110)
                         .foregroundColor(Color(hex: "#BFA004"))
 
                     Image(systemName: "seal")
                         .resizable()
-                        .frame(width: 200, height: 200)
+                        .frame(width: 175, height: 175)
                         .foregroundColor(Color(hex: "#010D00").opacity(0.7))
                 }
-                Text(learningWord).frame(maxWidth: 100).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027"))
-            }
+                Text(learningWord).frame(maxWidth: 150).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2)
+            }.padding(.vertical)
 
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
 
@@ -108,9 +129,12 @@ struct TodayCardUI: View {
     @State var backDegree = 0.0
     @State var frontDegree = -90.0
     @State var isFlipped = false
-
-    let width : CGFloat = 250
-    let height : CGFloat = 325
+    let learningWord: String
+    let meaningWord: String
+    let exampleSentence: String
+    let descriptionSentence: String
+    let width : CGFloat = 225
+    let height : CGFloat = 320
     let durationAndDelay : CGFloat = 0.3
 
     // MARK: FLIP FUNCTION
@@ -138,8 +162,20 @@ struct TodayCardUI: View {
     
     var body: some View {
         ZStack {
-            CardFront(meaningWord: "öğrendim", width: width, height: height, degree: $frontDegree)
-            CardBack(learningWord: "Uzumaki dattebayo", width: width, height: height, degree: $backDegree)
+            CardFront(
+                meaningWord: meaningWord,
+                exampleSentence: exampleSentence,
+                descriptionSentence: descriptionSentence,
+                width: width,
+                height: height,
+                degree: $frontDegree
+            )
+            CardBack(
+                learningWord: learningWord,
+                width: width,
+                height: height,
+                degree: $backDegree
+            )
         }.onTapGesture {
             flipCard ()
         }
@@ -147,7 +183,7 @@ struct TodayCardUI: View {
 }
 
 #Preview {
-    TodayCardUI()
+    TodayCardUI(learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf")
 }
 
 extension Color {
