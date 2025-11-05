@@ -68,6 +68,17 @@ struct BookcaseDetailUI: View {
                     searchBarIsFocused = false
                 }
         )
+        .sheet(item: $viewModel.editingBook) { bookToEdit in
+            BookEditSheet(book: bookToEdit, onSave: { (learning, meaning, desc, example) in
+                viewModel.updateBook(
+                    bookToUpdate: bookToEdit,
+                    learningWord: learning,
+                    meaningWord: meaning,
+                    descriptionWord: desc,
+                    exampleSentence: example
+                )
+            })
+        }
     }
 }
 
@@ -113,7 +124,9 @@ private extension BookcaseDetailUI {
                     book: book,
                     showMeaning: $showMeaning,
                     bookNumber: index + 1,
-                    onEdit: bookRowEdit,
+                    onEdit: {
+                        bookRowEdit(book: book)
+                    },
                     onDelete: { book in bookRowDelete(book: book) }
                 ).onAppear {
                     print(book)
@@ -133,8 +146,8 @@ private extension BookcaseDetailUI {
     func onClickBookcaseIcon() {
         
     }
-    func bookRowEdit(){
-        print("ed,t")
+    func bookRowEdit(book: Book){
+        viewModel.prepareForEdit(book: book)
     }
     func bookRowDelete(book: Book){
         viewModel.deleteBookModel(at: book)

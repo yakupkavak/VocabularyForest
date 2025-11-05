@@ -13,10 +13,19 @@
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
 
     },
+    "Açıklama" : {
+
+    },
     "Add" : {
 
     },
+    "Anlam" : {
+
+    },
     "Anlam Dili" : {
+
+    },
+    "Anlamı" : {
 
     },
     "Ayarlar" : {
@@ -59,6 +68,9 @@
 
     },
     "Description" : {
+
+    },
+    "Detaylar (Opsiyonel)" : {
 
     },
     "Diller" : {
@@ -105,7 +117,13 @@
     "Kaydet" : {
 
     },
+    "Kelime" : {
+
+    },
     "Kelime Bildirimleri" : {
+
+    },
+    "Kelimeyi Düzenle" : {
 
     },
     "Key" : {
@@ -132,6 +150,12 @@
       }
     },
     "Öğrenilen Dil" : {
+
+    },
+    "Öğrenilen Kelime" : {
+
+    },
+    "Örnek Cümle" : {
 
     },
     "Quizes" : {

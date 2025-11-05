@@ -15,6 +15,7 @@ final class BookcaseDetailViewModel: ObservableObject {
     @Published var books: [Book] = []
     @Published var searchText = ""
     @Published var createdAnyBook = false
+    @Published var editingBook: Book? = nil
     private var bookcase: Bookcase? = nil
     private var dataManager = CoreDataManager.shared
     private var allBooks: [Book] = []
@@ -29,9 +30,10 @@ final class BookcaseDetailViewModel: ObservableObject {
         if let bookcase {
             fetchBooks(bookcase: bookcase)
         }
+        setListener()
     }
     
-    // MARK: - HELPERS
+    // MARK: - PRIVATE HELPERS
     
     private func setListener(){
         $searchText
@@ -58,6 +60,9 @@ final class BookcaseDetailViewModel: ObservableObject {
     private func fetchBookcase(bookcaseName: String){
         bookcase = dataManager.fetchBookcase(name: bookcaseName)
     }
+    
+    // MARK: - HELPERS
+
     func deleteBook(at offsets: IndexSet) {
         let booksToDelete = offsets.map { self.books[$0] }
         for book in booksToDelete {
@@ -86,5 +91,25 @@ final class BookcaseDetailViewModel: ObservableObject {
             setListener()
         }
     }
-
+    func prepareForEdit(book: Book) {
+        self.editingBook = book
+    }
+    func updateBook(
+        bookToUpdate: Book,
+        learningWord: String,
+        meaningWord: String,
+        descriptionWord: String?,
+        exampleSentence: String?
+    ) {
+        bookToUpdate.learningWord = learningWord
+        bookToUpdate.meaningWord = meaningWord
+        bookToUpdate.descriptionWord = (descriptionWord?.isEmpty == false) ? descriptionWord : nil
+        bookToUpdate.exampleSentence = (exampleSentence?.isEmpty == false) ? exampleSentence : nil
+        
+        dataManager.save()
+        if let bookcase = self.bookcase {
+            fetchBooks(bookcase: bookcase)
+        }
+        self.editingBook = nil
+    }
 }
