@@ -16,6 +16,7 @@ struct CardFront : View {
     let descriptionSentence: String
     let width : CGFloat
     let height : CGFloat
+    let onClick: () -> Void
     @Binding var degree : Double
 
     // MARK: VIEW
@@ -23,10 +24,24 @@ struct CardFront : View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color(hex: "#022601"))
-                .frame(width: width, height: height)
-                .shadow(color: .gray, radius: 2, x: 0, y: 0)
-
+            .fill(Color(hex: "#022601"))
+            .frame(width: width, height: height)
+            .shadow(color: .gray, radius: 2, x: 0, y: 0)
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    onClick()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24)
+                        .foregroundStyle(Color.brown700)
+                }
+                .contentShape(Rectangle())
+                .padding(.top, 16)
+                .padding(.trailing, 16)
+            }
+            
             VStack(spacing: 8){
                 Image(systemName: "suit.club.fill")
                     .resizable()
@@ -42,7 +57,7 @@ struct CardFront : View {
                     FrontCardText(text: exampleSentence).zIndex(2.0)
                 }
             }
-           
+            
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
     }
 }
@@ -136,6 +151,7 @@ struct TodayCardUI: View {
     let width : CGFloat = 225
     let height : CGFloat = 320
     let durationAndDelay : CGFloat = 0.3
+    let onRefreshClick: () -> Void
 
     // MARK: FLIP FUNCTION
     
@@ -162,28 +178,33 @@ struct TodayCardUI: View {
     
     var body: some View {
         ZStack {
-            CardFront(
-                meaningWord: meaningWord,
-                exampleSentence: exampleSentence,
-                descriptionSentence: descriptionSentence,
-                width: width,
-                height: height,
-                degree: $frontDegree
-            )
             CardBack(
                 learningWord: learningWord,
                 width: width,
                 height: height,
                 degree: $backDegree
             )
-        }.onTapGesture {
-            flipCard ()
+            CardFront(
+                meaningWord: meaningWord,
+                exampleSentence: exampleSentence,
+                descriptionSentence: descriptionSentence,
+                width: width,
+                height: height,
+                onClick: {
+                    onRefreshClick()
+                    flipCard()
+                },
+                degree: $frontDegree
+            )
+        }
+        .onTapGesture {
+            flipCard()
         }
     }
 }
 
 #Preview {
-    TodayCardUI(learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf")
+    TodayCardUI(learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf", onRefreshClick: { print("refresh") })
 }
 
 extension Color {

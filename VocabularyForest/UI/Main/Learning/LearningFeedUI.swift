@@ -36,7 +36,8 @@ struct LearningFeedUI: View {
                     learningWord: viewModel.todaysLearningWord,
                     meaningWord: viewModel.todaysMeaning,
                     exampleSentence: viewModel.todaysExample,
-                    descriptionSentence: viewModel.todaysDescription
+                    descriptionSentence: viewModel.todaysDescription,
+                    onRefreshClick: viewModel.forceFetchNewWord
                 )
                 Spacer()
             }
