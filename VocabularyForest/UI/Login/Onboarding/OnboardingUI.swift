@@ -99,9 +99,9 @@ private extension OnboardingUI {
                 }
             } label: {
                 if(currentPage == dotCount - 1){
-                    tvSubtitle(text: "Over").foregroundStyle(.white)
+                    tvSubtitle(text: "Başla").foregroundStyle(.white)
                 }else {
-                    tvSubtitle(text: "Next").foregroundStyle(.white)
+                    tvSubtitle(text: "Diğer").foregroundStyle(.white)
                 }
             }
         }

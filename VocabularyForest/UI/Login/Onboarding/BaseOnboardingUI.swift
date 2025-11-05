@@ -54,7 +54,7 @@ private extension BaseOnboardingUI {
     func talkingBox(message: String) -> some View {
         VStack(spacing: 16){
             if showText {
-                tvDefault(text: message, color: .white).padding(24)
+                tvDefault(text: message, color: .white).frame(maxWidth: 250).padding(24)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .strokeBorder(.white, lineWidth: 4)
