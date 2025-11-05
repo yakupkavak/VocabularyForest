@@ -46,9 +46,6 @@
     "Example" : {
 
     },
-    "Feed" : {
-
-    },
     "Flash Card" : {
 
     },
@@ -122,6 +119,9 @@
 
     },
     "Unuttum" : {
+
+    },
+    "Word" : {
 
     }
   },

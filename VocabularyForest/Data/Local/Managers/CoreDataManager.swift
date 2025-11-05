@@ -133,6 +133,20 @@ class CoreDataManager {
             return nil
         }
     }
+    
+    func deleteEverything() {
+        let entities = ["Book", "Bookcase"]
+        for entity in entities {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            do {
+                try viewContext.execute(deleteRequest)
+            } catch {
+                print("Error in \(entity): \(error.localizedDescription)")
+            }
+        }
+        save()
+    }
 }
 
 extension CoreDataManager {

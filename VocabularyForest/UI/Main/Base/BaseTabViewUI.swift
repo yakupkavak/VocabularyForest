@@ -29,7 +29,7 @@ struct BaseTabViewUI: View {
             settingsTab
         })
         .navigationBarBackButtonHidden()
-        .accentColor(.blue)
+        .accentColor(.logoGreen)
         .background(.backgroundSystem)
     }
 }
@@ -51,7 +51,7 @@ extension BaseTabViewUI {
                 }
             }
         }.tabItem {
-                Label("Feed", systemImage: "house")
+                Label("Word", systemImage: "plus.app")
         }.tag(Tab.createBook).tint(.clickableButton)
     }
     var bookcaseFeedTab: some View {
@@ -83,7 +83,7 @@ extension BaseTabViewUI {
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
-                Label("Bookcases", systemImage: "calendar")
+                Label("Bookcases", systemImage: "books.vertical")
             }.tag(Tab.bookcases).tint(.clickableButton)
     }
     var learningFeedTab: some View {
@@ -103,12 +103,12 @@ extension BaseTabViewUI {
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
-            Label("Quizes", systemImage: "calendar")
+            Label("Quizes", systemImage: "book")
         }.tag(Tab.quiz)
     }
     var settingsTab: some View {
         CreateBookUI().tabItem {
-            Label("Settings", systemImage: "settings")
+            Label("Settings", systemImage: "gearshape")
         }.tag(Tab.settings)
     }
 }
