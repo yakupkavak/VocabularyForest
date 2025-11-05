@@ -16,6 +16,7 @@ class BookcaseFeedViewModel: ObservableObject {
     @Published var bookcases: [BookcaseDisplayItem] = []
     @Published var searchText = ""
     @Published var createdAnyBookcase = false
+    @Published var editingBookcaseItem: BookcaseDisplayItem? = nil
     private var allBookcases: [BookcaseDisplayItem] = []
     private var cancellables = Set<AnyCancellable>()
     private var manager = CoreDataManager.shared
@@ -38,6 +39,7 @@ class BookcaseFeedViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
     private func filterBookcases(searchText: String) {
         if searchText.isEmpty {
             self.bookcases = self.allBookcases
@@ -87,5 +89,24 @@ class BookcaseFeedViewModel: ObservableObject {
             allBookcases.remove(at: index)
         }
         filterBookcases(searchText: self.searchText)
+    }
+    
+    func prepareForEdit(item: BookcaseDisplayItem) {
+        self.editingBookcaseItem = item
+    }
+
+    func updateBookcase(
+        item: BookcaseDisplayItem,
+        newName: String,
+        learningLang: Language,
+        meaningLang: Language
+    ) {
+        let bookcase = item.bookcase
+        bookcase.name = newName
+        bookcase.learningLanguage = learningLang.id
+        bookcase.meaningLanguage = meaningLang.id
+        manager.save()
+        fetchBookcases()
+        self.editingBookcaseItem = nil
     }
 }

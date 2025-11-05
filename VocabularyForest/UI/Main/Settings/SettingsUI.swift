@@ -26,7 +26,7 @@ struct SettingsUI: View {
                     Toggle("Kelime Bildirimleri", isOn: $viewModel.notificationsEnabled)
                     Button("Bildirim Ayarlarını Aç") {
                         viewModel.openAppSettings()
-                    }.tint(.clickableText)
+                    }.tint(.logoGreen)
                 }
                 .padding()
                 .background(Color.backgroundSystem)

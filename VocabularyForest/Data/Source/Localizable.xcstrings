@@ -10,16 +10,40 @@
     "%%%lld" : {
 
     },
+    "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
+
+    },
     "Add" : {
 
     },
+    "Anlam Dili" : {
+
+    },
+    "Ayarlar" : {
+
+    },
+    "Bildirim Ayarlarını Aç" : {
+
+    },
+    "Bildirimler" : {
+
+    },
     "Biliyorum" : {
+
+    },
+    "Bize Puan Verin" : {
 
     },
     "Bookcases" : {
 
     },
     "Boost your knowledge" : {
+
+    },
+    "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
+
+    },
+    "Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz." : {
 
     },
     "Cancel" : {
@@ -37,6 +61,9 @@
     "Description" : {
 
     },
+    "Diller" : {
+
+    },
     "Düzenle" : {
 
     },
@@ -49,7 +76,10 @@
     "Flash Card" : {
 
     },
-    "Hello, World!" : {
+    "Gizlilik Politikası" : {
+
+    },
+    "Hakkında" : {
 
     },
     "Henüz hiç kelime eklememişsin." : {
@@ -66,8 +96,29 @@
         }
       }
     },
+    "İptal" : {
+
+    },
+    "Kapat" : {
+
+    },
+    "Kaydet" : {
+
+    },
+    "Kelime Bildirimleri" : {
+
+    },
     "Key" : {
       "extractionState" : "manual"
+    },
+    "Kitaplığı Düzenle" : {
+
+    },
+    "Kitaplık Adı" : {
+
+    },
+    "Kullanım Koşulları" : {
+
     },
     "Nice to meet you!" : {
       "extractionState" : "manual",
@@ -79,6 +130,9 @@
           }
         }
       }
+    },
+    "Öğrenilen Dil" : {
+
     },
     "Quizes" : {
 
@@ -118,7 +172,19 @@
     "Sil" : {
 
     },
+    "Tehlikeli Alan" : {
+
+    },
+    "Tüm Veriler Silinsin mi?" : {
+
+    },
+    "Tüm Verileri Sıfırla" : {
+
+    },
     "Unuttum" : {
+
+    },
+    "Vazgeç" : {
 
     },
     "Word" : {

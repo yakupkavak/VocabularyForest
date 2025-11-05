@@ -107,7 +107,7 @@ extension BaseTabViewUI {
         }.tag(Tab.quiz)
     }
     var settingsTab: some View {
-        CreateBookUI().tabItem {
+        SettingsUI().tabItem {
             Label("Settings", systemImage: "gearshape")
         }.tag(Tab.settings)
     }

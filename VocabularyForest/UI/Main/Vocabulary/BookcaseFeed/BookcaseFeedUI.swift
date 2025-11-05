@@ -45,6 +45,16 @@ struct BookcaseFeedUI: View {
         .onAppear {
             viewModel.fetchBookcases()
         }
+        .sheet(item: $viewModel.editingBookcaseItem) { item in
+            BookcaseEditSheet(item: item) { (newName, newLearningLang, newMeaningLang) in
+                viewModel.updateBookcase(
+                    item: item,
+                    newName: newName,
+                    learningLang: newLearningLang,
+                    meaningLang: newMeaningLang
+                )
+            }
+        }
     }
 }
 
@@ -84,7 +94,7 @@ private extension BookcaseFeedUI {
         List{
             ForEach(viewModel.bookcases, id: \.id) { bookcaseDisplayItem in
                 BookcaseRow(bookcase: bookcaseDisplayItem.bookcase, animalModel: bookcaseDisplayItem.animalModel, onEdit: {
-                    
+                    viewModel.prepareForEdit(item: bookcaseDisplayItem)
                 }, onDelete: {
                     viewModel.deleteBookcase(item: bookcaseDisplayItem)
                 })
@@ -97,8 +107,6 @@ private extension BookcaseFeedUI {
                 .onDisappear {
                     print("disapper")
                 }
-            }.onDelete { indexSet in
-                viewModel.deleteBookcaseIndex(offsets: indexSet)
             }
         }.scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
