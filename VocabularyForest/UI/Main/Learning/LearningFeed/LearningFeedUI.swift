@@ -12,6 +12,7 @@ struct LearningFeedUI: View {
     // MARK: - PROPERTIES
     
     @StateObject var viewModel = LearningFeedViewModel()
+    @EnvironmentObject var router: LearningRouter
     
     // MARK: - VIEW
     
@@ -25,7 +26,7 @@ struct LearningFeedUI: View {
                     QuizRowUI(quizModel: quiz) { type in
                         switch type {
                         case .flashCard:
-                            print("flash card")
+                            router.navigate(to: .flashCard)
                         }
                     }.listRowInsets(.init())
                         .listRowSeparator(.hidden, edges: .all)

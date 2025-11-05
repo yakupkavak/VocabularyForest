@@ -13,6 +13,9 @@
     "Add" : {
 
     },
+    "Biliyorum" : {
+
+    },
     "Bookcases" : {
 
     },
@@ -50,6 +53,9 @@
 
     },
     "Hello, World!" : {
+
+    },
+    "Henüz hiç kelime eklememişsin." : {
 
     },
     "I’m ready" : {
@@ -113,6 +119,9 @@
       }
     },
     "Sil" : {
+
+    },
+    "Unuttum" : {
 
     }
   },

@@ -13,6 +13,7 @@ struct BaseTabViewUI: View {
     
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @EnvironmentObject private var createBookRouter: CreateBookRouter
+    @EnvironmentObject private var learningRouter: LearningRouter
     @StateObject private var viewModel = BaseTabViewModel()
     @StateObject var tabbarController = TabBarController()
     @State private var selectedTab: Tab = .createBook
@@ -22,71 +23,93 @@ struct BaseTabViewUI: View {
 
     var body: some View {
         TabView(selection: $selectedTab, content: {
-            NavigationStack(path: $createBookRouter.navPath) {
-                CreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
-                    switch destination {
-                    case .createBookcase:
-                        CreateBookcaseUI().onAppear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.hideTabbar()
-                            }
-                        }.onDisappear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.showTabbar()
-                            }
-                        }
-                    }
-                }
-            }.tabItem {
-                    Label("Feed", systemImage: "house")
-            }.tag(Tab.createBook).tint(.clickableButton)
-            
-            NavigationStack(path: $bookcaseRouter.navPath) {
-                BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
-                    switch destination {
-                    case .bookcaseDetail(let bookcaseName):
-                        BookcaseDetailUI(bookcaseName: bookcaseName).onAppear {
-                            withAnimation(.easeInOut(duration: 0.4)) {
-                                tabbarController.hideTabbar()
-                            }
-                        }.onDisappear {
-                            withAnimation(.easeInOut(duration: 0.4)) {
-                                tabbarController.showTabbar()
-                            }
-                        }
-                    case .bookcaseList:
-                        BookcaseFeedUI()
-                    case .createBookcase:
-                        CreateBookcaseUI().onAppear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.hideTabbar()
-                            }
-                        }.onDisappear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.showTabbar()
-                            }
-                        }
-                    }
-                }.tabbarVisibility(visibility: tabbarController.isVisible)
-            }.tabItem {
-                    Label("Bookcases", systemImage: "calendar")
-                }.tag(Tab.bookcases).tint(.clickableButton)
-            
-            LearningFeedUI()
-                .tabItem {
-                    Label("Quizes", systemImage: "calendar")
-                }.tag(Tab.quiz)
-            
-            CreateBookUI().tabItem {
-                Label("Settings", systemImage: "settings")
-            }.tag(Tab.settings)
+            createBookTab
+            bookcaseFeedTab
+            learningFeedTab
+            settingsTab
         })
-        .onAppear {
-            print("BaseTabViewUI appeared. ViewModel: \(viewModel)")
-        }
         .navigationBarBackButtonHidden()
         .accentColor(.blue)
         .background(.backgroundSystem)
+    }
+}
+extension BaseTabViewUI {
+    var createBookTab: some View {
+        NavigationStack(path: $createBookRouter.navPath) {
+            CreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
+                switch destination {
+                case .createBookcase:
+                    CreateBookcaseUI().onAppear {
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            tabbarController.hideTabbar()
+                        }
+                    }.onDisappear {
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            tabbarController.showTabbar()
+                        }
+                    }
+                }
+            }
+        }.tabItem {
+                Label("Feed", systemImage: "house")
+        }.tag(Tab.createBook).tint(.clickableButton)
+    }
+    var bookcaseFeedTab: some View {
+        NavigationStack(path: $bookcaseRouter.navPath) {
+            BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
+                switch destination {
+                case .bookcaseDetail(let bookcaseName):
+                    BookcaseDetailUI(bookcaseName: bookcaseName).onAppear {
+                        withAnimation(.easeInOut(duration: 0.4)) {
+                            tabbarController.hideTabbar()
+                        }
+                    }.onDisappear {
+                        withAnimation(.easeInOut(duration: 0.4)) {
+                            tabbarController.showTabbar()
+                        }
+                    }
+                case .bookcaseList:
+                    BookcaseFeedUI()
+                case .createBookcase:
+                    CreateBookcaseUI().onAppear {
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            tabbarController.hideTabbar()
+                        }
+                    }.onDisappear {
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            tabbarController.showTabbar()
+                        }
+                    }
+                }
+            }.tabbarVisibility(visibility: tabbarController.isVisible)
+        }.tabItem {
+                Label("Bookcases", systemImage: "calendar")
+            }.tag(Tab.bookcases).tint(.clickableButton)
+    }
+    var learningFeedTab: some View {
+        NavigationStack(path: $learningRouter.navPath) {
+            LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
+                switch destination {
+                    case .flashCard:
+                        FlashCardUI().onAppear {
+                            withAnimation(.easeInOut(duration: 1.2)) {
+                                tabbarController.hideTabbar()
+                            }
+                        }.onDisappear {
+                            withAnimation(.easeInOut(duration: 1.2)) {
+                                tabbarController.showTabbar()
+                            }
+                        }
+                }
+            }.tabbarVisibility(visibility: tabbarController.isVisible)
+        }.tabItem {
+            Label("Quizes", systemImage: "calendar")
+        }.tag(Tab.quiz)
+    }
+    var settingsTab: some View {
+        CreateBookUI().tabItem {
+            Label("Settings", systemImage: "settings")
+        }.tag(Tab.settings)
     }
 }
 
@@ -95,10 +118,3 @@ extension BaseTabViewUI {
         case createBook,bookcases,quiz,forest,settings
     }
 }
-
-/*
- #Preview {
- BaseTabViewUI()
- }
- 
- */

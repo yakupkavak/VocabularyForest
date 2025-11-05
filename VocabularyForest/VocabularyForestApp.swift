@@ -15,6 +15,7 @@ struct VocabularyForestApp: App {
     // MARK: - PROPERTIES
     
     @Environment(\.scenePhase) var scenePhase
+    @StateObject private var routerLearning = LearningRouter()
     @StateObject private var routerBookcase = BookcaseRouter()
     @StateObject private var routerCreateBookcase = CreateBookRouter()
 
@@ -24,7 +25,8 @@ struct VocabularyForestApp: App {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
                 CoreDataManager.shared.save()
-            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase)        .installToast(position: .bottom)
+            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
+                .installToast(position: .bottom)
         }
     }
 }

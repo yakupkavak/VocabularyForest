@@ -120,6 +120,19 @@ class CoreDataManager {
         viewContext.delete(book)
         save()
     }
+    
+    func fetchAllBooks(sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        let request = NSFetchRequest<Book>(entityName: "Book")
+        request.sortDescriptors = sortDescriptors ?? [
+            NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+        ]
+        
+        do {
+            return try viewContext.fetch(request)
+        } catch {
+            return nil
+        }
+    }
 }
 
 extension CoreDataManager {
@@ -129,17 +142,64 @@ extension CoreDataManager {
         let context = manager.viewContext
         
         let sampleBookcase = Bookcase(context: context)
-        sampleBookcase.name = "Preview bookcase"
+        sampleBookcase.name = "Japonca Kelimeler"
         sampleBookcase.createdDate = Date()
         sampleBookcase.learningLanguage = "ja"
         sampleBookcase.meaningLanguage = "tr"
         
-        let sampleBook = Book(context: context)
-        sampleBook.learningWord = "Konnichiwa"
-        sampleBook.meaningWord = "Merhaba"
-        sampleBook.createdDate = Date()
-        sampleBook.exampleSentence = "Konnichiwa, sensei!"
-        sampleBook.bookcase = sampleBookcase
+        let sampleBook1 = Book(context: context)
+        sampleBook1.learningWord = "Konnichiwa"
+        sampleBook1.meaningWord = "Merhaba"
+        sampleBook1.createdDate = Date().addingTimeInterval(-100)
+        sampleBook1.exampleSentence = "Konnichiwa, sensei!"
+        sampleBook1.descriptionWord = "Japonca'da 'iyi günler' veya 'merhaba' anlamına gelir."
+        sampleBook1.bookcase = sampleBookcase
+        
+        let sampleBook2 = Book(context: context)
+        sampleBook2.learningWord = "Arigatou"
+        sampleBook2.meaningWord = "Teşekkürler"
+        sampleBook2.createdDate = Date().addingTimeInterval(-200)
+        sampleBook2.exampleSentence = "Arigatou gozaimasu."
+        sampleBook2.descriptionWord = "Minnettarlık bildiren bir ifade."
+        sampleBook2.bookcase = sampleBookcase
+
+        let sampleBook3 = Book(context: context)
+        sampleBook3.learningWord = "Sayonara"
+        sampleBook3.meaningWord = "Güle güle"
+        sampleBook3.createdDate = Date().addingTimeInterval(-300)
+        sampleBook3.exampleSentence = "Sayonara, mata ashita."
+        sampleBook3.descriptionWord = "Ayrılırken kullanılan bir veda sözü."
+        sampleBook3.bookcase = sampleBookcase
+
+        let sampleBookcase2 = Bookcase(context: context)
+        sampleBookcase2.name = "English Basics"
+        sampleBookcase2.createdDate = Date().addingTimeInterval(-400)
+        sampleBookcase2.learningLanguage = "en"
+        sampleBookcase2.meaningLanguage = "tr"
+        
+        let sampleBook4 = Book(context: context)
+        sampleBook4.learningWord = "Apple"
+        sampleBook4.meaningWord = "Elma"
+        sampleBook4.createdDate = Date().addingTimeInterval(-500)
+        sampleBook4.exampleSentence = "An apple a day keeps the doctor away."
+        sampleBook4.descriptionWord = "Kırmızı veya yeşil olabilen bir meyve."
+        sampleBook4.bookcase = sampleBookcase2
+        
+        let sampleBook5 = Book(context: context)
+        sampleBook5.learningWord = "Code"
+        sampleBook5.meaningWord = "Kod"
+        sampleBook5.createdDate = Date().addingTimeInterval(-600)
+        sampleBook5.exampleSentence = "I need to write some code for my app."
+        sampleBook5.descriptionWord = "Bilgisayara talimat vermek için kullanılan komut dizisi."
+        sampleBook5.bookcase = sampleBookcase2
+
+        let sampleBook6 = Book(context: context)
+        sampleBook6.learningWord = "Water"
+        sampleBook6.meaningWord = "Su"
+        sampleBook6.createdDate = Date().addingTimeInterval(-700)
+        sampleBook6.exampleSentence = nil
+        sampleBook6.descriptionWord = nil
+        sampleBook6.bookcase = sampleBookcase2
         
         manager.save()
         return manager
