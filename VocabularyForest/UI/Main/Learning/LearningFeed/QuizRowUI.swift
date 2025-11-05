@@ -20,8 +20,8 @@ struct QuizRowUI: View {
         HStack{
             Image(quizModel.leftImage).resizable().scaledToFit().frame(maxWidth: 40)
             VStack{
-                Text("Flash Card").font(.system(size: 20, weight: .bold)).foregroundStyle(.brown300)
-                Text("Boost your knowledge").font(.system(size: 14, weight: .regular)).foregroundStyle(.gray.opacity(0.9))
+                Text("Hızlı kart").font(.system(size: 20, weight: .bold)).foregroundStyle(.brown300)
+                Text("Bilgeliğini yücelt").font(.system(size: 14, weight: .regular)).foregroundStyle(.gray.opacity(0.9))
             }
             Image(quizModel.rightImage).resizable().scaledToFit().frame(maxWidth: 40)
         }.padding()

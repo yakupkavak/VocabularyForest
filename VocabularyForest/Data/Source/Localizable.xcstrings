@@ -16,9 +16,6 @@
     "Açıklama" : {
 
     },
-    "Add" : {
-
-    },
     "Anlam" : {
 
     },
@@ -37,16 +34,13 @@
     "Bildirimler" : {
 
     },
+    "Bilgeliğini yücelt" : {
+
+    },
     "Biliyorum" : {
 
     },
     "Bize Puan Verin" : {
-
-    },
-    "Bookcases" : {
-
-    },
-    "Boost your knowledge" : {
 
     },
     "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
@@ -58,12 +52,6 @@
     "Cancel" : {
 
     },
-    "Create" : {
-
-    },
-    "Create bookcase" : {
-
-    },
     "Delete" : {
 
     },
@@ -71,6 +59,9 @@
 
     },
     "Detaylar (Opsiyonel)" : {
+
+    },
+    "Dil seç" : {
 
     },
     "Diller" : {
@@ -82,10 +73,10 @@
     "Edit" : {
 
     },
-    "Example" : {
+    "Ekle" : {
 
     },
-    "Flash Card" : {
+    "Example" : {
 
     },
     "Gizlilik Politikası" : {
@@ -94,7 +85,13 @@
     "Hakkında" : {
 
     },
+    "Hangi dili arıyorsun" : {
+
+    },
     "Henüz hiç kelime eklememişsin." : {
+
+    },
+    "Hızlı kart" : {
 
     },
     "I’m ready" : {
@@ -132,7 +129,13 @@
     "Kitaplığı Düzenle" : {
 
     },
+    "Kitaplık" : {
+
+    },
     "Kitaplık Adı" : {
+
+    },
+    "Kitaplık oluştur" : {
 
     },
     "Kullanım Koşulları" : {
@@ -155,25 +158,19 @@
     "Öğrenilen Kelime" : {
 
     },
-    "Örnek Cümle" : {
+    "Öğrenme" : {
 
     },
-    "Quizes" : {
+    "Oluştur" : {
+
+    },
+    "Örnek Cümle" : {
 
     },
     "Search Bookcases" : {
 
     },
-    "Search for a language" : {
-
-    },
     "Select Bookcase" : {
-
-    },
-    "Select Language" : {
-
-    },
-    "Settings" : {
 
     },
     "Shall we begin?" : {
@@ -209,9 +206,6 @@
 
     },
     "Vazgeç" : {
-
-    },
-    "Word" : {
 
     }
   },

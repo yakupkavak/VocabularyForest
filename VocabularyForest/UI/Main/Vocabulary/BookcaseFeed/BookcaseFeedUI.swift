@@ -68,13 +68,13 @@ private extension BookcaseFeedUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Search bookcase").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
         }.padding(.horizontal,32)
     }
     var noneDataView: some View {
         VStack(spacing: 24){
             Spacer()
-            tvDefault(text: "We couldn't find any bookcase", color: .brown300)
+            tvDefault(text: "Hiçbir kitaplık bulamadık", color: .brown300)
                 .padding(24)
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)

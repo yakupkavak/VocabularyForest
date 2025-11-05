@@ -30,7 +30,7 @@ struct CreateBookcaseUI: View {
             }
         }
         .background(.backgroundSystem)
-        .navigationTitle("Create bookcase")
+        .navigationTitle("Kitaplık oluştur")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -40,33 +40,33 @@ struct CreateBookcaseUI: View {
 private extension CreateBookcaseUI {
     var initalizeUser: some View {
         VStack(alignment: .leading ,spacing: 16) {
-            tvDefault(text: "Bookcase name")
+            tvDefault(text: "Kitaplık adı")
             VocabularyTextField(
                 userInput: $viewModel.bookcaseName,
                 isSelected: .constant(focusedField == .bookcaseName),
                 isEmpty: $viewModel.emptyInitialBookcaseName,
-                placeholder: "Daily words, hobbies, etc.",
+                placeholder: "Günlük kelimeler, hobiler vs.",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             ).focused($focusedField, equals: .bookcaseName)
-            tvDefault(text: "Learning language")
+            tvDefault(text: "Öğrendiğin dil")
             Button(action: {
                 activeSheet = .learning
             }) {
                 LanguageRowUI(
                     isEmpty: $viewModel.emptyInitialVocabularyLanguage,
                     language: viewModel.learningLanguage,
-                    placeholder: "Select learning language"
+                    placeholder: "Öğrendiğin dili seç"
                 )
             }.buttonStyle(.plain)
-            tvDefault(text: "Meaning language")
+            tvDefault(text: "Anlamının dili")
             Button(action: {
                 activeSheet = .meaning
             }) {
                 LanguageRowUI(
                     isEmpty: $viewModel.emptyInitialMeaningLanguage,
                     language: viewModel.meaningLanguage,
-                    placeholder: "Select meaning language"
+                    placeholder: "Anlam dilini seçin"
                 )
             }.buttonStyle(.plain)
             Spacer()
@@ -81,7 +81,7 @@ private extension CreateBookcaseUI {
             Button {
                 viewModel.checkAndCreateBookcase()
             } label: {
-                Text("Create").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
+                Text("Oluştur").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
             }.tint(Color.clickableButton).buttonStyle(.bordered)
 
             Spacer()

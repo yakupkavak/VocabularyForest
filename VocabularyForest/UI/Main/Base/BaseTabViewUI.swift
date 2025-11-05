@@ -51,7 +51,7 @@ extension BaseTabViewUI {
                 }
             }
         }.tabItem {
-                Label("Word", systemImage: "plus.app")
+                Label("Kelime", systemImage: "plus.app")
         }.tag(Tab.createBook).tint(.clickableButton)
     }
     var bookcaseFeedTab: some View {
@@ -83,7 +83,7 @@ extension BaseTabViewUI {
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
-                Label("Bookcases", systemImage: "books.vertical")
+                Label("Kitaplık", systemImage: "books.vertical")
             }.tag(Tab.bookcases).tint(.clickableButton)
     }
     var learningFeedTab: some View {
@@ -103,12 +103,12 @@ extension BaseTabViewUI {
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
-            Label("Quizes", systemImage: "book")
+            Label("Öğrenme", systemImage: "book")
         }.tag(Tab.quiz)
     }
     var settingsTab: some View {
         SettingsUI().tabItem {
-            Label("Settings", systemImage: "gearshape")
+            Label("Ayarlar", systemImage: "gearshape")
         }.tag(Tab.settings)
     }
 }

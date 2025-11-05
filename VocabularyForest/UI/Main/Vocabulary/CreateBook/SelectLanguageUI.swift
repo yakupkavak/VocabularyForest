@@ -38,12 +38,12 @@ struct SelectLanguageUI: View {
                         .foregroundStyle(.primary)
                 }
             }
-            .navigationTitle("Select Language")
+            .navigationTitle("Dil seç")
             .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, prompt: "Search for a language")
+            .searchable(text: $searchText, prompt: "Hangi dili arıyorsun")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("İptal") {
                         dismiss()
                     }
                 }

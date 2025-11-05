@@ -72,7 +72,7 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookLearningWord,
                 isSelected: .constant(focusedField == .vocabulary),
                 isEmpty: $viewModel.emptyBookLearningWord,
-                placeholder: "What are you learning (Required)",
+                placeholder: "Hangi kelimeyi öğreniyorsun (Gerekli)",
                 title: viewModel.learningLanguage?.name,
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
@@ -82,7 +82,7 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookMeaningWord,
                 isSelected: .constant(focusedField == .meaning),
                 isEmpty: $viewModel.emptyBookMeaningWord,
-                placeholder: "Meaning of that (Required)",
+                placeholder: "Anlamı nedir (Gerekli)",
                 title: viewModel.meaningLanguage?.localizedName
             ).focused($focusedField, equals: .meaning)
             
@@ -90,8 +90,8 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
                 isEmpty: .constant(false),
-                placeholder: "Write the description",
-                title: "Description",
+                placeholder: "Açıklaması",
+                title: "Açıklama",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             ).focused($focusedField, equals: .description)
@@ -100,8 +100,8 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookExampleSentence,
                 isSelected: .constant(focusedField == .sentence),
                 isEmpty: .constant(false),
-                placeholder: "Example sentence",
-                title: "Sentence"
+                placeholder: "Örnek cümle",
+                title: "Cümle"
             ).focused($focusedField, equals: .sentence)
         }.padding(24)
     }
@@ -120,7 +120,7 @@ private extension CreateBookUI {
             Button {
                 viewModel.checkAndCreateBook()
             } label: {
-                Text("Add").foregroundStyle(.title)
+                Text("Ekle").foregroundStyle(.title)
             }.offset(x: -24)
         }
         .overlay(alignment: .leading) {

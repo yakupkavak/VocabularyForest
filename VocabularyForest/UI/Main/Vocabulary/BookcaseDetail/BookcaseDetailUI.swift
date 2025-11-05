@@ -95,14 +95,14 @@ private extension BookcaseDetailUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Search word").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kelime ara").focused($searchBarIsFocused)
         }.padding(.horizontal,32)
     }
     var emptyBooks: some View {
         VStack(spacing: 24){
             Spacer()
             if showEmptyText {
-                tvDefault(text: "We couldn't find any books", color: .brown300).padding(24)
+                tvDefault(text: "Hiçbir kitap bulamadık", color: .brown300).padding(24)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .strokeBorder(.title, lineWidth: 4)
