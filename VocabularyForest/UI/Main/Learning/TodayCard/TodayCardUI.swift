@@ -48,7 +48,12 @@ struct CardFront : View {
                     .frame(width: 80, height: 80)
                     .foregroundColor(Color(hex: "#F2CB05"))
                 if !meaningWord.isEmpty {
-                    FrontCardText(text: meaningWord).zIndex(2.0).padding(.vertical)
+                    Text(meaningWord).font(.system(size: 16)).frame(maxWidth: 150).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+                        RoundedRectangle(cornerRadius: 16)
+                    ).overlay {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
+                    }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2).zIndex(2.0).padding(.vertical)
                 }
                 if !descriptionSentence.isEmpty {
                     FrontCardText(text: descriptionSentence).zIndex(2.0)
@@ -69,7 +74,7 @@ private extension CardFront {
         var text: String
         
         var body: some View {
-            Text(text).frame(maxWidth: 150).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+            Text(text).font(.system(size: 12)).frame(maxWidth: 150).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                 RoundedRectangle(cornerRadius: 16)
             ).overlay {
                 RoundedRectangle(cornerRadius: 16)

@@ -99,6 +99,8 @@ class CoreDataManager {
         book.createdDate = Date()
         book.bookcase = bookcase
         save()
+        let persistentBookID = book.objectID.uriRepresentation().absoluteString
+        NotificationManager.shared.createNotification(bookId: persistentBookID, learningWord: learningWord, meaningWord: meaningWord, description: descriptionWord ?? "", example: exampleSentence ?? "")
         return book
     }
     
@@ -118,6 +120,8 @@ class CoreDataManager {
     
     func deleteBook(book: Book) {
         viewContext.delete(book)
+        let persistentBookID = book.objectID.uriRepresentation().absoluteString
+        NotificationManager.shared.deleteNotification(bookId: persistentBookID)
         save()
     }
     

@@ -28,13 +28,13 @@ struct Language: Identifiable, Hashable {
 class LanguageData {
     
     static let allLanguages: [Language] = [
-        Language(id: "en-US", name: "English (US)"),
-        Language(id: "en-GB", name: "English (UK)"),
-        Language(id: "tr", name: "Turkish"),
+        Language(id: "en-US", name: "İngilizce (US)"),
+        Language(id: "en-GB", name: "İngilizce (UK)"),
+        Language(id: "tr", name: "Türkçe"),
         Language(id: "es", name: "Spanish"),
-        Language(id: "fr", name: "French"),
-        Language(id: "de", name: "German"),
-        Language(id: "ja", name: "Japanese"),
+        Language(id: "fr", name: "Fransızca"),
+        Language(id: "de", name: "Almanca"),
+        Language(id: "ja", name: "Japonca"),
         Language(id: "it", name: "Italian"),
         Language(id: "pt-PT", name: "Portuguese (Portugal)"),
         Language(id: "pt-BR", name: "Portuguese (Brazil)"),

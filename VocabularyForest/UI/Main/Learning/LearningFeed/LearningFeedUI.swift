@@ -42,6 +42,8 @@ struct LearningFeedUI: View {
                 )
                 Spacer()
             }
+        }.task {
+            viewModel.fetchDailyWord()
         }
     }
 }

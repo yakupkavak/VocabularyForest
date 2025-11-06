@@ -14,6 +14,7 @@ struct VocabularyForestApp: App {
     
     // MARK: - PROPERTIES
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @Environment(\.scenePhase) var scenePhase
     @StateObject private var routerLearning = LearningRouter()
     @StateObject private var routerBookcase = BookcaseRouter()

@@ -28,7 +28,7 @@ class SettingsViewModel: ObservableObject {
             if notificationsEnabled {
                 requestNotificationPermission()
             } else {
-                UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                NotificationManager.shared.removeAllNotification()
             }
         }
     }
