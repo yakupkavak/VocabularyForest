@@ -16,7 +16,7 @@ struct BaseTabViewUI: View {
     @EnvironmentObject private var learningRouter: LearningRouter
     @StateObject private var viewModel = BaseTabViewModel()
     @StateObject var tabbarController = TabBarController()
-    @State private var selectedTab: Tab = .createBook
+    @State private var selectedTab: BaseTabTypes = .createBook
     @State private var isAddLibraryPresented = false
     
     // MARK: - VIEW
@@ -52,7 +52,7 @@ extension BaseTabViewUI {
             }
         }.tabItem {
                 Label("Kelime", systemImage: "plus.app")
-        }.tag(Tab.createBook).tint(.clickableButton)
+        }.tag(BaseTabTypes.createBook).tint(.clickableButton)
     }
     var bookcaseFeedTab: some View {
         NavigationStack(path: $bookcaseRouter.navPath) {
@@ -84,14 +84,14 @@ extension BaseTabViewUI {
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
                 Label("Kitaplık", systemImage: "books.vertical")
-            }.tag(Tab.bookcases).tint(.clickableButton)
+            }.tag(BaseTabTypes.bookcases).tint(.clickableButton)
     }
     var learningFeedTab: some View {
         NavigationStack(path: $learningRouter.navPath) {
             LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
                 switch destination {
                     case .flashCard:
-                        FlashCardUI().onAppear {
+                    FlashCardUI(tabBar: $selectedTab).onAppear {
                             withAnimation(.easeInOut(duration: 1.2)) {
                                 tabbarController.hideTabbar()
                             }
@@ -104,17 +104,15 @@ extension BaseTabViewUI {
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {
             Label("Öğrenme", systemImage: "book")
-        }.tag(Tab.quiz)
+        }.tag(BaseTabTypes.quiz)
     }
     var settingsTab: some View {
         SettingsUI().tabItem {
             Label("Ayarlar", systemImage: "gearshape")
-        }.tag(Tab.settings)
+        }.tag(BaseTabTypes.settings)
     }
+}
+enum BaseTabTypes {
+    case createBook,bookcases,quiz,forest,settings
 }
 
-extension BaseTabViewUI {
-    enum Tab {
-        case createBook,bookcases,quiz,forest,settings
-    }
-}

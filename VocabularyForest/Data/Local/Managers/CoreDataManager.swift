@@ -98,6 +98,7 @@ class CoreDataManager {
         book.descriptionWord = descriptionWord
         book.createdDate = Date()
         book.bookcase = bookcase
+        book.shortMemory = true
         save()
         let persistentBookID = book.objectID.uriRepresentation().absoluteString
         NotificationManager.shared.createNotification(bookId: persistentBookID, learningWord: learningWord, meaningWord: meaningWord, description: descriptionWord ?? "", example: exampleSentence ?? "")

@@ -6,20 +6,85 @@
 //
 
 import UserNotifications
+import Combine
+import UIKit
 
-class NotificationManager {
+class NotificationManager: ObservableObject {
     
     // MARK: - PROPERTIES
     
+    @MainActor
+    @Published var notificationsEnabled: Bool = false
     static let shared = NotificationManager()
     private let center = UNUserNotificationCenter.current()
     
     // MARK: - INIT
 
-    private init() { }
-    
-    // MARK: - HELPERS
+    private init() {
+        Task {
+            await checkNotificationStatus()
+        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAppDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+    }
 
+    // MARK: - HELPERS
+    
+    @objc private func handleAppDidBecomeActive() {
+        Task {
+            await checkNotificationStatus()
+            }
+    }
+
+    @MainActor
+    func checkNotificationStatus() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        let newStatus = (settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional)
+        if self.notificationsEnabled != newStatus {
+            self.notificationsEnabled = newStatus
+        }
+    }
+    
+    @MainActor
+    func requestEnable() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        switch settings.authorizationStatus {
+        case .notDetermined:
+            do {
+                let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                self.notificationsEnabled = granted
+                
+            } catch {
+                self.notificationsEnabled = false
+            }
+            
+        case .denied:
+            await openAppSettings()
+        case .authorized, .provisional, .ephemeral:
+            if !self.notificationsEnabled {
+                self.notificationsEnabled = true
+            }
+        @unknown default:
+            self.notificationsEnabled = false
+        }
+    }
+
+    @MainActor
+    func requestDisable() async {
+        await openAppSettings()
+    }
+
+    @MainActor
+    private func openAppSettings() async {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            await UIApplication.shared.open(url)
+        }
+    }
+    
     func createNotification(bookId: String,
                             learningWord: String, meaningWord: String, description: String, example: String) {
         let randomHour = Int.random(in: (8...22))

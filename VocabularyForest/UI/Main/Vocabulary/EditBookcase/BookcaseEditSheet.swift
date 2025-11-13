@@ -89,10 +89,10 @@ struct BookcaseEditSheet: View {
             }
         }
         .sheet(isPresented: $isShowingLearnPicker) {
-            SelectLanguageUI(selectedLanguage: $learningLanguage)
+            SelectLanguageUI(selectedLanguage: $learningLanguage, dismissLanguage: $meaningLanguage)
         }
         .sheet(isPresented: $isShowingMeanPicker) {
-            SelectLanguageUI(selectedLanguage: $meaningLanguage)
+            SelectLanguageUI(selectedLanguage: $meaningLanguage, dismissLanguage: $learningLanguage)
         }
     }
     

@@ -12,6 +12,7 @@ struct CreateBookcaseUI: View {
     
     // MARK: - PROPERTIES
     
+    @EnvironmentObject private var router: BookcaseRouter
     @StateObject private var viewModel = CreateBookcaseViewModel()
     @FocusState private var focusedField: Field?
     @State private var activeSheet: SheetTypes? = nil
@@ -24,9 +25,9 @@ struct CreateBookcaseUI: View {
         }.sheet(item: $activeSheet) { sheetType in
             switch sheetType {
             case .learning:
-                SelectLanguageUI(selectedLanguage: $viewModel.learningLanguage)
+                SelectLanguageUI(selectedLanguage: $viewModel.learningLanguage, dismissLanguage: $viewModel.meaningLanguage)
             case .meaning:
-                SelectLanguageUI(selectedLanguage: $viewModel.meaningLanguage)
+                SelectLanguageUI(selectedLanguage: $viewModel.meaningLanguage, dismissLanguage: $viewModel.learningLanguage)
             }
         }
         .background(.backgroundSystem)
@@ -48,7 +49,7 @@ private extension CreateBookcaseUI {
                 placeholder: "Günlük kelimeler, hobiler vs.",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
-            ).focused($focusedField, equals: .bookcaseName)
+            ).focused($focusedField, equals: .bookcaseName).frame(minHeight: 80)
             tvDefault(text: "Öğrendiğin dil")
             Button(action: {
                 activeSheet = .learning
@@ -69,17 +70,16 @@ private extension CreateBookcaseUI {
                     placeholder: "Anlam dilini seçin"
                 )
             }.buttonStyle(.plain)
-            Spacer()
             HStack{
                 Spacer()
                 LottieView(animation: .named("meditationSloth"))
                     .playing(loopMode: .loop).resizable().frame(maxWidth: 250)
                 Spacer()
             }
-            
-            Spacer()
             Button {
-                viewModel.checkAndCreateBookcase()
+                if viewModel.checkAndCreateBookcase() {
+                    router.navigateToRoot()
+                }
             } label: {
                 Text("Oluştur").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
             }.tint(Color.clickableButton).buttonStyle(.bordered)

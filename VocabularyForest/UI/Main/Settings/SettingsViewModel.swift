@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 import UserNotifications
 import Combine
+import StoreKit
 
 struct PolicyContent: Identifiable {
     let id = UUID()
@@ -18,28 +19,38 @@ struct PolicyContent: Identifiable {
 
 class SettingsViewModel: ObservableObject {
     
-    // MARK: - Properties
+    // MARK: - PROPERTIES
     
+    @Environment(\.requestReview) var requestReview
     private var manager: CoreDataManager
+    private var notificationManager = NotificationManager.shared
+    private var cancellables = Set<AnyCancellable>()
     @Published var sheetContent: PolicyContent? = nil
-    @Published var notificationsEnabled: Bool = UserDefaults.standard.bool(forKey: "notificationsEnabled") {
-        didSet {
-            UserDefaults.standard.set(notificationsEnabled, forKey: "notificationsEnabled")
-            if notificationsEnabled {
-                requestNotificationPermission()
-            } else {
-                NotificationManager.shared.removeAllNotification()
-            }
-        }
-    }
-    // MARK: - Init
+    @Published var notificationsEnabled: Bool = false
+    
+    // MARK: - INIT
     
     init(manager: CoreDataManager = .shared) {
         self.manager = manager
+        notificationManager.$notificationsEnabled
+            .receive(on: RunLoop.main)
+            .assign(to: \.notificationsEnabled, on: self)
+            .store(in: &cancellables)
     }
     
     // MARK: - HELPERS
-
+    
+    func handleNotificationToggleChange() {
+        let currentStatus = notificationManager.notificationsEnabled
+        Task {
+            if !currentStatus {
+                await notificationManager.requestEnable()
+            } else {
+                openAppSettings()
+            }
+        }
+    }
+    
     func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
@@ -48,7 +59,7 @@ class SettingsViewModel: ObservableObject {
                 }
             }
             if let error = error {
-                print("Bildirim izni hatası: \(error.localizedDescription)")
+                print("Bildirim izin hatası: \(error.localizedDescription)")
             }
         }
     }
@@ -60,10 +71,7 @@ class SettingsViewModel: ObservableObject {
     }
     
     func openAppStoreReview() {
-        let appID = "YOUR_APP_ID"
-        guard let url = URL(string: "https://apps.apple.com/app/id\(appID)?action=write-review"),
-              UIApplication.shared.canOpenURL(url) else { return }
-        UIApplication.shared.open(url)
+        requestReview()
     }
     
     func showTermsOfUse() {

@@ -15,6 +15,9 @@ extension View {
     func tabbarVisibility(visibility: Bool) -> some View{
         self.toolbar(visibility ? .visible : .hidden, for: .tabBar).animation(.default, value: visibility)
     }
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
 
 

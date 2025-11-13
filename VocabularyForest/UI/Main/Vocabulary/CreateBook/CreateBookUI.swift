@@ -59,6 +59,22 @@ struct CreateBookUI: View {
             }.onAppear {
                 viewModel.fetchBookcases()
             }
+        }.onSubmit {
+            if let focusedField {
+                switch focusedField {
+                case .vocabulary:
+                    self.focusedField = .meaning
+                case .meaning:
+                    self.focusedField = .description
+                case .description:
+                    self.focusedField = .sentence
+                case .sentence:
+                    viewModel.checkAndCreateBook()
+                    hideKeyboard()
+                }
+            }
+        }.onTapGesture {
+            hideKeyboard()
         }
     }
 }
@@ -76,7 +92,7 @@ private extension CreateBookUI {
                 title: viewModel.learningLanguage?.name,
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
-            ).focused($focusedField, equals: .vocabulary)
+            ).focused($focusedField, equals: .vocabulary).submitLabel(.next)
             
             VocabularyTextField(
                 userInput: $viewModel.bookMeaningWord,
@@ -84,7 +100,7 @@ private extension CreateBookUI {
                 isEmpty: $viewModel.emptyBookMeaningWord,
                 placeholder: "Anlamı nedir (Gerekli)",
                 title: viewModel.meaningLanguage?.localizedName
-            ).focused($focusedField, equals: .meaning)
+            ).focused($focusedField, equals: .meaning).submitLabel(.next)
             
             VocabularyTextField(
                 userInput: $viewModel.bookDescription,
@@ -94,7 +110,7 @@ private extension CreateBookUI {
                 title: "Açıklama",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
-            ).focused($focusedField, equals: .description)
+            ).focused($focusedField, equals: .description).submitLabel(.next)
             
             VocabularyTextField(
                 userInput: $viewModel.bookExampleSentence,
@@ -102,7 +118,7 @@ private extension CreateBookUI {
                 isEmpty: .constant(false),
                 placeholder: "Örnek cümle",
                 title: "Cümle"
-            ).focused($focusedField, equals: .sentence)
+            ).focused($focusedField, equals: .sentence).submitLabel(.done)
         }.padding(24)
     }
     var defaultHeader: some View {
@@ -153,9 +169,8 @@ private extension CreateBookUI {
 
 private extension CreateBookUI {
     enum Field: Hashable {
-        case vocabulary, meaning, sentence
-        case description, bookcaseName
-        case learningLanguage, meaningLanguage
+        case vocabulary, meaning
+        case description, sentence
     }
 }
 

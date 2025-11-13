@@ -66,7 +66,7 @@ private extension BookcaseFeedUI {
             Button {
                 onClickBookcaseIcon()
             } label: {
-                Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
+                Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 40)
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
         }.padding(.horizontal,32)

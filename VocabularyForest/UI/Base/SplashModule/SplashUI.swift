@@ -26,7 +26,7 @@ struct SplashUI: View {
                 Image("splash-logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: 300, maxHeight: 300)
+                    .frame(maxWidth: UIScreen.main.bounds.width * 2 / 3, maxHeight: UIScreen.main.bounds.height * 2 / 3)
             }
         }.ignoresSafeArea().frame(maxWidth: .infinity,maxHeight: .infinity)
             .onAppear {

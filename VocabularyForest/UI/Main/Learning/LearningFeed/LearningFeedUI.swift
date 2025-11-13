@@ -23,7 +23,7 @@ struct LearningFeedUI: View {
                 Spacer()
                 tvMainTitle(text: "Öğrenme").padding(.bottom)
                 ForEach(Constant.quizList, id: \.self) { quiz in
-                    QuizRowUI(quizModel: quiz) { type in
+                    QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
                         switch type {
                         case .flashCard:
                             router.navigate(to: .flashCard)
@@ -34,6 +34,7 @@ struct LearningFeedUI: View {
                 Spacer()
                 tvMainTitle(text: "Günün kartı")
                 TodayCardUI(
+                    height: UIScreen.main.bounds.height * 0.3,
                     learningWord: viewModel.todaysLearningWord,
                     meaningWord: viewModel.todaysMeaning,
                     exampleSentence: viewModel.todaysExample,

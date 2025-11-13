@@ -22,10 +22,10 @@ struct VocabularyTextField: View {
     // MARK: - VIEW
     
     var body: some View {
-        TextField(placeholder, text: $userInput, axis: .vertical)
+        TextField(placeholder, text: $userInput)
             .padding(.vertical, 16)
             .padding(.horizontal)
-            .lineLimit(nil)
+            .lineLimit(1)
             .textFieldStyle(PlainTextFieldStyle())
             .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 16))

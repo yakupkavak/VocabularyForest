@@ -39,7 +39,7 @@ class CreateBookcaseViewModel: ObservableObject {
         NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: dic)
     }
     
-    func checkAndCreateBookcase(){
+    func checkAndCreateBookcase() -> Bool{
         var isValid = true
         if(bookcaseName.isEmpty){
             emptyInitialBookcaseName = true
@@ -61,7 +61,9 @@ class CreateBookcaseViewModel: ObservableObject {
         }
         if(isValid) {
             createBookcase(bookcaseName: bookcaseName, learningLanguage: learningLanguage!.id, meaningLanguage: meaningLanguage!.id)
+            return true
         }
+        return false
     }
 
 }

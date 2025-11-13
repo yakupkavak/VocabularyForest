@@ -14,12 +14,19 @@ struct SelectLanguageUI: View {
     
     @Environment(\.dismiss) var dismiss
     @Binding var selectedLanguage: Language?
+    @Binding var dismissLanguage: Language?
     @State private var searchText = ""
     private var filteredLanguages: [Language] {
+        
+        var languages = LanguageData.allLanguages
+        if let dismissLanguage {
+            languages = languages.filter{ $0.id != dismissLanguage.id }
+        }
+        
         if searchText.isEmpty {
-            return LanguageData.allLanguages
+            return languages
         } else {
-            return LanguageData.allLanguages.filter {
+            return languages.filter {
                 $0.localizedName.localizedCaseInsensitiveContains(searchText)
             }
         }
