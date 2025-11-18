@@ -25,6 +25,7 @@ struct BaseTabViewUI: View {
         TabView(selection: $selectedTab, content: {
             createBookTab
             bookcaseFeedTab
+            forestTab
             learningFeedTab
             settingsTab
         })
@@ -85,6 +86,19 @@ extension BaseTabViewUI {
         }.tabItem {
                 Label("Kitaplık", systemImage: "books.vertical")
             }.tag(BaseTabTypes.bookcases).tint(.clickableButton)
+    }
+    var forestTab: some View {
+        ForestUI().onAppear {
+            withAnimation(.easeInOut(duration: 1.2)) {
+                tabbarController.hideTabbar()
+            }
+        }.onDisappear {
+            withAnimation(.easeInOut(duration: 1.2)) {
+                tabbarController.showTabbar()
+            }
+        }.tabItem {
+            Label("Ormanım", systemImage: "tree")
+        }.tag(BaseTabTypes.forest)
     }
     var learningFeedTab: some View {
         NavigationStack(path: $learningRouter.navPath) {
