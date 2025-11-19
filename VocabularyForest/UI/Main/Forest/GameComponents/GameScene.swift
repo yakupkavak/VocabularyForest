@@ -12,6 +12,14 @@ import AVFoundation
 private extension GameScene {
     enum Constant {
         static let movingAction = "walkingAnimation"
+        static let backgroundAction = "backgroundAnimation"
+        static let airAction = "airAnimation"
+        static let movingDistance: CGFloat = 100
+        static let movingTimePerFrame: CGFloat = 0.1
+    }
+    enum GameDirection {
+        case right
+        case left
     }
 }
 
@@ -55,7 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             currentIndex += 1
         }
         walkTextures = frames
-        setupWalkPlayer()
+        setupPlayer()
     }
     
     private func leftMoving() {
@@ -63,42 +71,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         playerSprite.xScale = -1.0
-        let walkAction = SKAction.animate(
-            with: walkTextures,
-            timePerFrame: 0.1,
-            resize: false,
-            restore: false
+        let walkAction = SKAction.animateSprite(
+            textures: walkTextures,
+            timePerFrame: Constant.movingTimePerFrame
         )
         let foreverWalkAction = SKAction.repeatForever(walkAction)
-        let moveLeft = SKAction.moveBy(x: -100, y: 0, duration: 1.0)
-        let foreverWalkMove = SKAction.repeatForever(moveLeft)
-        let walkingAnimationGroup = SKAction.group([foreverWalkAction, foreverWalkMove])
-        playerSprite.run(walkingAnimationGroup, withKey: Constant.movingAction)
+        playerSprite.run(foreverWalkAction, withKey: Constant.movingAction)
+        moveBackground(direction: .left)
     }
     
     private func rightMoving() {
         if playerSprite.action(forKey: Constant.movingAction) != nil {
             return
         }
-        let walkAction = SKAction.animate(
-            with: walkTextures,
-            timePerFrame: 0.1,
-            resize: false,
-            restore: false
+        let walkAction = SKAction.animateSprite(
+            textures: walkTextures,
+            timePerFrame: Constant.movingTimePerFrame
         )
         playerSprite.xScale = 1.0
         let foreverWalkAction = SKAction.repeatForever(walkAction)
-        let moveRight = SKAction.moveBy(x: 100, y: 0, duration: 1.0)
-        let foreverWalkMove = SKAction.repeatForever(moveRight)
-        let walkingAnimationGroup = SKAction.group([foreverWalkAction, foreverWalkMove])
-        playerSprite.run(walkingAnimationGroup, withKey: Constant.movingAction)
+        playerSprite.run(foreverWalkAction, withKey: Constant.movingAction)
+        moveBackground(direction: .right)
     }
      
     private func stopMoving() {
         playerSprite.removeAction(forKey: Constant.movingAction)
+        for node in children {
+            if let sprite = node as? SKSpriteNode, sprite != background, sprite != playerSprite {
+                sprite.removeAction(forKey: Constant.backgroundAction)
+            }
+        }
     }
 
-    private func setupWalkPlayer() {
+    private func setupPlayer() {
         guard let firstFrame = walkTextures.first else { return }
         
         playerSprite.texture = firstFrame
@@ -115,12 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func startGame(){
         gameTimer?.invalidate()
         scoreTimer?.invalidate()
-        
-        gameTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true){ _ in
-            //self.score += 1
-            self.moveBackground()
-            //self.updateScoreLabel()
-        }
+        setupAir()
     }
     
     private func setupBackground() {
@@ -129,7 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.zPosition = -1
         addChild(background)
         floor.position = CGPoint(x: size.width / 2, y: 0)
-        floor.size.width = self.size.width
+        floor.size.width = self.size.width * 3
         floor.size.height = 120
         floor.zPosition = 1
         floor.anchorPoint = CGPoint(x: 0.5, y: 0)
@@ -141,7 +141,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
         addChild(scoreLabel)
-        updateScoreLabel()
     }
     
     private func setupTree() {
@@ -154,21 +153,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(tree)
     }
     
-    func moveBackground() {
+    // MARK: - BACKGROUND FUNCTIONS
+    
+    private func setupAir() {
+        
+    }
+        
+    private func moveBackground(direction: GameDirection) {
         for node in children {
-            if let sprite = node as? SKSpriteNode, sprite != background, sprite != floor, sprite != playerSprite {
-                sprite.position.x -= 1
-                if sprite.position.x < 0 - sprite.size.width {
-                    sprite.removeFromParent()
-                }
+            if let sprite = node as? SKSpriteNode, sprite != background, sprite != playerSprite {
+                let moveAction = SKAction.moveBy(x: direction.self == .left ? 100 : -100, y: 0, duration: 1.0)
+                let repeatAction = SKAction.repeatForever(moveAction)
+                sprite.run(repeatAction, withKey: "\(Constant.backgroundAction)")
             }
         }
     }
-    
-    func updateScoreLabel(){
-        scoreLabel.text = "Timer Surived: \(score) "
-    }
-    
+
     // MARK: - TOUCH EVENTS
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
