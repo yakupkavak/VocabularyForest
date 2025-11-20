@@ -20,7 +20,7 @@ struct ForestUI: View {
         SpriteView(scene: gameScene)
             .ignoresSafeArea(.all)
             .navigationBarBackButtonHidden()
-    }
+    } 
 }
 
 // MARK: - UI COMPONENTS
