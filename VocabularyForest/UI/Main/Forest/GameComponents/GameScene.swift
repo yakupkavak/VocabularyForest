@@ -32,8 +32,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
      
     var walkTextures: [SKTexture] = []
     let playerSprite = SKSpriteNode()
-    var backDecor = SKSpriteNode(imageNamed: "back_decor")
-    var middleDecor = SKSpriteNode(imageNamed: "middle_decor")
     var skyDecor = SKSpriteNode(imageNamed: "sky_decor")
     var floor = SKSpriteNode(imageNamed: "floor_cropped")
     let tree = SKSpriteNode(imageNamed: "firstTree")
@@ -55,6 +53,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupTree()
         setupWalkTextures()
         startGame()
+        moveSky()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -102,6 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         }
+        checkInfinitySky()
     }
     
     // MARK: - PRIVATE HELPERS
@@ -156,20 +156,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private func startGame(){
         gameTimer?.invalidate()
         scoreTimer?.invalidate()
-        setupAir()
+        
     }
     
     private func setupBackground() {
-        backDecor.size.width = Constant.gameWidthSize
-        backDecor.size.height = Constant.gameHeightSize
-        backDecor.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        backDecor.zPosition = -2
-        addChild(backDecor)
-        middleDecor.size.width = Constant.gameWidthSize
-        middleDecor.size.height = Constant.gameHeightSize
-        middleDecor.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        middleDecor.zPosition = -1
-        addChild(middleDecor)
+        for i in 0..<2{
+            let backDecor = SKSpriteNode(imageNamed: "back_decor")
+            let middleDecor = SKSpriteNode(imageNamed: "middle_decor")
+            backDecor.size.width = Constant.gameWidthSize
+            backDecor.size.height = Constant.gameHeightSize
+            backDecor.position = CGPoint(x: size.width / 2 + (CGFloat(i) * Constant.gameWidthSize), y: size.height / 2)
+            backDecor.name = "clouds"
+            backDecor.zPosition = -2
+            addChild(backDecor)
+            middleDecor.size.width = Constant.gameWidthSize
+            middleDecor.size.height = Constant.gameHeightSize
+            middleDecor.name = "clouds"
+            middleDecor.position = CGPoint(x: size.width / 2 + (CGFloat(i) * Constant.gameWidthSize), y: size.height / 2)
+            middleDecor.zPosition = -1
+            addChild(middleDecor)
+        }
         skyDecor.size.width = Constant.gameWidthSize
         skyDecor.size.height = Constant.gameHeightSize
         skyDecor.position = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -275,8 +281,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: - BACKGROUND FUNCTIONS
     
-    private func setupAir() {
-        
+    private func moveSky(){
+        enumerateChildNodes(withName: "clouds") { node, _ in
+            let sky = node as! SKSpriteNode
+            let moveAction = SKAction.moveBy(x: -10, y: 0, duration: 1.0)
+            let repeatAction = SKAction.repeatForever(moveAction)
+            sky.run(repeatAction, withKey: Constant.airAction)
+        }
+    }
+    
+    private func checkInfinitySky() {
+        enumerateChildNodes(withName: "clouds") { node, _ in
+            let sky = node as! SKSpriteNode
+            let skyWidth = sky.size.width
+            if sky.position.x <= -skyWidth / 2 {
+                sky.position.x += skyWidth * 2
+            }
+            if sky.position.x >= self.size.width + skyWidth / 2 {
+                sky.position.x -= skyWidth * 2
+            }
+        }
     }
     
     private func switchToBackgroundMode(direction: GameDirection) {
