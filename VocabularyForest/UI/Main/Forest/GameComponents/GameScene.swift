@@ -19,11 +19,19 @@ extension GameScene {
         static let movingTimePerFrame: CGFloat = 0.1
         static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
         static let gameHeightSize = UIScreen.main.bounds.height
+        static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
     }
     enum GameDirection {
         case right
         case left
     }
+}
+
+protocol GameSceneProtocol: AnyObject {
+    func getTrees() -> [TreeModel]
+    func treeOnClick(id: UUID)
+    func getForestStatus() -> ForestStatusModel
+    func updateForestStatus(model: ForestStatusModel)
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -33,7 +41,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var walkTextures: [SKTexture] = []
     let playerSprite = SKSpriteNode()
     var skyDecor = SKSpriteNode(imageNamed: "sky_decor")
-    var floor = SKSpriteNode(imageNamed: "floor_cropped")
+    var floor = SKSpriteNode(imageNamed: "floor")
+    let waterStatue = SKSpriteNode(imageNamed: "water_statue")
+    let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     let tree = SKSpriteNode(imageNamed: "firstTree")
     var scoreLabel = SKLabelNode(fontNamed: "AevnirNext-Bold")
     var score = 0
@@ -147,7 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerSprite.anchorPoint = CGPoint(x: 0.5, y: 0)
         playerSprite.position = CGPoint(
             x: self.size.width / 2,
-            y: floor.size.height * 0.7
+            y: floor.size.height * 0.83
         )
         playerSprite.zPosition = 3
         addChild(playerSprite)
@@ -165,7 +175,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let middleDecor = SKSpriteNode(imageNamed: "middle_decor")
             backDecor.size.width = Constant.gameWidthSize
             backDecor.size.height = Constant.gameHeightSize
-            backDecor.position = CGPoint(x: size.width / 2 + (CGFloat(i) * Constant.gameWidthSize), y: size.height / 2)
+            backDecor.position = CGPoint(x: size.width / 2 + (CGFloat(i) * Constant.gameWidthSize), y: size.height * 0.75)
             backDecor.name = "clouds"
             backDecor.zPosition = -2
             addChild(backDecor)
@@ -183,13 +193,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(skyDecor)
         floor.position = CGPoint(x: size.width / 2, y: 0)
         floor.size.width = Constant.gameWidthSize
-        floor.size.height = 120
+        floor.size.height = Constant.floorHeightSize
         floor.zPosition = 1
         floor.anchorPoint = CGPoint(x: 0.5, y: 0)
         addChild(floor)
     }
     
     private func setupUI() {
+        waterStatue.anchorPoint = CGPoint(x: 0.5, y: 0)
+        waterStatue.position = CGPoint(
+            x: Constant.gameWidthSize * -0.15,
+            y: 0
+        )
+        waterStatue.zPosition = 4
+        addChild(waterStatue)
+        grassStatue.anchorPoint = CGPoint(x: 0.5, y: 0)
+        grassStatue.position = CGPoint(
+            x: Constant.gameWidthSize * 0.15,
+            y: 10
+        )
+        grassStatue.zPosition = 4
+        addChild(grassStatue)
         scoreLabel.position = CGPoint(x: size.width / 2, y: size.height - 80)
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
@@ -200,7 +224,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tree.anchorPoint = CGPoint(x: 0.5, y: 0)
         tree.position = CGPoint(
                     x: self.size.width / 3,
-                    y: floor.size.height * 0.3
+                    y: floor.size.height * 0.7
                 )
         tree.zPosition = 0
         addChild(tree)
@@ -221,7 +245,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 characterMovingAction(direction: .right)
                 characterMovingActive = true
             }else if floor.frame.minX >= 0 {
-                characterMovingAction(direction: .left)
+                characterMovingAction(direction: .right)
                 characterMovingActive = true
             }
             else {
