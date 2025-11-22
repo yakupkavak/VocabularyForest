@@ -29,8 +29,11 @@ extension QuestStatus {
             "claimed"
         }
     }
-    static func convertFromCoreData(string: String) -> QuestStatus {
-        switch string {
+    static func convertFromCoreData(string: String?) -> QuestStatus {
+        guard let string else {
+            return .locked
+        }
+        return switch string {
             case "locked":
                 .locked
             case "active":
@@ -75,13 +78,21 @@ extension QuestRewardModel {
         }
     }
 
-    static func convertFromCoreData(type: String, value: String) -> QuestRewardModel {
-        switch type {
-        case "animal": return .animal(name: value)
-        case "plant": return .plant(name: value)
-        case "water": return .water(count: Int(value) ?? 1)
-        case "sculpture": return .sculpture(name: value)
-        default: return .water(count: 1)
+    static func convertFromCoreData(type: String?, value: String?) -> QuestRewardModel {
+        guard let type, let value else {
+            return .water(count: 1)
+        }
+        return switch type {
+            case "animal":
+                .animal(name: value)
+            case "plant":
+                .plant(name: value)
+            case "water":
+                .water(count: Int(value) ?? 1)
+            case "sculpture":
+                .sculpture(name: value)
+            default:
+                .water(count: 1)
         }
     }
 }
@@ -122,8 +133,10 @@ extension QuestType {
             "special"
         }
     }
-    static func convertFromCoreData(string: String) -> QuestType {
-        switch string {
+    static func convertFromCoreData(string: String?) -> QuestType {
+        guard let string else { return QuestType.daily }
+        
+        return switch string {
             case "daily":
                 .daily
             case "weekly":

@@ -10,7 +10,7 @@ struct Resource<T> {
     let data: T?
     let error: Error?
     
-    static func success(data: T?) -> Resource {
+    static func success(_ data: T?) -> Resource {
         return Resource(status: .success, data: data, error: nil)
     }
     

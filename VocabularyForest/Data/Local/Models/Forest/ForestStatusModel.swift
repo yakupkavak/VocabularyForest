@@ -6,7 +6,7 @@
 //
 
 struct ForestStatusModel {
-    let rainPercentage: Int
+    let rainValue: Int
     let landHealthPercentage: Int
     let landStatus: Bool
 }
