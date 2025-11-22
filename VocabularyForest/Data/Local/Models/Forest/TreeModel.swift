@@ -10,7 +10,8 @@ import Foundation
 struct TreeModel {
     let id: UUID
     let treeName: String
-    let treeHealthPercentage: Int
+    let isAlive: Bool
+    let treeHealthValue: Int
     let treeXPosition: CGFloat
     let treeYPosition: CGFloat
 }
