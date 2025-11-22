@@ -7,31 +7,48 @@
 
 import Foundation
 
+protocol ForestViewModelOutputProcotol: AnyObject {
+    func startRain()
+    func stopRain()
+}
+
 class ForestViewModel: BaseViewModel {
     
     // MARK: - PROPERTIES
-    let coreDataManager = CoreDataManager.shared
     
-    
+    let coreDataManager = ForestDataManager.shared
+    weak var output: ForestViewModelOutputProcotol?
 }
 
 // MARK: GAME SCENE PROTOCOL
-/*
+
 extension ForestViewModel: GameSceneProtocol {
-    func getTrees() -> [TreeModel] {
-        
+    func getTrees() -> Resource<[Tree]> {
+        coreDataManager.fetchTrees()
+    }
+    
+    func getAnimals() -> Resource<[Animal]> {
+        coreDataManager.fetchAnimals()
+    }
+    
+    func getSculptures() -> Resource<[Sculpture]> {
+        coreDataManager.fetchSculptures()
+    }
+    
+    func getQuests() -> Resource<[QuestModel]> {
+        coreDataManager.fetchQuests()
     }
     
     func treeOnClick(id: UUID) {
-        <#code#>
+        print("")
     }
     
-    func getForestStatus() -> ForestStatusModel {
-        <#code#>
+    func getForestStatus() -> Resource<ForestStatusModel> {
+        coreDataManager.fetchForestStatus()
     }
     
     func updateForestStatus(model: ForestStatusModel) {
-        <#code#>
+        coreDataManager.updateForestStatus(model: model)
     }
-}*/
+}
 

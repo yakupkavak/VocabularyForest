@@ -30,6 +30,8 @@ private extension ForestUI {
         let gameView = GameScene()
         gameView.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         gameView.scaleMode = .fill
+        gameView.helper = viewModel
+        viewModel.output = gameView
         return gameView
     }
 }
