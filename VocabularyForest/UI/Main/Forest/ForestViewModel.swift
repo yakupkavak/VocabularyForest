@@ -17,7 +17,36 @@ class ForestViewModel: BaseViewModel {
     // MARK: - PROPERTIES
     
     let coreDataManager = ForestDataManager.shared
+    private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
+    
+    init(audioService: AudioServiceProtocol = ForestAudioService()) {
+        self.audioService = audioService
+    }
+    
+    func startGameMusic() {
+        audioService.playBackgroundMusic()
+    }
+    
+    func stopGameMusic() {
+        audioService.stopMusic()
+    }
+
+    func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool) {
+        audioService.updateVolume(musicLevel: music, sfxLevel: sfx, isMuted: isMuted)
+    }
+    
+    func playSoundEffect(name: String) {
+        audioService.playSFX(filename: name)
+    }
+
+    func didTapTree(id: UUID) {
+        playSoundEffect(name: "pop_sound")
+    }
+
+    func didCollectWater(amount: Int) {
+        playSoundEffect(name: "water_splash")
+    }
 }
 
 // MARK: GAME SCENE PROTOCOL

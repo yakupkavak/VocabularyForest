@@ -15,6 +15,11 @@ protocol EnvironmentManagerProtocol: AnyObject {
     func update()
 }
 
+private extension EnvironmentManager {
+    enum Constant {
+        static let menuButtonName = "menu_button"
+    }
+}
 class EnvironmentManager: EnvironmentManagerProtocol {
     
     // MARK: - PROPERTIES
@@ -24,6 +29,7 @@ class EnvironmentManager: EnvironmentManagerProtocol {
     private var skyDecor = SKSpriteNode(imageNamed: "sky_decor")
     private let waterStatue = SKSpriteNode(imageNamed: "water_statue")
     private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
+    private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
 
     // MARK: - INIT
@@ -55,6 +61,11 @@ class EnvironmentManager: EnvironmentManagerProtocol {
         scoreLabel.position = CGPoint(x: scene.size.width / 2, y: scene.size.height - 80)
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
+        menuButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.90)
+        menuButton.zPosition = 4
+        menuButton.size = CGSize(width: 36.0, height: 36.0)
+        menuButton.name = Constant.menuButtonName
+        scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }
     

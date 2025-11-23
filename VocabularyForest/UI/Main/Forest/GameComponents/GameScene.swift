@@ -41,7 +41,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - PROPERTIES
 
     var playerManager: PlayerManagerProtocol!
-    var envManager: EnvironmentManagerProtocol!
+    var environmentManager: EnvironmentManagerProtocol!
+    var forestHelper: ForestUIProtocol?
     var helper: GameSceneProtocol?
     private var isTouching = false
     
@@ -49,14 +50,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-        envManager = EnvironmentManager(scene: self)
+        environmentManager = EnvironmentManager(scene: self)
         playerManager = PlayerManager(scene: self)
-        envManager.setupEnvironment()
+        environmentManager.setupEnvironment()
         playerManager.setupPlayer()
+        forestHelper?.hideOptions()
     }
     
     override func update(_ currentTime: TimeInterval) {
-        envManager.update()
+        environmentManager.update()
         guard isTouching else { return }
         handleMovementCoordination()
     }
@@ -65,7 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     private func handleMovementCoordination() {
         let direction = playerManager.direction
-        let floor = envManager.floorNode
+        let floor = environmentManager.floorNode
         let playerNode = playerManager.playerNode
         
         let centerScreen = self.size.width / 2
@@ -79,7 +81,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                (direction == .right && playerX >= centerScreen && canScrollRight) {
                 playerManager.stopPhysicalMovement()
                 playerNode.position.x = centerScreen
-                envManager.moveBackground(direction: direction)
+                environmentManager.moveBackground(direction: direction)
                 return
             }
         }
@@ -87,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if playerX >= self.size.width - halfPlayerWidth {
                 playerManager.stopPhysicalMovement()
             } else {
-                envManager.stopBackground()
+                environmentManager.stopBackground()
                 playerManager.startWalking(direction: .right)
             }
         }
@@ -95,7 +97,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if playerX <= halfPlayerWidth {
                 playerManager.stopPhysicalMovement()
             } else {
-                envManager.stopBackground()
+                environmentManager.stopBackground()
                 playerManager.startWalking(direction: .left)
             }
         }
@@ -107,7 +109,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isTouching = true
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
-        
+        let nodesAtPoint = nodes(at: location)
+        if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
+            forestHelper?.showOptions()
+            return
+        }
         let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
@@ -115,7 +121,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         isTouching = false
         playerManager.stopWalking()
-        envManager.stopBackground()
+        environmentManager.stopBackground()
     }
 }
 

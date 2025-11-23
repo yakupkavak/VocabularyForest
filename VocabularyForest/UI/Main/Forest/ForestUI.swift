@@ -4,23 +4,70 @@
 //
 //  Created by Yakup Kavak on 17.11.2025.
 //
- 
+
 import SwiftUI
 import SpriteKit
 
-struct ForestUI: View { 
+protocol ForestUIProtocol {
+    func showOptions()
+    func hideOptions()
+}
+
+// MARK: - CONSTANTS
+
+private extension ForestUI {
+    enum Constant {
+        static let optionsList: [SettingsModel] = [
+            SettingsModel(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
+            SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
+            SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
+        ]
+    }
+}
+
+// MARK: - VIEW
+
+struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
     @StateObject private var viewModel = ForestViewModel()
+    @State private var showOption = false
+    @State private var showSetting = false
+    @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
+    @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
+    @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
+    @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     
     // MARK: - UI
     
-    var body: some View { 
-        SpriteView(scene: gameScene)
-            .ignoresSafeArea(.all)
-            .navigationBarBackButtonHidden()
-    } 
+    var body: some View {
+        ZStack {
+            if showOption {
+                options
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+            }
+            if showSetting {
+                settings
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+            }
+            SpriteView(scene: gameScene)
+                .ignoresSafeArea(.all)
+                .navigationBarBackButtonHidden().zIndex(1.0)
+        }.onAppear {
+            viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
+            viewModel.startGameMusic()
+        }
+        .onChange(of: musicVolume) { newValue in
+            viewModel.updateAudioSettings(music: newValue, sfx: sfxVolume, isMuted: isMuted)
+        }
+        .onChange(of: sfxVolume) { newValue in
+            viewModel.updateAudioSettings(music: musicVolume, sfx: newValue, isMuted: isMuted)
+        }
+        .onChange(of: isMuted) { newValue in
+            viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: newValue)
+        }
+    }
 }
 
 // MARK: - UI COMPONENTS
@@ -31,9 +78,106 @@ private extension ForestUI {
         gameView.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         gameView.scaleMode = .fill
         gameView.helper = viewModel
+        gameView.forestHelper = self
         viewModel.output = gameView
         return gameView
     }
+    var options: some View {
+        VStack {
+            ZStack {
+                Image("title_header").resizable().scaledToFit()
+                Text("Options").foregroundStyle(.white).font(.system(size: 24))
+            }
+            ForEach(Constant.optionsList, id: \.self) { model in
+                settingsRow(model: model).onTapGesture {
+                    switch model.type {
+                    case .resume:
+                        showOption = false
+                    case .settings:
+                        showOption = false
+                        showSetting = true
+                    case .home:
+                        showOption = false
+                    }
+                }
+            }
+        }.padding().background(.brown.opacity(0.8)).cornerRadius(16).zIndex(3.0).frame(width: UIScreen.main.bounds.width * 0.6)
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    showOption = false
+                } label: {
+                    Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
+                        .offset(x: 12, y: -12)
+                }
+            }
+    }
+    var settings: some View {
+        VStack(spacing: 20) {
+            ZStack {
+                Image("title_header").resizable().scaledToFit().frame(height: 50)
+                Text("Settings").foregroundStyle(.white).font(.system(size: 24, weight: .bold))
+            }
+            .padding(.bottom, 10)
+            
+            VStack(spacing: 24) {
+                Group {
+                    customSliderRow(title: "Music", icon: "music.note", value: $musicVolume)
+                        .disabled(isMuted)
+                        .opacity(isMuted ? 0.5 : 1.0)
+                    customSliderRow(title: "SFX", icon: "speaker.wave.2.fill", value: $sfxVolume)
+                        .disabled(isMuted)
+                        .opacity(isMuted ? 0.5 : 1.0)
+                    customToggleRow(title: "Mute All", icon: "speaker.slash.fill", isOn: $isMuted)
+                }
+                
+                Divider().background(Color.white.opacity(0.5))
+                Group {
+                    customToggleRow(title: "Haptics", icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
+                }
+            }
+            .padding(.horizontal, 8)
+            
+        }
+        .padding(24)
+        .background(Color.brown.opacity(0.95))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color("brown300"), lineWidth: 4)
+        )
+        .zIndex(3.0)
+        .frame(width: UIScreen.main.bounds.width * 0.7)
+        .overlay(alignment: .topTrailing) {
+            Button {
+                showSetting = false
+            } label: {
+                Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
+                    .offset(x: 12, y: -12)
+            }
+        }
+    }
+    func settingsRow(model: SettingsModel) -> some View {
+        HStack {
+            Spacer()
+            Image(model.icon).resizable().scaledToFit().frame(maxWidth: 36, maxHeight: 36)
+            Text(model.title).padding().foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.3)
+            Spacer()
+            
+        }.padding(8).background(model.color).cornerRadius(16).overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(.brown300, lineWidth: 4)
+        }
+    }
+}
+
+extension ForestUI: ForestUIProtocol {
+    func hideOptions() {
+        showOption = false
+    }
+    func showOptions() {
+        showOption = true
+    }
+    
 }
 
 #Preview {

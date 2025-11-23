@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     ":" : {
 
     },
@@ -8,6 +11,9 @@
 
     },
     "%%%lld" : {
+
+    },
+    "%lld%%" : {
 
     },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
@@ -167,6 +173,9 @@
     "Oluştur" : {
 
     },
+    "Options" : {
+
+    },
     "Ormanım" : {
 
     },
@@ -189,6 +198,9 @@
 
     },
     "Select Bookcase" : {
+
+    },
+    "Settings" : {
 
     },
     "Shall we begin?" : {
