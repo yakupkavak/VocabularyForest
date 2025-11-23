@@ -45,6 +45,8 @@ struct QuizRowUI: View {
         switch type {
         case .flashCard:
             print("flashcard clicked")
+        case .forest:
+            print("flashcard clicked")
         }}))
 }
 

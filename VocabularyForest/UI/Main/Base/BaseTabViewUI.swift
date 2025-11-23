@@ -16,17 +16,16 @@ struct BaseTabViewUI: View {
     @EnvironmentObject private var learningRouter: LearningRouter
     @StateObject private var viewModel = BaseTabViewModel()
     @StateObject var tabbarController = TabBarController()
-    @State private var selectedTab: BaseTabTypes = .createBook
+    @State private var selectedTab: BaseTabTypes = .quiz
     @State private var isAddLibraryPresented = false
     
     // MARK: - VIEW
 
     var body: some View {
         TabView(selection: $selectedTab, content: {
+            learningFeedTab
             createBookTab
             bookcaseFeedTab
-            forestTab
-            learningFeedTab
             settingsTab
         })
         .navigationBarBackButtonHidden()
@@ -87,19 +86,6 @@ extension BaseTabViewUI {
                 Label("Kitaplık", systemImage: "books.vertical")
             }.tag(BaseTabTypes.bookcases).tint(.clickableButton)
     }
-    var forestTab: some View {
-        ForestUI().onAppear {
-            withAnimation(.easeInOut(duration: 1.2)) {
-                tabbarController.hideTabbar()
-            }
-        }.onDisappear {
-            withAnimation(.easeInOut(duration: 1.2)) {
-                tabbarController.showTabbar()
-            }
-        }.tabItem {
-            Label("Ormanım", systemImage: "tree")
-        }.tag(BaseTabTypes.forest)
-    }
     var learningFeedTab: some View {
         NavigationStack(path: $learningRouter.navPath) {
             LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
@@ -114,6 +100,19 @@ extension BaseTabViewUI {
                                 tabbarController.showTabbar()
                             }
                         }
+                    case .forest:
+                        ForestUI().onAppear {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                tabbarController.hideTabbar()
+                            }
+                        }
+                        .onDisappear {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                tabbarController.showTabbar()
+                            }
+                        }
+                        .ignoresSafeArea()
+                        .navigationBarBackButtonHidden()
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {

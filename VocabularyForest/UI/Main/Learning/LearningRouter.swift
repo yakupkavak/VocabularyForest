@@ -36,6 +36,7 @@ final class LearningRouter: ObservableObject {
 
 extension LearningRouter {
     public enum Destination: Codable, Hashable {
+        case forest
         case flashCard
     }
 }

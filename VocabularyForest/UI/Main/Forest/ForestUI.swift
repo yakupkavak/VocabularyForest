@@ -32,6 +32,7 @@ struct ForestUI: View {
     // MARK: - PROPERTIES
     
     @StateObject private var viewModel = ForestViewModel()
+    @EnvironmentObject var router: LearningRouter
     @State private var showOption = false
     @State private var showSetting = false
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
@@ -98,6 +99,7 @@ private extension ForestUI {
                         showSetting = true
                     case .home:
                         showOption = false
+                        exitForest()
                     }
                 }
             }
@@ -167,6 +169,15 @@ private extension ForestUI {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(.brown300, lineWidth: 4)
         }
+    }
+}
+
+// MARK: - HELPERS
+
+private extension ForestUI {
+    func exitForest() {
+        viewModel.stopGameMusic()
+        router.navigateToRoot()
     }
 }
 

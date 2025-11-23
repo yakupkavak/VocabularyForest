@@ -13,4 +13,5 @@ struct QuizRowModel: Hashable{
 
 enum QuizType: Hashable{
     case flashCard
+    case forest
 }

@@ -26,7 +26,9 @@ struct LearningFeedUI: View {
                     QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
                         switch type {
                         case .flashCard:
-                            router.navigate(to: .flashCard)
+                            router.navigate(to: .forest)
+                        case .forest:
+                            router.navigate(to: .forest)
                         }
                     }.listRowInsets(.init())
                         .listRowSeparator(.hidden, edges: .all)
