@@ -101,7 +101,7 @@ extension BaseTabViewUI {
                             }
                         }
                     case .forest:
-                        ForestUI().onAppear {
+                        BattleUI().onAppear {
                             withAnimation(.easeInOut(duration: 0.5)) {
                                 tabbarController.hideTabbar()
                             }

@@ -10,12 +10,14 @@ import SwiftUI
 import AVFoundation
 
 enum GameConstant {
+    static let waitingCharacterAnimation = "waitingCharacterAnimation"
     static let movingCharacterAnimation = "movingCharacterAnimation"
     static let movingCharacterAction = "movingCharacterAction"
     static let backgroundAction = "backgroundAnimation"
     static let airAction = "airAnimation"
     static let movingDistance: CGFloat = 100
     static let movingTimePerFrame: CGFloat = 0.1
+    static let waitingTimePerFrame: CGFloat = 0.1
     static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
     static let gameHeightSize = UIScreen.main.bounds.height
     static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
