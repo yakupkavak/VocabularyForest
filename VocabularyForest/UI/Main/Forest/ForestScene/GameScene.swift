@@ -13,6 +13,8 @@ enum GameConstant {
     static let waitingCharacterAnimation = "waitingCharacterAnimation"
     static let movingCharacterAnimation = "movingCharacterAnimation"
     static let movingCharacterAction = "movingCharacterAction"
+    static let deathCharacterAnimation = "deathCharacterAnimation"
+    static let deathCharacterAction = "deathCharacterAction"
     static let backgroundAction = "backgroundAnimation"
     static let airAction = "airAnimation"
     static let movingDistance: CGFloat = 100
@@ -47,6 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var forestHelper: ForestUIProtocol?
     var helper: GameSceneProtocol?
     private var isTouching = false
+    var timer: Timer?
     
     // MARK: - LIFECYCLE
     

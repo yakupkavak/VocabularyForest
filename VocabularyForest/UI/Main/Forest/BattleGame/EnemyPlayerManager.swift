@@ -12,8 +12,9 @@ protocol BattleEnemyManagerProtocol: AnyObject {
     func setupEnemy()
     func startIdleAnimation()
     func attack()
-    func die(completion: @escaping () -> Void)
     func spawnNewEnemy()
+    func killEnemy(completion: @escaping () -> Void)
+    func enemyAtacks()
 }
 
 class BattleEnemyManager: BattleEnemyManagerProtocol {
@@ -76,6 +77,30 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
         return textures
     }
     
+    func killEnemy(completion: @escaping () -> Void) {
+        let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
+        let notify = SKAction.run { completion() }
+        let delete = SKAction.run {
+            self.enemyNode.removeAllActions()
+            self.enemyNode.removeFromParent()
+        }
+        let animationDuration = Double(deathTextures.count) * 0.1
+        let targetWidth = BattleConstant.enemySize * 0.6
+        let targetHeight = BattleConstant.enemySize * 0.6
+        let shrink = SKAction.resize(toWidth: targetWidth, height: targetHeight, duration: animationDuration)
+        let visualEffects = SKAction.group([animate, shrink])
+        
+        enemyNode.size = CGSize(width: BattleConstant.enemySize * 0.6, height: BattleConstant.enemySize * 0.6)
+        enemyNode.run(
+            SKAction.sequence([visualEffects, delete,notify]),
+            withKey: GameConstant.deathCharacterAction
+        )
+    }
+    
+    func enemyAtacks() {
+        
+    }
+    
     func setupEnemy() {
         guard let firstFrame = idleTextures.first, let scene = scene else { return }
         enemyNode.texture = firstFrame
@@ -101,14 +126,5 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
         let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.1)
         let returnToIdle = SKAction.run { [weak self] in self?.startIdleAnimation() }
         enemyNode.run(SKAction.sequence([animate, returnToIdle]), withKey: "attack")
-    }
-    
-    func die(completion: @escaping () -> Void) {
-        let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.1)
-        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
-        let remove = SKAction.removeFromParent()
-        let notify = SKAction.run { completion() }
-        
-        enemyNode.run(SKAction.sequence([animate, fadeOut, remove, notify]), withKey: "death")
     }
 }

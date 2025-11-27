@@ -50,8 +50,10 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         var runCount = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             runCount += 1
-            if runCount % 2 == 0 {
-                self.environmentManager?.nextBackground()
+            if runCount % 5 == 0 {
+                self.enemyManager.killEnemy {
+                    print("enemy died")
+                }
             }
         })
     }
@@ -63,6 +65,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: - SETUP UI
+    
     private func setupStartButton() {
         startLabel.text = "TAP TO START BATTLE!"
         startLabel.fontSize = 36

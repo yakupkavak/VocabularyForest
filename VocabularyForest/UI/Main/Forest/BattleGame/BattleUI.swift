@@ -18,7 +18,7 @@ struct BattleUI: View {
     // MARK: - PROPERTIES
     
     @StateObject var viewModel = BattleViewModel()
-    @State private var showMagics = true
+    @State private var showMagics = false
     
     // MARK: - UI
     
@@ -54,7 +54,7 @@ private extension BattleUI {
                         let magicModel = magic.model
                         VStack {
                             Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1)
-                            Text(magicModel.name).foregroundStyle(.white)
+                            Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                             Spacer()
                         }.padding(.horizontal, 12)
                     }
@@ -64,7 +64,7 @@ private extension BattleUI {
                         let magicModel = magic.model
                         VStack {
                             Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1)
-                            Text(magicModel.name).foregroundStyle(.white)
+                            Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                         }.padding(.horizontal, 16)
                     }
                 }
@@ -74,7 +74,7 @@ private extension BattleUI {
             ZStack {
                 Image("pop_up_title_window").resizable().scaledToFit()
                 Text("Select your \nMagic").foregroundStyle(.white).multilineTextAlignment(.center)
-            }.frame(maxHeight: UIScreen.main.bounds.height * 0.11).offset(y: -UIScreen.main.bounds.height * 0.075)
+            }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
         }
     }
 }
