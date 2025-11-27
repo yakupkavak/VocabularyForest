@@ -14,6 +14,7 @@ protocol BattleEnvironmentManagerProtocol: AnyObject {
     func nextBackground()
     func setupEnvironment()
     func update()
+    func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void)
 }
 
 private extension BattleEnvironmentManager {
@@ -22,7 +23,7 @@ private extension BattleEnvironmentManager {
     }
 }
 
-class BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
+class BattleEnvironmentManager {
     
     // MARK: - PROPERTIES
     
@@ -31,7 +32,10 @@ class BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private var currentGameIndex = 0
     private var backgroundTextures: [SKTexture] = []
+    private var magicFlyTextures: [SKTexture] = []
+    private var magicExplodeTextures: [SKTexture] = []
     var backgroundNode = SKSpriteNode()
+    var magicNode = SKSpriteNode()
 
     // MARK: - INIT
     
@@ -50,6 +54,87 @@ class BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         for i in 0..<atlas.textureNames.count {
             backgroundTextures.append(atlas.textureNamed("battle_background_\(i)"))
         }
+    }
+    
+    private func setupMagic(magic: MagicType) {
+        var newFlyList: [SKTexture] = []
+        var newExplodeList: [SKTexture] = []
+        switch magic {
+        case .fire:
+            let flyAtlas = SKTextureAtlas(named: "FireMagicFly")
+            for i in 1...flyAtlas.textureNames.count{
+                newFlyList.append(flyAtlas.textureNamed("fire_fly_\(i)"))
+            }
+            let explodeAtlas = SKTextureAtlas(named: "FireMagicExplode")
+            for i in 1...explodeAtlas.textureNames.count{
+                newExplodeList.append(explodeAtlas.textureNamed("fire\(i)"))
+            }
+        case .darkMagic:
+            let flyAtlas = SKTextureAtlas(named: "DarkMagicFly")
+            for i in 1...flyAtlas.textureNames.count{
+                newFlyList.append(flyAtlas.textureNamed("comet_fly_\(i)"))
+            }
+            let explodeAtlas = SKTextureAtlas(named: "DarkMagicExplode")
+            for i in 1...explodeAtlas.textureNames.count{
+                newExplodeList.append(explodeAtlas.textureNamed("comet\(i)"))
+            }
+        case .ice:
+            let flyAtlas = SKTextureAtlas(named: "IceMagicFly")
+            for i in 1...flyAtlas.textureNames.count{
+                newFlyList.append(flyAtlas.textureNamed("ice_fly_\(i)"))
+            }
+            let explodeAtlas = SKTextureAtlas(named: "IceMagicExplode")
+            for i in 1...explodeAtlas.textureNames.count{
+                newExplodeList.append(explodeAtlas.textureNamed("ice\(i)"))
+            }
+        case .death:
+            let flyAtlas = SKTextureAtlas(named: "DeathMagicFly")
+            for i in 1...flyAtlas.textureNames.count{
+                newFlyList.append(flyAtlas.textureNamed("scull_fly_\(i)"))
+            }
+            let explodeAtlas = SKTextureAtlas(named: "DeathMagicExplode")
+            for i in 1...explodeAtlas.textureNames.count{
+                newExplodeList.append(explodeAtlas.textureNamed("scull\(i)"))
+            }
+        case .psychic:
+            let flyAtlas = SKTextureAtlas(named: "PsychicMagicFly")
+            for i in 1...flyAtlas.textureNames.count{
+                newFlyList.append(flyAtlas.textureNamed("spiral_fly_\(i)"))
+            }
+            let explodeAtlas = SKTextureAtlas(named: "PsychicMagicExplode")
+            for i in 1...explodeAtlas.textureNames.count{
+                newExplodeList.append(explodeAtlas.textureNamed("spiral\(i)"))
+            }
+        }
+        magicFlyTextures = newFlyList
+        magicExplodeTextures = newExplodeList
+    }
+}
+
+extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
+    
+    // MARK: - HELPERS
+    
+    func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void) {
+        setupMagic(magic: magic)
+        magicNode.position = startPoint
+        magicNode.zPosition = 10
+        magicNode.size = CGSize(width: 150, height: 150)
+        scene?.addChild(magicNode)
+        let flyTimePeriod = GameConstant.flyTime / Double(magicFlyTextures.count)
+        let flyAnimateAction = SKAction.animate(with: magicFlyTextures, timePerFrame: flyTimePeriod)
+        let flyMoveAction = SKAction.move(to: endPoint, duration: GameConstant.flyTime)
+        let callHitted = SKAction.run {
+            hitted()
+        }
+        let explodeTimePeriod = GameConstant.explodeTime / Double(magicExplodeTextures.count)
+        let explodeAnimation = SKAction.animate(with: magicExplodeTextures, timePerFrame: explodeTimePeriod)
+        let explodeFinished = SKAction.run { [ weak self ] in
+            guard let self else { return }
+            self.magicNode.removeFromParent()
+            self.magicNode.removeAllActions()
+        }
+        magicNode.run(SKAction.sequence([flyAnimateAction, flyMoveAction, callHitted, explodeAnimation, explodeFinished]))
     }
     
     // MARK: - SETUP FUNCTIONS
@@ -84,7 +169,7 @@ class BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     }
     
     func update() {
-        print("upd")
+        //print("upd")
     }
     
     func moveBackground(direction: GameDirection) {

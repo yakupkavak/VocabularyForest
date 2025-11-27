@@ -20,3 +20,27 @@ class BattleViewModel: ObservableObject {
     weak var output: BattleViewModelOutputProcotol?
 
 }
+
+/*
+extension BattleViewModel: BattleSceneProtocol {
+    func getSculptures() -> Resource<[Sculpture]> {
+        <#code#>
+    }
+    
+    func getQuests() -> Resource<[QuestModel]> {
+        <#code#>
+    }
+    
+    func treeOnClick(id: UUID) {
+        <#code#>
+    }
+    
+    func getForestStatus() -> Resource<ForestStatusModel> {
+        <#code#>
+    }
+    
+    func updateForestStatus(model: ForestStatusModel) {
+        <#code#>
+    }
+}
+*/

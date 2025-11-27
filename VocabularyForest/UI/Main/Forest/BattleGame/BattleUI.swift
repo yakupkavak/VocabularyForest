@@ -12,13 +12,24 @@ protocol BattleUIProtocol {
     func showMagicSelection()
 }
 
+protocol BattleUIOutputProcotol {
+    func startMagic(magic: MagicType)
+}
 
 struct BattleUI: View {
     
     // MARK: - PROPERTIES
     
     @StateObject var viewModel = BattleViewModel()
-    @State private var showMagics = false
+    @State private var scene: BattleScene = {
+        let scene = BattleScene()
+        scene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        scene.scaleMode = .fill
+        return scene
+    }()
+    
+    @State private var showMagics = true
+    @State var battleOutput: BattleUIOutputProcotol?
     
     // MARK: - UI
     
@@ -29,6 +40,8 @@ struct BattleUI: View {
             if showMagics {
                 magicSelectionView
             }
+        }.task {
+            self.battleOutput = scene
         }
     }
 }
@@ -36,13 +49,6 @@ struct BattleUI: View {
 // MARK: - UI COMPONENTS
 
 private extension BattleUI {
-    
-    var scene: SKScene {
-        let scene = BattleScene()
-        scene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        scene.scaleMode = .fill
-        return scene
-    }
     
     var magicSelectionView: some View {
         ZStack {
@@ -54,6 +60,10 @@ private extension BattleUI {
                         let magicModel = magic.model
                         VStack {
                             Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1)
+                                .onTapGesture {
+                                    showMagics = false
+                                    battleOutput?.startMagic(magic: magic)
+                                }
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                             Spacer()
                         }.padding(.horizontal, 12)
@@ -63,7 +73,10 @@ private extension BattleUI {
                     ForEach(BattleConstant.allMagicList.dropFirst(3), id: \.self) { magic in
                         let magicModel = magic.model
                         VStack {
-                            Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1)
+                            Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1).onTapGesture {
+                                showMagics = false
+                                battleOutput?.startMagic(magic: magic)
+                            }
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                         }.padding(.horizontal, 16)
                     }

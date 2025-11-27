@@ -16,6 +16,7 @@ protocol GamePlayerManagerProtocol: AnyObject {
     func startWaiting()
     func stopWalking()
     func stopPhysicalMovement()
+    func startAttack(completion: @escaping () -> Void)
 }
 
 class GamePlayerManager: GamePlayerManagerProtocol {
@@ -24,6 +25,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     
     private weak var scene: SKScene?
     let playerNode = SKSpriteNode()
+    private var attackTextures: [SKTexture] = []
     private var walkTextures: [SKTexture] = []
     private var idleTextures: [SKTexture] = []
     var direction: GameDirection = .right
@@ -35,9 +37,19 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         self.scene = scene
         setupWalkTextures()
         setupIdleTextures()
+        setupAttackTextures()
     }
     
     // MARK: - SETUP
+    
+    private func setupAttackTextures() {
+        let atlas = SKTextureAtlas(named: "MenAttack")
+        for i in 0..<atlas.textureNames.count {
+            attackTextures.append(atlas.textureNamed("men_attack_\(i)"))
+        }
+        attackTextures.append(atlas.textureNamed("men_attack_1"))
+        attackTextures.append(atlas.textureNamed("men_attack_0"))
+    }
     
     private func setupWalkTextures() {
         let atlas = SKTextureAtlas(named: "MenWalking")
@@ -67,6 +79,15 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     }
     
     // MARK: - ACTIONS
+    
+    func startAttack(completion: @escaping () -> Void) {
+        stopWalking()
+        let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.4)
+        let completion = SKAction.run {
+            completion()
+        }
+        playerNode.run(SKAction.sequence([animate,completion]), withKey: GameConstant.attackAnimation)
+    }
     
     func startWaiting() {
         stopWalking()

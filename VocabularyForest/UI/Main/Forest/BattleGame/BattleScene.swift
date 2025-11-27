@@ -51,9 +51,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             runCount += 1
             if runCount % 5 == 0 {
-                self.enemyManager.killEnemy {
-                    print("enemy died")
-                }
+                //self.startMagic(magic: .fire)
             }
         })
     }
@@ -154,8 +152,45 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
 }
 
-// MARK: - VIEW MODEL OUTPUT
+// MARK: - VIEW OUTPUT
 
-extension GameScene: BattleViewModelOutputProcotol {
-
+extension BattleScene: BattleUIOutputProcotol {
+    func startMagic(magic: MagicType) {
+        playerManager.startAttack() { [weak self] in
+            guard let self = self else { return }
+            
+            let playerNode = self.playerManager.playerNode
+            let enemyNode = self.enemyManager.enemyNode
+            let startX = playerNode.position.x + (10)
+            let startY = playerNode.position.y + (playerNode.size.height * 0.6)
+            
+            let endX = enemyNode.position.x
+            let endY = enemyNode.position.y + (enemyNode.size.height * 0.5)
+            
+            let startPoint = CGPoint(x: startX, y: startY)
+            let endPoint = CGPoint(x: endX, y: endY)
+            
+            self.environmentManager.startMagic(
+                magic: magic,
+                startPoint: startPoint,
+                endPoint: endPoint
+            ) {
+                self.enemyManager.killEnemy {
+                    print("Düşman öldü!")
+                }
+            }
+        }
+    }
 }
+
+// MARK: - VIEW MODEL OUTPUT
+/*
+extension BattleScene: BattleViewModelOutputProcotol {
+    func startRain() {
+        <#code#>
+    }
+    
+    func stopRain() {
+        <#code#>
+    }
+}*/

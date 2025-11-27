@@ -16,6 +16,7 @@ enum GameConstant {
     static let deathCharacterAnimation = "deathCharacterAnimation"
     static let deathCharacterAction = "deathCharacterAction"
     static let backgroundAction = "backgroundAnimation"
+    static let attackAnimation = "attackAnimation"
     static let airAction = "airAnimation"
     static let movingDistance: CGFloat = 100
     static let movingTimePerFrame: CGFloat = 0.1
@@ -23,6 +24,8 @@ enum GameConstant {
     static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
     static let gameHeightSize = UIScreen.main.bounds.height
     static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
+    static let flyTime: Double = 0.6
+    static let explodeTime: Double = 0.6
 }
 
 enum GameDirection {
