@@ -119,12 +119,21 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         setupMagic(magic: magic)
         magicNode.position = startPoint
         magicNode.zPosition = 10
-        magicNode.size = CGSize(width: 150, height: 150)
+        magicNode.size = GameConstant.magicSize
         scene?.addChild(magicNode)
-        let flyTimePeriod = GameConstant.flyTime / Double(magicFlyTextures.count)
+        let flyTimePeriod = GameConstant.flyTime / Double(magicFlyTextures.count * 2)
         let flyAnimateAction = SKAction.animate(with: magicFlyTextures, timePerFrame: flyTimePeriod)
+        let flyAnimation = SKAction.animate(with: magicFlyTextures.suffix(2), timePerFrame: flyTimePeriod)
+        let flyAnimationForever = SKAction.repeatForever(flyAnimation)
         let flyMoveAction = SKAction.move(to: endPoint, duration: GameConstant.flyTime)
-        let callHitted = SKAction.run {
+        let flyFunction = SKAction.run { [weak self] in
+            guard let self else { return }
+            let combinedFly = SKAction.sequence([flyAnimateAction, flyAnimationForever])
+            self.magicNode.run(combinedFly, withKey: "flyAnimation")
+        }
+        let callHitted = SKAction.run { [weak self] in
+            guard let self else { return }
+            self.magicNode.removeAction(forKey: "flyAnimation")
             hitted()
         }
         let explodeTimePeriod = GameConstant.explodeTime / Double(magicExplodeTextures.count)
@@ -134,7 +143,7 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
             self.magicNode.removeFromParent()
             self.magicNode.removeAllActions()
         }
-        magicNode.run(SKAction.sequence([flyAnimateAction, flyMoveAction, callHitted, explodeAnimation, explodeFinished]))
+        magicNode.run(SKAction.sequence([flyFunction, flyMoveAction, callHitted, explodeAnimation, explodeFinished]))
     }
     
     // MARK: - SETUP FUNCTIONS

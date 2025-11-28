@@ -47,8 +47,6 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         for i in 0..<atlas.textureNames.count {
             attackTextures.append(atlas.textureNamed("men_attack_\(i)"))
         }
-        attackTextures.append(atlas.textureNamed("men_attack_1"))
-        attackTextures.append(atlas.textureNamed("men_attack_0"))
     }
     
     private func setupWalkTextures() {
@@ -71,7 +69,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         playerNode.size = firstFrame.size()
         playerNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         playerNode.position = CGPoint(
-            x: scene.size.width * 0.35,
+            x: scene.size.width * 0.2,
             y: BattleConstant.characterPosition
         )
         playerNode.zPosition = 3
@@ -82,7 +80,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     
     func startAttack(completion: @escaping () -> Void) {
         stopWalking()
-        let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.4)
+        let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.2)
         let completion = SKAction.run {
             completion()
         }

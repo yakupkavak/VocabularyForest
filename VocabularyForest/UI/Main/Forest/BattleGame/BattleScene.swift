@@ -161,14 +161,11 @@ extension BattleScene: BattleUIOutputProcotol {
             
             let playerNode = self.playerManager.playerNode
             let enemyNode = self.enemyManager.enemyNode
-            let startX = playerNode.position.x + (10)
-            let startY = playerNode.position.y + (playerNode.size.height * 0.6)
-            
+            let startX = playerNode.position.x + (50)
+            let startY = playerNode.position.y + playerNode.size.height * 0.8
             let endX = enemyNode.position.x
-            let endY = enemyNode.position.y + (enemyNode.size.height * 0.5)
-            
             let startPoint = CGPoint(x: startX, y: startY)
-            let endPoint = CGPoint(x: endX, y: endY)
+            let endPoint = CGPoint(x: endX, y: startY)
             
             self.environmentManager.startMagic(
                 magic: magic,
