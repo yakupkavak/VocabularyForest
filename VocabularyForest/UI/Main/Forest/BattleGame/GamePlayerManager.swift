@@ -16,6 +16,7 @@ protocol GamePlayerManagerProtocol: AnyObject {
     func startWaiting()
     func stopWalking()
     func stopPhysicalMovement()
+    func die(completion: @escaping () -> Void)
     func startAttack(completion: @escaping () -> Void)
 }
 
@@ -28,6 +29,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     private var attackTextures: [SKTexture] = []
     private var walkTextures: [SKTexture] = []
     private var idleTextures: [SKTexture] = []
+    private var dieTextures: [SKTexture] = []
     var direction: GameDirection = .right
     var isMoving: Bool = false
     
@@ -38,6 +40,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         setupWalkTextures()
         setupIdleTextures()
         setupAttackTextures()
+        setupDieTextures()
     }
     
     // MARK: - SETUP
@@ -46,6 +49,13 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         let atlas = SKTextureAtlas(named: "MenAttack")
         for i in 0..<atlas.textureNames.count {
             attackTextures.append(atlas.textureNamed("men_attack_\(i)"))
+        }
+    }
+    
+    private func setupDieTextures() {
+        let atlas = SKTextureAtlas(named: "MenDie")
+        for i in 0..<atlas.textureNames.count {
+            dieTextures.append(atlas.textureNamed("men_die_\(i)"))
         }
     }
     
@@ -131,5 +141,21 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         isMoving = false
         playerNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
         playerNode.removeAction(forKey: GameConstant.movingCharacterAction)
+    }
+    
+    func die(completion: @escaping () -> Void) {
+        playerNode.removeAllActions()
+        let animate = SKAction.animate(with: dieTextures, timePerFrame: GameConstant.dyingTimePerFrame, resize: false, restore: false)
+        let fadeOut = SKAction.fadeOut(withDuration: 2.0)
+        let dieAction = SKAction.run { [weak self] in
+            guard let self else { return }
+            playerNode.removeFromParent()
+            completion()
+        }
+        let diePosition = SKAction.run { [weak self] in
+            guard let self else { return }
+            playerNode.texture = dieTextures.last
+        }
+        playerNode.run(SKAction.sequence([animate,diePosition, fadeOut, dieAction]))
     }
 }

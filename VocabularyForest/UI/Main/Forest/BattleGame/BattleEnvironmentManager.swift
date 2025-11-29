@@ -6,7 +6,6 @@
 //
 
 import SpriteKit
-
 protocol BattleEnvironmentManagerProtocol: AnyObject {
     var backgroundNode: SKSpriteNode { get }
     func moveBackground(direction: GameDirection)

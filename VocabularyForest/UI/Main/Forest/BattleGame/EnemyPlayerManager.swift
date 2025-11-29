@@ -11,19 +11,19 @@ protocol BattleEnemyManagerProtocol: AnyObject {
     var enemyNode: SKSpriteNode { get }
     func setupEnemy()
     func startIdleAnimation()
-    func attack()
+    func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void)
     func spawnNewEnemy()
     func killEnemy(completion: @escaping () -> Void)
-    func enemyAtacks()
 }
 
-class BattleEnemyManager: BattleEnemyManagerProtocol {
+class BattleEnemyManager {
     
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
     let enemyNode = SKSpriteNode()
     private var idleTextures: [SKTexture] = []
+    private var walkingTextures: [SKTexture] = []
     private var attackTextures: [SKTexture] = []
     private var deathTextures: [SKTexture] = []
     private let enemyTypes = ["Vampire"]
@@ -37,19 +37,11 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
     
     // MARK: - LOGIC
     
-    func spawnNewEnemy() {
-        currentEnemyType = enemyTypes.randomElement() ?? "Vampire"
-        loadTextures(for: currentEnemyType)
-        enemyNode.removeFromParent()
-        enemyNode.removeAllActions()
-        setupEnemy()
-        startIdleAnimation()
-    }
-    
     private func loadTextures(for type: String) {
         idleTextures = loadCircleAtlas(named: "\(type)Idle", prefix: "\(type.lowercased())_idle_")
         attackTextures = loadAtlas(named: "\(type)Attack", prefix: "\(type.lowercased())_attack_")
         deathTextures = loadAtlas(named: "\(type)Death", prefix: "\(type.lowercased())_death_")
+        walkingTextures = loadAtlas(named: "\(type)Walk", prefix: "\(type.lowercased())_walk_")
     }
     
     private func loadCircleAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
@@ -77,6 +69,31 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
         return textures
     }
     
+    // MARK: - ANIMATIONS
+    
+    func attack() {
+        let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.1)
+        let returnToIdle = SKAction.run { [weak self] in self?.startIdleAnimation() }
+        enemyNode.run(SKAction.sequence([animate, returnToIdle]), withKey: "attack")
+    }
+}
+
+extension BattleEnemyManager: BattleEnemyManagerProtocol {
+    
+    func spawnNewEnemy() {
+        currentEnemyType = enemyTypes.randomElement() ?? "Vampire"
+        loadTextures(for: currentEnemyType)
+        enemyNode.removeFromParent()
+        enemyNode.removeAllActions()
+        setupEnemy()
+        startIdleAnimation()
+    }
+    
+    func startIdleAnimation() {
+        let animate = SKAction.animate(with: idleTextures, timePerFrame: GameConstant.waitingTimePerFrame)
+        enemyNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation)
+    }
+    
     func killEnemy(completion: @escaping () -> Void) {
         let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
         let notify = SKAction.run { completion() }
@@ -97,8 +114,38 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
         )
     }
     
-    func enemyAtacks() {
+    func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void) {
+        let moveAnimate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.movingTimePerFrame)
+        let moveAnimation = SKAction.repeatForever(moveAnimate)
+        let moveAction = SKAction.move(to: endPoint, duration: GameConstant.walkingTime)
+        let arriveFunction = SKAction.run { [weak self] in
+            guard let self else { return }
+            self.enemyNode.removeAction(forKey: "walking")
+        }
+        let killEnemyFunction = SKAction.run { [weak self] in
+            guard let self else { return }
+            guard self.attackTextures.count > 1 else {
+                let simpleAnimate = SKAction.animate(with: self.attackTextures, timePerFrame: GameConstant.attackTimePerFrame)
+                self.enemyNode.run(simpleAnimate)
+                return
+            }
+            let firstPartTextures = Array(self.attackTextures.dropLast())
+            let animatePart1 = SKAction.animate(with: firstPartTextures, timePerFrame: GameConstant.attackTimePerFrame, resize: false, restore: false)
+            let lastPartTextures = Array(self.attackTextures.suffix(1))
+            let animatePart2 = SKAction.animate(with: lastPartTextures, timePerFrame: GameConstant.attackTimePerFrame, resize: false, restore: false)
+            let triggerAction = SKAction.run {
+                hitted()
+            }
+            let stopAction = SKAction.run {
+                self.enemyNode.removeAllActions()
+                self.enemyNode.removeAction(forKey: "walking")
+            }
+            let fullSequence = SKAction.sequence([animatePart1, triggerAction, animatePart2, stopAction])
+            self.enemyNode.run(fullSequence)
+        }
         
+        enemyNode.run(moveAnimation, withKey: "walking")
+        enemyNode.run(SKAction.sequence([moveAction,arriveFunction,killEnemyFunction]))
     }
     
     func setupEnemy() {
@@ -110,21 +157,8 @@ class BattleEnemyManager: BattleEnemyManagerProtocol {
             x: scene.size.width * 0.7,
             y: BattleConstant.characterPosition
         )
-        enemyNode.xScale = -1.0 
+        enemyNode.xScale = -1.0
         enemyNode.zPosition = 3
         scene.addChild(enemyNode)
-    }
-    
-    // MARK: - ANIMATIONS
-    
-    func startIdleAnimation() {
-        let animate = SKAction.animate(with: idleTextures, timePerFrame: GameConstant.waitingTimePerFrame)
-        enemyNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation)
-    }
-    
-    func attack() {
-        let animate = SKAction.animate(with: attackTextures, timePerFrame: 0.1)
-        let returnToIdle = SKAction.run { [weak self] in self?.startIdleAnimation() }
-        enemyNode.run(SKAction.sequence([animate, returnToIdle]), withKey: "attack")
     }
 }

@@ -14,6 +14,7 @@ protocol BattleUIProtocol {
 
 protocol BattleUIOutputProcotol {
     func startMagic(magic: MagicType)
+    func enemyAttack()
 }
 
 struct BattleUI: View {
@@ -28,7 +29,7 @@ struct BattleUI: View {
         return scene
     }()
     
-    @State private var showMagics = true
+    @State private var showMagics = false
     @State var battleOutput: BattleUIOutputProcotol?
     
     // MARK: - UI

@@ -50,8 +50,8 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         var runCount = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             runCount += 1
-            if runCount % 5 == 0 {
-                //self.startMagic(magic: .fire)
+            if runCount == 5 {
+                self.enemyAttack()
             }
         })
     }
@@ -155,6 +155,17 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW OUTPUT
 
 extension BattleScene: BattleUIOutputProcotol {
+    func enemyAttack() {
+        let playerPosition = playerManager.playerNode.position
+
+        enemyManager.enemyAtacks(endPoint: CGPoint(x: playerPosition.x + 70, y: playerPosition.y)) { [weak self] in
+            guard let self else { return }
+            self.playerManager.die {
+                print("player died")
+            }
+        }
+    }
+    
     func startMagic(magic: MagicType) {
         playerManager.startAttack() { [weak self] in
             guard let self = self else { return }
