@@ -7,18 +7,9 @@
 
 import SpriteKit
 
-struct BattleQuestion {
-    let text: String
-    let answers: [String]
-    let correctAnswer: String
-}
-
 protocol BattleSceneProtocol: AnyObject {
-    func getSculptures() -> Resource<[Sculpture]>
-    func getQuests() -> Resource <[QuestModel]>
-    func treeOnClick(id: UUID)
-    func getForestStatus() -> Resource<ForestStatusModel>
-    func updateForestStatus(model: ForestStatusModel)
+    func startGame()
+    func roundComplete()
 }
 
 class BattleScene: SKScene, SKPhysicsContactDelegate {
@@ -51,7 +42,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             runCount += 1
             if runCount == 5 {
-                self.enemyAttack()
+                //self.enemyAttack()
             }
         })
     }
@@ -83,7 +74,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     private func startGame() {
         isGameStarted = true
         startLabel.removeFromParent()
-        // askQuestion()
+        helper?.startGame()
     }
     
     private func handleMovementCoordination() {
@@ -152,14 +143,22 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
 }
 
-// MARK: - VIEW OUTPUT
+// MARK: - VIEW MODEL OUTPUT
 
-extension BattleScene: BattleUIOutputProcotol {
+extension BattleScene: BattleViewModelOutputProcotol {
+    func correctAnswer() {
+        print("correct answer")
+    }
+    
+    func wrongAnswer() {
+        print("wrong answer")
+    }
+    
     func enemyAttack() {
         let playerPosition = playerManager.playerNode.position
-
         enemyManager.enemyAtacks(endPoint: CGPoint(x: playerPosition.x + 70, y: playerPosition.y)) { [weak self] in
             guard let self else { return }
+            
             self.playerManager.die {
                 print("player died")
             }
@@ -190,15 +189,3 @@ extension BattleScene: BattleUIOutputProcotol {
         }
     }
 }
-
-// MARK: - VIEW MODEL OUTPUT
-/*
-extension BattleScene: BattleViewModelOutputProcotol {
-    func startRain() {
-        <#code#>
-    }
-    
-    func stopRain() {
-        <#code#>
-    }
-}*/

@@ -191,6 +191,23 @@
     "quest_weekly_type_title" : {
 
     },
+    "quiz_question_format" : {
+      "comment" : "Learning vocabulary question title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is the meaning of %@?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aşağıdakilerden hangisi \\\"%@\\\" anlamına gelmektedir?"
+          }
+        }
+      }
+    },
     "Search Bookcases" : {
 
     },

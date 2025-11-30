@@ -146,7 +146,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     func die(completion: @escaping () -> Void) {
         playerNode.removeAllActions()
         let animate = SKAction.animate(with: dieTextures, timePerFrame: GameConstant.dyingTimePerFrame, resize: false, restore: false)
-        let fadeOut = SKAction.fadeOut(withDuration: 2.0)
+        let fadeOut = SKAction.fadeOut(withDuration: GameConstant.dyingTime)
         let dieAction = SKAction.run { [weak self] in
             guard let self else { return }
             playerNode.removeFromParent()

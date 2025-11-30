@@ -7,30 +7,29 @@
 
 import SwiftUI
 import SpriteKit
+internal import CoreData
 
-protocol BattleUIProtocol {
-    func showMagicSelection()
-}
-
-protocol BattleUIOutputProcotol {
-    func startMagic(magic: MagicType)
-    func enemyAttack()
-}
-
-struct BattleUI: View {
+struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     // MARK: - PROPERTIES
     
-    @StateObject var viewModel = BattleViewModel()
+    @StateObject private var viewModel: ViewModel
     @State private var scene: BattleScene = {
         let scene = BattleScene()
         scene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         scene.scaleMode = .fill
         return scene
     }()
+    @State private var showMagics = true
+    @State private var showQuestion = false
+    var gameType: BattleGameType
     
-    @State private var showMagics = false
-    @State var battleOutput: BattleUIOutputProcotol?
+    // MARK: - INIT
+    
+    init(viewModel: @autoclosure @escaping () -> ViewModel, gameType: BattleGameType) {
+        self._viewModel = StateObject(wrappedValue: viewModel())
+        self.gameType = gameType
+    }
     
     // MARK: - UI
     
@@ -38,11 +37,28 @@ struct BattleUI: View {
         ZStack {
             SpriteView(scene: scene)
                 .ignoresSafeArea()
-            if showMagics {
-                magicSelectionView
+            if let error = viewModel.errorModel {
+                switch error {
+                case .emptyBookcase:
+                    Text("emptyBookcase").foregroundStyle(.white)
+                case .emptyQuestionList:
+                    Text("emptyQuestionList").foregroundStyle(.white)
+                case .unexpectedError:
+                    Text("unexpectedError").foregroundStyle(.white)
+                }
+            }else {
+                switch viewModel.uiStation {
+                case .askQuestion:
+                    questionView
+                case .chooseMagic:
+                    magicSelectionView
+                case .notDetermined:
+                    EmptyView()
+                }
             }
         }.task {
-            self.battleOutput = scene
+            self.viewModel.prepareQuestions(bookcase: nil, gameMode: gameType)
+            self.viewModel.output = scene
         }
     }
 }
@@ -63,7 +79,7 @@ private extension BattleUI {
                             Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1)
                                 .onTapGesture {
                                     showMagics = false
-                                    battleOutput?.startMagic(magic: magic)
+                                    viewModel.startMagic(magicType: magic)
                                 }
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                             Spacer()
@@ -76,7 +92,7 @@ private extension BattleUI {
                         VStack {
                             Image(magicModel.image).resizable().cornerRadius(8).frame(width: UIScreen.main.bounds.width * 0.1, height: UIScreen.main.bounds.width * 0.1).onTapGesture {
                                 showMagics = false
-                                battleOutput?.startMagic(magic: magic)
+                                viewModel.startMagic(magicType: magic)
                             }
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
                         }.padding(.horizontal, 16)
@@ -91,14 +107,77 @@ private extension BattleUI {
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
         }
     }
+    
+    var questionView: some View {
+        VStack {
+            Spacer()
+            if let question = viewModel.currentQuestion {
+                ZStack {
+                    Image("pop_up_background").resizable()
+                    Spacer()
+                    VStack(alignment: .center) {
+                        Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
+                    }.frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.2)
+                }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
+                    ZStack {
+                        Image("pop_up_title_window").resizable().scaledToFit()
+                        Text("Question \n1").foregroundStyle(.white).multilineTextAlignment(.center)
+                    }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
+                }
+                Spacer()
+                VStack() {
+                    HStack{
+                        Spacer()
+                        answerComponent(text: question.answers[0].answer)
+                        Spacer()
+                        answerComponent(text: question.answers[1].answer)
+                        Spacer()
+                    }
+                    HStack{
+                        Spacer()
+                        answerComponent(text: question.answers[2].answer)
+                        Spacer()
+                        answerComponent(text: question.answers[3].answer)
+                        Spacer()
+                    }
+                }
+            }
+        }
+    }
+    private func answerComponent(text: String) -> some View {
+        ZStack {
+            Image(.popUpBackground).resizable().frame(width: UIScreen.main.bounds.width * 0.35, height: UIScreen.main.bounds.width * 0.2).opacity(0.9)
+            Text(text).foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.3, height: UIScreen.main.bounds.height * 0.12).multilineTextAlignment(.center)
+        }
+    }
 }
 
-extension BattleUI: BattleUIProtocol {
-    func showMagicSelection() {
-        showMagics = true
+// MARK: - GAME HELPERS
+
+private extension BattleUI {
+    func nextQuestion() {
+        
     }
 }
 
 #Preview {
-    BattleUI()
+    let previewManager = CoreDataManager.preview
+    let context = previewManager.viewContext
+    let sampleBookcase = Bookcase(context: context)
+    sampleBookcase.name = "Test Kitaplık"
+    sampleBookcase.learningLanguage = "en"
+    sampleBookcase.meaningLanguage = "tr"
+    sampleBookcase.createdDate = Date()
+    for i in 1...40 {
+        let sampleBook = Book(context: context)
+        sampleBook.learningWord = "Word \(i)"
+        sampleBook.meaningWord = "Anlam \(i)"
+        sampleBook.createdDate = Date()
+        sampleBook.shortMemory = i % 2 == 0
+        sampleBook.longMemory = i % 2 != 0
+        sampleBook.bookcase = sampleBookcase
+    }
+    try? context.save()
+    let viewModel = BattleViewModel(coreDataManager: previewManager)
+    return BattleUI(viewModel: viewModel, gameType: .competitive)
 }

@@ -23,6 +23,7 @@ enum GameConstant {
     static let attackTimePerFrame: CGFloat = 0.5
     static let waitingTimePerFrame: CGFloat = 0.1
     static let dyingTimePerFrame: CGFloat = 0.4
+    static let dyingTime: Double = 1.2
     static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
     static let gameHeightSize = UIScreen.main.bounds.height
     static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
