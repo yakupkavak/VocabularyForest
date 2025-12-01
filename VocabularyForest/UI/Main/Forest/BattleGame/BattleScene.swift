@@ -35,7 +35,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         enemyManager = BattleEnemyManager(scene: self)
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
-        enemyManager.spawnNewEnemy()
         playerManager.startWaiting()
         forestHelper?.hideOptions()
         var runCount = 0
@@ -146,6 +145,10 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension BattleScene: BattleViewModelOutputProcotol {
+    func setupGame(enemyCharacterModels: [String]) {
+        enemyManager?.setupEnemyManager(models: enemyCharacterModels)
+    }
+    
     func correctAnswer() {
         print("correct answer")
     }

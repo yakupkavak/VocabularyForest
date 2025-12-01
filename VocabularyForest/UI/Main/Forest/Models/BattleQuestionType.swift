@@ -5,7 +5,7 @@
 //  Created by Yakup Kavak on 24.11.2025.
 //
 
-enum BattleGameType {
+enum BattleQuestionType {
     case learning // short memory words with their description or example
     case competitive // only short memory without description or example.  If we suceed on that word will become long memory.
     case remainder // only long memory words to practise.

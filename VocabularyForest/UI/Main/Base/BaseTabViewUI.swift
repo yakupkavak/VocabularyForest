@@ -101,7 +101,7 @@ extension BaseTabViewUI {
                             }
                         }
                     case .forest:
-                    BattleUI(viewModel: BattleViewModel() ,gameType: .competitive).onAppear {
+                    BattleUI(viewModel: BattleViewModel(), gameType: .competitive, battleMode: .classic, gameLevel: .easy).onAppear {
                             withAnimation(.easeInOut(duration: 0.5)) {
                                 tabbarController.hideTabbar()
                             }

@@ -9,11 +9,11 @@ import SpriteKit
 
 protocol BattleEnemyManagerProtocol: AnyObject {
     var enemyNode: SKSpriteNode { get }
-    func setupEnemy()
     func startIdleAnimation()
     func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void)
-    func spawnNewEnemy()
+    func spawnNextEnemy()
     func killEnemy(completion: @escaping () -> Void)
+    func setupEnemyManager(models: [String])
 }
 
 class BattleEnemyManager {
@@ -26,8 +26,8 @@ class BattleEnemyManager {
     private var walkingTextures: [SKTexture] = []
     private var attackTextures: [SKTexture] = []
     private var deathTextures: [SKTexture] = []
-    private let enemyTypes = ["Vampire"]
-    private var currentEnemyType: String = "Vampire"
+    private var enemyTypes: [String]? = nil
+    private var currentEnemyType: String? = nil
     
     // MARK: - INIT
     
@@ -78,15 +78,53 @@ class BattleEnemyManager {
     }
 }
 
-extension BattleEnemyManager: BattleEnemyManagerProtocol {
-    
-    func spawnNewEnemy() {
-        currentEnemyType = enemyTypes.randomElement() ?? "Vampire"
-        loadTextures(for: currentEnemyType)
+// MARK: - HELPERS
+
+private extension BattleEnemyManager {
+    func spawnNewEnemy(enemyName: String) {
+        loadTextures(for: enemyName)
         enemyNode.removeFromParent()
         enemyNode.removeAllActions()
         setupEnemy()
         startIdleAnimation()
+    }
+    
+    func setupEnemy() {
+        guard let firstFrame = idleTextures.first, let scene = scene else { return }
+        enemyNode.texture = firstFrame
+        enemyNode.size = CGSize(width: BattleConstant.enemySize, height: BattleConstant.enemySize)
+        enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
+        enemyNode.position = CGPoint(
+            x: scene.size.width * 0.7,
+            y: BattleConstant.characterPosition
+        )
+        enemyNode.xScale = -1.0
+        enemyNode.zPosition = 3
+        scene.addChild(enemyNode)
+    }
+}
+
+extension BattleEnemyManager: BattleEnemyManagerProtocol {
+    
+    func setupEnemyManager(models: [String]) {
+        enemyTypes = models
+        currentEnemyType = enemyTypes?.randomElement()
+        if let currentEnemyType {
+            spawnNewEnemy(enemyName: currentEnemyType)
+        }
+    }
+    
+    func spawnNextEnemy() {
+        if let enemyTypes = enemyTypes, let currentEnemyType = currentEnemyType {
+            if let currentIndex = enemyTypes.firstIndex(of: currentEnemyType) {
+                let nextIndex = currentIndex + 1
+                let nextEnemy = enemyTypes[safe: nextIndex]
+                if let nextEnemy {
+                    self.currentEnemyType = nextEnemy
+                    spawnNewEnemy(enemyName: nextEnemy)
+                }
+            }
+        }
     }
     
     func startIdleAnimation() {
@@ -148,17 +186,4 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         enemyNode.run(SKAction.sequence([moveAction,arriveFunction,killEnemyFunction]))
     }
     
-    func setupEnemy() {
-        guard let firstFrame = idleTextures.first, let scene = scene else { return }
-        enemyNode.texture = firstFrame
-        enemyNode.size = CGSize(width: BattleConstant.enemySize, height: BattleConstant.enemySize)
-        enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
-        enemyNode.position = CGPoint(
-            x: scene.size.width * 0.7,
-            y: BattleConstant.characterPosition
-        )
-        enemyNode.xScale = -1.0
-        enemyNode.zPosition = 3
-        scene.addChild(enemyNode)
-    }
 }

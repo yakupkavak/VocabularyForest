@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
 enum BattleConstant {
     static let movingCharacterAnimation = "movingCharacterAnimation"
     static let movingCharacterAction = "movingCharacterAction"
@@ -21,12 +23,59 @@ enum BattleConstant {
     static let allMagicList: [MagicType] = [
         .fire, .darkMagic, .ice, .death, .psychic
     ]
+    static let easyPlayerLevel = 3
+    static let easyEnemyLevel = 3
+    static let mediumPlayerLevel = 2
+    static let mediumEnemyLevel = 10
+    static let hardPlayerLevel = 2
+    static let hardEnemyLevel = 20
+    static let insanePlayerLevel = 3
+    static let insaneEnemyLevel = 100
 }
 
-struct MagicSpeelModel: Hashable {
-    var image: String
+// MARK: - GAME UI HELPER MODELS
+
+struct CharacterAnger {
+    let totalLevel: Int
+    var currentLevel: Int
     var name: String
+    var imageFileName: String
 }
+
+enum GameLevel {
+    case easy
+    case medium
+    case hard
+    case insane
+}
+
+// MARK: - UI STATIONS
+
+enum BattleUIStation {
+    case chooseMagic
+    case askQuestion
+    case notDetermined
+    case checkAnswer
+}
+
+enum QuestionStation {
+    case correct
+    case wrong
+    case waiting
+    case timeOut
+    case notDetermined
+}
+
+// MARK: - ERROR MODEL
+
+enum BattleError: Error {
+    case emptyBookcase
+    case emptyQuestionList
+    case unexpectedError
+    case emptyEnemyAsset
+}
+
+// MARK: - MAGIC MODELS
 
 enum MagicType: Hashable {
     case fire
@@ -64,4 +113,9 @@ enum MagicType: Hashable {
             )
         }
     }
+}
+
+struct MagicSpeelModel: Hashable {
+    var image: String
+    var name: String
 }

@@ -58,6 +58,9 @@
     "Cancel" : {
 
     },
+    "correct" : {
+
+    },
     "Delete" : {
 
     },
@@ -80,6 +83,15 @@
 
     },
     "Ekle" : {
+
+    },
+    "emptyBookcase" : {
+
+    },
+    "emptyEnemyAsset" : {
+
+    },
+    "emptyQuestionList" : {
 
     },
     "Example" : {
@@ -191,6 +203,9 @@
     "quest_weekly_type_title" : {
 
     },
+    "question_number" : {
+
+    },
     "quiz_question_format" : {
       "comment" : "Learning vocabulary question title",
       "localizations" : {
@@ -249,10 +264,16 @@
     "Tüm Verileri Sıfırla" : {
 
     },
+    "unexpectedError" : {
+
+    },
     "Unuttum" : {
 
     },
     "Vazgeç" : {
+
+    },
+    "wrong" : {
 
     }
   },

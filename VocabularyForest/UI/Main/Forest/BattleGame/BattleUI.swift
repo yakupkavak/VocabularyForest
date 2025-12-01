@@ -22,13 +22,22 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     }()
     @State private var showMagics = true
     @State private var showQuestion = false
-    var gameType: BattleGameType
+    var gameType: BattleQuestionType
+    var battleMode: BattleModeModel
+    var gameLevel: GameLevel
     
     // MARK: - INIT
     
-    init(viewModel: @autoclosure @escaping () -> ViewModel, gameType: BattleGameType) {
+    init(
+        viewModel: @autoclosure @escaping () -> ViewModel,
+        gameType: BattleQuestionType,
+        battleMode: BattleModeModel,
+        gameLevel: GameLevel,
+    ) {
         self._viewModel = StateObject(wrappedValue: viewModel())
         self.gameType = gameType
+        self.battleMode = battleMode
+        self.gameLevel = gameLevel
     }
     
     // MARK: - UI
@@ -45,20 +54,36 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                     Text("emptyQuestionList").foregroundStyle(.white)
                 case .unexpectedError:
                     Text("unexpectedError").foregroundStyle(.white)
+                case .emptyEnemyAsset:
+                    Text("emptyEnemyAsset").foregroundStyle(.white)
                 }
             }else {
-                switch viewModel.uiStation {
-                case .askQuestion:
-                    questionView
-                case .chooseMagic:
-                    magicSelectionView
-                case .notDetermined:
-                    EmptyView()
-                }
+                ZStack{
+                    switch viewModel.uiStation {
+                    case .askQuestion:
+                        questionView
+                    case .chooseMagic:
+                        magicSelectionView
+                    case .notDetermined:
+                        EmptyView()
+                    case .checkAnswer:
+                        if viewModel.questionStation == .correct {
+                            Text("correct").task {
+                                try? await Task.sleep(for: .seconds(2))
+                                viewModel.nextQuestion()
+                            }
+                        }else if viewModel.questionStation == .wrong {
+                            Text("wrong").task {
+                                try? await Task.sleep(for: .seconds(2))
+                                viewModel.nextQuestion()
+                            }
+                        }
+                    }
+                }.ignoresSafeArea(.all)
             }
         }.task {
-            self.viewModel.prepareQuestions(bookcase: nil, gameMode: gameType)
             self.viewModel.output = scene
+            self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }
     }
 }
@@ -121,30 +146,59 @@ private extension BattleUI {
                 }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
                     ZStack {
                         Image("pop_up_title_window").resizable().scaledToFit()
-                        Text("Question \n1").foregroundStyle(.white).multilineTextAlignment(.center)
+                        let questionString = NSLocalizedString("question_number", comment: "")
+                        let finalString = String(format: questionString, question.questionNumber)
+                        Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
                     }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
                 }
                 Spacer()
                 VStack() {
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[0].answer)
+                        answerComponent(text: question.answers[0].answer).onTapGesture {
+                            viewModel.checkAnswer(answerNumber: 0)
+                        }
                         Spacer()
-                        answerComponent(text: question.answers[1].answer)
+                        answerComponent(text: question.answers[1].answer).onTapGesture {
+                            viewModel.checkAnswer(answerNumber: 1)
+                        }
                         Spacer()
                     }
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[2].answer)
+                        answerComponent(text: question.answers[2].answer).onTapGesture {
+                            viewModel.checkAnswer(answerNumber: 2)
+                        }
                         Spacer()
-                        answerComponent(text: question.answers[3].answer)
+                        answerComponent(text: question.answers[3].answer).onTapGesture {
+                            viewModel.checkAnswer(answerNumber: 3)
+                        }
                         Spacer()
                     }
                 }
             }
         }
+        .padding(.bottom)
     }
-    private func answerComponent(text: String) -> some View {
+    
+    var headerView: some View {
+        HStack {
+            if let playerAnger = viewModel.playerAnger {
+                HStack{
+                    Image(playerAnger.imageFileName).resizable().scaledToFit().frame(maxWidth: 32,maxHeight: 32).borderRadius(borderColor: .brown300)
+                    Text(playerAnger.name).foregroundStyle(.white)
+                }.padding().background(Color.brown700).borderRadius(borderColor: .backgroundSystem)
+            }
+            if let enemyAnger = viewModel.enemyAnger {
+                HStack{
+                    Image(enemyAnger.imageFileName).resizable().scaledToFit().frame(maxWidth: 32,maxHeight: 32).borderRadius(borderColor: .brown300)
+                    Text(enemyAnger.name).foregroundStyle(.white)
+                }.padding().background(Color.brown700).borderRadius(borderColor: .backgroundSystem)
+            }
+        }
+    }
+    
+    func answerComponent(text: String) -> some View {
         ZStack {
             Image(.popUpBackground).resizable().frame(width: UIScreen.main.bounds.width * 0.35, height: UIScreen.main.bounds.width * 0.2).opacity(0.9)
             Text(text).foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.3, height: UIScreen.main.bounds.height * 0.12).multilineTextAlignment(.center)
@@ -179,5 +233,5 @@ private extension BattleUI {
     }
     try? context.save()
     let viewModel = BattleViewModel(coreDataManager: previewManager)
-    return BattleUI(viewModel: viewModel, gameType: .competitive)
+    return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .classic, gameLevel: .easy)
 }
