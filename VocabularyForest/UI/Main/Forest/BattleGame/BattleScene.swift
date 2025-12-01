@@ -65,7 +65,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         }
         if ((firstBody.categoryBitMask & PhysicsCategory.enemy != 0) &&
             (secondBody.categoryBitMask & PhysicsCategory.blackHole != 0)) {
-            environmentManager?.nextBackground()
+            setupNextGame()
         }
     }
     
@@ -87,6 +87,15 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: - LOGIC
     
+    private func setupNextGame() {
+        helper?.roundComplete()
+        environmentManager?.nextBackground()
+        environmentManager?.hideGate()
+        playerManager?.setupPlayer()
+        enemyManager?.spawnNextEnemy()
+        touchEnable = false
+    }
+    
     private func startGame() {
         isGameStarted = true
         startLabel.removeFromParent()
@@ -95,7 +104,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     
     private func handleMovementCoordination() {
         let direction = playerManager.direction
-        let floor = environmentManager.backgroundNode
         let playerNode = playerManager.playerNode
         let halfPlayerWidth = playerNode.size.width / 2
         let playerX = playerNode.position.x

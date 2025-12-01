@@ -68,21 +68,16 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                         EmptyView()
                     case .checkAnswer:
                         if viewModel.questionStation == .correct {
-                            Text("correct").task {
-                                try? await Task.sleep(for: .seconds(2))
-                                viewModel.nextQuestion()
-                            }
+                            Text("correct")
                         }else if viewModel.questionStation == .wrong {
-                            Text("wrong").task {
-                                try? await Task.sleep(for: .seconds(2))
-                                viewModel.nextQuestion()
-                            }
+                            Text("wrong")
                         }
                     }
                 }.ignoresSafeArea(.all)
             }
         }.task {
             self.viewModel.output = scene
+            self.scene.helper = viewModel
             self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }
     }

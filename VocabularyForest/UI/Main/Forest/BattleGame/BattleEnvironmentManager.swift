@@ -17,6 +17,7 @@ protocol BattleEnvironmentManagerProtocol: AnyObject {
     func userWon()
     func enemyWon()
     func showGate()
+    func hideGate()
     func setupEnvironment()
     func update()
     func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void)
@@ -135,6 +136,11 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         blackHoleNode.isHidden = false
         let animationAction = SKAction.animate(with: blackHoleTextures, timePerFrame: BattleConstant.movingTimePerFrame)
         blackHoleNode.run(SKAction.repeatForever(animationAction))
+    }
+    
+    func hideGate() {
+        blackHoleNode.isHidden = true
+        blackHoleNode.removeAllActions()
     }
     
     func correctAnswer() {

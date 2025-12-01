@@ -96,7 +96,7 @@ private extension BattleEnemyManager {
         enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         enemyNode.position = CGPoint(
             x: scene.size.width * 0.7,
-            y: BattleConstant.characterPosition
+            y: currentEnemyType == "Vampire" ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
         )
         enemyNode.xScale = -1.0
         enemyNode.zPosition = 3
@@ -108,7 +108,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     
     func setupEnemyManager(models: [String]) {
         enemyTypes = models
-        currentEnemyType = enemyTypes?.randomElement()
+        currentEnemyType = enemyTypes?.first
         if let currentEnemyType {
             spawnNewEnemy(enemyName: currentEnemyType)
         }

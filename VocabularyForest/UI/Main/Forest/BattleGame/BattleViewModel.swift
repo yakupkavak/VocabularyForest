@@ -10,7 +10,7 @@
 import SwiftUI
 import Combine
 
-protocol BattleViewModelProtocol: ObservableObject {
+protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func askQuestion()
     func prepareGame(
         bookcase: Bookcase?,
@@ -182,9 +182,9 @@ extension BattleViewModel: BattleViewModelProtocol {
         questionList = []
         switch questionType {
         case .learning, .competitive:
-            setShortBooks(books: books, bookCount: gameLevel.playerLevel)
+            setShortBooks(books: books, bookCount: (gameLevel.playerLevel + gameLevel.enemyLevel + 1) * 8)
         case .remainder:
-            setLongBooks(books: books, bookCount: gameLevel.playerLevel)
+            setLongBooks(books: books, bookCount: (gameLevel.playerLevel + gameLevel.enemyLevel + 1) * 8)
         }
         askQuestion()
         
@@ -203,9 +203,12 @@ extension BattleViewModel: BattleViewModelProtocol {
     }
     
     func checkAnswer(answerNumber: Int) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            uiStation = .checkAnswer
+        }
         if let currentQuestion {
             if let answer = currentQuestion.answers[safe: answerNumber] {
-                uiStation = .checkAnswer
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
                     output?.correctAnswer()
@@ -213,7 +216,9 @@ extension BattleViewModel: BattleViewModelProtocol {
                     enemyAnger?.currentLevel += 1
                     output?.wrongAnswer()
                 }
-                nextQuestion()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                    self?.nextQuestion()
+                }
             }
         }
     }
@@ -224,32 +229,24 @@ extension BattleViewModel: BattleViewModelProtocol {
     }
     
     func nextQuestion() {
-        secondsElapsed = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
-            guard let self else { return }
-            secondsElapsed += 1
-            if secondsElapsed == 2 {
-                questionStation = .waiting
-                uiStation = .askQuestion
-                currentQuestionId += 1
-                if playerAnger?.currentLevel == playerAnger?.totalLevel {
-                    uiStation = .chooseMagic
-                }else if enemyAnger?.currentLevel == playerAnger?.totalLevel {
-                    uiStation = .notDetermined
-                    output?.enemyAttack()
-                }else {
-                    askQuestion()
-                }
-                self.timer = nil
-            }
-        })
+        questionStation = .waiting
+        uiStation = .askQuestion
+        currentQuestionId += 1
+        if playerAnger?.currentLevel == playerAnger?.totalLevel {
+            uiStation = .chooseMagic
+        }else if enemyAnger?.currentLevel == enemyAnger?.totalLevel {
+            uiStation = .notDetermined
+            output?.enemyAttack()
+        }else {
+            askQuestion()
+        }
     }
-    
 }
 
 extension BattleViewModel: BattleSceneProtocol {
     func roundComplete() {
-        print("")
+        playerAnger?.currentLevel = 0
+        nextQuestion()
     }
     func startGame() {
         print("")

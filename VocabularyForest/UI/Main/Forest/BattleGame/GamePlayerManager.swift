@@ -75,6 +75,8 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     
     func setupPlayer() {
         guard let firstFrame = walkTextures.first, let scene = scene else { return }
+        playerNode.removeAllActions()
+        playerNode.removeFromParent()
         playerNode.texture = firstFrame
         playerNode.size = firstFrame.size()
         playerNode.anchorPoint = CGPoint(x: 0.5, y: 0)
@@ -89,6 +91,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         playerNode.physicsBody?.categoryBitMask = PhysicsCategory.enemy
         playerNode.physicsBody?.contactTestBitMask = PhysicsCategory.blackHole
         playerNode.physicsBody?.collisionBitMask = PhysicsCategory.none
+        startWaiting()
         scene.addChild(playerNode)
     }
     
@@ -100,7 +103,11 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         let completion = SKAction.run {
             completion()
         }
-        playerNode.run(SKAction.sequence([animate,completion]), withKey: GameConstant.attackAnimation)
+        let startWait = SKAction.run { [weak self] in
+            guard let self else { return }
+            startWaiting()
+        }
+        playerNode.run(SKAction.sequence([animate,completion,startWait]), withKey: GameConstant.attackAnimation)
     }
     
     func startWaiting() {
