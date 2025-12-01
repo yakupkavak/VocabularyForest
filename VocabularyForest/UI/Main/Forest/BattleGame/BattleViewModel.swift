@@ -58,7 +58,7 @@ class BattleViewModel: ObservableObject {
     @Published var enemyAnger: CharacterAnger?
     
     init(coreDataManager: CoreDataManager = .shared) {
-            self.coreData = coreDataManager
+        self.coreData = coreDataManager
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
             secondsElapsed += 1
@@ -77,35 +77,35 @@ private extension BattleViewModel {
     func prepareEnemyLevel(gameLevel: GameLevel, characterName: String) {
         switch gameLevel {
         case .easy:
-            enemyAnger = CharacterAnger(totalLevel: BattleConstant.easyEnemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
         case .medium:
-            enemyAnger = CharacterAnger(totalLevel: BattleConstant.mediumEnemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
         case .hard:
-            enemyAnger = CharacterAnger(totalLevel: BattleConstant.hardEnemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
         case .insane:
-            enemyAnger = CharacterAnger(totalLevel: BattleConstant.insaneEnemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
         }
     }
     
     func preparePlayerLevel(gameLevel: GameLevel) {
         switch gameLevel {
         case .easy:
-            playerAnger = CharacterAnger(totalLevel: BattleConstant.easyPlayerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
         case .medium:
-            playerAnger = CharacterAnger(totalLevel: BattleConstant.mediumPlayerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
         case .hard:
-            playerAnger = CharacterAnger(totalLevel: BattleConstant.hardPlayerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
         case .insane:
-            playerAnger = CharacterAnger(totalLevel: BattleConstant.insanePlayerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
         }
     }
     
-    func setShortBooks(books: [Book]) {
+    func setShortBooks(books: [Book], bookCount: Int) {
         let shortBooks = books.filter { (book: Book) -> Bool in
             return book.shortMemory == true
         }
         var questionNumber = 1
-        for book in shortBooks.shuffled().prefix(10){
+        for book in shortBooks.shuffled().prefix(bookCount){
             let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
                 return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
             }.prefix(3))
@@ -126,12 +126,12 @@ private extension BattleViewModel {
         }
     }
     
-    func setLongBooks(books: [Book]) {
+    func setLongBooks(books: [Book], bookCount: Int) {
         let longBooks = books.filter { (book: Book) -> Bool in
             return book.longMemory == true
         }
         var questionNumber = 1
-        for book in longBooks.prefix(10){
+        for book in longBooks.prefix(bookCount){
             if let answer = book.learningWord {
                 let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
                     return indexBook != book || indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
@@ -182,9 +182,9 @@ extension BattleViewModel: BattleViewModelProtocol {
         questionList = []
         switch questionType {
         case .learning, .competitive:
-            setShortBooks(books: books)
+            setShortBooks(books: books, bookCount: gameLevel.playerLevel)
         case .remainder:
-            setLongBooks(books: books)
+            setLongBooks(books: books, bookCount: gameLevel.playerLevel)
         }
         askQuestion()
         
@@ -192,7 +192,7 @@ extension BattleViewModel: BattleViewModelProtocol {
     
     func askQuestion() {
         uiStation = .askQuestion
-        if currentQuestionId > questionList.count + 1 || questionList.isEmpty {
+        if currentQuestionId >= questionList.count || questionList.isEmpty {
             errorModel = BattleError.emptyQuestionList
         }
         if let question = questionList[safe: currentQuestionId] {
@@ -208,11 +208,12 @@ extension BattleViewModel: BattleViewModelProtocol {
                 uiStation = .checkAnswer
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
-                    questionStation = .correct
+                    output?.correctAnswer()
                 }else {
                     enemyAnger?.currentLevel += 1
-                    questionStation = .wrong
+                    output?.wrongAnswer()
                 }
+                nextQuestion()
             }
         }
     }
@@ -223,14 +224,25 @@ extension BattleViewModel: BattleViewModelProtocol {
     }
     
     func nextQuestion() {
-        currentQuestionId += 1
-        if playerAnger?.currentLevel == playerAnger?.totalLevel {
-            uiStation = .chooseMagic
-        }else if enemyAnger?.currentLevel == playerAnger?.totalLevel {
-            output?.enemyAttack()
-        }else {
-            askQuestion()
-        }
+        secondsElapsed = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
+            guard let self else { return }
+            secondsElapsed += 1
+            if secondsElapsed == 2 {
+                questionStation = .waiting
+                uiStation = .askQuestion
+                currentQuestionId += 1
+                if playerAnger?.currentLevel == playerAnger?.totalLevel {
+                    uiStation = .chooseMagic
+                }else if enemyAnger?.currentLevel == playerAnger?.totalLevel {
+                    uiStation = .notDetermined
+                    output?.enemyAttack()
+                }else {
+                    askQuestion()
+                }
+                self.timer = nil
+            }
+        })
     }
     
 }

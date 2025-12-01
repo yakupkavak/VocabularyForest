@@ -25,12 +25,19 @@ enum BattleConstant {
     ]
     static let easyPlayerLevel = 3
     static let easyEnemyLevel = 3
-    static let mediumPlayerLevel = 2
-    static let mediumEnemyLevel = 10
-    static let hardPlayerLevel = 2
-    static let hardEnemyLevel = 20
-    static let insanePlayerLevel = 3
-    static let insaneEnemyLevel = 100
+    static let mediumPlayerLevel = 10
+    static let mediumEnemyLevel = 2
+    static let hardPlayerLevel = 20
+    static let hardEnemyLevel = 2
+    static let insanePlayerLevel = 100
+    static let insaneEnemyLevel = 3
+}
+
+struct PhysicsCategory {
+    static let none: UInt32 = 0
+    static let all: UInt32 = UInt32.max
+    static let enemy: UInt32 = 0x1 << 0
+    static let blackHole: UInt32 = 0x1 << 1   
 }
 
 // MARK: - GAME UI HELPER MODELS
@@ -47,6 +54,32 @@ enum GameLevel {
     case medium
     case hard
     case insane
+    
+    var playerLevel: Int {
+        return switch self {
+        case .easy:
+            BattleConstant.easyPlayerLevel
+        case .medium:
+            BattleConstant.mediumPlayerLevel
+        case .hard:
+            BattleConstant.hardPlayerLevel
+        case .insane:
+            BattleConstant.insanePlayerLevel
+        }
+    }
+    
+    var enemyLevel: Int {
+        return switch self {
+        case .easy:
+            BattleConstant.easyEnemyLevel
+        case .medium:
+            BattleConstant.mediumEnemyLevel
+        case .hard:
+            BattleConstant.hardEnemyLevel
+        case .insane:
+            BattleConstant.insaneEnemyLevel
+        }
+    }
 }
 
 // MARK: - UI STATIONS

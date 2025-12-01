@@ -83,6 +83,12 @@ class GamePlayerManager: GamePlayerManagerProtocol {
             y: BattleConstant.characterPosition
         )
         playerNode.zPosition = 3
+        playerNode.physicsBody = SKPhysicsBody(texture: firstFrame, size: playerNode.size)
+        playerNode.physicsBody?.isDynamic = true
+        playerNode.physicsBody?.affectedByGravity = false
+        playerNode.physicsBody?.categoryBitMask = PhysicsCategory.enemy
+        playerNode.physicsBody?.contactTestBitMask = PhysicsCategory.blackHole
+        playerNode.physicsBody?.collisionBitMask = PhysicsCategory.none
         scene.addChild(playerNode)
     }
     

@@ -25,6 +25,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     private var isGameStarted = false
     private let startLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private var timer: Timer?
+    private var touchEnable = false
     
     // MARK: - LIFECYCLE
     
@@ -50,6 +51,22 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         environmentManager.update()
         guard isTouching else { return }
         handleMovementCoordination()
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        var firstBody: SKPhysicsBody
+        var secondBody: SKPhysicsBody
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        if ((firstBody.categoryBitMask & PhysicsCategory.enemy != 0) &&
+            (secondBody.categoryBitMask & PhysicsCategory.blackHole != 0)) {
+            environmentManager?.nextBackground()
+        }
     }
     
     // MARK: - SETUP UI
@@ -80,36 +97,17 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         let direction = playerManager.direction
         let floor = environmentManager.backgroundNode
         let playerNode = playerManager.playerNode
-        
-        let centerScreen = self.size.width / 2
         let halfPlayerWidth = playerNode.size.width / 2
         let playerX = playerNode.position.x
+        
         if playerManager.isMoving {
-            let canScrollLeft = direction == .left && floor.frame.minX < 0
-            let canScrollRight = direction == .right && floor.frame.maxX > self.size.width
+            let canScrollLeft = direction == .left && playerX < halfPlayerWidth
+            let canScrollRight = direction == .right && playerX > self.size.width - halfPlayerWidth
             
-            if (direction == .left && playerX <= centerScreen && canScrollLeft) ||
-               (direction == .right && playerX >= centerScreen && canScrollRight) {
+            if (direction == .left && canScrollLeft) ||
+               (direction == .right && canScrollRight) {
                 playerManager.stopPhysicalMovement()
-                playerNode.position.x = centerScreen
-                environmentManager.moveBackground(direction: direction)
                 return
-            }
-        }
-        if direction == .right && floor.frame.maxX <= self.size.width {
-            if playerX >= self.size.width - halfPlayerWidth {
-                playerManager.stopPhysicalMovement()
-            } else {
-                environmentManager.stopBackground()
-                playerManager.startWalking(direction: .right)
-            }
-        }
-        else if direction == .left && floor.frame.minX >= 0 {
-            if playerX <= halfPlayerWidth {
-                playerManager.stopPhysicalMovement()
-            } else {
-                environmentManager.stopBackground()
-                playerManager.startWalking(direction: .left)
             }
         }
     }
@@ -117,28 +115,25 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - TOUCH EVENTS
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isTouching = true
-        guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        let nodesAtPoint = nodes(at: location)
-        if !isGameStarted {
-            if nodesAtPoint.contains(where: { $0.name == "start_button" }) {
-                startGame()
+        if touchEnable {
+            isTouching = true
+            guard let touch = touches.first else { return }
+            let location = touch.location(in: self)
+            let nodesAtPoint = nodes(at: location)
+            if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
+                forestHelper?.showOptions()
+                return
             }
-            return
+            let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
+            playerManager.startWalking(direction: direction)
         }
-        if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
-            forestHelper?.showOptions()
-            return
-        }
-        let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
-        playerManager.startWalking(direction: direction)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isTouching = false
-        playerManager.stopWalking()
-        environmentManager.stopBackground()
+        if touchEnable {
+            isTouching = false
+            playerManager.stopWalking()
+        }
     }
 }
 
@@ -150,11 +145,11 @@ extension BattleScene: BattleViewModelOutputProcotol {
     }
     
     func correctAnswer() {
-        print("correct answer")
+        environmentManager?.correctAnswer()
     }
     
     func wrongAnswer() {
-        print("wrong answer")
+        environmentManager?.wrongAnswer()
     }
     
     func enemyAttack() {
@@ -185,8 +180,10 @@ extension BattleScene: BattleViewModelOutputProcotol {
                 startPoint: startPoint,
                 endPoint: endPoint
             ) {
-                self.enemyManager.killEnemy {
-                    print("Düşman öldü!")
+                self.enemyManager.killEnemy { [weak self] in
+                    guard let self else { return }
+                    environmentManager?.showGate()
+                    touchEnable = true
                 }
             }
         }

@@ -6,11 +6,17 @@
 //
 
 import SpriteKit
+
 protocol BattleEnvironmentManagerProtocol: AnyObject {
     var backgroundNode: SKSpriteNode { get }
     func moveBackground(direction: GameDirection)
     func stopBackground()
     func nextBackground()
+    func correctAnswer()
+    func wrongAnswer()
+    func userWon()
+    func enemyWon()
+    func showGate()
     func setupEnvironment()
     func update()
     func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void)
@@ -19,6 +25,8 @@ protocol BattleEnvironmentManagerProtocol: AnyObject {
 private extension BattleEnvironmentManager {
     enum Constant {
         static let menuButtonName = "menu_button"
+        static let celebrateTextureNames = ["Celebrate_0","Celebrate_1","Celebrate_2"]
+        static let loseTextureNames = ["Lose_0"]
     }
 }
 
@@ -29,12 +37,17 @@ class BattleEnvironmentManager {
     private weak var scene: SKScene?
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+    private var celebrateCount = 0
     private var currentGameIndex = 0
     private var backgroundTextures: [SKTexture] = []
     private var magicFlyTextures: [SKTexture] = []
     private var magicExplodeTextures: [SKTexture] = []
+    private var explodeTextures: [SKTexture] = []
+    private var blackHoleTextures: [SKTexture] = []
     var backgroundNode = SKSpriteNode()
     var magicNode = SKSpriteNode()
+    var explodeNode = SKSpriteNode()
+    var blackHoleNode = SKSpriteNode()
 
     // MARK: - INIT
     
@@ -52,6 +65,10 @@ class BattleEnvironmentManager {
         let atlas = SKTextureAtlas(named: "Battle_backgrounds")
         for i in 0..<atlas.textureNames.count {
             backgroundTextures.append(atlas.textureNamed("battle_background_\(i)"))
+        }
+        let blackAtlas = SKTextureAtlas(named: "BlackHole")
+        for i in 0..<blackAtlas.textureNames.count {
+            blackHoleTextures.append(blackAtlas.textureNamed("black_hole_\(i)"))
         }
     }
     
@@ -110,9 +127,86 @@ class BattleEnvironmentManager {
     }
 }
 
+// MARK: - BATTLE PROTOCOL
+
 extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     
-    // MARK: - HELPERS
+    func showGate() {
+        blackHoleNode.isHidden = false
+        let animationAction = SKAction.animate(with: blackHoleTextures, timePerFrame: BattleConstant.movingTimePerFrame)
+        blackHoleNode.run(SKAction.repeatForever(animationAction))
+    }
+    
+    func correctAnswer() {
+        if let textureName = Constant.celebrateTextureNames[safe: celebrateCount % Constant.celebrateTextureNames.count] {
+            explodeTextures = []
+            explodeNode.isHidden = false
+            let atlas = SKTextureAtlas(named: textureName)
+            for i in 0..<atlas.textureNames.count {
+                explodeTextures.append(atlas.textureNamed("\(textureName.lowercased())_\(i)"))
+            }
+            let animationAction = SKAction.animate(with: explodeTextures, timePerFrame: 0.06)
+            let hideAction = SKAction.run { [weak self] in
+                guard let self else { return }
+                self.explodeNode.isHidden = true
+            }
+            explodeNode.run(SKAction.sequence([animationAction,hideAction]))
+            celebrateCount += 1
+        }
+    }
+    
+    func wrongAnswer() {
+        if let textureName = Constant.loseTextureNames[safe: 0] {
+            explodeTextures = []
+            explodeNode.isHidden = false
+            let atlas = SKTextureAtlas(named: textureName)
+            for i in 0..<atlas.textureNames.count {
+                explodeTextures.append(atlas.textureNamed("lose_\(i)"))
+            }
+            let animationAction = SKAction.animate(with: explodeTextures, timePerFrame: 0.06)
+            let hideAction = SKAction.run { [weak self] in
+                guard let self else { return }
+                self.explodeNode.isHidden = true
+            }
+            explodeNode.run(SKAction.sequence([animationAction,hideAction]))
+            celebrateCount += 1
+        }
+    }
+    
+    func userWon() {
+        if let textureName = Constant.celebrateTextureNames[safe: celebrateCount % Constant.celebrateTextureNames.count] {
+            explodeTextures = []
+            explodeNode.isHidden = false
+            let atlas = SKTextureAtlas(named: textureName)
+            for i in 0..<atlas.textureNames.count {
+                explodeTextures.append(atlas.textureNamed("\(textureName.lowercased())_\(i)"))            }
+            let animationAction = SKAction.animate(with: explodeTextures, timePerFrame: 0.06)
+            let hideAction = SKAction.run { [weak self] in
+                guard let self else { return }
+                self.explodeNode.isHidden = true
+            }
+            explodeNode.run(SKAction.sequence([animationAction,hideAction]))
+            celebrateCount += 1
+        }
+    }
+    
+    func enemyWon() {
+        if let textureName = Constant.loseTextureNames[safe: 0] {
+            explodeTextures = []
+            explodeNode.isHidden = false
+            let atlas = SKTextureAtlas(named: textureName)
+            for i in 0..<atlas.textureNames.count {
+                explodeTextures.append(atlas.textureNamed("lose_\(i)"))
+            }
+            let animationAction = SKAction.animate(with: explodeTextures, timePerFrame: 0.06)
+            let hideAction = SKAction.run { [weak self] in
+                guard let self else { return }
+                self.explodeNode.isHidden = true
+            }
+            explodeNode.run(SKAction.sequence([animationAction,hideAction]))
+            celebrateCount += 1
+        }
+    }
     
     func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void) {
         setupMagic(magic: magic)
@@ -162,7 +256,7 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     
     func nextBackground() {
         currentGameIndex += 1
-        guard let newFrame = backgroundTextures[safe: currentGameIndex], let scene = scene else { return }
+        guard let newFrame = backgroundTextures[safe: currentGameIndex], let _ = scene else { return }
         backgroundNode.texture = newFrame
     }
     
@@ -172,6 +266,20 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         menuButton.zPosition = 4
         menuButton.size = CGSize(width: 36.0, height: 36.0)
         menuButton.name = Constant.menuButtonName
+        explodeNode.position = CGPoint(x: scene.size.width * 0.5, y: scene.size.height * 0.5)
+        explodeNode.zPosition = 15
+        explodeNode.size = CGSize(width: scene.size.width / 2, height: scene.size.width / 2)
+        blackHoleNode.position = CGPoint(x: scene.size.width * 0.85, y: BattleConstant.characterPosition + 50)
+        blackHoleNode.zPosition = 4
+        blackHoleNode.size = CGSize(width: scene.size.width / 3, height: scene.size.width / 3)
+        blackHoleNode.isHidden = true
+        blackHoleNode.physicsBody = SKPhysicsBody(circleOfRadius: blackHoleNode.size.width / 2)
+        blackHoleNode.physicsBody?.isDynamic = false        
+        blackHoleNode.physicsBody?.categoryBitMask = PhysicsCategory.blackHole
+        blackHoleNode.physicsBody?.contactTestBitMask = PhysicsCategory.enemy
+        blackHoleNode.physicsBody?.collisionBitMask = PhysicsCategory.none
+        scene.addChild(blackHoleNode)
+        scene.addChild(explodeNode)
         scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }
