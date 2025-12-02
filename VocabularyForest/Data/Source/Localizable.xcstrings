@@ -204,7 +204,14 @@
 
     },
     "question_number" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question\n%1$(variableName)lld"
+          }
+        }
+      }
     },
     "quiz_question_format" : {
       "comment" : "Learning vocabulary question title",

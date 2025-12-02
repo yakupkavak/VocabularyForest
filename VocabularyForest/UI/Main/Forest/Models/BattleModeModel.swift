@@ -26,7 +26,7 @@ enum BattleModeModel {
         case .fireDragon:
             ["FireDragon"]
         case .classic:
-            ["Vampire","Skeleton","Vampire","Skeleton"] // TODO: - ADD NEW ENEMIES
+            ["Skeleton","Ghost","DarkKnight","BigKnight","SkeletonDragon","Vampire"]
         }
     }
 }
