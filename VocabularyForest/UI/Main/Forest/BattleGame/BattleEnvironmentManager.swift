@@ -25,7 +25,6 @@ protocol BattleEnvironmentManagerProtocol: AnyObject {
 
 private extension BattleEnvironmentManager {
     enum Constant {
-        static let menuButtonName = "menu_button"
         static let celebrateTextureNames = ["Celebrate_0","Celebrate_1","Celebrate_2"]
         static let loseTextureNames = ["Lose_0"]
     }
@@ -36,7 +35,6 @@ class BattleEnvironmentManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
-    private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private var celebrateCount = 0
     private var currentGameIndex = 0
@@ -268,10 +266,6 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     
     func setupUI() {
         guard let scene else { return }
-        menuButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.90)
-        menuButton.zPosition = 4
-        menuButton.size = CGSize(width: 36.0, height: 36.0)
-        menuButton.name = Constant.menuButtonName
         explodeNode.position = CGPoint(x: scene.size.width * 0.5, y: scene.size.height * 0.5)
         explodeNode.zPosition = 15
         explodeNode.size = CGSize(width: scene.size.width / 2, height: scene.size.width / 2)
@@ -286,7 +280,6 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         blackHoleNode.physicsBody?.collisionBitMask = PhysicsCategory.none
         scene.addChild(blackHoleNode)
         scene.addChild(explodeNode)
-        scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }
     

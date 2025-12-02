@@ -128,10 +128,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
             guard let touch = touches.first else { return }
             let location = touch.location(in: self)
             let nodesAtPoint = nodes(at: location)
-            if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
-                forestHelper?.showOptions()
-                return
-            }
             let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
             playerManager.startWalking(direction: direction)
         }

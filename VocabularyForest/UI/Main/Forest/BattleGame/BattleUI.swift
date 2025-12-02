@@ -43,9 +43,10 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     // MARK: - UI
     
     var body: some View {
-        ZStack {
+        ZStack() {
             SpriteView(scene: scene)
                 .ignoresSafeArea()
+            headerView
             if let error = viewModel.errorModel {
                 switch error {
                 case .emptyBookcase:
@@ -177,20 +178,42 @@ private extension BattleUI {
     }
     
     var headerView: some View {
-        HStack {
-            if let playerAnger = viewModel.playerAnger {
-                HStack{
-                    Image(playerAnger.imageFileName).resizable().scaledToFit().frame(maxWidth: 32,maxHeight: 32).borderRadius(borderColor: .brown300)
-                    Text(playerAnger.name).foregroundStyle(.white)
-                }.padding().background(Color.brown700).borderRadius(borderColor: .backgroundSystem)
+        VStack() {
+            HStack {
+                if let playerAnger = viewModel.playerAnger {
+                    VStack {
+                        Text(playerAnger.name).foregroundStyle(.white)
+                        ZStack {
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_fill_blue").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
+                                GeometryReader { geo in
+                                    Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.playerAnger?.currentLevel ?? 1) / CGFloat( viewModel.playerAnger?.totalLevel ?? 1)))
+                                }
+                            }.zIndex(2.0)
+                        }
+                    }
+                }
+                Spacer()
+                if let enemyAnger = viewModel.enemyAnger {
+                    VStack {
+                        Text(enemyAnger.name).foregroundStyle(.white)
+                        ZStack {
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_fill_red").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
+                                GeometryReader { geo in
+                                    Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.enemyAnger?.currentLevel ?? 1) / CGFloat( viewModel.enemyAnger?.totalLevel ?? 1)))
+                                }
+                            }.zIndex(2.0)
+                        }
+                    }
+                }
             }
-            if let enemyAnger = viewModel.enemyAnger {
-                HStack{
-                    Image(enemyAnger.imageFileName).resizable().scaledToFit().frame(maxWidth: 32,maxHeight: 32).borderRadius(borderColor: .brown300)
-                    Text(enemyAnger.name).foregroundStyle(.white)
-                }.padding().background(Color.brown700).borderRadius(borderColor: .backgroundSystem)
+            HStack {
+                Spacer()
+                Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36)
             }
-        }
+            Spacer()
+        }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
     }
     
     func answerComponent(text: String) -> some View {
