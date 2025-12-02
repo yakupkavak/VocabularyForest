@@ -182,7 +182,9 @@ private extension BattleUI {
             HStack {
                 if let playerAnger = viewModel.playerAnger {
                     VStack {
-                        Text(playerAnger.name).foregroundStyle(.white)
+                        Image("button_special").resizable().scaledToFit().overlay{
+                            Text(playerAnger.name).foregroundStyle(.white).padding(4)
+                        }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
                             Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
                             Image("loading_bar_fill_blue").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
@@ -196,7 +198,9 @@ private extension BattleUI {
                 Spacer()
                 if let enemyAnger = viewModel.enemyAnger {
                     VStack {
-                        Text(enemyAnger.name).foregroundStyle(.white)
+                        Image("button_special").resizable().scaledToFit().overlay{
+                            Text(enemyAnger.name).foregroundStyle(.white).padding(4)
+                        }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
                             Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
                             Image("loading_bar_fill_red").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
@@ -213,7 +217,7 @@ private extension BattleUI {
                 Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36)
             }
             Spacer()
-        }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
+        }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8).padding(.top, -16)
     }
     
     func answerComponent(text: String) -> some View {
@@ -240,7 +244,7 @@ private extension BattleUI {
     sampleBookcase.learningLanguage = "en"
     sampleBookcase.meaningLanguage = "tr"
     sampleBookcase.createdDate = Date()
-    for i in 1...40 {
+    for i in 1...100 {
         let sampleBook = Book(context: context)
         sampleBook.learningWord = "Word \(i)"
         sampleBook.meaningWord = "Anlam \(i)"

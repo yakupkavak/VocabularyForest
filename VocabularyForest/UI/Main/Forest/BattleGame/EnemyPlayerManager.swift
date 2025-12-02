@@ -13,7 +13,7 @@ protocol BattleEnemyManagerProtocol: AnyObject {
     func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void)
     func spawnNextEnemy()
     func killEnemy(completion: @escaping () -> Void)
-    func setupEnemyManager(models: [String])
+    func setupEnemyManager(models: [EnemyCharacterModel])
 }
 
 class BattleEnemyManager {
@@ -26,8 +26,8 @@ class BattleEnemyManager {
     private var walkingTextures: [SKTexture] = []
     private var attackTextures: [SKTexture] = []
     private var deathTextures: [SKTexture] = []
-    private var enemyTypes: [String]? = nil
-    private var currentEnemyType: String? = nil
+    private var enemyTypes: [EnemyCharacterModel]? = nil
+    private var currentEnemyType: EnemyCharacterModel? = nil
     
     // MARK: - INIT
     
@@ -96,7 +96,7 @@ private extension BattleEnemyManager {
         enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         enemyNode.position = CGPoint(
             x: scene.size.width * 0.7,
-            y: (currentEnemyType == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
+            y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
         )
         enemyNode.xScale = -1.0
         enemyNode.zPosition = 3
@@ -106,11 +106,11 @@ private extension BattleEnemyManager {
 
 extension BattleEnemyManager: BattleEnemyManagerProtocol {
     
-    func setupEnemyManager(models: [String]) {
+    func setupEnemyManager(models: [EnemyCharacterModel]) {
         enemyTypes = models
         currentEnemyType = enemyTypes?.first
         if let currentEnemyType {
-            spawnNewEnemy(enemyName: currentEnemyType)
+            spawnNewEnemy(enemyName: currentEnemyType.assetName)
         }
     }
     
@@ -121,7 +121,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
                 let nextEnemy = enemyTypes[safe: nextIndex]
                 if let nextEnemy {
                     self.currentEnemyType = nextEnemy
-                    spawnNewEnemy(enemyName: nextEnemy)
+                    spawnNewEnemy(enemyName: nextEnemy.assetName)
                 }
             }
         }

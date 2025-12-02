@@ -144,7 +144,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension BattleScene: BattleViewModelOutputProcotol {
-    func setupGame(enemyCharacterModels: [String]) {
+    func setupGame(enemyCharacterModels: [EnemyCharacterModel]) {
         enemyManager?.setupEnemyManager(models: enemyCharacterModels)
     }
     

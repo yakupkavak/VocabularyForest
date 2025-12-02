@@ -35,7 +35,7 @@ protocol BattleViewModelOutputProcotol: AnyObject {
     func wrongAnswer()
     func enemyAttack()
     func startMagic(magic: MagicType)
-    func setupGame(enemyCharacterModels: [String])
+    func setupGame(enemyCharacterModels: [EnemyCharacterModel])
 }
 
 class BattleViewModel: ObservableObject {
@@ -48,7 +48,9 @@ class BattleViewModel: ObservableObject {
     private var currentQuestionId = 0
     private var timer: Timer? = nil
     private var secondsElapsed = 0
-    private var enemyList: [String]? = nil
+    private var enemyList: [EnemyCharacterModel]? = nil
+    private var currentEnemyIndex = 0
+    private var gameLevel: GameLevel? = nil
     weak var output: BattleViewModelOutputProcotol?
     @Published var questionStation: QuestionStation = .notDetermined
     @Published var currentQuestion: QuestionModel?
@@ -74,29 +76,30 @@ class BattleViewModel: ObservableObject {
 // MARK: - PRIVATE HELPERS
 
 private extension BattleViewModel {
-    func prepareEnemyLevel(gameLevel: GameLevel, characterName: String) {
+    func prepareEnemyLevel(gameLevel: GameLevel, characterModel: EnemyCharacterModel) {
         switch gameLevel {
         case .easy:
-            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
         case .medium:
-            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
         case .hard:
-            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
         case .insane:
-            enemyAnger = CharacterAnger(totalLevel: gameLevel.enemyLevel, currentLevel: 0, name: characterName, imageFileName: "\(characterName)_profile_icon")
+            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
         }
+        enemyAnger?.name = characterModel.characterName
     }
     
     func preparePlayerLevel(gameLevel: GameLevel) {
         switch gameLevel {
         case .easy:
-            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "", imageFileName: "men_profile_icon")
         case .medium:
-            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "", imageFileName: "men_profile_icon")
         case .hard:
-            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "", imageFileName: "men_profile_icon")
         case .insane:
-            playerAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "Ichigo", imageFileName: "men_profile_icon")
+            enemyAnger = CharacterAnger(totalLevel: gameLevel.playerLevel, currentLevel: 0, name: "", imageFileName: "men_profile_icon")
         }
     }
     
@@ -157,6 +160,25 @@ private extension BattleViewModel {
     func gameOver() {
         print("gameOver")
     }
+    
+    func nextEnemy() {
+        currentEnemyIndex += 1
+        if let nextEnemy = enemyList?[safe: currentEnemyIndex], let safeGameLevel = gameLevel {
+            enemyAnger?.currentLevel = 0
+            prepareEnemyLevel(gameLevel: safeGameLevel, characterModel: nextEnemy)
+        }
+    }
+    private func calculateMinBookCount(
+        battleMode: BattleModeModel,
+        gameLevel: GameLevel,
+    ) -> Int{
+        var totalBook = 0
+        let assetModels = battleMode.assetModels
+        for characterModel in assetModels {
+            totalBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
+        }
+        return totalBook + 1
+    }
 }
 
 extension BattleViewModel: BattleViewModelProtocol {
@@ -165,29 +187,30 @@ extension BattleViewModel: BattleViewModelProtocol {
         bookcase: Bookcase?,
         questionType: BattleQuestionType,
         battleMode: BattleModeModel,
-        gameLevel: GameLevel
+        gameLevel: GameLevel,
     ) {
-        output?.setupGame(enemyCharacterModels: battleMode.assetModels)
-        enemyList = battleMode.assetModels
-        guard let firstEnemyName = enemyList?.first else {
-            errorModel = .emptyEnemyAsset
-            return
-        }
-        preparePlayerLevel(gameLevel: gameLevel)
-        prepareEnemyLevel(gameLevel: gameLevel, characterName: firstEnemyName)
         guard let books = coreData.fetchAllBooks() else {
             errorModel = .emptyBookcase
             return
         }
+        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
+        self.gameLevel = gameLevel
+        output?.setupGame(enemyCharacterModels: battleMode.assetModels)
+        enemyList = battleMode.assetModels
+        guard let firstEnemy = enemyList?.first else {
+            errorModel = .emptyEnemyAsset
+            return
+        }
+        preparePlayerLevel(gameLevel: gameLevel)
+        prepareEnemyLevel(gameLevel: gameLevel, characterModel: firstEnemy)
         questionList = []
         switch questionType {
         case .learning, .competitive:
-            setShortBooks(books: books, bookCount: (gameLevel.playerLevel + gameLevel.enemyLevel + 1) * 8)
+            setShortBooks(books: books, bookCount: minBook)
         case .remainder:
-            setLongBooks(books: books, bookCount: (gameLevel.playerLevel + gameLevel.enemyLevel + 1) * 8)
+            setLongBooks(books: books, bookCount: minBook)
         }
         askQuestion()
-        
     }
     
     func askQuestion() {
@@ -247,6 +270,7 @@ extension BattleViewModel: BattleSceneProtocol {
     func roundComplete() {
         playerAnger?.currentLevel = 0
         nextQuestion()
+        nextEnemy()
     }
     func startGame() {
         print("")

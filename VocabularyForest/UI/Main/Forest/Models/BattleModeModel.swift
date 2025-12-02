@@ -13,20 +13,33 @@ enum BattleModeModel {
     case fireDragon
     case classic
     
-    var assetModels: [String] {
+    var assetModels: [EnemyCharacterModel] {
         switch self {
         case .iceElemental:
-            ["IceElemental"]
+            [EnemyCharacterModel(assetName: "IceElemental", characterName: "Ice Elemental", isBoss: true)]
         case .fireElemental:
-            ["FireElemental"]
+            [EnemyCharacterModel(assetName: "FireElemental", characterName: "Fire Elemental", isBoss: true)]
         case .natureElemental:
-            ["NatureElemental"]
+            [EnemyCharacterModel(assetName: "NatureElemental", characterName: "Nature Elemental", isBoss: true)]
         case .sandDragon:
-            ["SandDragon"]
+            [EnemyCharacterModel(assetName: "SandDragon", characterName: "Sand Dragon", isBoss: true)]
         case .fireDragon:
-            ["FireDragon"]
+            [EnemyCharacterModel(assetName: "FireDragon", characterName: "Fire Dragon", isBoss: true)]
         case .classic:
-            ["Skeleton","Ghost","DarkKnight","BigKnight","SkeletonDragon","Vampire"]
+            [
+                EnemyCharacterModel(assetName: "Skeleton", characterName: "Skeleton", isBoss: false),
+                EnemyCharacterModel(assetName: "Ghost", characterName: "Ghost", isBoss: false),
+                EnemyCharacterModel(assetName: "DarkKnight", characterName: "Dark Knight", isBoss: false),
+                EnemyCharacterModel(assetName: "BigKnight", characterName: "Big Knight", isBoss: false),
+                EnemyCharacterModel(assetName: "SkeletonDragon", characterName: "Skeleton Dragon", isBoss: false),
+                EnemyCharacterModel(assetName: "Vampire", characterName: "Vampire", isBoss: true)
+            ]
         }
     }
+}
+
+struct EnemyCharacterModel: Equatable {
+    var assetName: String
+    var characterName: String
+    var isBoss: Bool
 }

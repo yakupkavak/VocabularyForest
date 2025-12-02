@@ -24,13 +24,17 @@ enum BattleConstant {
         .fire, .darkMagic, .ice, .death, .psychic
     ]
     static let easyPlayerLevel = 3
-    static let easyEnemyLevel = 3
-    static let mediumPlayerLevel = 10
-    static let mediumEnemyLevel = 2
-    static let hardPlayerLevel = 20
-    static let hardEnemyLevel = 2
-    static let insanePlayerLevel = 100
-    static let insaneEnemyLevel = 3
+    static let easyEnemyLevel = 4
+    static let easyBossEnemyLevel = 10
+    static let mediumPlayerLevel = 3
+    static let mediumEnemyLevel = 10
+    static let mediumBossEnemyLevel = 20
+    static let hardPlayerLevel = 3
+    static let hardEnemyLevel = 10
+    static let hardBossEnemyLevel = 30
+    static let insanePlayerLevel = 3
+    static let insaneEnemyLevel = 15
+    static let insaneBossEnemyLevel = 100
 }
 
 struct PhysicsCategory {
@@ -43,7 +47,7 @@ struct PhysicsCategory {
 // MARK: - GAME UI HELPER MODELS
 
 struct CharacterAnger {
-    let totalLevel: Int
+    var totalLevel: Int
     var currentLevel: Int
     var name: String
     var imageFileName: String
@@ -78,6 +82,18 @@ enum GameLevel {
             BattleConstant.hardEnemyLevel
         case .insane:
             BattleConstant.insaneEnemyLevel
+        }
+    }
+    var bossLevel: Int {
+        return switch self {
+        case .easy:
+            BattleConstant.easyBossEnemyLevel
+        case .medium:
+            BattleConstant.mediumBossEnemyLevel
+        case .hard:
+            BattleConstant.hardBossEnemyLevel
+        case .insane:
+            BattleConstant.insaneBossEnemyLevel
         }
     }
 }
