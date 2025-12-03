@@ -105,6 +105,7 @@ enum BattleUIStation {
     case askQuestion
     case notDetermined
     case checkAnswer
+    case gameOver
 }
 
 enum QuestionStation {

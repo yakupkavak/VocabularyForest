@@ -10,7 +10,7 @@ import SpriteKit
 protocol BattleEnemyManagerProtocol: AnyObject {
     var enemyNode: SKSpriteNode { get }
     func startIdleAnimation()
-    func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void)
+    func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void)
     func spawnNextEnemy()
     func killEnemy(completion: @escaping () -> Void)
     func setupEnemyManager(models: [EnemyCharacterModel])
@@ -152,10 +152,10 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         )
     }
     
-    func enemyAtacks(endPoint: CGPoint, hitted: @escaping () -> Void) {
+    func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void) {
         let moveAnimate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.movingTimePerFrame)
         let moveAnimation = SKAction.repeatForever(moveAnimate)
-        let moveAction = SKAction.move(to: endPoint, duration: GameConstant.walkingTime)
+        let moveAction = SKAction.move(to: CGPoint(x: endPointX, y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
         let arriveFunction = SKAction.run { [weak self] in
             guard let self else { return }
             self.enemyNode.removeAction(forKey: "walking")

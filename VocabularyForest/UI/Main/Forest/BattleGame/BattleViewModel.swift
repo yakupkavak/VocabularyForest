@@ -28,6 +28,7 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     var errorModel: BattleError? { get }
     var playerAnger: CharacterAnger? { get }
     var enemyAnger: CharacterAnger? { get }
+    var gameStatus: GameStatusModel { get }
 }
 
 protocol BattleViewModelOutputProcotol: AnyObject {
@@ -44,7 +45,7 @@ class BattleViewModel: ObservableObject {
     
     private let coreData: CoreDataManager
     private var questionList: [QuestionModel] = []
-    private var randomBooks: [Book] = []
+    private var answerBooks: [Book] = []
     private var currentQuestionId = 0
     private var timer: Timer? = nil
     private var secondsElapsed = 0
@@ -58,7 +59,12 @@ class BattleViewModel: ObservableObject {
     @Published var uiStation: BattleUIStation = .notDetermined
     @Published var playerAnger: CharacterAnger?
     @Published var enemyAnger: CharacterAnger?
-    
+    @Published var gameStatus: GameStatusModel = GameStatusModel(
+        trueCount: 0,
+        wrongCount: 0,
+        wrongWords: []
+    )
+
     init(coreDataManager: CoreDataManager = .shared) {
         self.coreData = coreDataManager
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
@@ -79,13 +85,33 @@ private extension BattleViewModel {
     func prepareEnemyLevel(gameLevel: GameLevel, characterModel: EnemyCharacterModel) {
         switch gameLevel {
         case .easy:
-            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
+            playerAnger = CharacterAnger(
+                totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
+                currentLevel: 0,
+                name: "Ichigo",
+                imageFileName: "\(characterModel.assetName)_profile_icon"
+            )
         case .medium:
-            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
+            playerAnger = CharacterAnger(
+                totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
+                currentLevel: 0,
+                name: "Ichigo",
+                imageFileName: "\(characterModel.assetName)_profile_icon"
+            )
         case .hard:
-            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
+            playerAnger = CharacterAnger(
+                totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
+                currentLevel: 0,
+                name: "Ichigo",
+                imageFileName: "\(characterModel.assetName)_profile_icon"
+            )
         case .insane:
-            playerAnger = CharacterAnger(totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel, currentLevel: 0, name: "Ichigo", imageFileName: "\(characterModel.assetName)_profile_icon")
+            playerAnger = CharacterAnger(
+                totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
+                currentLevel: 0,
+                name: "Ichigo",
+                imageFileName: "\(characterModel.assetName)_profile_icon"
+            )
         }
         enemyAnger?.name = characterModel.characterName
     }
@@ -125,6 +151,7 @@ private extension BattleViewModel {
                 questionNumber: questionNumber
             )
             questionList.append(model)
+            answerBooks.append(book)
             questionNumber += 1
         }
     }
@@ -152,13 +179,14 @@ private extension BattleViewModel {
                     questionNumber: questionNumber
                 )
                 questionList.append(model)
+                answerBooks.append(book)
                 questionNumber += 1
             }
         }
     }
     
     func gameOver() {
-        print("gameOver")
+        uiStation = .gameOver
     }
     
     func nextEnemy() {
@@ -234,9 +262,14 @@ extension BattleViewModel: BattleViewModelProtocol {
             if let answer = currentQuestion.answers[safe: answerNumber] {
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
+                    gameStatus.trueCount += 1
                     output?.correctAnswer()
                 }else {
                     enemyAnger?.currentLevel += 1
+                    gameStatus.wrongCount += 1
+                    if let answerBook = answerBooks[safe: currentQuestionId] {
+                        gameStatus.wrongWords.append(answerBook)
+                    }
                     output?.wrongAnswer()
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
@@ -272,8 +305,13 @@ extension BattleViewModel: BattleSceneProtocol {
         nextQuestion()
         nextEnemy()
     }
-    func startGame() {
-        print("")
+    func playerDead() {
+        gameStatus.userWon = false
+        uiStation = .gameOver
+    }
+    func playerWon() {
+        gameStatus.userWon = true
+        uiStation = .gameOver
     }
 }
 

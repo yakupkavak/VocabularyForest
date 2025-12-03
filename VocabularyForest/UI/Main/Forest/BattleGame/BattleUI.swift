@@ -14,6 +14,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     // MARK: - PROPERTIES
     
     @StateObject private var viewModel: ViewModel
+    @EnvironmentObject private var forestRouter: LearningRouter
     @State private var scene: BattleScene = {
         let scene = BattleScene()
         scene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -73,6 +74,8 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                         }else if viewModel.questionStation == .wrong {
                             Text("wrong")
                         }
+                    case .gameOver:
+                        gameOverView
                     }
                 }.ignoresSafeArea(.all)
             }
@@ -177,12 +180,49 @@ private extension BattleUI {
         .padding(.bottom)
     }
     
+    var gameOverView: some View {
+        ZStack {
+            Image("pop_up_background").resizable()
+            Spacer()
+            VStack(alignment: .center) {
+                VStack{
+                    if viewModel.gameStatus.wrongWords.isEmpty {
+                        Text("Amazing!!\nYou remembered everything!").multilineTextAlignment(.center).foregroundStyle(.white).padding()
+                    }else {
+                        Text("Review Words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
+                        List {
+                            ForEach(viewModel.gameStatus.wrongWords) { book in
+                                Text(book.unwrappedLearningWord).foregroundStyle(.white).listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                            }
+                        }.padding(.horizontal).listRowInsets(.none).listRowSeparator(.hidden, edges: .all)
+                            .listStyle(.plain)
+                            .background(.clear)
+                            .scrollContentBackground(.hidden)
+                    }
+                }
+                Button {
+                    forestRouter.navigateBack()
+                } label: {
+                    Text("Return Forest")
+                }.buttonStyle(.plain).foregroundStyle(.clickableText).font(.headline).padding()
+
+            }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.27)
+                
+        }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.3).overlay(alignment: .top) {
+            ZStack {
+                Image("pop_up_title_window").resizable().scaledToFit()
+                Text(viewModel.gameStatus.userWon ?? true ? "Fantastic!" : "So Close!").foregroundStyle(.white).multilineTextAlignment(.center)
+            }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.078)
+        }
+    }
+    
     var headerView: some View {
         VStack() {
             HStack {
                 if let playerAnger = viewModel.playerAnger {
                     VStack {
-                        Image("button_special").resizable().scaledToFit().overlay{
+                        Image("player_title_header").resizable().scaledToFit().overlay{
                             Text(playerAnger.name).foregroundStyle(.white).padding(4)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
@@ -198,7 +238,7 @@ private extension BattleUI {
                 Spacer()
                 if let enemyAnger = viewModel.enemyAnger {
                     VStack {
-                        Image("button_special").resizable().scaledToFit().overlay{
+                        Image("enemy_title_header").resizable().scaledToFit().overlay{
                             Text(enemyAnger.name).foregroundStyle(.white).padding(4)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {

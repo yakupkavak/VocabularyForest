@@ -14,6 +14,14 @@ enum CreateBookToastType {
     case firstBookcaseCreated, newBookCreated, none
 }
 
+// MARK: - CONSTANTS
+
+private extension CreateBookUI {
+    enum Constant {
+        static let padding = CGFloat(10)
+    }
+}
+
 struct CreateBookUI: View {
     
     // MARK: - PROPERTIES

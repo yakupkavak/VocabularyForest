@@ -8,7 +8,7 @@
 import SpriteKit
 
 protocol BattleSceneProtocol: AnyObject {
-    func startGame()
+    func playerDead()
     func roundComplete()
 }
 
@@ -99,7 +99,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     private func startGame() {
         isGameStarted = true
         startLabel.removeFromParent()
-        helper?.startGame()
     }
     
     private func handleMovementCoordination() {
@@ -158,11 +157,10 @@ extension BattleScene: BattleViewModelOutputProcotol {
     
     func enemyAttack() {
         let playerPosition = playerManager.playerNode.position
-        enemyManager.enemyAtacks(endPoint: CGPoint(x: playerPosition.x + 70, y: playerPosition.y)) { [weak self] in
+        enemyManager.enemyAtacks(endPointX: CGFloat(playerPosition.x)) { [weak self] in
             guard let self else { return }
-            
             self.playerManager.die {
-                print("player died")
+                self.helper?.playerDead()
             }
         }
     }
