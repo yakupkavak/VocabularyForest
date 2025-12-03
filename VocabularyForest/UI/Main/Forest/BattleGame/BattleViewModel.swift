@@ -37,6 +37,7 @@ protocol BattleViewModelOutputProcotol: AnyObject {
     func enemyAttack()
     func startMagic(magic: MagicType)
     func setupGame(enemyCharacterModels: [EnemyCharacterModel])
+    func setupNextEnemy()
 }
 
 class BattleViewModel: ObservableObject {
@@ -211,6 +212,8 @@ private extension BattleViewModel {
     }
 }
 
+// MARK: - BATTLE VIEW MODEL PROTOCOL
+
 extension BattleViewModel: BattleViewModelProtocol {
 
     func prepareGame(
@@ -301,8 +304,11 @@ extension BattleViewModel: BattleViewModelProtocol {
     }
 }
 
+// MARK: - BATTLE SCENE PROTOCOL
+
 extension BattleViewModel: BattleSceneProtocol {
     func roundComplete() {
+        output?.setupNextEnemy()
         playerAnger?.currentLevel = 0
         nextQuestion()
         nextEnemy()

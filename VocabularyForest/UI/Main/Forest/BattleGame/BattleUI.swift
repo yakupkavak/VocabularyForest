@@ -189,7 +189,7 @@ private extension BattleUI {
                     if viewModel.gameStatus.wrongWords.isEmpty {
                         Text("Amazing!!\nYou remembered everything!").multilineTextAlignment(.center).foregroundStyle(.white).padding()
                     }else {
-                        Text("Review Words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
+                        Text("Review  wrong words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
                         List {
                             ForEach(viewModel.gameStatus.wrongWords) { book in
                                 Text(book.unwrappedLearningWord).foregroundStyle(.white).listRowBackground(Color.clear)

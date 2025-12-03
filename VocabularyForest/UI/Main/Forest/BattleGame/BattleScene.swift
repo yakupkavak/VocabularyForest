@@ -10,6 +10,7 @@ import SpriteKit
 protocol BattleSceneProtocol: AnyObject {
     func playerDead()
     func roundComplete()
+    func playerWon()
 }
 
 class BattleScene: SKScene, SKPhysicsContactDelegate {
@@ -65,7 +66,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         }
         if ((firstBody.categoryBitMask & PhysicsCategory.enemy != 0) &&
             (secondBody.categoryBitMask & PhysicsCategory.blackHole != 0)) {
-            setupNextGame()
+            helper?.roundComplete()
         }
     }
     
@@ -86,15 +87,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: - LOGIC
-    
-    private func setupNextGame() {
-        helper?.roundComplete()
-        environmentManager?.nextBackground()
-        environmentManager?.hideGate()
-        playerManager?.setupPlayer()
-        enemyManager?.spawnNextEnemy()
-        touchEnable = false
-    }
     
     private func startGame() {
         isGameStarted = true
@@ -143,6 +135,15 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension BattleScene: BattleViewModelOutputProcotol {
+    
+    func setupNextEnemy() {
+        environmentManager?.nextBackground()
+        environmentManager?.hideGate()
+        playerManager?.setupPlayer()
+        enemyManager?.spawnNextEnemy()
+        touchEnable = false
+    }
+
     func setupGame(enemyCharacterModels: [EnemyCharacterModel]) {
         enemyManager?.setupEnemyManager(models: enemyCharacterModels)
     }
@@ -182,10 +183,15 @@ extension BattleScene: BattleViewModelOutputProcotol {
                 startPoint: startPoint,
                 endPoint: endPoint
             ) {
-                self.enemyManager.killEnemy { [weak self] in
+                self.enemyManager.killEnemy { [weak self] isBossDead in
                     guard let self else { return }
-                    environmentManager?.showGate()
-                    touchEnable = true
+                    if isBossDead {
+                        helper?.playerWon()
+                        touchEnable = false
+                    }else {
+                        environmentManager?.showGate()
+                        touchEnable = true
+                    }
                 }
             }
         }

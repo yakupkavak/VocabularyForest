@@ -12,7 +12,7 @@ protocol BattleEnemyManagerProtocol: AnyObject {
     func startIdleAnimation()
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void)
     func spawnNextEnemy()
-    func killEnemy(completion: @escaping () -> Void)
+    func killEnemy(completion: @escaping (Bool) -> Void)
     func setupEnemyManager(models: [EnemyCharacterModel])
 }
 
@@ -132,9 +132,9 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         enemyNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation)
     }
     
-    func killEnemy(completion: @escaping () -> Void) {
+    func killEnemy(completion: @escaping (Bool) -> Void) {
         let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
-        let notify = SKAction.run { completion() }
+        let notify = SKAction.run { completion(self.currentEnemyType?.assetName == "Vampire") }
         let delete = SKAction.run {
             self.enemyNode.removeAllActions()
             self.enemyNode.removeFromParent()
@@ -155,7 +155,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void) {
         let moveAnimate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.movingTimePerFrame)
         let moveAnimation = SKAction.repeatForever(moveAnimate)
-        let moveAction = SKAction.move(to: CGPoint(x: endPointX, y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
+        let moveAction = SKAction.move(to: CGPoint(x: endPointX + 20, y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
         let arriveFunction = SKAction.run { [weak self] in
             guard let self else { return }
             self.enemyNode.removeAction(forKey: "walking")

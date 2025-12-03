@@ -24,8 +24,8 @@ enum BattleConstant {
         .fire, .darkMagic, .ice, .death, .psychic
     ]
     static let easyPlayerLevel = 3
-    static let easyEnemyLevel = 4
-    static let easyBossEnemyLevel = 10
+    static let easyEnemyLevel = 1
+    static let easyBossEnemyLevel = 1
     static let mediumPlayerLevel = 3
     static let mediumEnemyLevel = 10
     static let mediumBossEnemyLevel = 20
