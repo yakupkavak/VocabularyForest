@@ -137,7 +137,7 @@ private extension BattleViewModel {
         for book in shortBooks.shuffled().prefix(bookCount){
             let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
                 return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
-            }.prefix(3))
+            }.shuffled().prefix(3))
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, book.unwrappedLearningWord)
             let model = QuestionModel(
@@ -161,11 +161,11 @@ private extension BattleViewModel {
             return book.longMemory == true
         }
         var questionNumber = 1
-        for book in longBooks.prefix(bookCount){
+        for book in longBooks.shuffled().prefix(bookCount){
             if let answer = book.learningWord {
                 let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
-                    return indexBook != book || indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
-                }.prefix(3))
+                    return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
+                }).shuffled().prefix(3)
                 let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
                 let finalQuestionText = String(format: formatString, answer)
                 let model = QuestionModel(
@@ -175,7 +175,7 @@ private extension BattleViewModel {
                         AnswerModel(answer: randomBooks[safe: 0]?.unwrappedLearningWord ?? "Agile", isTrue: false),
                         AnswerModel(answer: randomBooks[safe: 1]?.unwrappedLearningWord ?? "Player", isTrue: false),
                         AnswerModel(answer: randomBooks[safe: 2]?.unwrappedLearningWord ?? "Who", isTrue: false),
-                    ],
+                    ].shuffled(),
                     questionNumber: questionNumber
                 )
                 questionList.append(model)
@@ -196,16 +196,18 @@ private extension BattleViewModel {
             prepareEnemyLevel(gameLevel: safeGameLevel, characterModel: nextEnemy)
         }
     }
-    private func calculateMinBookCount(
+    func calculateMinBookCount(
         battleMode: BattleModeModel,
         gameLevel: GameLevel,
     ) -> Int{
-        var totalBook = 0
+        var totalCorrectBook = 0
+        var totalWrongBook = 0
         let assetModels = battleMode.assetModels
         for characterModel in assetModels {
-            totalBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
+            totalCorrectBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
+            totalWrongBook += gameLevel.playerLevel
         }
-        return totalBook + 1
+        return totalCorrectBook + totalWrongBook + 1
     }
 }
 
