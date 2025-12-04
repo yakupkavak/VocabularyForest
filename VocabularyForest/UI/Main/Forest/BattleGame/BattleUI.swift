@@ -9,10 +9,24 @@ import SwiftUI
 import SpriteKit
 internal import CoreData
 
+// MARK: - CONSTANTS
+
+private enum BattleConstantUI {
+    static let optionsList: [SettingsModel] = [
+        SettingsModel(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
+        SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
+        SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
+    ]
+}
+
 struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     // MARK: - PROPERTIES
     
+    @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
+    @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
+    @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
+    @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     @StateObject private var viewModel: ViewModel
     @EnvironmentObject private var forestRouter: LearningRouter
     @State private var scene: BattleScene = {
@@ -23,6 +37,9 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     }()
     @State private var showMagics = true
     @State private var showQuestion = false
+    @State private var showOption = false
+    @State private var showSetting = false
+    @State private var showExistAlert = false
     var gameType: BattleQuestionType
     var battleMode: BattleModeModel
     var gameLevel: GameLevel
@@ -48,6 +65,36 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             SpriteView(scene: scene)
                 .ignoresSafeArea()
             headerView
+            if showOption {
+                if showExistAlert {
+                    GameConfirmationUI(title: "Are you sure?", message: "Your progress won't be saved") {
+                        forestRouter.navigateBack()
+                    } onCancel: {
+                        showExistAlert = false
+                    }.transition(.scale)
+                        .zIndex(3.0)
+                }else {
+                    GameOptionsUI(
+                        onResume: { showOption = false },
+                        onSettings: {
+                            showOption = false
+                            showSetting = true
+                        },
+                        onHome: {
+                            showExistAlert = true
+                        },
+                        onClose: { showOption = false }
+                    )
+                    .transition(.scale)
+                    .zIndex(3.0)
+                }
+                Color.black.ignoresSafeArea().opacity(0.7).zIndex(2.0)
+            }else if showSetting {
+                ForestSettingsUI(onClose: { showSetting = false })
+                    .transition(.scale)
+                    .zIndex(3.0)
+                Color.black.ignoresSafeArea().opacity(0.7).zIndex(2.0)
+            }
             if let error = viewModel.errorModel {
                 switch error {
                 case .emptyBookcase:
@@ -83,6 +130,18 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             self.viewModel.output = scene
             self.scene.helper = viewModel
             self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
+        }.onAppear {
+            viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
+            viewModel.startGameMusic()
+        }
+        .onChange(of: musicVolume) { newValue in
+            viewModel.updateAudioSettings(music: newValue, sfx: sfxVolume, isMuted: isMuted)
+        }
+        .onChange(of: sfxVolume) { newValue in
+            viewModel.updateAudioSettings(music: musicVolume, sfx: newValue, isMuted: isMuted)
+        }
+        .onChange(of: isMuted) { newValue in
+            viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: newValue)
         }
     }
 }
@@ -254,10 +313,43 @@ private extension BattleUI {
             }
             HStack {
                 Spacer()
-                Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36)
+                Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36).onTapGesture {
+                    showOption = true
+                }
             }
             Spacer()
         }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8).padding(.top, -16)
+    }
+    
+    var options: some View {
+        VStack {
+            ZStack {
+                Image("title_header").resizable().scaledToFit()
+                Text("Options").foregroundStyle(.white).font(.system(size: 24))
+            }
+            ForEach(BattleConstantUI.optionsList, id: \.self) { model in
+                settingsRow(model: model).onTapGesture {
+                    switch model.type {
+                    case .resume:
+                        showOption = false
+                    case .settings:
+                        showOption = false
+                        showSetting = true
+                    case .home:
+                        showOption = false
+                        showExistAlert = true
+                    }
+                }
+            }
+        }.padding().background(.brown.opacity(0.8)).cornerRadius(16).zIndex(3.0).frame(width: UIScreen.main.bounds.width * 0.6)
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    showOption = false
+                } label: {
+                    Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
+                        .offset(x: 12, y: -12)
+                }
+            }
     }
     
     func answerComponent(text: String) -> some View {
@@ -271,8 +363,8 @@ private extension BattleUI {
 // MARK: - GAME HELPERS
 
 private extension BattleUI {
-    func nextQuestion() {
-        
+    func exitGame() {
+        showExistAlert = true
     }
 }
 

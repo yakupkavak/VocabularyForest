@@ -25,9 +25,6 @@
     "Amazing!!\nYou remembered everything!" : {
 
     },
-    "Anladım" : {
-
-    },
     "Anlam" : {
 
     },
@@ -182,6 +179,9 @@
         }
       }
     },
+    "No" : {
+
+    },
     "Öğrenilen Dil" : {
 
     },
@@ -239,7 +239,10 @@
         }
       }
     },
-    "Review \n Words" : {
+    "Return Forest" : {
+
+    },
+    "Review  wrong words" : {
 
     },
     "Search Bookcases" : {
@@ -296,6 +299,9 @@
 
     },
     "wrong" : {
+
+    },
+    "Yes" : {
 
     }
   },

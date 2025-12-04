@@ -21,6 +21,10 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func checkAnswer(answerNumber: Int)
     func startMagic(magicType: MagicType)
     func nextQuestion()
+    func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool)
+    func playSoundEffect(name: String)
+    func stopGameMusic()
+    func startGameMusic()
     var questionStation: QuestionStation { get }
     var output: BattleViewModelOutputProcotol? { get set }
     var currentQuestion: QuestionModel? { get }
@@ -45,6 +49,7 @@ class BattleViewModel: ObservableObject {
     // MARK: - PROPERTIES
     
     private let coreData: CoreDataManager
+    private let audioService: AudioServiceProtocol
     private var questionList: [QuestionModel] = []
     private var answerBooks: [Book] = []
     private var currentQuestionId = 0
@@ -54,6 +59,9 @@ class BattleViewModel: ObservableObject {
     private var currentEnemyIndex = 0
     private var gameLevel: GameLevel? = nil
     weak var output: BattleViewModelOutputProcotol?
+    
+    // MARK: - PUBLISHED PROPERTIES
+
     @Published var questionStation: QuestionStation = .notDetermined
     @Published var currentQuestion: QuestionModel?
     @Published var errorModel: BattleError? = nil
@@ -66,8 +74,9 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
 
-    init(coreDataManager: CoreDataManager = .shared) {
+    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService()) {
         self.coreData = coreDataManager
+        self.audioService = audioService
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
             secondsElapsed += 1
@@ -301,6 +310,22 @@ extension BattleViewModel: BattleViewModelProtocol {
         }else {
             askQuestion()
         }
+    }
+    
+    func startGameMusic() {
+        audioService.playBackgroundMusic()
+    }
+    
+    func stopGameMusic() {
+        audioService.stopMusic()
+    }
+    
+    func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool) {
+        audioService.updateVolume(musicLevel: music, sfxLevel: sfx, isMuted: isMuted)
+    }
+    
+    func playSoundEffect(name: String) {
+        audioService.playSFX(filename: name)
     }
 }
 
