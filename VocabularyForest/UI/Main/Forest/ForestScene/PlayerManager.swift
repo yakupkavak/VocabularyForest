@@ -13,6 +13,7 @@ protocol PlayerManagerProtocol: AnyObject {
     var isMoving: Bool { get }
     func setupPlayer()
     func startWalking(direction: GameDirection)
+    func startWaiting()
     func stopWalking()
     func stopPhysicalMovement()
 }
@@ -24,6 +25,7 @@ class PlayerManager: PlayerManagerProtocol {
     private weak var scene: SKScene?
     let playerNode = SKSpriteNode()
     private var walkTextures: [SKTexture] = []
+    private var idleTextures: [SKTexture] = []
     var direction: GameDirection = .right
     var isMoving: Bool = false
     
@@ -32,6 +34,7 @@ class PlayerManager: PlayerManagerProtocol {
     init(scene: SKScene) {
         self.scene = scene
         setupWalkTextures()
+        setupIdleTextures()
     }
     
     // MARK: - SETUP
@@ -40,6 +43,13 @@ class PlayerManager: PlayerManagerProtocol {
         let atlas = SKTextureAtlas(named: "MenWalking")
         for i in 0..<atlas.textureNames.count {
             walkTextures.append(atlas.textureNamed("men_walk_\(i)"))
+        }
+    }
+    
+    private func setupIdleTextures() {
+        let atlas = SKTextureAtlas(named: "MenIdle")
+        for i in 0..<atlas.textureNames.count {
+            idleTextures.append(atlas.textureNamed("men_idle_\(i)"))
         }
     }
     
@@ -54,12 +64,30 @@ class PlayerManager: PlayerManagerProtocol {
             y: GameConstant.floorHeightSize * 0.83
         )
         playerNode.zPosition = 3
+        
+        startWaiting()
         scene.addChild(playerNode)
     }
     
     // MARK: - ACTIONS
     
+    func startWaiting() {
+        stopPhysicalMovement()
+        playerNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
+        self.isMoving = false
+        playerNode.xScale = (direction == .right) ? 1.0 : -1.0
+        if playerNode.action(forKey: GameConstant.waitingCharacterAnimation) == nil {
+            let animate = SKAction.animate(with: idleTextures, timePerFrame: GameConstant.waitingTimePerFrame * 1.3)
+            playerNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation)
+        }
+    }
+    
+    func stopWaiting() {
+        playerNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
+    }
+    
     func startWalking(direction: GameDirection) {
+        stopWaiting()
         self.direction = direction
         self.isMoving = true
         playerNode.xScale = (direction == .right) ? 1.0 : -1.0
@@ -88,5 +116,6 @@ class PlayerManager: PlayerManagerProtocol {
         isMoving = false
         playerNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
         playerNode.removeAction(forKey: GameConstant.movingCharacterAction)
+        startWaiting()
     }
 }

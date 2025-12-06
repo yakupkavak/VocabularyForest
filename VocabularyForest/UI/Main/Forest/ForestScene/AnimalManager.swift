@@ -139,7 +139,7 @@ private extension AnimalManager {
     
     func moveAnimal() {
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAction)
-        let moveAmount: CGFloat = (direction == .right) ? 20 : -20
+        let moveAmount: CGFloat = (direction == .right) ? 50 : -50
         let move = SKAction.moveBy(x: moveAmount, y: 0, duration: 1.0)
         let repeatAction = SKAction.repeatForever(move)
         currentAnimalNode.run(repeatAction, withKey: GameConstant.movingCharacterAction)

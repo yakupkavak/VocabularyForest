@@ -5,7 +5,7 @@
 //  Created by Yakup Kavak on 1.12.2025.
 //
 
-enum BattleModeModel {
+enum BattleModeModel: Hashable {
     case iceElemental
     case fireElemental
     case natureElemental

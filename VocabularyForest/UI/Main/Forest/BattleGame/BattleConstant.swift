@@ -53,7 +53,7 @@ struct CharacterAnger {
     var imageFileName: String
 }
 
-enum GameLevel {
+enum GameLevel: Hashable {
     case easy
     case medium
     case hard

@@ -10,7 +10,7 @@ import SwiftUI
 
 // MARK: - ENUMS
 
-enum QuestStatus: String {
+enum QuestStatus: String, Hashable {
     case locked
     case active
     case completed
@@ -49,7 +49,7 @@ extension QuestStatus {
     }
 }
 
-enum QuestRewardModel {
+enum QuestRewardModel: Hashable {
     case animal(name: String)
     case plant(name: String)
     case gold(count: Int)
@@ -104,7 +104,7 @@ extension QuestRewardModel {
 
 // TODO: - FUTURE I WILL CREATE FIREBASE WITH MONTLY FOREST COMPONENTS
 
-enum QuestType {
+enum QuestType: Hashable {
     case daily
     case weekly
     case monthly
@@ -184,7 +184,7 @@ extension QuestType {
 
 // MARK: MODEL
 
-struct QuestModel: Identifiable {
+struct QuestModel: Identifiable, Hashable {
     
     // MARK: - PROPERTIES
     

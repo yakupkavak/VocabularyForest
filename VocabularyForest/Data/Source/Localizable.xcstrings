@@ -13,6 +13,22 @@
     "%%%lld" : {
 
     },
+    "%lld Gold" : {
+
+    },
+    "%lld Water Drops" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
     "%lld%%" : {
 
     },
@@ -61,10 +77,10 @@
     "Cancel" : {
 
     },
-    "correct" : {
+    "Claim reward" : {
 
     },
-    "Daily Quests" : {
+    "correct" : {
 
     },
     "Delete" : {
@@ -132,6 +148,9 @@
         }
       }
     },
+    "In progress" : {
+
+    },
     "İptal" : {
 
     },
@@ -171,9 +190,6 @@
     "Kullanım Koşulları" : {
 
     },
-    "MonthlyQuests" : {
-
-    },
     "Nice to meet you!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -186,6 +202,9 @@
       }
     },
     "No" : {
+
+    },
+    "No quests available." : {
 
     },
     "Öğrenilen Dil" : {
@@ -206,10 +225,7 @@
     "Örnek Cümle" : {
 
     },
-    "Quest Decription" : {
-
-    },
-    "Quest Rewards" : {
+    "Progress" : {
 
     },
     "quest_daily_type_title" : {
@@ -263,6 +279,12 @@
     "Review  wrong words" : {
 
     },
+    "REWARD" : {
+
+    },
+    "Reward claimed" : {
+
+    },
     "Search Bookcases" : {
 
     },
@@ -298,9 +320,6 @@
     "So Close!" : {
 
     },
-    "Special Quests" : {
-
-    },
     "Tehlikeli Alan" : {
 
     },
@@ -319,22 +338,10 @@
     "Vazgeç" : {
 
     },
-    "WeeklyQuests" : {
-
-    },
     "wrong" : {
 
     },
     "Yes" : {
-
-    },
-    "You will get %@ water drops." : {
-
-    },
-    "You will get %@." : {
-
-    },
-    "Your Progress" : {
 
     }
   },
