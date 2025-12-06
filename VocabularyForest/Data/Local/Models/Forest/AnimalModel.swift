@@ -9,6 +9,7 @@ import Foundation
 
 struct AnimalModel {
     let name: String
+    let assetName: String
     let createdDate: Date
     let healthValue: Int
     let isAlive: Bool

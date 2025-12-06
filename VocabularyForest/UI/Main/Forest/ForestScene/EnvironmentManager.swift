@@ -138,7 +138,7 @@ class EnvironmentManager: EnvironmentManagerProtocol {
         guard let scene = scene else { return }
         
         for node in scene.children {
-            if node == floorNode || node == waterStatue || node == grassStatue {
+            if node == floorNode || node == waterStatue || node == grassStatue || node.name == "Animal" {
                 let moveAction = SKAction.moveBy(x: direction == .left ? 100 : -100, y: 0, duration: 1.0)
                 let repeatAction = SKAction.repeatForever(moveAction)
                 

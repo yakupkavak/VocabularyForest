@@ -38,6 +38,46 @@ enum BattleModeModel {
     }
 }
 
+extension BattleModeModel {
+    var valueForCoreData: String {
+        switch self {
+        case .iceElemental:
+            "iceElemental"
+        case .fireElemental:
+            "fireElemental"
+        case .natureElemental:
+            "natureElemental"
+        case .sandDragon:
+            "sandDragon"
+        case .fireDragon:
+            "fireDragon"
+        case .classic:
+            "classic"
+        }
+    }
+    static func convertFromCoreData(string: String?) -> BattleModeModel {
+        guard let string else {
+            return .classic
+        }
+        return switch string {
+            case "iceElemental":
+                .iceElemental
+            case "fireElemental":
+                .fireElemental
+            case "natureElemental":
+                .natureElemental
+            case "sandDragon":
+                .sandDragon
+            case "fireDragon":
+                .fireDragon
+            case "classic":
+                .classic
+            default:
+                .classic
+        }
+    }
+}
+
 struct EnemyCharacterModel: Equatable {
     var assetName: String
     var characterName: String

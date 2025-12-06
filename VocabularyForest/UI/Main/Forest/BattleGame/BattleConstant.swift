@@ -97,6 +97,37 @@ enum GameLevel {
         }
     }
 }
+extension GameLevel {
+    var valueForCoreData: String {
+        switch self {
+        case .easy:
+            "easy"
+        case .medium:
+            "medium"
+        case .hard:
+            "hard"
+        case .insane:
+            "insane"
+        }
+    }
+    static func convertFromCoreData(string: String?) -> GameLevel {
+        guard let string else {
+            return .medium
+        }
+        return switch string {
+            case "easy":
+                .easy
+            case "medium":
+                .medium
+            case "hard":
+                .hard
+            case "insane":
+                .insane
+            default:
+                .medium
+        }
+    }
+}
 
 // MARK: - UI STATIONS
 

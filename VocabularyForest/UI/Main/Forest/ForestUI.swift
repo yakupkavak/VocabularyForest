@@ -18,7 +18,7 @@ protocol ForestUIProtocol {
 private extension ForestUI {
     enum Constant {
         static let optionsList: [SettingsModel] = [
-            SettingsModel(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
+            SettingsModel<SettingType>(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
             SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
             SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
         ]
@@ -31,6 +31,7 @@ struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
+    @State private var forestScene = ForestScene()
     @StateObject private var viewModel = ForestViewModel()
     @EnvironmentObject var router: LearningRouter
     @State private var showOption = false
@@ -55,7 +56,12 @@ struct ForestUI: View {
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)
                 .navigationBarBackButtonHidden().zIndex(1.0)
-        }.onAppear {
+        }.task {
+            self.viewModel.output = forestScene
+            self.forestScene.helper = viewModel
+            viewModel.fetchForest()
+        }
+        .onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
             viewModel.startGameMusic()
         }
@@ -75,13 +81,11 @@ struct ForestUI: View {
 
 private extension ForestUI {
     var gameScene: SKScene {
-        let gameView = GameScene()
-        gameView.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        gameView.scaleMode = .fill
-        gameView.helper = viewModel
-        gameView.forestHelper = self
-        viewModel.output = gameView
-        return gameView
+        forestScene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        forestScene.scaleMode = .fill
+        forestScene.helper = viewModel
+        forestScene.forestHelper = self
+        return forestScene
     }
     var options: some View {
         VStack {

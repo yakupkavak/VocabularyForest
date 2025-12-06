@@ -20,7 +20,7 @@ struct GameOptionsUI: View {
     var onClose: () -> Void
     
     private let options = [
-        SettingsModel(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
+        SettingsModel<SettingType>(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
         SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
         SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
     ]

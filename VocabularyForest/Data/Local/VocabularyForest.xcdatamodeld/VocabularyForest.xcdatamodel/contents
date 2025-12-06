@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="24G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Animal" representedClassName="Animal" syncable="YES">
+        <attribute name="assetName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="healtValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -38,9 +39,12 @@
         <relationship name="trees" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tree" inverseName="forest" inverseEntity="Tree"/>
     </entity>
     <entity name="Quest" representedClassName="Quest" syncable="YES">
+        <attribute name="battleMode" optional="YES" attributeType="String"/>
         <attribute name="currentProgressCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="description_quest" optional="YES" attributeType="String"/>
+        <attribute name="gameLevel" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="questType" optional="YES" attributeType="String"/>
         <attribute name="rewardType" optional="YES" attributeType="String"/>
         <attribute name="rewardValue" optional="YES" attributeType="String"/>
         <attribute name="status" optional="YES" attributeType="String"/>
@@ -57,6 +61,7 @@
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="sculptures" inverseEntity="Forest"/>
     </entity>
     <entity name="Tree" representedClassName="Tree" syncable="YES">
+        <attribute name="assetName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="healthValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

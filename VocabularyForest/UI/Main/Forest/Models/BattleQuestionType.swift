@@ -11,3 +11,31 @@ enum BattleQuestionType {
     case remainder // only long memory words to practise.
 } // For 2 weeks or for a month it will became short term memory.
 // TODO: - SAY ENGLISH DESCRIPTION OR EXAMPLE TO USER
+
+extension BattleQuestionType {
+    
+    var valueForCoreData: String {
+        switch self {
+        case .learning:
+            "learning"
+        case .competitive:
+            "competitive"
+        case .remainder:
+            "remainder"
+        }
+    }
+    
+    static func convertFromCoreData(type: String?) -> BattleQuestionType {
+        guard let type else { return .learning }
+        return switch type {
+            case "learning":
+                .learning
+            case "competitive":
+                .competitive
+            case "remainder":
+                .remainder
+            default:
+                .learning
+        }
+    }
+}

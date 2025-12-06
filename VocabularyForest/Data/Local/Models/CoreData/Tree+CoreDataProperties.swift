@@ -19,6 +19,7 @@ extension Tree {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var assetName: String?
     @NSManaged public var createdDate: Date?
     @NSManaged public var healthValue: Int16
     @NSManaged public var isAlive: Bool

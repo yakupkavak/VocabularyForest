@@ -64,6 +64,9 @@
     "correct" : {
 
     },
+    "Daily Quests" : {
+
+    },
     "Delete" : {
 
     },
@@ -168,6 +171,9 @@
     "Kullanım Koşulları" : {
 
     },
+    "MonthlyQuests" : {
+
+    },
     "Nice to meet you!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -200,6 +206,12 @@
     "Örnek Cümle" : {
 
     },
+    "Quest Decription" : {
+
+    },
+    "Quest Rewards" : {
+
+    },
     "quest_daily_type_title" : {
 
     },
@@ -222,6 +234,9 @@
         }
       }
     },
+    "Quests" : {
+
+    },
     "quiz_question_format" : {
       "comment" : "Learning vocabulary question title",
       "localizations" : {
@@ -238,6 +253,9 @@
           }
         }
       }
+    },
+    "Return back" : {
+
     },
     "Return Forest" : {
 
@@ -280,6 +298,9 @@
     "So Close!" : {
 
     },
+    "Special Quests" : {
+
+    },
     "Tehlikeli Alan" : {
 
     },
@@ -298,10 +319,22 @@
     "Vazgeç" : {
 
     },
+    "WeeklyQuests" : {
+
+    },
     "wrong" : {
 
     },
     "Yes" : {
+
+    },
+    "You will get %@ water drops." : {
+
+    },
+    "You will get %@." : {
+
+    },
+    "Your Progress" : {
 
     }
   },

@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct SettingsModel: Hashable {
+struct SettingsModel<T: Hashable>: Hashable {
     let title: String
     let icon: String
     let color: Color
-    let type: SettingType
+    let type: T
 }
 
 enum SettingType {

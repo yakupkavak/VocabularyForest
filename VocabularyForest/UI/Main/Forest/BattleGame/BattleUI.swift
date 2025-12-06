@@ -12,7 +12,7 @@ internal import CoreData
 // MARK: - CONSTANTS
 
 private enum BattleConstantUI {
-    static let optionsList: [SettingsModel] = [
+    static let optionsList: [SettingsModel<SettingType>] = [
         SettingsModel(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
         SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
         SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)

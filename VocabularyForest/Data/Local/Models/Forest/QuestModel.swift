@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - ENUMS
 
@@ -51,6 +52,7 @@ extension QuestStatus {
 enum QuestRewardModel {
     case animal(name: String)
     case plant(name: String)
+    case gold(count: Int)
     case water(count: Int)
     case sculpture(name: String)
 }
@@ -62,6 +64,7 @@ extension QuestRewardModel {
         case .plant: return "plant"
         case .water: return "water"
         case .sculpture: return "sculpture"
+        case .gold: return "gold"
         }
     }
 
@@ -75,6 +78,8 @@ extension QuestRewardModel {
             String(count)
         case .sculpture(let name):
             name
+        case .gold(count: let count):
+            String(count)
         }
     }
 
@@ -97,6 +102,8 @@ extension QuestRewardModel {
     }
 }
 
+// TODO: - FUTURE I WILL CREATE FIREBASE WITH MONTLY FOREST COMPONENTS
+
 enum QuestType {
     case daily
     case weekly
@@ -117,6 +124,30 @@ enum QuestType {
     }
     var localizedTitle: String {
         String(localized: titleKey)
+    }
+    var imageIconName: String {
+        switch self {
+        case .daily:
+            "daily_quest_icon"
+        case .weekly:
+            "weekly_quest_icon"
+        case .monthly:
+            "monthly_quest_icon"
+        case .special:
+            "special_quest_icon"
+        }
+    }
+    var backgroundColor: Color {
+        switch self {
+        case .daily:
+            Color.brown500
+        case .weekly:
+            Color.brown500
+        case .monthly:
+            Color.brown500
+        case .special:
+            Color.brown500
+        }
     }
 }
 
@@ -165,7 +196,10 @@ struct QuestModel: Identifiable {
     var status: QuestStatus
     var targetCount: Int
     var currentProgressCount: Int
-    
+    var questionType: BattleQuestionType
+    var battleMode: BattleModeModel
+    var gameLevel: GameLevel
+
     // MARK: - COMPUTED PROPERTIES
 
     var currentRatio: Int {

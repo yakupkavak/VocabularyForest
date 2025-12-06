@@ -28,6 +28,9 @@ extension Quest {
     @NSManaged public var targetCount: Int16
     @NSManaged public var currentProgressCount: Int16
     @NSManaged public var forest: Forest?
+    @NSManaged public var questType: String?
+    @NSManaged public var battleMode: String?
+    @NSManaged public var gameLevel: String?
 
 }
 

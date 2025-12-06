@@ -59,13 +59,30 @@ class ForestDataManager {
     // MARK: - CREATE FOREST
 
     func createForestGame(helper: ForestGameHelperProtocol) -> Resource<Bool> {
-        let quests = helper.initalizeQuests()
+        let dailyQuests = helper.initalizeDailyQuests()
+        let weeklyQuests = helper.initalizeWeeklyQuests()
+        let monthlyQuests = helper.initalizeMonthlyQuests()
+        let specialQuests = helper.initalizeSpecialQuests()
         let forest = Forest(context: viewContext)
+        setupQuests(questList: dailyQuests, forest: forest)
+        setupQuests(questList: weeklyQuests, forest: forest)
+        setupQuests(questList: monthlyQuests, forest: forest)
+        setupQuests(questList: specialQuests, forest: forest)
         forest.rainValue = 0
         forest.isRaining = false
         forest.landHealthPercent = 100
         forest.landStatus = true
-        for model in quests {
+        
+        do {
+            try save()
+            return Resource.success(nil)
+        } catch {
+            return Resource.error(error: ForestError.saveError)
+        }
+    }
+    
+    private func setupQuests(questList: [QuestModel], forest: Forest) {
+        for model in questList {
             let quest = Quest(context: viewContext)
             quest.id = model.id
             quest.type = model.type.valueForCoreData
@@ -77,12 +94,6 @@ class ForestDataManager {
             quest.targetCount = Int16(model.targetCount)
             quest.currentProgressCount = 0
             forest.addToQuests(quest)
-        }
-        do {
-            try save()
-            return Resource.success(nil)
-        } catch {
-            return Resource.error(error: ForestError.saveError)
         }
     }
     
@@ -112,6 +123,7 @@ class ForestDataManager {
         }
         let animal = Animal(context: viewContext)
         animal.createdDate = Date()
+        animal.assetName = model.assetName
         animal.healtValue = Int16(model.healthValue)
         animal.isAlive = model.isAlive
         animal.name = model.name
@@ -158,21 +170,8 @@ class ForestDataManager {
                 viewContext.delete(oldQuest)
             }
         }
-        let newQuestsModels = helper.initalizeQuests()
-        let newDailyModels = newQuestsModels.filter { $0.type == .daily }
-        for model in newDailyModels {
-            let quest = Quest(context: viewContext)
-            quest.id = model.id
-            quest.type = model.type.valueForCoreData
-            quest.title = model.title
-            quest.description_quest = model.description
-            quest.rewardType = model.reward.typeName
-            quest.rewardValue = model.reward.valueString
-            quest.status = model.status.valueForCoreData
-            quest.targetCount = Int16(model.targetCount)
-            quest.currentProgressCount = 0
-            quest.forest = forest
-        }
+        let newQuestsModels = helper.initalizeDailyQuests()
+        setupQuests(questList: newQuestsModels, forest: forest)
         do {
             try save()
             return Resource.success(true)
@@ -199,7 +198,19 @@ class ForestDataManager {
         if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest] {
             for quest in quests {
                 if let id = quest.id {
-                    let model = QuestModel(id: id, type: QuestType.convertFromCoreData(string: quest.type), title: quest.title ?? "", description: quest.description_quest ?? "", reward: .convertFromCoreData(type: quest.rewardType, value: quest.rewardValue), status: .convertFromCoreData(string: quest.status), targetCount: Int(quest.targetCount), currentProgressCount: Int(quest.currentProgressCount))
+                    let model = QuestModel(
+                        id: id,
+                        type: QuestType.convertFromCoreData(string: quest.type),
+                        title: quest.title ?? "Quest",
+                        description: quest.description_quest ?? "Unexpected error",
+                        reward: .convertFromCoreData(type: quest.rewardType, value: quest.rewardValue),
+                        status: .convertFromCoreData(string: quest.status),
+                        targetCount: Int(quest.targetCount),
+                        currentProgressCount: Int(quest.currentProgressCount),
+                        questionType: .convertFromCoreData(type: quest.questType),
+                        battleMode: .convertFromCoreData(string: quest.battleMode),
+                        gameLevel: .convertFromCoreData(string: quest.gameLevel),
+                    )
                     questList.append(model)
                 } else {
                     continue
@@ -213,12 +224,26 @@ class ForestDataManager {
         }
     }
     
-    func fetchAnimals() -> Resource<[Animal]> {
+    func fetchAnimals() -> Resource<[AnimalModel]> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.emptyForest)
         }
-        if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
-            return Resource.success(animals)
+        var animalList: [AnimalModel] = []
+         if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
+            for animal in animals {
+                let animalModel = AnimalModel(
+                    name: animal.name ?? "",
+                    assetName: animal.assetName ?? "Cat",
+                    createdDate: animal.createdDate ?? Date(),
+                    healthValue: Int(animal.healtValue),
+                    isAlive: animal.isAlive,
+                    xPosition: CGFloat(animal.xPosition),
+                    yPosition: CGFloat(animal.yPosition)
+                )
+                animalList.append(animalModel)
+            }
+            
+            return Resource.success(animalList)
         }
         return Resource.error(error: ForestError.emptyList)
     }

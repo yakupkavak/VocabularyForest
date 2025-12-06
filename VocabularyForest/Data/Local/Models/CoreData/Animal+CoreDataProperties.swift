@@ -20,6 +20,7 @@ extension Animal {
 
     @NSManaged public var createdDate: Date?
     @NSManaged public var name: String?
+    @NSManaged public var assetName: String?
     @NSManaged public var isAlive: Bool
     @NSManaged public var healtValue: Int16
     @NSManaged public var xPosition: Double

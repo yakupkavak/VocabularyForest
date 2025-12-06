@@ -10,6 +10,17 @@ import Foundation
 protocol ForestViewModelOutputProcotol: AnyObject {
     func startRain()
     func stopRain()
+    func setupAnimals(animals: [AnimalModel]?)
+}
+
+protocol ForestViewModelProtocol: AnyObject {
+    func startGameMusic()
+    func stopGameMusic()
+    func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool)
+    func playSoundEffect(name: String)
+    func didTapTree(id: UUID)
+    func didCollectWater(amount: Int)
+    func fetchForest()
 }
 
 class ForestViewModel: BaseViewModel {
@@ -22,6 +33,28 @@ class ForestViewModel: BaseViewModel {
     
     init(audioService: AudioServiceProtocol = ForestAudioService()) {
         self.audioService = audioService
+        super.init()
+    }
+}
+
+extension ForestViewModel: ForestViewModelProtocol {
+    
+    // MARK:  - HELPERS
+
+    func fetchForest() {
+        //coreDataManager.fetchForestStatus()
+        //coreDataManager.fetchTrees()
+        //coreDataManager.fetchQuests()
+        //coreDataManager.fetchSculptures()
+        /*
+        coreDataManager.createForestGame(helper: ForestGameHelper())
+        coreDataManager.createAnimal(animal: AnimalModel(name: "Cat", assetName: "Cat", createdDate: Date(), healthValue: 10, isAlive: true, xPosition: 10, yPosition: 10))
+            */
+        let resultAnimal = coreDataManager.fetchAnimals()
+        if resultAnimal.status == .success {
+            guard let animals = resultAnimal.data else { return }
+            output?.setupAnimals(animals: animals)
+        }
     }
     
     func startGameMusic() {
@@ -51,13 +84,9 @@ class ForestViewModel: BaseViewModel {
 
 // MARK: GAME SCENE PROTOCOL
 
-extension ForestViewModel: GameSceneProtocol {
+extension ForestViewModel: ForectSceneProtocol {
     func getTrees() -> Resource<[Tree]> {
         coreDataManager.fetchTrees()
-    }
-    
-    func getAnimals() -> Resource<[Animal]> {
-        coreDataManager.fetchAnimals()
     }
     
     func getSculptures() -> Resource<[Sculpture]> {
