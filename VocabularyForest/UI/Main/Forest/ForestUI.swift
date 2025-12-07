@@ -11,6 +11,8 @@ import SpriteKit
 protocol ForestUIProtocol {
     func showOptions()
     func hideOptions()
+    func showQuests()
+    func hideQuests()
 }
 
 // MARK: - CONSTANTS
@@ -40,6 +42,7 @@ struct ForestUI: View {
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
+    @State private var showQuest = false
     
     // MARK: - UI
     
@@ -51,6 +54,18 @@ struct ForestUI: View {
             }
             if showSetting {
                 settings
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+            }
+            if showQuest {
+                ForestQuestUI(
+                    showQuest: $showQuest,
+                    dailyQuests: viewModel.dailyQuestList,
+                    weeklyQuests: viewModel.weeklyQuestList,
+                    monthlyQuests: viewModel.monthlyQuestList,
+                    specialQuests: viewModel.specialQuestList
+                ) { model in
+                    print("model")
+                }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }
             SpriteView(scene: gameScene)
@@ -174,13 +189,19 @@ private extension ForestUI {
 }
 
 extension ForestUI: ForestUIProtocol {
+    func showQuests() {
+        showQuest = true
+    }
+    func hideQuests() {
+        showQuest = false
+    }
+    
     func hideOptions() {
         showOption = false
     }
     func showOptions() {
         showOption = true
     }
-    
 }
 
 #Preview {

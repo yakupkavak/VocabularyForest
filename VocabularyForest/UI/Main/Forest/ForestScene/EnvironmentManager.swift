@@ -30,6 +30,7 @@ class EnvironmentManager: EnvironmentManagerProtocol {
     private let waterStatue = SKSpriteNode(imageNamed: "water_statue")
     private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
+    private let questButton = SKSpriteNode(imageNamed: "quest_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
 
     // MARK: - INIT
@@ -63,8 +64,13 @@ class EnvironmentManager: EnvironmentManagerProtocol {
         scoreLabel.fontColor = .white
         menuButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.90)
         menuButton.zPosition = 4
-        menuButton.size = CGSize(width: 36.0, height: 36.0)
+        menuButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
         menuButton.name = Constant.menuButtonName
+        questButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.83)
+        questButton.zPosition = 4
+        questButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
+        questButton.name = "quest_button"
+        scene.addChild(questButton)
         scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol ForestViewModelOutputProcotol: AnyObject {
     func startRain()
@@ -27,6 +28,10 @@ class ForestViewModel: BaseViewModel {
     
     // MARK: - PROPERTIES
     
+    @Published var dailyQuestList: [QuestModel] = []
+    @Published var weeklyQuestList: [QuestModel] = []
+    @Published var monthlyQuestList: [QuestModel] = []
+    @Published var specialQuestList: [QuestModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
@@ -50,10 +55,36 @@ extension ForestViewModel: ForestViewModelProtocol {
         coreDataManager.createForestGame(helper: ForestGameHelper())
         coreDataManager.createAnimal(animal: AnimalModel(name: "Cat", assetName: "Cat", createdDate: Date(), healthValue: 10, isAlive: true, xPosition: 10, yPosition: 10))
             */
+        let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
+        if !forestInitalized {
+            let result = coreDataManager.createForestGame(helper: ForestGameHelper())
+            if result.status == .success {
+                UserDefaults.standard.set(true, forKey: "forestInitalized")
+            }
+        }
         let resultAnimal = coreDataManager.fetchAnimals()
         if resultAnimal.status == .success {
             guard let animals = resultAnimal.data else { return }
             output?.setupAnimals(animals: animals)
+        }
+        fetchQuests()
+    }
+    
+    private func fetchQuests() {
+        let questResult = coreDataManager.fetchQuests()
+        if questResult.status == .success, let questList = questResult.data {
+            for quest in questList {
+                switch quest.type {
+                case .daily:
+                    dailyQuestList.append(quest)
+                case .weekly:
+                    weeklyQuestList.append(quest)
+                case .monthly:
+                    monthlyQuestList.append(quest)
+                case .special:
+                    specialQuestList.append(quest)
+                }
+            }
         }
     }
     
