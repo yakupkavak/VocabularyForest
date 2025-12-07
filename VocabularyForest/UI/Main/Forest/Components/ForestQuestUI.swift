@@ -90,7 +90,7 @@ struct QuestRewardView: View {
                 Text("Reward")
                     .font(.caption2)
                     .fontWeight(.black)
-                    .foregroundStyle(.brown.opacity(0.6))
+                    .foregroundStyle(.white.opacity(0.8))
                 
                 switch reward {
                 case .animal, .plant, .sculpture:
@@ -103,7 +103,7 @@ struct QuestRewardView: View {
             }
         }
         .padding(8)
-        .background(Color.white.opacity(0.5))
+        .background(Color.white.opacity(0.3))
         .cornerRadius(12)
     }
 }
@@ -146,10 +146,16 @@ struct QuestRow: View {
                 HStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.black.opacity(0.2))
+                            .fill(Color.white.opacity(0.2))
                             .frame(width: 44, height: 44)
-                        Image(quest.type.imageIconName)
-                            .resizable().scaledToFit().frame(width: 28, height: 28).foregroundStyle(.white)
+                        switch quest.reward {
+                        case .animal(let name), .plant(let name), .sculpture(let name):
+                            Image(name).resizable().scaledToFit().frame(width: 35, height: 35).shadow(radius: 2)
+                        case .water:
+                            Image(systemName: "drop.fill").resizable().scaledToFit().frame(width: 24, height: 24).foregroundStyle(.blue)
+                        case .gold:
+                            Image(systemName: "circle.circle.fill").resizable().scaledToFit().frame(width: 24, height: 24).foregroundStyle(.yellow)
+                        }
                         if quest.status == .locked {
                             Image(systemName: "lock.fill").foregroundStyle(.white.opacity(0.8))
                         }
@@ -157,16 +163,15 @@ struct QuestRow: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(quest.title)
-                            .font(.system(size: 18, weight: .heavy, design: .rounded))
+                            .font(.system(size: 14, weight: .heavy, design: .rounded))
                             .foregroundStyle(.white)
-                            .lineLimit(1)
+                            .lineLimit(2)
                         Text(statusText)
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(statusColor)
                             .padding(.horizontal, 4)
                             .padding(.vertical, 2)
-                            .cornerRadius(4)
                     }
                     
                     Spacer()
@@ -179,30 +184,39 @@ struct QuestRow: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .opacity(quest.status == .locked ? 0.6 : 1.0)
+                .opacity(quest.status == .locked ? 0.8 : 1.0)
             }
             .buttonStyle(.plain)
             .disabled(quest.status == .locked)
             if showDetail {
                 VStack(alignment: .leading, spacing: 16) {
-                    HStack(alignment: .top) {
+                    HStack(alignment: .center) {
                         Image(systemName: "scroll.fill").foregroundStyle(statusColor)
                         Text(quest.description)
                             .font(.subheadline).foregroundStyle(.white.opacity(0.9))
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer()
                     }
-                    
-                    Divider().background(.white.opacity(0.3))
-                    
+                    HStack(alignment: .center) {
+                        Image(systemName: "scroll.fill").foregroundStyle(statusColor)
+                        if #available(iOS 17.0, *) {
+                            (Text("Learning Mode: ")
+                                .foregroundStyle(.white.opacity(0.9)).font(.subheadline)
+                             +
+                             Text(quest.questionType.valueForCoreData.capitalized)
+                                .foregroundStyle(statusColor)
+                                .bold())
+                            .font(.caption)
+                        }
+                        Spacer()
+                    }
+                                        
                     QuestProgressBar(
                         current: quest.currentProgressCount,
                         target: quest.targetCount,
                         color: statusColor
                     )
-                    
-                    Divider().background(.white.opacity(0.3))
-                    
+                                        
                     HStack {
                         Spacer()
                         QuestRewardView(reward: quest.reward)
@@ -244,7 +258,6 @@ struct QuestRow: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.horizontal)
         .padding(.vertical, 4)
         .background(
             RoundedRectangle(cornerRadius: 16)
