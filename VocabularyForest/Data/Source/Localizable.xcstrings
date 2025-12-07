@@ -190,6 +190,9 @@
     "Kullanım Koşulları" : {
 
     },
+    "Learning Mode: " : {
+
+    },
     "Nice to meet you!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -229,16 +232,68 @@
 
     },
     "quest_daily_type_title" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Günlük Görevler"
+          }
+        }
+      }
     },
     "quest_eternal_type_title" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Özel Görevler"
+          }
+        }
+      }
     },
     "quest_monthly_type_title" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aylık Görevler"
+          }
+        }
+      }
     },
     "quest_weekly_type_title" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Haftalık Görevler"
+          }
+        }
+      }
     },
     "question_number" : {
       "localizations" : {

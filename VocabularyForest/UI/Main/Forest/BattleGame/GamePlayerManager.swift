@@ -81,7 +81,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         playerNode.size = firstFrame.size()
         playerNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         playerNode.position = CGPoint(
-            x: scene.size.width * 0.2,
+            x: scene.size.width * 0.15,
             y: BattleConstant.characterPosition
         )
         playerNode.zPosition = 3

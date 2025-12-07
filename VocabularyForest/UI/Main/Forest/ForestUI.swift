@@ -10,9 +10,8 @@ import SpriteKit
 
 protocol ForestUIProtocol {
     func showOptions()
-    func hideOptions()
     func showQuests()
-    func hideQuests()
+    func showGameSelection()
 }
 
 // MARK: - CONSTANTS
@@ -33,11 +32,12 @@ struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
-    @State private var forestScene = ForestScene()
-    @StateObject private var viewModel = ForestViewModel()
     @EnvironmentObject var router: LearningRouter
+    @StateObject private var viewModel = ForestViewModel()
+    @State private var forestScene = ForestScene()
     @State private var showOption = false
     @State private var showSetting = false
+    @State private var showGameSelect = false
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -67,6 +67,9 @@ struct ForestUI: View {
                     print("model")
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+            }
+            if showQuest {
+                
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)
@@ -132,6 +135,7 @@ private extension ForestUI {
                 }
             }
     }
+    
     var settings: some View {
         VStack(spacing: 20) {
             ZStack {
@@ -189,9 +193,15 @@ private extension ForestUI {
 }
 
 extension ForestUI: ForestUIProtocol {
+    
+    func showGameSelection() {
+        showGameSelect = true
+    }
+    
     func showQuests() {
         showQuest = true
     }
+    
     func hideQuests() {
         showQuest = false
     }

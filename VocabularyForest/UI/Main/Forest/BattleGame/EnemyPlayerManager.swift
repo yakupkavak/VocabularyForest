@@ -92,11 +92,21 @@ private extension BattleEnemyManager {
     func setupEnemy() {
         guard let firstFrame = idleTextures.first, let scene = scene else { return }
         enemyNode.texture = firstFrame
-        enemyNode.size = CGSize(width: BattleConstant.enemySize, height: BattleConstant.enemySize)
+        let originalSize = firstFrame.size()
+        let targetHeight = GameConstant.gameHeightSize * 0.18
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = targetHeight * aspectRatio
+            enemyNode.size = CGSize(width: targetWidth, height: targetHeight)
+        }
+        /*
+        enemyNode.size = CGSize(width: BattleConstant.enemySize, height: BattleConstant.enemySize)*/
         enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         enemyNode.position = CGPoint(
-            x: scene.size.width * 0.7,
-            y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
+            x: ["SandDragon"]
+                .contains(currentEnemyType?.assetName) ? scene.size.width * 0.55 : scene.size.width * 0.7,
+            y:["Vampire","SandDragon"]
+                .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
         )
         enemyNode.xScale = -1.0
         enemyNode.zPosition = 3
@@ -134,7 +144,10 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     
     func killEnemy(completion: @escaping (Bool) -> Void) {
         let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
-        let notify = SKAction.run { completion(self.currentEnemyType?.assetName == "Vampire") }
+        let notify = SKAction.run {
+            completion(
+            ["Vampire","SandDragon"].contains(self.currentEnemyType?.assetName))
+        }
         let delete = SKAction.run {
             self.enemyNode.removeAllActions()
             self.enemyNode.removeFromParent()
@@ -155,7 +168,10 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void) {
         let moveAnimate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.movingTimePerFrame)
         let moveAnimation = SKAction.repeatForever(moveAnimate)
-        let moveAction = SKAction.move(to: CGPoint(x: endPointX + 20, y: (currentEnemyType?.assetName == "Vampire") ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
+        let moveAction = SKAction.move(to: CGPoint(x: endPointX + CGFloat(["Vampire","SandDragon"]
+            .contains(currentEnemyType?.assetName) ? 100 : 30),
+            y: ["Vampire","SandDragon"]
+            .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
         let arriveFunction = SKAction.run { [weak self] in
             guard let self else { return }
             self.enemyNode.removeAction(forKey: "walking")

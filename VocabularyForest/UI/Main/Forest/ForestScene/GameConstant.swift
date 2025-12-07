@@ -19,7 +19,7 @@ enum GameConstant {
     static let airAction = "airAnimation"
     static let movingDistance: CGFloat = 100
     static let movingTimePerFrame: CGFloat = 0.1
-    static let attackTimePerFrame: CGFloat = 0.5
+    static let attackTimePerFrame: CGFloat = 0.2
     static let waitingTimePerFrame: CGFloat = 0.1
     static let jumpTimePerFrame: CGFloat = 0.1
     static let dyingTimePerFrame: CGFloat = 0.4

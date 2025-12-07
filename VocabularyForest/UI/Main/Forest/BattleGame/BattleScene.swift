@@ -20,7 +20,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
     var playerManager: GamePlayerManagerProtocol!
     var environmentManager: BattleEnvironmentManagerProtocol!
     var enemyManager: BattleEnemyManagerProtocol!
-    var forestHelper: ForestUIProtocol?
     var helper: BattleSceneProtocol?
     private var isTouching = false
     private var isGameStarted = false
@@ -38,7 +37,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
         playerManager.startWaiting()
-        forestHelper?.hideOptions()
         var runCount = 0
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { timer in
             runCount += 1

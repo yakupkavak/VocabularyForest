@@ -38,7 +38,6 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         playerManager = PlayerManager(scene: self)
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
-        forestHelper?.hideOptions()
     }
     
     override func update(_ currentTime: TimeInterval) {
