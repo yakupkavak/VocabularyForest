@@ -91,32 +91,19 @@ extension BaseTabViewUI {
             LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
                 switch destination {
                     case .flashCard:
-                    FlashCardUI(tabBar: $selectedTab).onAppear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.hideTabbar()
-                            }
-                        }.onDisappear {
-                            withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.showTabbar()
-                            }
-                        }
+                    FlashCardUI(tabBar: $selectedTab)
                     case .forest:
-                    /*
-                    BattleUI(viewModel: BattleViewModel(), gameType: .competitive, battleMode: .classic, gameLevel: .easy)*/
-                        ForestUI().onAppear {
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                tabbarController.hideTabbar()
-                            }
-                        }
-                        .onDisappear {
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                tabbarController.showTabbar()
-                            }
-                        }
+                    ForestUI()
                         .ignoresSafeArea()
                         .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .tabBar)
+                case .game(let option, let mode, let level):
+                    BattleUI(viewModel: BattleViewModel(), gameType: option, battleMode: mode, gameLevel: level)
+                    .ignoresSafeArea()
+                    .navigationBarBackButtonHidden()
+                    .toolbar(.hidden, for: .tabBar)
                 }
-            }.tabbarVisibility(visibility: tabbarController.isVisible)
+            }
         }.tabItem {
             Label("Öğrenme", systemImage: "book")
         }.tag(BaseTabTypes.quiz)
@@ -130,4 +117,3 @@ extension BaseTabViewUI {
 enum BaseTabTypes {
     case createBook,bookcases,quiz,forest,settings
 }
-

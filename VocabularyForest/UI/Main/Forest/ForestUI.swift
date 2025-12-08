@@ -68,8 +68,11 @@ struct ForestUI: View {
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }
-            if showQuest {
-                
+            if showGameSelect {
+                GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
+                    router.navigate(to: .game(type, mode, level))
+                }
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)

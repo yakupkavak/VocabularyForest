@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum GameOptionType {
+enum GameOptionType: Codable {
     case resume
     case settings
     case home

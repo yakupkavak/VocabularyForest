@@ -38,5 +38,6 @@ extension LearningRouter {
     public enum Destination: Codable, Hashable {
         case forest
         case flashCard
+        case game(BattleQuestionType, BattleModeModel, GameLevel)
     }
 }

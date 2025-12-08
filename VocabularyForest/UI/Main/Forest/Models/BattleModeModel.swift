@@ -5,7 +5,7 @@
 //  Created by Yakup Kavak on 1.12.2025.
 //
 
-enum BattleModeModel: Hashable {
+enum BattleModeModel: Hashable, Codable {
     case iceElemental
     case fireElemental
     case natureElemental
@@ -39,6 +39,38 @@ enum BattleModeModel: Hashable {
 }
 
 extension BattleModeModel {
+    var title: String {
+        switch self {
+        case .iceElemental:
+            "Ice Elemental"
+        case .fireElemental:
+            "Fire Elemental"
+        case .natureElemental:
+            "Nature Elemental"
+        case .sandDragon:
+            "Sand Dragon"
+        case .fireDragon:
+            "Fire Dragon"
+        case .classic:
+            "Classic"
+        }
+    }
+    var background: String {
+        switch self {
+        case .iceElemental:
+            "battle_background_2"
+        case .fireElemental:
+            "battle_background_3"
+        case .natureElemental:
+            "battle_background_3"
+        case .sandDragon:
+            "battle_background_1"
+        case .fireDragon:
+            "battle_background_7"
+        case .classic:
+            "battle_background_0"
+        }
+    }
     var valueForCoreData: String {
         switch self {
         case .iceElemental:

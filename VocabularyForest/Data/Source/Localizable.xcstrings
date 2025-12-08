@@ -122,6 +122,18 @@
     "Fantastic!" : {
 
     },
+    "Game Levels" : {
+
+    },
+    "Game Mode" : {
+
+    },
+    "Game Types" : {
+
+    },
+    "Games" : {
+
+    },
     "Gizlilik Politikası" : {
 
     },
@@ -375,6 +387,9 @@
     "So Close!" : {
 
     },
+    "Start Game" : {
+
+    },
     "Tehlikeli Alan" : {
 
     },
@@ -398,6 +413,26 @@
     },
     "Yes" : {
 
+    },
+    "You can defeat the enemies with %lld correct selections, and the boss with %lld correct selections and you have %lld health" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You can defeat the enemies with %1$lld correct selections, and the boss with %2$lld correct selections and you have %3$lld health"
+          }
+        }
+      }
+    },
+    "You can defeat the enemy with %lld correct selections and you have %lld health" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You can defeat the enemy with %1$lld correct selections and you have %2$lld health"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

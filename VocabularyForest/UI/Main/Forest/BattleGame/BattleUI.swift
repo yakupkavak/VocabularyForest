@@ -62,9 +62,9 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     var body: some View {
         ZStack() {
+            headerView.zIndex(3.0)
             SpriteView(scene: scene)
                 .ignoresSafeArea()
-            headerView
             if showOption {
                 if showExistAlert {
                     GameConfirmationUI(title: "Are you sure?", message: "Your progress won't be saved") {
@@ -318,7 +318,7 @@ private extension BattleUI {
                 }
             }
             Spacer()
-        }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8).padding(.top, -16)
+        }.padding(.trailing, 8)
     }
     
     var options: some View {

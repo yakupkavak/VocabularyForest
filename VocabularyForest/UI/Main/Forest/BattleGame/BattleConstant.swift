@@ -53,7 +53,7 @@ struct CharacterAnger {
     var imageFileName: String
 }
 
-enum GameLevel: Hashable {
+enum GameLevel: Hashable, Codable {
     case easy
     case medium
     case hard
@@ -98,6 +98,18 @@ enum GameLevel: Hashable {
     }
 }
 extension GameLevel {
+    var title: String {
+        switch self {
+        case .easy:
+            "Easy"
+        case .medium:
+            "Medium"
+        case .hard:
+            "Hard"
+        case .insane:
+            "Insane"
+        }
+    }
     var valueForCoreData: String {
         switch self {
         case .easy:
