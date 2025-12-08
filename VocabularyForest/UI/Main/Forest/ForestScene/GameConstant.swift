@@ -30,7 +30,7 @@ enum GameConstant {
     static let magicSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
     static let flyTime: Double = 1.0
     static let explodeTime: Double = 0.6
-    static let walkingTime: Double = 2.0
+    static let walkingTime: Double = 1.5
 }
 
 enum GameDirection {

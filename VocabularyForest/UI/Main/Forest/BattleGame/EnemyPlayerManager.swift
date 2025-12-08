@@ -93,7 +93,7 @@ private extension BattleEnemyManager {
         guard let firstFrame = idleTextures.first, let scene = scene else { return }
         enemyNode.texture = firstFrame
         let originalSize = firstFrame.size()
-        let targetHeight = GameConstant.gameHeightSize * 0.18
+        let targetHeight = GameConstant.gameHeightSize * 0.2
         if originalSize.height > 0 {
             let aspectRatio = originalSize.width / originalSize.height
             let targetWidth = targetHeight * aspectRatio
@@ -103,9 +103,9 @@ private extension BattleEnemyManager {
         enemyNode.size = CGSize(width: BattleConstant.enemySize, height: BattleConstant.enemySize)*/
         enemyNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         enemyNode.position = CGPoint(
-            x: ["SandDragon"]
-                .contains(currentEnemyType?.assetName) ? scene.size.width * 0.55 : scene.size.width * 0.7,
-            y:["Vampire","SandDragon"]
+            x: ["SandDragon","FireDragon"]
+                .contains(currentEnemyType?.assetName) ? scene.size.width * 0.65 : scene.size.width * 0.7,
+            y:["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"]
                 .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
         )
         enemyNode.xScale = -1.0
@@ -168,10 +168,22 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void) {
         let moveAnimate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.movingTimePerFrame)
         let moveAnimation = SKAction.repeatForever(moveAnimate)
-        let moveAction = SKAction.move(to: CGPoint(x: endPointX + CGFloat(["Vampire","SandDragon"]
-            .contains(currentEnemyType?.assetName) ? 100 : 30),
-            y: ["Vampire","SandDragon"]
-            .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85), duration: GameConstant.walkingTime)
+        let moveAction = SKAction.move(
+            to: CGPoint(
+                x: endPointX + CGFloat(["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"]
+                    .contains(currentEnemyType?.assetName) ? 100 : 30),
+                y:[
+                    "Vampire",
+                    "SandDragon",
+                    "FireDragon",
+                    "IceElemental",
+                    "NatureElemental",
+                    "FireElemental"
+                ]
+                    .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
+            ),
+            duration: GameConstant.walkingTime
+        )
         let arriveFunction = SKAction.run { [weak self] in
             guard let self else { return }
             self.enemyNode.removeAction(forKey: "walking")
