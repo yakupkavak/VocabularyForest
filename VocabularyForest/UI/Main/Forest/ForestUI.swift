@@ -64,7 +64,7 @@ struct ForestUI: View {
                     monthlyQuests: viewModel.monthlyQuestList,
                     specialQuests: viewModel.specialQuestList
                 ) { model in
-                    print("model")
+                    viewModel.claimReward(quest: model)
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }

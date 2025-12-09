@@ -8,6 +8,7 @@
 import Foundation
 
 struct AnimalModel {
+    let id: UUID? = nil
     let name: String
     let assetName: String
     let createdDate: Date

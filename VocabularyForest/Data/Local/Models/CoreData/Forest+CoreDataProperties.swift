@@ -19,6 +19,7 @@ extension Forest {
     }
 
     @NSManaged public var rainValue: Int16
+    @NSManaged public var moneyValue: Int16
     @NSManaged public var landHealthPercent: Int16
     @NSManaged public var landStatus: Bool
     @NSManaged public var isRaining: Bool

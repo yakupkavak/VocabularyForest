@@ -72,6 +72,7 @@ class ForestDataManager {
         forest.isRaining = false
         forest.landHealthPercent = 100
         forest.landStatus = true
+        forest.moneyValue = 0
         let context = viewContext
         let sampleBookcase = Bookcase(context: context)
         sampleBookcase.name = "Test Kitaplık"
@@ -275,6 +276,53 @@ class ForestDataManager {
     
     // MARK: - UPDATE
     
+    func claimReward(quest: QuestModel) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return .error(error: ForestError.emptyForest)
+        }
+        if let questSet = forest.quests, let quests =  questSet.allObjects as? [Quest], let quest = quests.first(where: { $0.id == quest.id }) {
+            quest.status = QuestStatus.claimed.valueForCoreData
+        } else {
+            return .error(error: ForestError.emptyForest)
+        }
+        switch quest.reward {
+        case .animal(let name):
+            let animalModel = AnimalModel(
+                name: "\(name)",
+                assetName: name,
+                createdDate: Date(),
+                healthValue: 10,
+                isAlive: true,
+                xPosition: 10,
+                yPosition: 10
+            )
+            createAnimal(animal: animalModel)
+        case .plant(let name):
+            let plantModel = TreeModel(
+                id: nil,
+                treeName: name,
+                isAlive: true,
+                treeHealthValue: 5,
+                treeXPosition: 20,
+                treeYPosition: 20,
+            )
+            createTree(tree: plantModel)
+        case .gold(let count):
+            updateMoneyValue(money: count)
+        case .water(let count):
+            updateRainValue(rain: count)
+        case .sculpture(let name):
+            let sculptureModel = SculptureModel(
+                name: name,
+                createDate: Date(),
+                xPosition: 20,
+                yPosition: 20
+            )
+            createSculpture(sculpture: sculptureModel)
+        }
+        return .success(true)
+    }
+    
     func winGame(gameLevel: GameLevel, battleEnemyMode: BattleEnemyModel, gameType: BattleQuestionType) -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.saveError)
@@ -344,5 +392,20 @@ class ForestDataManager {
     
     func updateForestStatus(model: ForestStatusModel) {
         
+    }
+    
+    func updateRainValue(rain: Int) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        forest.rainValue += Int16(rain)
+        return Resource.success(true)
+    }
+    func updateMoneyValue(money: Int)  -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        forest.moneyValue += Int16(money)
+        return Resource.success(true)
     }
 }

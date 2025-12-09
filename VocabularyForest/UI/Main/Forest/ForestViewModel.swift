@@ -22,6 +22,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func didTapTree(id: UUID)
     func didCollectWater(amount: Int)
     func fetchForest()
+    func claimReward(quest: QuestModel)
 }
 
 class ForestViewModel: BaseViewModel {
@@ -42,19 +43,22 @@ class ForestViewModel: BaseViewModel {
     }
 }
 
+// MARK:  - HELPERS
+
 extension ForestViewModel: ForestViewModelProtocol {
     
-    // MARK:  - HELPERS
-
+    func claimReward(quest: QuestModel) {
+        let result = coreDataManager.claimReward(quest: quest)
+        if result.status == .success {
+            fetchForest()
+        }
+    }
+    
     func fetchForest() {
         //coreDataManager.fetchForestStatus()
         //coreDataManager.fetchTrees()
         //coreDataManager.fetchQuests()
         //coreDataManager.fetchSculptures()
-        /*
-        coreDataManager.createForestGame(helper: ForestGameHelper())
-        coreDataManager.createAnimal(animal: AnimalModel(name: "Cat", assetName: "Cat", createdDate: Date(), healthValue: 10, isAlive: true, xPosition: 10, yPosition: 10))
-            */
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
         if !forestInitalized {
             let result = coreDataManager.createForestGame(helper: ForestGameHelper())

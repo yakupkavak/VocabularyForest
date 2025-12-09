@@ -8,7 +8,7 @@
 import Foundation
 
 struct TreeModel {
-    let id: UUID
+    let id: UUID?
     let treeName: String
     let isAlive: Bool
     let treeHealthValue: Int
