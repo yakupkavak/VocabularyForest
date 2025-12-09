@@ -15,7 +15,7 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func prepareGame(
         bookcase: Bookcase?,
         questionType: BattleQuestionType,
-        battleMode: BattleModeModel,
+        battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     )
     func checkAnswer(answerNumber: Int)
@@ -49,6 +49,7 @@ class BattleViewModel: ObservableObject {
     // MARK: - PROPERTIES
     
     private let coreData: CoreDataManager
+    private let forestDataManager: ForestDataManager
     private let audioService: AudioServiceProtocol
     private var questionList: [QuestionModel] = []
     private var answerBooks: [Book] = []
@@ -58,6 +59,8 @@ class BattleViewModel: ObservableObject {
     private var enemyList: [EnemyCharacterModel]? = nil
     private var currentEnemyIndex = 0
     private var gameLevel: GameLevel? = nil
+    private var questionType: BattleQuestionType? = nil
+    private var battleMode: BattleEnemyModel? = nil
     weak var output: BattleViewModelOutputProcotol?
     
     // MARK: - PUBLISHED PROPERTIES
@@ -74,9 +77,11 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
 
-    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService()) {
+    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService(), forestDataManager: ForestDataManager = .shared) {
         self.coreData = coreDataManager
         self.audioService = audioService
+        self.forestDataManager = forestDataManager
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
             secondsElapsed += 1
@@ -207,7 +212,7 @@ private extension BattleViewModel {
         }
     }
     func calculateMinBookCount(
-        battleMode: BattleModeModel,
+        battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     ) -> Int{
         var totalCorrectBook = 0
@@ -228,7 +233,7 @@ extension BattleViewModel: BattleViewModelProtocol {
     func prepareGame(
         bookcase: Bookcase?,
         questionType: BattleQuestionType,
-        battleMode: BattleModeModel,
+        battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     ) {
         guard let books = coreData.fetchAllBooks() else {
@@ -237,6 +242,8 @@ extension BattleViewModel: BattleViewModelProtocol {
         }
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         self.gameLevel = gameLevel
+        self.questionType = questionType
+        self.battleMode = battleMode
         output?.setupGame(enemyCharacterModels: battleMode.assetModels)
         enemyList = battleMode.assetModels
         guard let firstEnemy = enemyList?.first else {
@@ -277,6 +284,10 @@ extension BattleViewModel: BattleViewModelProtocol {
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
                     gameStatus.trueCount += 1
+                    // TODO: SHOW SAVE ERROR
+                    if let questionType {
+                        let saveResult = forestDataManager.correctAnswer(questionType: questionType )
+                    }
                     output?.correctAnswer()
                 }else {
                     enemyAnger?.currentLevel += 1
@@ -343,6 +354,17 @@ extension BattleViewModel: BattleSceneProtocol {
         uiStation = .gameOver
     }
     func playerWon() {
+        if let gameLevel, let questionType, let battleMode {
+            let result = forestDataManager.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, gameType: questionType)
+            switch result.status {
+            case .success:
+                print("player won saved")
+            case .loading:
+                print("")
+            case .error:
+                print("couldn't save progress")
+            }
+        }
         gameStatus.userWon = true
         uiStation = .gameOver
     }

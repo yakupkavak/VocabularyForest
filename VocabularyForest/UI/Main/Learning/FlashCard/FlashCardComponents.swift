@@ -13,7 +13,7 @@ struct FlashCardFront : View {
 
     @Binding var degree: Double
     let book: Book
-    let type: QuestionType
+    let type: FlashCardQuestionType
     let width: CGFloat = 300
     let height: CGFloat = 450
 

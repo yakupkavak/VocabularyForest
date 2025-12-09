@@ -42,7 +42,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     @State private var showSetting = false
     @State private var showExistAlert = false
     var gameType: BattleQuestionType
-    var battleMode: BattleModeModel
+    var battleMode: BattleEnemyModel
     var gameLevel: GameLevel
     
     // MARK: - INIT
@@ -50,7 +50,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     init(
         viewModel: @autoclosure @escaping () -> ViewModel,
         gameType: BattleQuestionType,
-        battleMode: BattleModeModel,
+        battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel())

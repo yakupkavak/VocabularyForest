@@ -311,7 +311,13 @@ struct ForestQuestUI: View {
         .zIndex(3.0)
         .frame(width: UIScreen.main.bounds.width * 0.85)
         .overlay(alignment: .topTrailing) {
-            Button { showQuest = false } label: {
+            Button {
+                showQuest = false
+                showDailyQuest = false
+                showWeeklyQuest = false
+                showMonthlyQuest = false
+                showSpecialQuest = false
+            } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36).offset(x: 12, y: -12)
             }
         }
@@ -381,15 +387,15 @@ struct ForestQuestUI: View {
         showQuest: $show,
         dailyQuests: [QuestModel(
             id: UUID(),
-            type: .daily,
-            title: "Daily",
+            type: .weekly,
+            title: "weekly",
             description: "Buraya açıklamalar geliyor",
             reward: .gold(count: 5),
             status: .locked,
             targetCount: 10,
             currentProgressCount: 0,
             questionType: .competitive,
-            battleMode: .classic,
+            battleEnemyModel: .classic,
             gameLevel: .easy
         ),
           QuestModel(
@@ -402,7 +408,7 @@ struct ForestQuestUI: View {
             targetCount: 10,
             currentProgressCount: 0,
             questionType: .competitive,
-            battleMode: .classic,
+            battleEnemyModel: .classic,
             gameLevel: .easy
           ),
           QuestModel(
@@ -415,7 +421,7 @@ struct ForestQuestUI: View {
             targetCount: 10,
             currentProgressCount: 0,
             questionType: .competitive,
-            battleMode: .classic,
+            battleEnemyModel: .classic,
             gameLevel: .easy
           ),
                       QuestModel(
@@ -428,7 +434,7 @@ struct ForestQuestUI: View {
                         targetCount: 10,
                         currentProgressCount: 0,
                         questionType: .competitive,
-                        battleMode: .classic,
+                        battleEnemyModel: .classic,
                         gameLevel: .easy
                       ),
                       QuestModel(
@@ -441,7 +447,7 @@ struct ForestQuestUI: View {
                         targetCount: 10,
                         currentProgressCount: 5,
                         questionType: .competitive,
-                        battleMode: .classic,
+                        battleEnemyModel: .classic,
                         gameLevel: .easy
                       ),
                       QuestModel(
@@ -454,7 +460,7 @@ struct ForestQuestUI: View {
                         targetCount: 10,
                         currentProgressCount: 5,
                         questionType: .competitive,
-                        battleMode: .classic,
+                        battleEnemyModel: .classic,
                         gameLevel: .easy
                       ),
                       QuestModel(
@@ -467,7 +473,7 @@ struct ForestQuestUI: View {
                         targetCount: 10,
                         currentProgressCount: 5,
                         questionType: .competitive,
-                        battleMode: .classic,
+                        battleEnemyModel: .classic,
                         gameLevel: .easy
                       )], claimReward: { model in
                           print(model)

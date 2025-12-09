@@ -9,7 +9,7 @@ import SwiftUI
 
 extension GameSelectUI {
     enum Constant {
-        static let gameTypes: [BattleModeModel] = [.classic,.fireDragon,.sandDragon,.fireElemental,.iceElemental,.natureElemental]
+        static let gameTypes: [BattleEnemyModel] = [.classic,.fireDragon,.sandDragon,.fireElemental,.iceElemental,.natureElemental]
         static let gameLevels: [GameLevel] = [.easy,.medium,.hard,.insane]
         static let gameMode: [BattleQuestionType] = [.learning,.competitive,.remainder]
     }
@@ -20,10 +20,10 @@ struct GameSelectUI: View {
     // MARK: - PROPERTIES
     
     @Binding var showGameSelect: Bool
-    @State private var selectedMode: BattleModeModel = .iceElemental
+    @State private var selectedMode: BattleEnemyModel = .iceElemental
     @State private var selectedLevel: GameLevel = .easy
     @State private var selectedType: BattleQuestionType = .learning
-    var startGame: (BattleQuestionType, BattleModeModel, GameLevel) -> Void
+    var startGame: (BattleQuestionType, BattleEnemyModel, GameLevel) -> Void
     
     // MARK: - UI
 

@@ -139,7 +139,6 @@ private extension ForestUI {
                 }
             }
     }
-    
     var settings: some View {
         VStack(spacing: 20) {
             ZStack {
@@ -190,6 +189,7 @@ private extension ForestUI {
 // MARK: - HELPERS
 
 private extension ForestUI {
+    
     func exitForest() {
         viewModel.stopGameMusic()
         router.navigateToRoot()

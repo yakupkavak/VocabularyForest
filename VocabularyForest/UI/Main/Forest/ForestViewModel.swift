@@ -71,6 +71,10 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     private func fetchQuests() {
+        dailyQuestList = []
+        weeklyQuestList = []
+        monthlyQuestList = []
+        specialQuestList = []
         let questResult = coreDataManager.fetchQuests()
         if questResult.status == .success, let questList = questResult.data {
             for quest in questList {

@@ -64,7 +64,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyPlayerLevel
         case .medium:
-            BattleConstant.mediumPlayerLevel
+            2
         case .hard:
             BattleConstant.hardPlayerLevel
         case .insane:
@@ -77,7 +77,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyEnemyLevel
         case .medium:
-            BattleConstant.mediumEnemyLevel
+            2
         case .hard:
             BattleConstant.hardEnemyLevel
         case .insane:
@@ -89,7 +89,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyBossEnemyLevel
         case .medium:
-            BattleConstant.mediumBossEnemyLevel
+            2
         case .hard:
             BattleConstant.hardBossEnemyLevel
         case .insane:

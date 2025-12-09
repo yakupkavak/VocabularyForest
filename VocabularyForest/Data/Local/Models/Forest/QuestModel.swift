@@ -197,7 +197,7 @@ struct QuestModel: Identifiable, Hashable {
     var targetCount: Int
     var currentProgressCount: Int
     var questionType: BattleQuestionType
-    var battleMode: BattleModeModel
+    var battleEnemyModel: BattleEnemyModel
     var gameLevel: GameLevel
 
     // MARK: - COMPUTED PROPERTIES
@@ -207,5 +207,24 @@ struct QuestModel: Identifiable, Hashable {
     }
     var isFinished: Bool {
         return currentProgressCount >= targetCount
+    }
+}
+
+extension QuestModel {
+    static func convertModel(quest: Quest, id: UUID) -> QuestModel {
+        let model = QuestModel(
+            id: id,
+            type: QuestType.convertFromCoreData(string: quest.type),
+            title: quest.title ?? "Quest",
+            description: quest.description_quest ?? "Unexpected error",
+            reward: .convertFromCoreData(type: quest.rewardType, value: quest.rewardValue),
+            status: .convertFromCoreData(string: quest.status),
+            targetCount: Int(quest.targetCount),
+            currentProgressCount: Int(quest.currentProgressCount),
+            questionType: .convertFromCoreData(type: quest.questType),
+            battleEnemyModel: .convertFromCoreData(string: quest.battleEnemyModel),
+            gameLevel: .convertFromCoreData(string: quest.gameLevel),
+        )
+        return model
     }
 }

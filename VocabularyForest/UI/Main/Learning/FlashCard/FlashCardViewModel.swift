@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-enum QuestionType: CaseIterable {
+enum FlashCardQuestionType: CaseIterable {
     case definition
     case fillInTheBlank
     case description
@@ -26,7 +26,7 @@ class FlashCardViewModel: ObservableObject {
     // MARK: - PUBLISHED PROPERTIES
     
     @Published var currentBook: Book?
-    @Published var currentQuestionType: QuestionType = .definition
+    @Published var currentQuestionType: FlashCardQuestionType = .definition
     @Published var noWordsFound = false
     @Published var backDegree = 90.0
     @Published var frontDegree = 0.0
@@ -57,7 +57,7 @@ class FlashCardViewModel: ObservableObject {
     }
 
     private func pickRandomQuestion() {
-        var availableTypes: [QuestionType] = [.definition]
+        var availableTypes: [FlashCardQuestionType] = [.definition]
         
         guard let book = currentBook else {
             currentQuestionType = .definition

@@ -1,11 +1,11 @@
 //
-//  BattleModeModel.swift
+//  BattleEnemyModel.swift
 //  VocabularyForest
 //
 //  Created by Yakup Kavak on 1.12.2025.
 //
 
-enum BattleModeModel: Hashable, Codable {
+enum BattleEnemyModel: Hashable, Codable {
     case iceElemental
     case fireElemental
     case natureElemental
@@ -38,7 +38,7 @@ enum BattleModeModel: Hashable, Codable {
     }
 }
 
-extension BattleModeModel {
+extension BattleEnemyModel {
     var title: String {
         switch self {
         case .iceElemental:
@@ -87,7 +87,7 @@ extension BattleModeModel {
             "classic"
         }
     }
-    static func convertFromCoreData(string: String?) -> BattleModeModel {
+    static func convertFromCoreData(string: String?) -> BattleEnemyModel {
         guard let string else {
             return .classic
         }

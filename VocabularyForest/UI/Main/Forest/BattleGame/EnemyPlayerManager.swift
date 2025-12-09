@@ -146,7 +146,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
         let notify = SKAction.run {
             completion(
-            ["Vampire","SandDragon"].contains(self.currentEnemyType?.assetName))
+                ["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"].contains(self.currentEnemyType?.assetName))
         }
         let delete = SKAction.run {
             self.enemyNode.removeAllActions()

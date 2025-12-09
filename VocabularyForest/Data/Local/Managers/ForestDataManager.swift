@@ -72,7 +72,21 @@ class ForestDataManager {
         forest.isRaining = false
         forest.landHealthPercent = 100
         forest.landStatus = true
-        
+        let context = viewContext
+        let sampleBookcase = Bookcase(context: context)
+        sampleBookcase.name = "Test Kitaplık"
+        sampleBookcase.learningLanguage = "en"
+        sampleBookcase.meaningLanguage = "tr"
+        sampleBookcase.createdDate = Date()
+        for i in 1...100 {
+            let sampleBook = Book(context: context)
+            sampleBook.learningWord = "Word \(i)"
+            sampleBook.meaningWord = "Anlam \(i)"
+            sampleBook.createdDate = Date()
+            sampleBook.shortMemory = i % 2 == 0
+            sampleBook.longMemory = i % 2 != 0
+            sampleBook.bookcase = sampleBookcase
+        }
         do {
             try save()
             return Resource.success(nil)
@@ -93,6 +107,9 @@ class ForestDataManager {
             quest.status = model.status.valueForCoreData
             quest.targetCount = Int16(model.targetCount)
             quest.currentProgressCount = 0
+            quest.gameLevel = model.gameLevel.valueForCoreData
+            quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
+            quest.questType = model.questionType.valueForCoreData
             forest.addToQuests(quest)
         }
     }
@@ -198,19 +215,7 @@ class ForestDataManager {
         if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest] {
             for quest in quests {
                 if let id = quest.id {
-                    let model = QuestModel(
-                        id: id,
-                        type: QuestType.convertFromCoreData(string: quest.type),
-                        title: quest.title ?? "Quest",
-                        description: quest.description_quest ?? "Unexpected error",
-                        reward: .convertFromCoreData(type: quest.rewardType, value: quest.rewardValue),
-                        status: .convertFromCoreData(string: quest.status),
-                        targetCount: Int(quest.targetCount),
-                        currentProgressCount: Int(quest.currentProgressCount),
-                        questionType: .convertFromCoreData(type: quest.questType),
-                        battleMode: .convertFromCoreData(string: quest.battleMode),
-                        gameLevel: .convertFromCoreData(string: quest.gameLevel),
-                    )
+                    let model = QuestModel.convertModel(quest: quest, id: id)
                     questList.append(model)
                 } else {
                     continue
@@ -264,6 +269,75 @@ class ForestDataManager {
         }
         if let sculptureSet = forest.sculptures, let sculptures = sculptureSet.allObjects as? [Sculpture]  {
             return Resource.success(sculptures)
+        }
+        return Resource.error(error: ForestError.emptyList)
+    }
+    
+    // MARK: - UPDATE
+    
+    func winGame(gameLevel: GameLevel, battleEnemyMode: BattleEnemyModel, gameType: BattleQuestionType) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        guard let questList = forest.quests,
+              let quests = questList.allObjects as? [Quest],
+              !quests.isEmpty else {
+            return Resource.success(false)
+        }
+        let targetLevelStr = gameLevel.valueForCoreData
+        let targetEnemyStr = battleEnemyMode.valueForCoreData
+        let targetTypeStr = gameType.valueForCoreData
+        let dailyTypeStr = QuestType.daily.valueForCoreData
+        let completedStatusStr = QuestStatus.completed.valueForCoreData
+
+        let filteredQuests = quests.filter { quest in
+            return quest.gameLevel == targetLevelStr &&
+                   quest.battleEnemyModel == targetEnemyStr &&
+                   quest.questType == targetTypeStr &&
+                   quest.type != dailyTypeStr &&
+                   quest.status != completedStatusStr
+        }
+        var hasChanges = false
+        for quest in filteredQuests {
+            quest.currentProgressCount += 1
+            hasChanges = true
+            if quest.currentProgressCount >= quest.targetCount {
+                quest.status = completedStatusStr
+            }
+        }
+        if hasChanges {
+            do {
+                try save()
+            } catch {
+                return Resource.error(error: ForestError.saveError)
+            }
+        }
+        return Resource.success(true)
+    }
+    
+    func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>{
+        guard let forest = getCurrentForest() else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        if let questList = forest.quests, let quests = questList.allObjects as? [Quest] {
+            let generalFilteredQuests = quests.filter{ (quest: Quest) in
+                BattleQuestionType
+                    .convertFromCoreData(type: quest.questType) == questionType &&
+                QuestType.convertFromCoreData(string: quest.type) == .daily
+            }
+            for quest in generalFilteredQuests {
+                quest.currentProgressCount += Int16(1)
+                if quest.currentProgressCount >= quest.targetCount {
+                    quest.status = QuestStatus.completed.valueForCoreData
+                    quest.currentProgressCount = quest.targetCount
+                }
+            }
+            do {
+                try save()
+            } catch {
+                return Resource.error(error: ForestError.saveError)
+            }
+            return Resource.success(true)
         }
         return Resource.error(error: ForestError.emptyList)
     }
