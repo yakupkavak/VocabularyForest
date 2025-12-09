@@ -23,6 +23,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     // MARK: - PROPERTIES
     
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -62,9 +63,13 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     var body: some View {
         ZStack() {
-            headerView.zIndex(3.0)
             SpriteView(scene: scene)
                 .ignoresSafeArea()
+            VStack {
+                headerView.padding(.top, safeAreaInsets.top)
+                Spacer()
+            }
+            .zIndex(3.0)
             if showOption {
                 if showExistAlert {
                     GameConfirmationUI(title: "Are you sure?", message: "Your progress won't be saved") {
@@ -126,7 +131,8 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                     }
                 }.ignoresSafeArea(.all)
             }
-        }.task {
+        }
+        .task {
             self.viewModel.output = scene
             self.scene.helper = viewModel
             self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
@@ -317,8 +323,7 @@ private extension BattleUI {
                     showOption = true
                 }
             }
-            Spacer()
-        }.padding(.trailing, 8)
+        }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
     }
     
     var options: some View {

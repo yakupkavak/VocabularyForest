@@ -70,6 +70,7 @@ struct ForestUI: View {
             }
             if showGameSelect {
                 GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
+                    showQuest = false
                     router.navigate(to: .game(type, mode, level))
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)

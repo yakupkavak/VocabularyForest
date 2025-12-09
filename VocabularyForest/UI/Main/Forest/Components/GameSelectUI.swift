@@ -39,7 +39,7 @@ struct GameSelectUI: View {
             
             ZStack(alignment: .center) {
                 // TODO: - PLAY IDLE ANIMATION
-                Image(selectedMode.background).resizable().scaledToFill().frame(width: .infinity, height: UIScreen.main.bounds.height * 0.2).borderRadius(borderColor: .white)
+                Image(selectedMode.background).resizable().scaledToFill().frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.18).borderRadius(borderColor: .white)
                 Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
             }
             Text("Game Types").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white)
