@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AnimalModel {
+struct AnimalModel: Equatable {
     let id: UUID? = nil
     let name: String
     let assetName: String

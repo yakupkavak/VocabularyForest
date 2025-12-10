@@ -157,8 +157,6 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         let targetHeight = BattleConstant.enemySize * 0.6
         let shrink = SKAction.resize(toWidth: targetWidth, height: targetHeight, duration: animationDuration)
         let visualEffects = SKAction.group([animate, shrink])
-        
-        enemyNode.size = CGSize(width: BattleConstant.enemySize * 0.6, height: BattleConstant.enemySize * 0.6)
         enemyNode.run(
             SKAction.sequence([visualEffects, delete,notify]),
             withKey: GameConstant.deathCharacterAction

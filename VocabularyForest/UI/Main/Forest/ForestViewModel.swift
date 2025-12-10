@@ -33,6 +33,7 @@ class ForestViewModel: BaseViewModel {
     @Published var weeklyQuestList: [QuestModel] = []
     @Published var monthlyQuestList: [QuestModel] = []
     @Published var specialQuestList: [QuestModel] = []
+    private var animalList: [AnimalModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
@@ -69,7 +70,12 @@ extension ForestViewModel: ForestViewModelProtocol {
         let resultAnimal = coreDataManager.fetchAnimals()
         if resultAnimal.status == .success {
             guard let animals = resultAnimal.data else { return }
-            output?.setupAnimals(animals: animals)
+            for animal in animals {
+                if animalList.contains(where: { $0 != animal}) {
+                    animalList.append(animal)
+                    output?.setupAnimals(animals: animals)
+                }
+            }
         }
         fetchQuests()
     }

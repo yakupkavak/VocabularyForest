@@ -38,11 +38,11 @@ struct ForestUI: View {
     @State private var showOption = false
     @State private var showSetting = false
     @State private var showGameSelect = false
+    @State private var showQuest = false
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
-    @State private var showQuest = false
     
     // MARK: - UI
     
@@ -70,7 +70,7 @@ struct ForestUI: View {
             }
             if showGameSelect {
                 GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
-                    showQuest = false
+                    showGameSelect = false
                     router.navigate(to: .game(type, mode, level))
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
