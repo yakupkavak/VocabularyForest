@@ -1,0 +1,439 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    ":" : {
+
+    },
+    "%@" : {
+
+    },
+    "%%%lld" : {
+
+    },
+    "%lld Gold" : {
+
+    },
+    "%lld Water Drops" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
+    "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
+
+    },
+    "Açıklama" : {
+
+    },
+    "Amazing!!\nYou remembered everything!" : {
+
+    },
+    "Anlam" : {
+
+    },
+    "Anlam Dili" : {
+
+    },
+    "Anlamı" : {
+
+    },
+    "Ayarlar" : {
+
+    },
+    "Bildirim Ayarlarını Aç" : {
+
+    },
+    "Bildirimler" : {
+
+    },
+    "Bilgeliğini yücelt" : {
+
+    },
+    "Biliyorum" : {
+
+    },
+    "Bize Puan Verin" : {
+
+    },
+    "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
+
+    },
+    "Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz." : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Claim reward" : {
+
+    },
+    "correct" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Description" : {
+
+    },
+    "Detaylar (Opsiyonel)" : {
+
+    },
+    "Dil seç" : {
+
+    },
+    "Diller" : {
+
+    },
+    "Düzenle" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Ekle" : {
+
+    },
+    "emptyBookcase" : {
+
+    },
+    "emptyEnemyAsset" : {
+
+    },
+    "emptyQuestionList" : {
+
+    },
+    "Example" : {
+
+    },
+    "Fantastic!" : {
+
+    },
+    "Game Levels" : {
+
+    },
+    "Game Mode" : {
+
+    },
+    "Game Types" : {
+
+    },
+    "Games" : {
+
+    },
+    "Gizlilik Politikası" : {
+
+    },
+    "Hakkında" : {
+
+    },
+    "Hangi dili arıyorsun" : {
+
+    },
+    "Henüz hiç kelime eklememişsin." : {
+
+    },
+    "Hızlı kart" : {
+
+    },
+    "I’m ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırım"
+          }
+        }
+      }
+    },
+    "In progress" : {
+
+    },
+    "İptal" : {
+
+    },
+    "Kapat" : {
+
+    },
+    "Kaydet" : {
+
+    },
+    "Kelime" : {
+
+    },
+    "Kelime Bildirimleri" : {
+
+    },
+    "Kelime Ekle" : {
+
+    },
+    "Kelimeyi Düzenle" : {
+
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "Kitaplığı Düzenle" : {
+
+    },
+    "Kitaplık" : {
+
+    },
+    "Kitaplık Adı" : {
+
+    },
+    "Kitaplık oluştur" : {
+
+    },
+    "Kullanım Koşulları" : {
+
+    },
+    "Learning Mode: " : {
+
+    },
+    "Nice to meet you!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanıştığımıza sevindim!"
+          }
+        }
+      }
+    },
+    "No" : {
+
+    },
+    "No quests available." : {
+
+    },
+    "Öğrenilen Dil" : {
+
+    },
+    "Öğrenilen Kelime" : {
+
+    },
+    "Öğrenme" : {
+
+    },
+    "Oluştur" : {
+
+    },
+    "Options" : {
+
+    },
+    "Örnek Cümle" : {
+
+    },
+    "Progress" : {
+
+    },
+    "quest_daily_type_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Günlük Görevler"
+          }
+        }
+      }
+    },
+    "quest_eternal_type_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Özel Görevler"
+          }
+        }
+      }
+    },
+    "quest_monthly_type_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aylık Görevler"
+          }
+        }
+      }
+    },
+    "quest_weekly_type_title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Haftalık Görevler"
+          }
+        }
+      }
+    },
+    "question_number" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question\n%1$(variableName)lld"
+          }
+        }
+      }
+    },
+    "Quests" : {
+
+    },
+    "quiz_question_format" : {
+      "comment" : "Learning vocabulary question title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is the meaning of %@?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Aşağıdakilerden hangisi \\\"%@\\\" anlamına gelmektedir?"
+          }
+        }
+      }
+    },
+    "Return back" : {
+
+    },
+    "Return Forest" : {
+
+    },
+    "Review  wrong words" : {
+
+    },
+    "Reward" : {
+
+    },
+    "Reward claimed" : {
+
+    },
+    "Search Bookcases" : {
+
+    },
+    "Select Bookcase" : {
+
+    },
+    "Select your \nMagic" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Shall we begin?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shall we begin?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırsan başlayalım mı?"
+          }
+        }
+      }
+    },
+    "Sil" : {
+
+    },
+    "So Close!" : {
+
+    },
+    "Start Game" : {
+
+    },
+    "Tehlikeli Alan" : {
+
+    },
+    "Tüm Veriler Silinsin mi?" : {
+
+    },
+    "Tüm Verileri Sıfırla" : {
+
+    },
+    "unexpectedError" : {
+
+    },
+    "Unuttum" : {
+
+    },
+    "Vazgeç" : {
+
+    },
+    "wrong" : {
+
+    },
+    "Yes" : {
+
+    },
+    "You can defeat the enemies with %lld correct selections, and the boss with %lld correct selections and you have %lld health" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You can defeat the enemies with %1$lld correct selections, and the boss with %2$lld correct selections and you have %3$lld health"
+          }
+        }
+      }
+    },
+    "You can defeat the enemy with %lld correct selections and you have %lld health" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You can defeat the enemy with %1$lld correct selections and you have %2$lld health"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

@@ -1,0 +1,33 @@
+//
+//  VocabularyForestApp.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 4.10.2025.
+//
+
+import SwiftUI
+import CoreData
+import Toasts
+
+@main
+struct VocabularyForestApp: App {
+    
+    // MARK: - PROPERTIES
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @Environment(\.scenePhase) var scenePhase
+    @StateObject private var routerLearning = LearningRouter()
+    @StateObject private var routerBookcase = BookcaseRouter()
+    @StateObject private var routerCreateBookcase = CreateBookRouter()
+
+    // MARK: - VIEWS
+    
+    var body: some Scene {
+        WindowGroup {
+            SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
+                CoreDataManager.shared.save()
+            }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
+                .installToast(position: .bottom)
+        }
+    }
+}

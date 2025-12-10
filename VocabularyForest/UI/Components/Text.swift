@@ -1,0 +1,57 @@
+//
+//  Text.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 4.10.2025.
+//
+
+import Foundation
+import SwiftUI
+
+struct tvMainTitle: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300)
+    }
+}
+
+struct tvTitle: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.system(size: 20, weight: .bold)).foregroundStyle(.brown300)
+    }
+}
+ 
+struct tvDefault: View {
+    var text: String
+    var color: Color = .primary
+    var body: some View{
+        Text(text).font(.callout).foregroundStyle(color)
+    }
+}
+
+struct tvSubtitle: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.system(size: 20, weight: .regular))
+    }
+}
+
+struct tvHint: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.footnote)
+    }
+}
+struct tvGrayHint: View {
+    var text: String
+    
+    var body: some View{
+        Text(text).font(.footnote).foregroundStyle(.gray)
+    }
+}
+

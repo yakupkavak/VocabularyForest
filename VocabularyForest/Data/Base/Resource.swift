@@ -8,18 +8,18 @@
 struct Resource<T> {
     let status: Status
     let data: T?
-    let error: Error? = nil
+    let error: Error?
     
-    static func success(data: T?) -> Resource {
-        return Resource(status: .success, data: data)
+    static func success(_ data: T?) -> Resource {
+        return Resource(status: .success, data: data, error: nil)
     }
     
     static func loading() -> Resource {
-        return Resource(status: .loading, data: nil)
+        return Resource(status: .loading, data: nil, error: nil)
     }
     
-    static func error(data: T?) -> Resource {
-        return Resource(status: .error, data: data)
+    static func error(error: Error?) -> Resource {
+        return Resource(status: .error, data: nil, error: error)
     }
 }
 
