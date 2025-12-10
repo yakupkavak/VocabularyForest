@@ -11,7 +11,7 @@ import Combine
 protocol ForestViewModelOutputProcotol: AnyObject {
     func startRain()
     func stopRain()
-    func setupAnimals(animals: [AnimalModel]?)
+    func setupAnimals(animals: AnimalModel?)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -71,9 +71,9 @@ extension ForestViewModel: ForestViewModelProtocol {
         if resultAnimal.status == .success {
             guard let animals = resultAnimal.data else { return }
             for animal in animals {
-                if animalList.contains(where: { $0 != animal}) {
+                if !animalList.contains(where: { $0 == animal}) {
                     animalList.append(animal)
-                    output?.setupAnimals(animals: animals)
+                    output?.setupAnimals(animals: animal)
                 }
             }
         }

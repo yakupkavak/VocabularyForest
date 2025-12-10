@@ -293,8 +293,8 @@ class ForestDataManager {
                 createdDate: Date(),
                 healthValue: 10,
                 isAlive: true,
-                xPosition: 10,
-                yPosition: 10
+                xPosition: CGFloat.random(in: -50...50),
+                yPosition: CGFloat.random(in: -50...50)
             )
             createAnimal(animal: animalModel)
         case .plant(let name):

@@ -124,7 +124,7 @@ private extension AnimalManager {
         currentAnimalNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         currentAnimalNode.position = CGPoint(
             x: scene.size.width / 2,
-            y: GameConstant.floorHeightSize * 0.7 + model.yPosition)
+            y: GameConstant.floorHeightSize * 0.65 + model.yPosition)
         currentAnimalNode.xScale = -1.0
         currentAnimalNode.zPosition = 3
         scene.addChild(currentAnimalNode)
@@ -139,8 +139,8 @@ private extension AnimalManager {
     
     func moveAnimal() {
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAction)
-        let moveAmount: CGFloat = (direction == .right) ? (50 + CGFloat.random(in: -10...10)) : (
-            -50 + CGFloat.random(in: -10...10)
+        let moveAmount: CGFloat = (direction == .right) ? (300 + CGFloat.random(in: -10...10)) : (
+            -300 + CGFloat.random(in: -10...10)
         )
         let move = SKAction.moveBy(x: moveAmount, y: 0, duration: 1.0)
         let repeatAction = SKAction.repeatForever(move)

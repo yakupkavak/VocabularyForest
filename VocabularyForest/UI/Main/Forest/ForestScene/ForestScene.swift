@@ -21,7 +21,7 @@ protocol ForectSceneProtocol: AnyObject {
 class ForestScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: - PROPERTIES
-
+    
     var playerManager: PlayerManagerProtocol!
     var environmentManager: EnvironmentManagerProtocol!
     var forestHelper: ForestUIProtocol?
@@ -62,7 +62,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
             let canScrollRight = direction == .right && floor.frame.maxX > self.size.width
             
             if (direction == .left && playerX <= centerScreen && canScrollLeft) ||
-               (direction == .right && playerX >= centerScreen && canScrollRight) {
+                (direction == .right && playerX >= centerScreen && canScrollRight) {
                 playerManager.stopPhysicalMovement()
                 playerNode.position.x = centerScreen
                 environmentManager.moveBackground(direction: direction)
@@ -91,19 +91,22 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         if animalManagers.isEmpty {
             return
         }
+        
         for animal in animalManagers {
             let animalNode = animal.animalNode
             let floor = environmentManager.floorNode
             let animalX = animalNode.position.x
             let halfAnimalWidth = animalNode.size.width / 2
-
-            if animal.animalDirection == .right && floor.frame.maxX <= self.size.width {
-                if animalX >= self.size.width - halfAnimalWidth {
+            let floorMinX = floor.frame.minX
+            let floorMaxX = floor.frame.maxX
+            
+            if animal.animalDirection == .right {
+                if animalX >= floorMaxX - halfAnimalWidth {
                     animal.changeDirection()
                 }
             }
-            else if animal.animalDirection == .left && floor.frame.minX >= 0 {
-                if animalX <= halfAnimalWidth {
+            else if animal.animalDirection == .left {
+                if animalX <= floorMinX + halfAnimalWidth {
                     animal.changeDirection()
                 }
             }
@@ -143,13 +146,11 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
-    func setupAnimals(animals: [AnimalModel]?){
+    func setupAnimals(animals: AnimalModel?){
         guard let animals else { return }
-        for animal in animals {
-            let animalManager = AnimalManager(scene: self)
-            animalManager.setupAnimalManager(model: animal)
-            animalManagers.append(animalManager)
-        }
+        let animalManager = AnimalManager(scene: self)
+        animalManager.setupAnimalManager(model: animals)
+        animalManagers.append(animalManager)
     }
     
     func startRain() {
