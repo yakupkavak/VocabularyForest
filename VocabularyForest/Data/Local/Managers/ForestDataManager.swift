@@ -204,7 +204,7 @@ class ForestDataManager {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.emptyForest)
         }
-        let model = ForestStatusModel(rainValue: Int(forest.rainValue), landHealthPercentage: Int(forest.landHealthPercent), landStatus: forest.landStatus)
+        let model = ForestStatusModel(rainValue: Int(forest.rainValue), landHealthPercentage: Int(forest.landHealthPercent), landStatus: forest.landStatus, gold: Int(forest.moneyValue))
         return Resource.success(model)
     }
     

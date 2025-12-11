@@ -33,6 +33,7 @@ class ForestViewModel: BaseViewModel {
     @Published var weeklyQuestList: [QuestModel] = []
     @Published var monthlyQuestList: [QuestModel] = []
     @Published var specialQuestList: [QuestModel] = []
+    @Published var forestStatus: ForestStatusModel? = nil
     private var animalList: [AnimalModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
@@ -76,6 +77,17 @@ extension ForestViewModel: ForestViewModelProtocol {
                     output?.setupAnimals(animals: animal)
                 }
             }
+        }
+        let result = coreDataManager.fetchForestStatus()
+        switch result.status {
+        case .success:
+            if let forestData = result.data {
+                forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
+            }
+        case .loading:
+            print("loading")
+        case .error:
+            print("fetch forest error")
         }
         fetchQuests()
     }

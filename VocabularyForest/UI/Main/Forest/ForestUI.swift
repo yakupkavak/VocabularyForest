@@ -12,6 +12,7 @@ protocol ForestUIProtocol {
     func showOptions()
     func showQuests()
     func showGameSelection()
+    func showForestInfo()
 }
 
 // MARK: - CONSTANTS
@@ -39,6 +40,7 @@ struct ForestUI: View {
     @State private var showSetting = false
     @State private var showGameSelect = false
     @State private var showQuest = false
+    @State private var showForest = false
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -72,6 +74,12 @@ struct ForestUI: View {
                 GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
                     showGameSelect = false
                     router.navigate(to: .game(type, mode, level))
+                }
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+            }
+            if showForest {
+                ForestInfoUI(forestModel: viewModel.forestStatus) {
+                    showForest = false
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }
@@ -189,7 +197,6 @@ private extension ForestUI {
 // MARK: - HELPERS
 
 private extension ForestUI {
-    
     func exitForest() {
         viewModel.stopGameMusic()
         router.navigateToRoot()
@@ -197,6 +204,10 @@ private extension ForestUI {
 }
 
 extension ForestUI: ForestUIProtocol {
+    
+    func showForestInfo() {
+        showForest = true
+    }
     
     func showGameSelection() {
         showGameSelect = true

@@ -31,6 +31,7 @@ class EnvironmentManager: EnvironmentManagerProtocol {
     private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let questButton = SKSpriteNode(imageNamed: "quest_button")
+    private let forestButton = SKSpriteNode(imageNamed: "forest_button")
     private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
 
@@ -75,6 +76,11 @@ class EnvironmentManager: EnvironmentManagerProtocol {
         playButton.zPosition = 4
         playButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
         playButton.name = "play_button"
+        forestButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.69)
+        forestButton.zPosition = 4
+        forestButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
+        forestButton.name = "forest_button"
+        scene.addChild(forestButton)
         scene.addChild(playButton)
         scene.addChild(questButton)
         scene.addChild(menuButton)

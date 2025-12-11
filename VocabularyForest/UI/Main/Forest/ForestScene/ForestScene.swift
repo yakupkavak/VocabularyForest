@@ -132,6 +132,10 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
             forestHelper?.showGameSelection()
             return
         }
+        if nodesAtPoint.contains(where: { $0.name == "forest_button" }) {
+            forestHelper?.showForestInfo()
+            return
+        }
         let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }

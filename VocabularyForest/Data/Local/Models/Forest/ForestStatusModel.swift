@@ -9,4 +9,5 @@ struct ForestStatusModel {
     let rainValue: Int
     let landHealthPercentage: Int
     let landStatus: Bool
+    let gold: Int
 }
