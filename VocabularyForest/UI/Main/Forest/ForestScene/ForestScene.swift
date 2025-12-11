@@ -158,7 +158,7 @@ extension ForestScene: ForestViewModelOutputProcotol {
     }
     
     func startRain() {
-        print("Scene: Yağmur efekti başlatılıyor...")
+        environmentManager.startRain()
     }
     
     func stopRain() {

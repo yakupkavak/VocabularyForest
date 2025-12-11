@@ -89,6 +89,7 @@ extension ForestViewModel: ForestViewModelProtocol {
         case .error:
             print("fetch forest error")
         }
+        output?.startRain()
         fetchQuests()
     }
     

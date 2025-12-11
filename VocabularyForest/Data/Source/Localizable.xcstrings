@@ -38,6 +38,9 @@
     "Açıklama" : {
 
     },
+    "Altın: %lld" : {
+
+    },
     "Amazing!!\nYou remembered everything!" : {
 
     },
@@ -51,6 +54,9 @@
 
     },
     "Ayarlar" : {
+
+    },
+    "Beklenmedik hata" : {
 
     },
     "Bildirim Ayarlarını Aç" : {
@@ -96,6 +102,9 @@
 
     },
     "Diller" : {
+
+    },
+    "Doluluk oranı %lld / 50" : {
 
     },
     "Düzenle" : {
@@ -391,6 +400,9 @@
 
     },
     "Tehlikeli Alan" : {
+
+    },
+    "Toprak sağlığı: %%%lld" : {
 
     },
     "Tüm Veriler Silinsin mi?" : {

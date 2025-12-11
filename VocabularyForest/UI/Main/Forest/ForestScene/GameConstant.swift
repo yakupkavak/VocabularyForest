@@ -17,6 +17,7 @@ enum GameConstant {
     static let backgroundAction = "backgroundAnimation"
     static let attackAnimation = "attackAnimation"
     static let airAction = "airAnimation"
+    static let rainAnimation = "rainAnimation"
     static let movingDistance: CGFloat = 100
     static let movingTimePerFrame: CGFloat = 0.1
     static let attackTimePerFrame: CGFloat = 0.2
