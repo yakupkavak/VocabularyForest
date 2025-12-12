@@ -8,6 +8,16 @@
 import Foundation
 import SwiftUI
 
+struct TitleBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        content.foregroundStyle(.white)
+            .font(.system(size: 20, weight: .bold))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(Image("title_header").resizable())
+    }
+}
+
 struct tvMainTitle: View {
     var text: String
     

@@ -22,11 +22,7 @@ struct GamePopUpContainer<Content: View>: View {
     var body: some View {
         VStack(spacing: 20) {
             Text(title)
-                .foregroundStyle(.white)
-                .font(.system(size: 20, weight: .bold))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Image("title_header").resizable())
+                .modifier(TitleBackground())
             .padding(.bottom, 10)
             content
         }

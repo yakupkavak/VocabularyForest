@@ -23,6 +23,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func didCollectWater(amount: Int)
     func fetchForest()
     func claimReward(quest: QuestModel)
+    func startRain()
 }
 
 class ForestViewModel: BaseViewModel {
@@ -34,6 +35,7 @@ class ForestViewModel: BaseViewModel {
     @Published var monthlyQuestList: [QuestModel] = []
     @Published var specialQuestList: [QuestModel] = []
     @Published var forestStatus: ForestStatusModel? = nil
+    @Published var showRainButton = true
     private var animalList: [AnimalModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
@@ -48,6 +50,19 @@ class ForestViewModel: BaseViewModel {
 // MARK:  - HELPERS
 
 extension ForestViewModel: ForestViewModelProtocol {
+    
+    func startRain() {
+        showRainButton = false
+        output?.startRain()
+        var time = 0
+        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            time += 1
+            if time == 40 {
+                output?.stopRain()
+            }
+        }
+    }
     
     func claimReward(quest: QuestModel) {
         let result = coreDataManager.claimReward(quest: quest)
@@ -83,13 +98,15 @@ extension ForestViewModel: ForestViewModelProtocol {
         case .success:
             if let forestData = result.data {
                 forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
+                if(forestData.rainValue == 50) {
+                    showRainButton = true
+                }
             }
         case .loading:
             print("loading")
         case .error:
             print("fetch forest error")
         }
-        output?.startRain()
         fetchQuests()
     }
     

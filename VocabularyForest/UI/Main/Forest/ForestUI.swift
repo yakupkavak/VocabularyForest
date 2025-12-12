@@ -83,6 +83,16 @@ struct ForestUI: View {
                 }
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
             }
+            if viewModel.showRainButton {
+                VStack{
+                    Spacer()
+                    Button {
+                        viewModel.startRain()
+                    } label: {
+                        Text("Start Rain").modifier(TitleBackground())
+                    }.padding(.bottom, 32)
+                }.zIndex(5.0)
+            }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)
                 .navigationBarBackButtonHidden().zIndex(1.0)
