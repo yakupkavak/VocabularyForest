@@ -28,6 +28,8 @@ enum GameConstant {
     static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
     static let gameHeightSize = UIScreen.main.bounds.height
     static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
+    static let materialHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.6)
+    static let sculptureHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.35)
     static let magicSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
     static let flyTime: Double = 1.0
     static let explodeTime: Double = 0.6

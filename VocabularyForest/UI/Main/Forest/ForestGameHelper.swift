@@ -46,9 +46,9 @@ struct ForestGameHelper: ForestGameHelperProtocol {
             QuestModel(
                 id: UUID(),
                 type: .daily,
-                title: "Wild Challenge",
+                title: "Some gold",
                 description: "No hints, big glory: beat 4 new words!",
-                reward: .water(count: 4),
+                reward: .gold(count: 4),
                 status: .active,
                 targetCount: 4,
                 currentProgressCount: 0,
@@ -115,7 +115,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
             QuestModel(
                 id: UUID(),
                 type: .weekly,
-                title: "Normal seviye Vampir'i alt et",
+                title: "Kristal bitkisi toplayalım",
                 description: "Vampiri alt edip ay çiçeğini elde edelim",
                 reward: .plant(name: "CrystalReed"),
                 status: .active,
@@ -128,7 +128,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
             QuestModel(
                 id: UUID(),
                 type: .weekly,
-                title: "Normal seviye Vampir'i alt et",
+                title: "Çöl çiçeği toplayalım",
                 description: "Vampiri alt edip ay çiçeğini elde edelim",
                 reward: .plant(name: "DesertStarBloom"),
                 status: .active,

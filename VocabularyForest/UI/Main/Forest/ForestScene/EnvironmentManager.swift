@@ -129,7 +129,6 @@ class EnvironmentManager {
             }
         }
     }
-    
 }
 
 extension EnvironmentManager: EnvironmentManagerProtocol {
@@ -147,14 +146,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     
     func setupUI() {
         guard let scene else { return }
-        waterStatue.anchorPoint = CGPoint(x: 0.5, y: 0)
-        waterStatue.position = CGPoint(x: GameConstant.gameWidthSize * -0.15, y: 0)
-        waterStatue.zPosition = 4
-        scene.addChild(waterStatue)
-        grassStatue.anchorPoint = CGPoint(x: 0.5, y: 0)
-        grassStatue.position = CGPoint(x: GameConstant.gameWidthSize * 0.15, y: 10)
-        grassStatue.zPosition = 4
-        scene.addChild(grassStatue)
         scoreLabel.position = CGPoint(x: scene.size.width / 2, y: scene.size.height - 80)
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
@@ -196,7 +187,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         guard let scene = scene else { return }
         
         for node in scene.children {
-            if node == floorNode || node == waterStatue || node == grassStatue || node.name == "Animal" {
+            if node == floorNode || node == waterStatue || node == grassStatue || node.name == "Animal" || node.name == "sculpture" {
                 let moveAction = SKAction.moveBy(x: direction == .left ? 100 : -100, y: 0, duration: 1.0)
                 let repeatAction = SKAction.repeatForever(moveAction)
                 

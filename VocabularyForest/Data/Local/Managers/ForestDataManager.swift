@@ -73,6 +73,9 @@ class ForestDataManager {
         forest.landHealthPercent = 100
         forest.landStatus = true
         forest.moneyValue = 0
+        for sculpture in baseSculptureList {
+            createSculpture(sculpture: sculpture)
+        }
         let context = viewContext
         let sampleBookcase = Bookcase(context: context)
         sampleBookcase.name = "Test Kitaplık"
@@ -264,12 +267,17 @@ class ForestDataManager {
         return Resource.error(error: ForestError.emptyList)
     }
     
-    func fetchSculptures() -> Resource<[Sculpture]> {
+    func fetchSculptures() -> Resource<[SculptureModel]> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.emptyForest)
         }
+        var sculptureList: [SculptureModel] = []
         if let sculptureSet = forest.sculptures, let sculptures = sculptureSet.allObjects as? [Sculpture]  {
-            return Resource.success(sculptures)
+            for sculpture in sculptures {
+                let model = SculptureModel(name: sculpture.name ?? "grass_sculpure", createDate: sculpture.createdDate ?? Date(), xPosition: sculpture.xPosition, yPosition: sculpture.yPosition)
+                sculptureList.append(model)
+            }
+            return Resource.success(sculptureList)
         }
         return Resource.error(error: ForestError.emptyList)
     }

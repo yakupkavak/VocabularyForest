@@ -51,12 +51,12 @@ struct ForestUI: View {
     var body: some View {
         ZStack {
             if showOption {
-                options
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                options.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showSetting {
-                settings
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                settings.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showQuest {
                 ForestQuestUI(
@@ -67,21 +67,21 @@ struct ForestUI: View {
                     specialQuests: viewModel.specialQuestList
                 ) { model in
                     viewModel.claimReward(quest: model)
-                }
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                }.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showGameSelect {
                 GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
                     showGameSelect = false
                     router.navigate(to: .game(type, mode, level))
-                }
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                }.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showForest {
                 ForestInfoUI(forestModel: viewModel.forestStatus) {
                     showForest = false
-                }
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                }.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if viewModel.showRainButton {
                 VStack{
@@ -91,7 +91,7 @@ struct ForestUI: View {
                     } label: {
                         Text("Start Rain").modifier(TitleBackground())
                     }.padding(.bottom, 32)
-                }.zIndex(5.0)
+                }.zIndex(4.0)
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)

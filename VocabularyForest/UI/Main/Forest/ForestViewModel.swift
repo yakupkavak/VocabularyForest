@@ -12,6 +12,8 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func startRain()
     func stopRain()
     func setupAnimals(animals: AnimalModel?)
+    func setupSculpture(sculpture: SculptureModel)
+    func setupPlant(plant: TreeModel)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -35,8 +37,9 @@ class ForestViewModel: BaseViewModel {
     @Published var monthlyQuestList: [QuestModel] = []
     @Published var specialQuestList: [QuestModel] = []
     @Published var forestStatus: ForestStatusModel? = nil
-    @Published var showRainButton = true
+    @Published var showRainButton = false
     private var animalList: [AnimalModel] = []
+    private var sculptureList: [SculptureModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
@@ -90,6 +93,16 @@ extension ForestViewModel: ForestViewModelProtocol {
                 if !animalList.contains(where: { $0 == animal}) {
                     animalList.append(animal)
                     output?.setupAnimals(animals: animal)
+                }
+            }
+         }
+        let sculptureResult = coreDataManager.fetchSculptures()
+        if sculptureResult.status == .success {
+            guard let sculptures = sculptureResult.data else { return }
+            for sculpture in sculptures {
+                if !sculptureList.contains(where: { $0 == sculpture}) {
+                    sculptureList.append(sculpture)
+                    output?.setupSculpture(sculpture: sculpture)
                 }
             }
         }
@@ -164,7 +177,7 @@ extension ForestViewModel: ForectSceneProtocol {
         coreDataManager.fetchTrees()
     }
     
-    func getSculptures() -> Resource<[Sculpture]> {
+    func getSculptures() -> Resource<[SculptureModel]> {
         coreDataManager.fetchSculptures()
     }
     

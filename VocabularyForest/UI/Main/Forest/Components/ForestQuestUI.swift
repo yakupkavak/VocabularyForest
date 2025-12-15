@@ -210,6 +210,20 @@ struct QuestRow: View {
                         }
                         Spacer()
                     }
+                    
+                    HStack(alignment: .center) {
+                        Image(systemName: "scroll.fill").foregroundStyle(statusColor)
+                        if #available(iOS 17.0, *) {
+                            (Text("Game Level: ")
+                                .foregroundStyle(.white.opacity(0.9)).font(.subheadline)
+                             +
+                             Text(quest.gameLevel.valueForCoreData.capitalized)
+                                .foregroundStyle(statusColor)
+                                .bold())
+                            .font(.caption)
+                        }
+                        Spacer()
+                    }
                                         
                     QuestProgressBar(
                         current: quest.currentProgressCount,

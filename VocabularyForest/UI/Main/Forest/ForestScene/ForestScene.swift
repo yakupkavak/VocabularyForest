@@ -11,7 +11,7 @@ import AVFoundation
 
 protocol ForectSceneProtocol: AnyObject {
     func getTrees() -> Resource<[Tree]>
-    func getSculptures() -> Resource<[Sculpture]>
+    func getSculptures() -> Resource<[SculptureModel]>
     func getQuests() -> Resource <[QuestModel]>
     func treeOnClick(id: UUID)
     func getForestStatus() -> Resource<ForestStatusModel>
@@ -27,6 +27,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var forestHelper: ForestUIProtocol?
     var helper: ForectSceneProtocol?
     var animalManagers: [AnimalManagerProtocol] = []
+    var plantManagers: [PlantManagerProtocol] = []
     private var isTouching = false
     var timer: Timer?
     
@@ -150,6 +151,18 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
+    
+    func setupSculpture(sculpture: SculptureModel) {
+        let manager = SculptureManager(scene: self)
+        manager.setupSculpture(model: sculpture)
+    }
+    
+    func setupPlant(plant: TreeModel) {
+        let manager = PlantManager(scene: self)
+        manager.setupPlant(model: plant)
+        plantManagers.append(manager)
+    }
+    
     func setupAnimals(animals: AnimalModel?){
         guard let animals else { return }
         let animalManager = AnimalManager(scene: self)
