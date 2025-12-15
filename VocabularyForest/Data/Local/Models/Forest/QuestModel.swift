@@ -96,6 +96,8 @@ extension QuestRewardModel {
                 .water(count: Int(value) ?? 1)
             case "sculpture":
                 .sculpture(name: value)
+            case "gold":
+                .gold(count: Int(value) ?? 1)
             default:
                 .water(count: 1)
         }
