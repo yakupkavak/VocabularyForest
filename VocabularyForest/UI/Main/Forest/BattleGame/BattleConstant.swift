@@ -34,7 +34,7 @@ enum BattleConstant {
     static let hardBossEnemyLevel = 30
     static let insanePlayerLevel = 3
     static let insaneEnemyLevel = 15
-    static let insaneBossEnemyLevel = 100
+    static let insaneBossEnemyLevel = 2
 }
 
 struct PhysicsCategory {

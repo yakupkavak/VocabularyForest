@@ -149,7 +149,7 @@ struct QuestRow: View {
         case .locked: return .gray
         case .active: return .yellow
         case .completed: return .green
-        case .claimed: return .blue
+        case .claimed: return .standartText
         }
     }
     

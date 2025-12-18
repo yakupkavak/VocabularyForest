@@ -143,7 +143,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     }
     
     func killEnemy(completion: @escaping (Bool) -> Void) {
-        let animate = SKAction.animate(with: deathTextures, timePerFrame: min(GameConstant.dyingTime / Double(deathTextures.count), 0.2))
+        let animate = SKAction.animate(with: deathTextures, timePerFrame: min(GameConstant.dyingTime / Double(deathTextures.count), 0.4))
         let notify = SKAction.run {
             completion(
                 ["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"].contains(self.currentEnemyType?.assetName))

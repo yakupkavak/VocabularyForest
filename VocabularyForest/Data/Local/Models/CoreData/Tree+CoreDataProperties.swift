@@ -17,7 +17,8 @@ extension Tree {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Tree> {
         return NSFetchRequest<Tree>(entityName: "Tree")
     }
-
+    
+    @NSManaged public var id: UUID?
     @NSManaged public var name: String?
     @NSManaged public var assetName: String?
     @NSManaged public var createdDate: Date?

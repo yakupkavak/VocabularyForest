@@ -173,7 +173,7 @@ extension ForestViewModel: ForestViewModelProtocol {
 // MARK: GAME SCENE PROTOCOL
 
 extension ForestViewModel: ForectSceneProtocol {
-    func getTrees() -> Resource<[Tree]> {
+    func getTrees() -> Resource<[TreeModel]> {
         coreDataManager.fetchTrees()
     }
     

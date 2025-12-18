@@ -10,7 +10,7 @@ import SwiftUI
 import AVFoundation
 
 protocol ForectSceneProtocol: AnyObject {
-    func getTrees() -> Resource<[Tree]>
+    func getTrees() -> Resource<[TreeModel]>
     func getSculptures() -> Resource<[SculptureModel]>
     func getQuests() -> Resource <[QuestModel]>
     func treeOnClick(id: UUID)

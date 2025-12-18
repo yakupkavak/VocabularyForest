@@ -12,6 +12,7 @@ enum ForestError: Error {
     case emptyForest
     case saveError
     case error(error: Error)
+    case emptyUUID
 }
 
 class ForestDataManager {
@@ -123,6 +124,7 @@ class ForestDataManager {
             return Resource.error(error: ForestError.emptyForest)
         }
         let tree = Tree(context: viewContext)
+        tree.id = model.id
         tree.createdDate = Date()
         tree.healthValue = Int16(model.treeHealthValue)
         tree.isAlive = model.isAlive
@@ -143,6 +145,7 @@ class ForestDataManager {
             return Resource.error(error: ForestError.emptyForest)
         }
         let animal = Animal(context: viewContext)
+        animal.id = model.id
         animal.createdDate = Date()
         animal.assetName = model.assetName
         animal.healtValue = Int16(model.healthValue)
@@ -164,6 +167,7 @@ class ForestDataManager {
             return Resource.error(error: ForestError.emptyForest)
         }
         let sculpture = Sculpture(context: viewContext)
+        sculpture.id = model.id
         sculpture.name = model.name
         sculpture.createdDate = model.createDate
         sculpture.xPosition = model.xPosition
@@ -239,8 +243,12 @@ class ForestDataManager {
         }
         var animalList: [AnimalModel] = []
          if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
-            for animal in animals {
+             for animal in animals {
+                 guard let id = animal.id else {
+                     return Resource.error(error: ForestError.emptyUUID)
+                 }
                 let animalModel = AnimalModel(
+                    id: id,
                     name: animal.name ?? "",
                     assetName: animal.assetName ?? "Cat",
                     createdDate: animal.createdDate ?? Date(),
@@ -257,12 +265,28 @@ class ForestDataManager {
         return Resource.error(error: ForestError.emptyList)
     }
     
-    func fetchTrees() -> Resource<[Tree]> {
+    func fetchTrees() -> Resource<[TreeModel]> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.emptyForest)
         }
+        var sculptureList: [TreeModel] = []
         if let treeSet = forest.trees, let trees = treeSet.allObjects as? [Tree]  {
-            return Resource.success(trees)
+            for tree in trees {
+                guard let id = tree.id else {
+                    return Resource.error(error: ForestError.emptyUUID)
+                }
+                let model = TreeModel(
+                    id: id,
+                    treeName: tree.name ?? "grass_sculpure",
+                    isAlive: tree.isAlive,
+                    createdDate: tree.createdDate ?? Date(),
+                    treeHealthValue: Int(tree.healthValue),
+                    treeXPosition: tree.xPosition,
+                    treeYPosition: tree.yPosition,
+                )
+                sculptureList.append(model)
+            }
+            return Resource.success(sculptureList)
         }
         return Resource.error(error: ForestError.emptyList)
     }
@@ -274,7 +298,14 @@ class ForestDataManager {
         var sculptureList: [SculptureModel] = []
         if let sculptureSet = forest.sculptures, let sculptures = sculptureSet.allObjects as? [Sculpture]  {
             for sculpture in sculptures {
-                let model = SculptureModel(name: sculpture.name ?? "grass_sculpure", createDate: sculpture.createdDate ?? Date(), xPosition: sculpture.xPosition, yPosition: sculpture.yPosition)
+                guard let id = sculpture.id else { return Resource.error(error: ForestError.emptyUUID) }
+                let model = SculptureModel(
+                    id: id,
+                    name: sculpture.name ?? "grass_sculpure",
+                    createDate: sculpture.createdDate ?? Date(),
+                    xPosition: sculpture.xPosition,
+                    yPosition: sculpture.yPosition
+                )
                 sculptureList.append(model)
             }
             return Resource.success(sculptureList)
@@ -296,6 +327,7 @@ class ForestDataManager {
         switch quest.reward {
         case .animal(let name):
             let animalModel = AnimalModel(
+                id: UUID(),
                 name: "\(name)",
                 assetName: name,
                 createdDate: Date(),
@@ -307,12 +339,13 @@ class ForestDataManager {
             createAnimal(animal: animalModel)
         case .plant(let name):
             let plantModel = TreeModel(
-                id: nil,
+                id: UUID(),
                 treeName: name,
                 isAlive: true,
+                createdDate: Date(),
                 treeHealthValue: 5,
-                treeXPosition: 20,
-                treeYPosition: 20,
+                treeXPosition: Double.random(in: -0.33...0.6),
+                treeYPosition: Double.random(in: 0.2...0.4),
             )
             createTree(tree: plantModel)
         case .gold(let count):
@@ -321,10 +354,11 @@ class ForestDataManager {
             updateRainValue(rain: count)
         case .sculpture(let name):
             let sculptureModel = SculptureModel(
+                id: UUID(),
                 name: name,
                 createDate: Date(),
-                xPosition: 20,
-                yPosition: 20
+                xPosition: Double.random(in: -0.33...0.6),
+                yPosition: Double.random(in: 0.2...0.4),
             )
             createSculpture(sculpture: sculptureModel)
         }
