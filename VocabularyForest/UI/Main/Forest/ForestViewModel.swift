@@ -40,6 +40,7 @@ class ForestViewModel: BaseViewModel {
     @Published var showRainButton = false
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
+    private var treeList: [TreeModel] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
@@ -75,10 +76,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func fetchForest() {
-        //coreDataManager.fetchForestStatus()
-        //coreDataManager.fetchTrees()
-        //coreDataManager.fetchQuests()
-        //coreDataManager.fetchSculptures()
+    
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
         if !forestInitalized {
             let result = coreDataManager.createForestGame(helper: ForestGameHelper())
@@ -86,6 +84,9 @@ extension ForestViewModel: ForestViewModelProtocol {
                 UserDefaults.standard.set(true, forKey: "forestInitalized")
             }
         }
+        
+        // MARK: - FETCH ANIMAL
+        
         let resultAnimal = coreDataManager.fetchAnimals()
         if resultAnimal.status == .success {
             guard let animals = resultAnimal.data else { return }
@@ -96,6 +97,9 @@ extension ForestViewModel: ForestViewModelProtocol {
                 }
             }
          }
+        
+        // MARK: - FETCH SCULPTURE
+        
         let sculptureResult = coreDataManager.fetchSculptures()
         if sculptureResult.status == .success {
             guard let sculptures = sculptureResult.data else { return }
@@ -106,6 +110,22 @@ extension ForestViewModel: ForestViewModelProtocol {
                 }
             }
         }
+        
+        // MARK: - FETCH TREE
+        
+        let resultTree = coreDataManager.fetchTrees()
+        if resultTree.status == .success {
+            guard let trees = resultTree.data else { return }
+            for tree in trees {
+                if !treeList.contains(where: { $0 == tree}) {
+                    treeList.append(tree)
+                    output?.setupPlant(plant: tree)
+                }
+            }
+         }
+        
+        // MARK: - FETCH STATUS
+        
         let result = coreDataManager.fetchForestStatus()
         switch result.status {
         case .success:
@@ -120,6 +140,7 @@ extension ForestViewModel: ForestViewModelProtocol {
         case .error:
             print("fetch forest error")
         }
+        
         fetchQuests()
     }
     
@@ -173,6 +194,7 @@ extension ForestViewModel: ForestViewModelProtocol {
 // MARK: GAME SCENE PROTOCOL
 
 extension ForestViewModel: ForectSceneProtocol {
+    
     func getTrees() -> Resource<[TreeModel]> {
         coreDataManager.fetchTrees()
     }

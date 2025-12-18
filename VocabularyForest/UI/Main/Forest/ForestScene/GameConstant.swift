@@ -27,6 +27,7 @@ enum GameConstant {
     static let dyingTime: Double = 1.2
     static let gameWidthSize = UIScreen.main.bounds.width * CGFloat(4)
     static let gameHeightSize = UIScreen.main.bounds.height
+    static let plantHeightSize = UIScreen.main.bounds.height * 0.16
     static let floorHeightSize = UIScreen.main.bounds.height * CGFloat(0.4)
     static let materialHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.6)
     static let sculptureHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.35)

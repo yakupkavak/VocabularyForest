@@ -34,11 +34,12 @@ class PlantManager {
 
 private extension PlantManager {
     
-    func loadTextures(for name: String) {
-        let atlas = SKTextureAtlas(named: name)
+    func loadTextures(for model: TreeModel) {
+        let atlas = SKTextureAtlas(named: model.treeName)
         for i in 0..<atlas.textureNames.count {
-            textures.append(atlas.textureNamed("\(name.lowercased())_\(i)"))
+            textures.append(atlas.textureNamed("\(model.treeName.lowercased())_\(i)"))
         }
+        setPlant(model: model)
     }
     
     func setPlant(model: TreeModel) {
@@ -47,12 +48,19 @@ private extension PlantManager {
         }
         plant.texture = firstFrame
         // TODO: - SIZE
+        let originalSize = firstFrame.size()
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = GameConstant.plantHeightSize * aspectRatio
+            plant.size = CGSize(width: targetWidth, height: GameConstant.plantHeightSize)
+        }
         plant.anchorPoint = CGPoint(x: 0.5, y: 0)
         plant.position = CGPoint(
             x: GameConstant.gameWidthSize * model.treeXPosition,
             y: GameConstant.materialHeightSize * model.treeYPosition
         )
-        plant.zPosition = 3
+        plant.name = "plant"
+        plant.zPosition = 5
         scene.addChild(plant)
     }
 }
@@ -62,7 +70,7 @@ private extension PlantManager {
 extension PlantManager: PlantManagerProtocol {
     
     func setupPlant(model: TreeModel) {
-        loadTextures(for: model.treeName)
+        loadTextures(for: model)
     }
     
     func growPlant() {

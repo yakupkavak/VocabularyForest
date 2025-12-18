@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TreeModel {
+struct TreeModel: Equatable{
     let id: UUID
     let treeName: String
     let isAlive: Bool
