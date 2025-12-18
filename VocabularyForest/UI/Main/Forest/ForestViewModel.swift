@@ -26,6 +26,9 @@ protocol ForestViewModelProtocol: AnyObject {
     func fetchForest()
     func claimReward(quest: QuestModel)
     func startRain()
+    func checkBookCount(battleMode: BattleEnemyModel,
+                        gameLevel: GameLevel) -> Bool
+    func closeBookError()
 }
 
 class ForestViewModel: BaseViewModel {
@@ -38,6 +41,7 @@ class ForestViewModel: BaseViewModel {
     @Published var specialQuestList: [QuestModel] = []
     @Published var forestStatus: ForestStatusModel? = nil
     @Published var showRainButton = false
+    @Published var showBookThreshold = false
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
     private var treeList: [TreeModel] = []
@@ -54,6 +58,22 @@ class ForestViewModel: BaseViewModel {
 // MARK:  - HELPERS
 
 extension ForestViewModel: ForestViewModelProtocol {
+    
+    func closeBookError() {
+        showBookThreshold = false
+    }
+    
+    func checkBookCount(battleMode: BattleEnemyModel, gameLevel: GameLevel) -> Bool {
+        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
+        guard let books = CoreDataManager.shared.fetchAllBooks() else {
+            showBookThreshold = true
+            return false }
+        if books.count < minBook {
+            showBookThreshold = true
+            return false
+        }
+        return true
+    }
     
     func startRain() {
         showRainButton = false

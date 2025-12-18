@@ -73,7 +73,9 @@ struct ForestUI: View {
             if showGameSelect {
                 GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
                     showGameSelect = false
-                    router.navigate(to: .game(type, mode, level))
+                    if (viewModel.checkBookCount(battleMode: mode, gameLevel: level)) {
+                        router.navigate(to: .game(type, mode, level))
+                    }
                 }.zIndex(4.0)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
@@ -92,6 +94,9 @@ struct ForestUI: View {
                         Text("Start Rain").modifier(TitleBackground())
                     }.padding(.bottom, 32)
                 }.zIndex(4.0)
+            }
+            if viewModel.showBookThreshold {
+                ForestPopUp(titleText: "Eksik soru", descriptionText: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin", onConfirm: { router.navigateBack()}, onDenied: {viewModel.closeBookError()}, confirmText: "Kütüphane", deniedText: "Orman", showForestPopUp: $viewModel.showBookThreshold)
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)

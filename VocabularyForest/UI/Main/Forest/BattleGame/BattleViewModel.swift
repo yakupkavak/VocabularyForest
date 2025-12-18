@@ -97,6 +97,7 @@ class BattleViewModel: ObservableObject {
 // MARK: - PRIVATE HELPERS
 
 private extension BattleViewModel {
+    
     func prepareEnemyLevel(gameLevel: GameLevel, characterModel: EnemyCharacterModel) {
         switch gameLevel {
         case .easy:
