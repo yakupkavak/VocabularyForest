@@ -70,6 +70,7 @@ struct QuestProgressBar: View {
 }
 
 // MARK: - QuestRewardView
+
 struct QuestRewardView: View {
     
     let reward: QuestRewardModel
@@ -408,6 +409,7 @@ struct ForestQuestUI: View {
     
     @ViewBuilder
     func questListView(title: String, quests: [QuestModel]?, closeAction: @escaping () -> Void, geo: GeometryProxy) -> some View {
+        @State var showAlert = false
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
@@ -475,6 +477,7 @@ struct ForestQuestUI: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 16) {
                     ForEach(Constant.questTypeList, id: \.self) { model in
+                        let hasReward = hasClaimableReward(for: model)
                         Button {
                             withAnimation(.spring()) {
                                 switch model {
@@ -488,7 +491,7 @@ struct ForestQuestUI: View {
                             HStack(spacing: 16) {
                                 ZStack {
                                     Circle()
-                                        .fill(Color.white.opacity(0.2))
+                                        .fill(hasReward ? Color.green.opacity(0.2) : Color.white.opacity(0.2))
                                         .frame(width: 50, height: 50)
                                     Image(model.imageIconName)
                                         .resizable()
@@ -525,6 +528,19 @@ struct ForestQuestUI: View {
             }
         }
     }
+    
+    private func hasClaimableReward(for type: QuestType) -> Bool {
+        let list: [QuestModel]?
+        
+        switch type {
+        case .daily: list = dailyQuests
+        case .weekly: list = weeklyQuests
+        case .monthly: list = monthlyQuests
+        case .special: list = specialQuests
+        }
+        
+        return list?.contains(where: { $0.status == .completed }) ?? false
+    }
 }
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -545,7 +561,7 @@ struct ScaleButtonStyle: ButtonStyle {
         title: "Test Quest",
         description: "Deneme açıklaması",
         reward: .water(count: 100),
-        status: .active,
+        status: .completed,
         targetCount: 5,
         currentProgressCount: 2,
         questionType: .competitive,
