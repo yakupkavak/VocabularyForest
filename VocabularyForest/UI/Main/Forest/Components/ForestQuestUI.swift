@@ -112,18 +112,18 @@ struct QuestRewardView: View {
                 
                 switch reward {
                 case .animal, .plant, .sculpture:
-                    Text(reward.valueString.capitalized)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                    Text(reward.rewardName)
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.brown)
                         .minimumScaleFactor(0.8)
                         .lineLimit(1)
                 case .water(let count):
                     Text("\(count) Water Drops")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.blue)
                 case .gold(let count):
                     Text("\(count) Gold")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                 }
             }
@@ -246,7 +246,7 @@ struct QuestRow: View {
                         Spacer()
                     }
                     
-                    HStack(alignment: .center) {
+                    HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             infoBadge(icon: "burst", title: "Enemy:", value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
                             infoBadge(icon: "brain.head.profile", title: "Mode:", value: quest.questionType.valueForCoreData.capitalized)
@@ -288,7 +288,7 @@ struct QuestRow: View {
     
     @ViewBuilder
     func infoBadge(icon: String, title: String, value: String) -> some View {
-        HStack(spacing: 4) {
+        HStack(alignment: .top, spacing: 4) {
             Image(systemName: icon).font(.caption).foregroundStyle(statusColor)
             Text(title).font(.caption).foregroundStyle(.white.opacity(0.7))
             Text(value).font(.caption).bold().foregroundStyle(statusColor)
@@ -549,7 +549,7 @@ struct ScaleButtonStyle: ButtonStyle {
         targetCount: 5,
         currentProgressCount: 2,
         questionType: .competitive,
-        battleEnemyModel: .classic,
+        battleEnemyModel: .fireElemental,
         gameLevel: .easy
     )
     
