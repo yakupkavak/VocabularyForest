@@ -201,7 +201,7 @@ struct QuestRow: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(quest.title)
-                            .font(.system(size: 15, weight: .heavy, design: .rounded))
+                            .font(.system(size: 14, weight: .heavy, design: .rounded))
                             .foregroundStyle(.white)
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
