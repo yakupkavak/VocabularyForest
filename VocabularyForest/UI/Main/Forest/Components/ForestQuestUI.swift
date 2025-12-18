@@ -184,7 +184,7 @@ struct QuestRow: View {
                                 .shadow(radius: 2)
                         case .water:
                             Image(systemName: "drop.fill").resizable().scaledToFit()
-                                .frame(maxWidth: iconBoxSize * 0.6)
+                                .frame(maxWidth: iconBoxSize * 0.4)
                                 .foregroundStyle(.blue)
                         case .gold:
                             Image(systemName: "circle.circle.fill").resizable().scaledToFit()
@@ -246,10 +246,16 @@ struct QuestRow: View {
                         Spacer()
                     }
                     
-                    HStack {
-                        infoBadge(icon: "brain.head.profile", title: "Type:", value: quest.questionType.valueForCoreData.capitalized)
+                    HStack(alignment: .center) {
+                        VStack(alignment: .leading) {
+                            infoBadge(icon: "burst", title: "Enemy:", value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
+                            infoBadge(icon: "brain.head.profile", title: "Mode:", value: quest.questionType.valueForCoreData.capitalized)
+                        }
                         Spacer()
-                        infoBadge(icon: "flag.fill", title: "Level:", value: quest.gameLevel.valueForCoreData.capitalized)
+                        VStack(alignment: .trailing) {
+                            infoBadge(icon: "flag.fill", title: "Level:", value: quest.gameLevel.valueForCoreData.capitalized)
+                            Spacer()
+                        }
                     }
                     
                     QuestProgressBar(
@@ -538,7 +544,7 @@ struct ScaleButtonStyle: ButtonStyle {
         type: .daily,
         title: "Test Quest",
         description: "Deneme açıklaması",
-        reward: .gold(count: 100),
+        reward: .water(count: 100),
         status: .active,
         targetCount: 5,
         currentProgressCount: 2,
