@@ -19,11 +19,12 @@ class BookcaseFeedViewModel: ObservableObject {
     @Published var editingBookcaseItem: BookcaseDisplayItem? = nil
     private var allBookcases: [BookcaseDisplayItem] = []
     private var cancellables = Set<AnyCancellable>()
-    private var manager = CoreDataManager.shared
-    
+    private var manager: CoreDataManager
+
     // MARK: - INIT
-    
-    init() {
+  
+    init(manager: CoreDataManager = .shared) {
+        self.manager = manager
         fetchBookcases()
         setListener()
     }

@@ -150,7 +150,7 @@ struct QuestRow: View {
         case .locked: return .gray
         case .active: return .yellow
         case .completed: return .green
-        case .claimed: return .standartText
+        case .claimed: return .claimedText
         }
     }
     
@@ -211,9 +211,7 @@ struct QuestRow: View {
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(statusColor)
-                            .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(statusColor.opacity(0.2))
                             .cornerRadius(4)
                     }
                     
@@ -561,7 +559,7 @@ struct ScaleButtonStyle: ButtonStyle {
         title: "Test Quest",
         description: "Deneme açıklaması",
         reward: .water(count: 100),
-        status: .completed,
+        status: .claimed,
         targetCount: 5,
         currentProgressCount: 2,
         questionType: .competitive,

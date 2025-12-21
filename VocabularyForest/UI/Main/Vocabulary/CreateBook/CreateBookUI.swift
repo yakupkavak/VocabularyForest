@@ -136,8 +136,8 @@ private extension CreateBookUI {
                 Button {
                     selectBookcase()
                 } label: {
-                    tvTitle(text: viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
-                }.foregroundStyle(.clickableButton).frame(maxWidth: 200)
+                    Text(viewModel.currentBookcase?.unwrappedName ?? "Unexpected error").font(.system(size: 20, weight: .bold))
+                }.frame(maxWidth: 200)
             }
             Spacer()
         }.overlay(alignment: .trailing) {
@@ -149,14 +149,9 @@ private extension CreateBookUI {
         }
         .overlay(alignment: .leading) {
             Button {
-                print("Boockase")
+                createBookcase()
             } label: {
-                Button {
-                    createBookcase()
-                } label: {
-                    Image("bookcase").resizable().scaledToFit().frame(minWidth: 20, maxWidth: 34)
-                }
-                
+                Image("bookcase").resizable().scaledToFit().frame(minWidth: 24, maxWidth: 36)
             }.offset(x: 24)
         }
     }

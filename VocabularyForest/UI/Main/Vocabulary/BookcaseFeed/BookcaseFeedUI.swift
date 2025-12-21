@@ -13,11 +13,14 @@ struct BookcaseFeedUI: View {
     
     // MARK: - PROPERTIES
     
-    @StateObject private var viewModel = BookcaseFeedViewModel()
+    @StateObject private var viewModel: BookcaseFeedViewModel
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @State private var showEmptyText = false
     @FocusState private var searchBarIsFocused: Bool
-
+    
+    init(viewModel: BookcaseFeedViewModel = BookcaseFeedViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     // MARK: - VIEWS
     
     var body: some View {
@@ -62,13 +65,18 @@ struct BookcaseFeedUI: View {
 
 private extension BookcaseFeedUI {
     var header: some View {
-        HStack{
+        HStack(alignment: .center){
             Button {
                 onClickBookcaseIcon()
             } label: {
-                Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 40)
+                Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
+            Button {
+                onClickBookcaseIcon()
+            } label: {
+                Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 28).foregroundStyle(.clickableButton)
+            }
         }.padding(.horizontal,32)
     }
     var noneDataView: some View {
@@ -122,12 +130,19 @@ private extension BookcaseFeedUI {
 }
 
 #Preview {
-    let context = CoreDataManager.preview.viewContext
+    let previewManager = CoreDataManager.preview
+    let context = previewManager.viewContext
+    
     let sampleBookcase = Bookcase(context: context)
-    sampleBookcase.name = "Örnek Kitaplık (Preview)"
-    sampleBookcase.createdDate = Date()
+    sampleBookcase.name = "Japonca A1 Kelimeler"
     sampleBookcase.learningLanguage = "ja"
     sampleBookcase.meaningLanguage = "tr"
+    sampleBookcase.createdDate = Date()
     
-    return BookcaseFeedUI()
+    try? context.save()
+    
+    let mockViewModel = BookcaseFeedViewModel(manager: previewManager)
+    
+    return BookcaseFeedUI(viewModel: mockViewModel)
+        .environmentObject(BookcaseRouter())
 }

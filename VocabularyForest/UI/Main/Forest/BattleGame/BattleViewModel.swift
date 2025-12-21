@@ -7,8 +7,8 @@
 
 // BattleViewModel.swift
 
-import SwiftUI
 import Combine
+import Foundation
 
 protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func askQuestion()
