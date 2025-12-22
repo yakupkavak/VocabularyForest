@@ -1,0 +1,34 @@
+
+//
+//  GetLibraries.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 22.12.2025.
+//
+
+import Alamofire
+
+enum GetLibraries: EndPoint {
+    
+    case standart
+    
+    var baseURL: String {
+        return "https://vocab-api.yakupkavk.workers.dev/api/"
+    }
+    
+    var path: String {
+        "library/"
+    }
+    
+    var method: HTTPMethod {
+        .get
+    }
+    
+    var parameters: [String: Any] {
+        return [:]
+    }
+    
+    var headers: [String: String] {
+        [:]
+    }
+}
