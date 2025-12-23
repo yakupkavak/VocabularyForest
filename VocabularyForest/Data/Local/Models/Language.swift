@@ -29,16 +29,17 @@ class LanguageData {
     
     static let allLanguages: [Language] = [
         Language(id: "en-US", name: "İngilizce (US)"),
-        Language(id: "en-GB", name: "İngilizce (UK)"),
-        Language(id: "es", name: "İspanyolca"),
+        Language(id: "en-GB", name: "İngilizce (Birleşik Krallık)"),
+        Language(id: "es",    name: "İspanyolca"),
         Language(id: "pt-BR", name: "Portekizce (Brezilya)"),
         Language(id: "zh-CN", name: "Çince (Basitleştirilmiş)"),
-        Language(id: "ar", name: "Arapça"),
-        Language(id: "hi", name: "Hintçe"),
-        Language(id: "ru", name: "Rusça"),
-        Language(id: "tr", name: "Türkçe"),
-        Language(id: "fr", name: "Fransızca"),
-        Language(id: "ja", name: "Japonca"),
-        Language(id: "ko", name: "Korece")
+        Language(id: "ar",    name: "Arapça"),
+        Language(id: "hi",    name: "Hintçe"),
+        Language(id: "ru",    name: "Rusça"),
+        Language(id: "tr",    name: "Türkçe"),
+        Language(id: "fr",    name: "Fransızca"),
+        Language(id: "de",    name: "Almanca"),
+        Language(id: "ja",    name: "Japonca"),
+        Language(id: "ko",    name: "Korece")
     ]
 }

@@ -39,5 +39,6 @@ extension BookcaseRouter {
         case bookcaseList
         case bookcaseDetail(bookcase: String)
         case createBookcase
+        case bookcasePacket
     }
 }

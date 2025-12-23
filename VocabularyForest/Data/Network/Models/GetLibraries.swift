@@ -17,7 +17,7 @@ enum GetLibraries: EndPoint {
     }
     
     var path: String {
-        "library/"
+        "libraries"
     }
     
     var method: HTTPMethod {

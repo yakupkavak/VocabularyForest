@@ -74,6 +74,9 @@
     "Bize Puan Verin" : {
 
     },
+    "Bu dil için kütüphane bulunamadı." : {
+
+    },
     "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
 
     },
@@ -96,6 +99,9 @@
 
     },
     "Detaylar (Opsiyonel)" : {
+
+    },
+    "Dil" : {
 
     },
     "Dil seç" : {
@@ -152,6 +158,9 @@
     "Hangi dili arıyorsun" : {
 
     },
+    "Hazır Kütüphaneler" : {
+
+    },
     "Henüz hiç kelime eklememişsin." : {
 
     },
@@ -170,6 +179,9 @@
       }
     },
     "In progress" : {
+
+    },
+    "İndir" : {
 
     },
     "İptal" : {

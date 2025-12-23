@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Libraries
 
-struct Libraries: Codable {
+struct Libraries: Decodable {
     let version: Int?
     let updatedAt: String?
     let libraries: [Library]?
@@ -17,8 +17,36 @@ struct Libraries: Codable {
 
 // MARK: - Library
 
-struct Library: Codable {
-    let id, sourceLanguage, targetLanguage, level: String?
+struct Library: Decodable, Identifiable, Hashable {
+    let id, sourceLanguage, targetLanguage: String?
+    let name: String?
     let wordCount: Int?
     let fileKey, updatedAt: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id, sourceLanguage, targetLanguage
+        case name = "level"
+        case wordCount, fileKey, updatedAt
+    }
+}
+
+extension String {
+    func toLanguageDisplayName() -> String {
+        let languages: [String: String] = [
+            "en-US": "İngilizce (Amerikan)",
+            "en-GB": "İngilizce (Birleşik Krallık) ",
+            "es":    "İspanyolca",
+            "pt-BR": "Portekizce (Brezilya)",
+            "zh-CN": "Çince (Basitleştirilmiş)",
+            "ar":    "Arapça",
+            "hi":    "Hintçe",
+            "ru":    "Rusça",
+            "tr":    "Türkçe",
+            "fr":    "Fransızca",
+            "ja":    "Japonca",
+            "ko":    "Korece",
+            "de": "Almanca"
+        ]
+        return languages[self] ?? self
+    }
 }

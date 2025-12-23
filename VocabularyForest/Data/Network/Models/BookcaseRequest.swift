@@ -10,7 +10,7 @@ import Foundation
 // MARK: - BookcaseRequest
 
 struct BookcaseRequest: Codable {
-    let id, sourceLanguage, targetLanguage, level: String?
+    let id, sourceLanguage, targetLanguage, name: String?
     let wordCount, version: Int?
     let updatedAt: String?
     let words: [Word]?

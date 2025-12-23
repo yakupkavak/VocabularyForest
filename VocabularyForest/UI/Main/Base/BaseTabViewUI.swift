@@ -59,27 +59,20 @@ extension BaseTabViewUI {
             BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
                 switch destination {
                 case .bookcaseDetail(let bookcaseName):
-                    BookcaseDetailUI(bookcaseName: bookcaseName).onAppear {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            tabbarController.hideTabbar()
-                        }
-                    }.onDisappear {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            tabbarController.showTabbar()
-                        }
-                    }
+                    BookcaseDetailUI(bookcaseName: bookcaseName)
+                        .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .tabBar)
                 case .bookcaseList:
                     BookcaseFeedUI()
                 case .createBookcase:
-                    CreateBookcaseUI().onAppear {
-                        withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.hideTabbar()
-                        }
-                    }.onDisappear {
-                        withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.showTabbar()
-                        }
-                    }
+                    CreateBookcaseUI()
+                        .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .tabBar)
+                case .bookcasePacket :
+                    let viewModel = BookcasePacketsViewModel(networkService: APIService())
+                    BookcasePacketsUI(viewModel: viewModel)
+                        .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .tabBar)
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
         }.tabItem {

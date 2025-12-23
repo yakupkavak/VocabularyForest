@@ -17,10 +17,43 @@
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MockBookcasePacketsViewModel.swift,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
+		37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MockData.swift,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		37267D222E90E9D90019D139 /* VocabularyForest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VocabularyForest;
+			sourceTree = "<group>";
+		};
+		37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */,
+			);
+			path = BookcasePackets;
+			sourceTree = "<group>";
+		};
+		37D8A8B12EF95A2600E59CA9 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +76,7 @@
 		37267D172E90E9D90019D139 = {
 			isa = PBXGroup;
 			children = (
+				37D8A8AF2EF959E500E59CA9 /* Preview Content */,
 				37267D222E90E9D90019D139 /* VocabularyForest */,
 				37267D212E90E9D90019D139 /* Products */,
 			);
@@ -54,6 +88,15 @@
 				37267D202E90E9D90019D139 /* VocabularyForest.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		37D8A8AF2EF959E500E59CA9 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				37D8A8B12EF95A2600E59CA9 /* Models */,
+				37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +321,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -315,6 +359,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

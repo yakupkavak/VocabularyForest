@@ -67,13 +67,13 @@ private extension BookcaseFeedUI {
     var header: some View {
         HStack(alignment: .center){
             Button {
-                onClickBookcaseIcon()
+                bookcaseRouter.navigate(to: .bookcasePacket)
             } label: {
                 Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
             Button {
-                onClickBookcaseIcon()
+                bookcaseRouter.navigate(to: .createBookcase)
             } label: {
                 Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 28).foregroundStyle(.clickableButton)
             }
