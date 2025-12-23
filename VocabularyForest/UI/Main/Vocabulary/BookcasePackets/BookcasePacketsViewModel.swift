@@ -8,10 +8,17 @@
 import Combine
 import Foundation
 
+enum UIState {
+    case success
+    case loading
+    case empty
+    case error(String)
+}
+
 protocol BookcasePacketsViewModelProtocol: ObservableObject {
     var libraries: Libraries? { get }
     var selectedLibrary: String? { get }
-    var error: String? { get }
+    var uiState: UIState { get }
     func selectLibrary(code: String)
     func refreshData()
 }
@@ -22,7 +29,7 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
 
     @Published var libraries: Libraries? =  nil
     @Published var selectedLibrary: String? = nil
-    @Published var error: String? = nil
+    @Published var uiState: UIState = .loading
     let networkService: APIServiceProtocol
     
     // MARK: - INIT
@@ -43,10 +50,17 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
             guard let self else { return }
             switch result {
             case .success(let data):
-                self.libraries = data
-                self.selectedLibrary = data.libraries?.first?.sourceLanguage
+                if let libraries = data.libraries {
+                    if libraries.isEmpty {
+                        self.uiState = .empty
+                    }else {
+                        self.libraries = data
+                        self.selectedLibrary = data.libraries?.first?.sourceLanguage
+                        self.uiState = .success
+                    }
+                }
             case .failure(let error):
-                self.error = error.message
+                self.uiState = .error(error.message)
             }
         }
     }
@@ -59,7 +73,7 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
                 print("\(result)")
                 // TODO KITAPLIK OLUŞTUR
             case .failure(let error):
-                self.error = error.message
+                uiState = .error(error.localizedDescription)
             }
         }
     }

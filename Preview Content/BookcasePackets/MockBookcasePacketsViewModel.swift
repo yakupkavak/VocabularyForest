@@ -13,17 +13,17 @@ class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     // MARK: - PROPERTIES
     
     @Published var libraries: Libraries?
-    @Published var error: String?
     @Published var selectedLibrary: String? = nil
+    @Published var uiState: UIState
 
     // Test senaryolarını yönetmek için init
-    init(libraries: Libraries? = .mock, error: String? = nil) {
+    // Varsayılan olarak .success ve mock data ile başlar
+    init(uiState: UIState = .success, libraries: Libraries? = .mock) {
+        self.uiState = uiState
         self.libraries = libraries
-        self.error = error
         
-        // MARK: OTOMATİK SEÇİM EKLEMESİ
-        // Eğer mock veri geldiyse, listenin ilk elemanını otomatik seçili yap
-        if let firstLib = libraries?.libraries?.first {
+        // Eğer durum Success ise ve veri varsa otomatik seçim yap (Gerçek senaryodaki gibi)
+        if case .success = uiState, let firstLib = libraries?.libraries?.first {
             self.selectedLibrary = firstLib.sourceLanguage
         }
     }
@@ -36,16 +36,5 @@ class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     
     func refreshData() {
         print("Mock refresh data called.")
-    }
-    
-    // Ekstra test metodları
-    func triggerError() {
-        self.libraries = nil
-        self.error = "İnternet bağlantısı koptu (Mock Error)"
-    }
-    
-    func triggerLoading() {
-        self.libraries = nil
-        self.error = nil
     }
 }

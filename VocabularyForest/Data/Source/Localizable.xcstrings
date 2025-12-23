@@ -13,6 +13,9 @@
     "%%%lld" : {
 
     },
+    "%lld" : {
+
+    },
     "%lld Gold" : {
 
     },
@@ -101,10 +104,10 @@
     "Detaylar (Opsiyonel)" : {
 
     },
-    "Dil" : {
+    "Dil seç" : {
 
     },
-    "Dil seç" : {
+    "Dili" : {
 
     },
     "Diller" : {
@@ -202,6 +205,9 @@
     "Kelime Ekle" : {
 
     },
+    "Kelime Sayısı" : {
+
+    },
     "Kelimeyi Düzenle" : {
 
     },
@@ -218,6 +224,9 @@
 
     },
     "Kitaplık oluştur" : {
+
+    },
+    "Kitaplıklar Yükleniyor..." : {
 
     },
     "Kullanım Koşulları" : {
@@ -427,6 +436,9 @@
 
     },
     "Unuttum" : {
+
+    },
+    "Üzgünüm bilinmeyen bir hata oluştu" : {
 
     },
     "Vazgeç" : {

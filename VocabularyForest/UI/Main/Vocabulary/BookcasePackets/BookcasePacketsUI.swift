@@ -29,11 +29,27 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
             Color.backgroundSystem.ignoresSafeArea()
             VStack {
                 defaultHeader
-                if let libraries = viewModel.libraries?.libraries, !libraries.isEmpty {
+                switch viewModel.uiState {
+                case .success:
                     horizontalBookcaseList
                     verticalBookcaseList
-                } else {
+                case .loading:
+                    VStack(spacing: 16) {
+                        Spacer()
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .logoGreen))
+                            .scaleEffect(1.5)
+                        Text("Kitaplıklar Yükleniyor...")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Spacer()
+                    }
+                case .empty:
                     emptyView
+                case .error(let string):
+                    Spacer()
+                    Text("Üzgünüm bilinmeyen bir hata oluştu")
+                    Spacer()
                 }
                 Spacer()
             }
@@ -77,7 +93,6 @@ extension BookcasePacketsUI {
                                 .background(
                                     Capsule()
                                         .fill(isSelected ? Color.brown700 : .brown300)
-                                        .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
                                 )
                                 .onTapGesture {
                                     withAnimation {
@@ -178,17 +193,18 @@ struct BookcasePacketRow: View {
             if isShow {
                 let width = UIScreen.main.bounds.width - (safeAreaInsets.leading + safeAreaInsets.trailing)
                 HStack {
-                    Text("Dil")
+                    Text("Dili")
                         .frame(width: width * 0.2, alignment: .center).foregroundStyle(.logoGreen)
                     
-                    Text("Anlam")
+                    Text("Anlamı")
                         .frame(width: width * 0.2, alignment: .center).foregroundStyle(.logoGreen)
                     
                     Text("Kitaplık Adı")
-                        .frame(maxWidth: width * 0.40, alignment: .center).foregroundStyle(.logoGreen)
-                    
+                        .frame(maxWidth: width * 0.2, alignment: .center).foregroundStyle(.logoGreen)
+                    Text("Kelime Sayısı")
+                        .frame(maxWidth: width * 0.2, alignment: .center).foregroundStyle(.logoGreen)
                     Text("İndir")
-                        .frame(width: width * 0.2, alignment: .center).foregroundStyle(.logoGreen)
+                        .frame(width: width * 0.1, alignment: .center).foregroundStyle(.logoGreen)
                 }
                 .font(.caption.bold())
                 .foregroundColor(.secondary)
@@ -197,21 +213,23 @@ struct BookcasePacketRow: View {
                 
                 Divider().ignoresSafeArea()
                 ForEach(libraries) { library in
-                    if let source = library.sourceLanguage, let target = library.targetLanguage, let name = library.name {
+                    if let source = library.sourceLanguage, let target = library.targetLanguage, let name = library.name, let count = library.wordCount {
                         HStack(alignment: .center) {
                             Text(source.toLanguageDisplayName())
-                                .frame(width: width * 0.22, alignment: .trailing)
+                                .frame(width: width * 0.22, alignment: .center)
                             Text(target.toLanguageDisplayName())
-                                .frame(width: width * 0.22, alignment: .center)
+                                .frame(width: width * 0.22, alignment: .leading)
                             Text(name.capitalized)
-                                .frame(width: width * 0.22, alignment: .center)
+                                .frame(width: width * 0.15, alignment: .leading)
+                            Text("\(count)")
+                                .frame(width: width * 0.1, alignment: .center)
                             Button {
                                 onClick(library)
                             } label: {
                                 Image(systemName: "square.and.arrow.down").foregroundStyle(.clickableButton)
                             }
-                            .frame(width: width * 0.2, alignment: .center)
-                        }
+                            .frame(width: width * 0.1, alignment: .trailing)
+                        }.padding(.bottom)
                     }
                 }
 
@@ -223,18 +241,30 @@ struct BookcasePacketRow: View {
 struct BookcasePacketsUI_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(libraries: .mock))
-                .previewDisplayName("Success State")
+            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(
+                uiState: .success,
+                libraries: .mock
+            ))
+            .previewDisplayName("1. Success State")
             
-            // SENARYO 2: Veri Yok / Yükleniyor (Loading State)
-            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(libraries: nil))
-                .previewDisplayName("Loading/Empty State")
+            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(
+                uiState: .loading,
+                libraries: nil
+            ))
+            .previewDisplayName("2. Loading State")
             
-            // SENARYO 3: Hata Durumu (Error State)
-            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(libraries: nil, error: "Sunucuya erişilemiyor."))
-                .previewDisplayName("Error State")
+            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(
+                uiState: .empty,
+                libraries: nil
+            ))
+            .previewDisplayName("3. Empty State")
+            
+            BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(
+                uiState: .error("İnternet bağlantısı koptu."),
+                libraries: nil
+            ))
+            .previewDisplayName("4. Error State")
         }
-        // Eğer Router EnvironmentObject gerektiriyorsa buraya eklemeyi unutma:
         .environmentObject(BookcaseRouter())
     }
 }
