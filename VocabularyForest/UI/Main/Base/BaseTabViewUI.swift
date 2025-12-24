@@ -77,7 +77,7 @@ extension BaseTabViewUI {
                             }
                         }
                 case .bookcasePacket :
-                    let viewModel = BookcasePacketsViewModel(networkService: APIService())
+                    let viewModel = BookcasePacketsViewModel(networkService: APIService(), dataManager: CoreDataManager.shared)
                     BookcasePacketsUI(viewModel: viewModel)
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)

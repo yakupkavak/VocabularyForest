@@ -19,6 +19,7 @@ class CreateBookViewModel: ObservableObject {
     @Published var bookMeaningWord = ""
     @Published var bookExampleSentence = ""
     @Published var bookDescription = ""
+    @Published var partOfSpeech: PartOfSpeech = .noun
     @Published var emptyBookLearningWord = false
     @Published var emptyBookMeaningWord = false
     @Published var toastMessageModel: CreateBookToastType = .none
@@ -93,6 +94,10 @@ class CreateBookViewModel: ObservableObject {
         bookcasesList = coreDataManager.fetchBookcases() ?? []
     }
     
+    func selectTag(model: PartOfSpeech) {
+        partOfSpeech = model
+    }
+    
     func checkAndCreateBook() {
         var isValid = true
         if(bookLearningWord.isEmpty) {
@@ -116,7 +121,7 @@ class CreateBookViewModel: ObservableObject {
         guard let currentBookcase else {
             return
         }
-        let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, in: currentBookcase)
+        let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, partOfSpeech: partOfSpeech.rawValue, in: currentBookcase)
         bookLearningWord = ""
         bookMeaningWord = ""
         bookExampleSentence = ""

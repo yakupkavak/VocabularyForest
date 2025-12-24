@@ -18,6 +18,7 @@
         <attribute name="learningWord" optional="YES" attributeType="String"/>
         <attribute name="longMemory" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="meaningWord" optional="YES" attributeType="String"/>
+        <attribute name="partOfSpeech" optional="YES" attributeType="String"/>
         <attribute name="shortMemory" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="bookcase" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bookcase" inverseName="books" inverseEntity="Bookcase"/>
     </entity>

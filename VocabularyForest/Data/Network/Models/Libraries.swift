@@ -22,12 +22,6 @@ struct Library: Decodable, Identifiable, Hashable {
     let name: String?
     let wordCount: Int?
     let fileKey, updatedAt: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case id, sourceLanguage, targetLanguage
-        case name = "level"
-        case wordCount, fileKey, updatedAt
-    }
 }
 
 extension String {

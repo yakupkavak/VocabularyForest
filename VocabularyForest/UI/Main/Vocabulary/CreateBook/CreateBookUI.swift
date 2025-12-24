@@ -23,9 +23,9 @@ private extension CreateBookUI {
 }
 
 struct CreateBookUI: View {
-    
+
     // MARK: - PROPERTIES
-    
+
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
@@ -37,17 +37,18 @@ struct CreateBookUI: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundSystem
-                            .ignoresSafeArea()
+            Color.backgroundSystem.ignoresSafeArea()
             VStack {
-                if viewModel.bookcasesList.isEmpty {
+                if false {
                     CreateBookcaseUI()
-                }else {
+                } else {
                     defaultHeader
                     textFields
                 }
                 Spacer()
-            }.frame(minHeight: 0, maxHeight: .infinity).sheet(isPresented: $showSelectBookcase) {
+            }
+            .frame(minHeight: 0, maxHeight: .infinity)
+            .sheet(isPresented: $showSelectBookcase) {
                 SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $selectedBookcase)
             }
             .addToastSafeAreaObserver()
@@ -55,19 +56,22 @@ struct CreateBookUI: View {
                 if let selectedBookcaseModel {
                     viewModel.fetchBookWithModel(bookcaseModel: selectedBookcaseModel)
                 }
-            }.onChange(of: viewModel.toastMessageModel) { model in
+            }
+            .onChange(of: viewModel.toastMessageModel) { model in
                 switch model {
                 case .firstBookcaseCreated:
                     presentToast(ToastValue(message: "Congratulations!"))
                 case .newBookCreated:
                     presentToast(ToastValue(message: "Book created!"))
                 case .none:
-                    print("none create book")
+                    break
                 }
-            }.onAppear {
+            }
+            .onAppear {
                 viewModel.fetchBookcases()
             }
-        }.onSubmit {
+        }
+        .onSubmit {
             if let focusedField {
                 switch focusedField {
                 case .vocabulary:
@@ -75,19 +79,44 @@ struct CreateBookUI: View {
                 case .meaning:
                     self.focusedField = .description
                 case .description:
+                    self.focusedField = .partOfSpeech
+                case .partOfSpeech:
                     self.focusedField = .sentence
                 case .sentence:
                     viewModel.checkAndCreateBook()
                     hideKeyboard()
                 }
             }
-        }.onTapGesture {
+        }
+        .onTapGesture {
             hideKeyboard()
         }
     }
 }
 
 // MARK: - COMPONENTS
+
+struct PartOfSpeechTag: View {
+    let partOfSpeech: PartOfSpeech
+    @Binding var isSelected: Bool
+
+    var body: some View {
+        Button {
+            withAnimation {
+                isSelected.toggle()
+            }
+        } label: {
+            Text(partOfSpeech.localizedText)
+                .fixedSize()
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .foregroundColor(.white)
+                .fontWeight(.medium)
+        }
+        .background(partOfSpeech.pasterColor).cornerRadius(16)
+            .opacity(isSelected ? 1.0 : 0.6).padding(6)
+    }
+}
 
 private extension CreateBookUI {
     var textFields: some View {
@@ -100,16 +129,20 @@ private extension CreateBookUI {
                 title: viewModel.learningLanguage?.name,
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
-            ).focused($focusedField, equals: .vocabulary).submitLabel(.next)
-            
+            )
+            .focused($focusedField, equals: .vocabulary)
+            .submitLabel(.next)
+
             VocabularyTextField(
                 userInput: $viewModel.bookMeaningWord,
                 isSelected: .constant(focusedField == .meaning),
                 isEmpty: $viewModel.emptyBookMeaningWord,
                 placeholder: "Anlamı nedir (Gerekli)",
                 title: viewModel.meaningLanguage?.localizedName
-            ).focused($focusedField, equals: .meaning).submitLabel(.next)
-            
+            )
+            .focused($focusedField, equals: .meaning)
+            .submitLabel(.next)
+
             VocabularyTextField(
                 userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
@@ -118,41 +151,70 @@ private extension CreateBookUI {
                 title: "Açıklama",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
-            ).focused($focusedField, equals: .description).submitLabel(.next)
-            
+            )
+            .focused($focusedField, equals: .description)
+            .submitLabel(.next)
+
             VocabularyTextField(
                 userInput: $viewModel.bookExampleSentence,
                 isSelected: .constant(focusedField == .sentence),
                 isEmpty: .constant(false),
                 placeholder: "Örnek cümle",
                 title: "Cümle"
-            ).focused($focusedField, equals: .sentence).submitLabel(.done)
-        }.padding(24)
+            )
+            .focused($focusedField, equals: .sentence)
+            .submitLabel(.done)
+            
+            partOfSpeechPicker
+                .focused($focusedField, equals: .partOfSpeech)
+
+        }
+        .padding(24)
     }
+
+    var partOfSpeechPicker: some View {
+        FlowLayout {
+            ForEach(partOfSpeechList) { part in
+                PartOfSpeechTag(partOfSpeech: part, isSelected: Binding(get: {viewModel.partOfSpeech == part}, set: { isSelected in
+                    if isSelected {
+                        viewModel.selectTag(model: part)
+                    }}))
+            }
+        }
+    }
+
     var defaultHeader: some View {
-        HStack{
+        HStack {
             Spacer()
-            VStack{
+            VStack {
                 Button {
                     selectBookcase()
                 } label: {
-                    Text(viewModel.currentBookcase?.unwrappedName ?? "Unexpected error").font(.system(size: 20, weight: .bold))
-                }.frame(maxWidth: 200)
+                    Text(viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
+                        .font(.system(size: 20, weight: .bold))
+                }
+                .frame(maxWidth: 200)
             }
             Spacer()
-        }.overlay(alignment: .trailing) {
+        }
+        .overlay(alignment: .trailing) {
             Button {
                 viewModel.checkAndCreateBook()
             } label: {
                 Text("Ekle").foregroundStyle(.title)
-            }.offset(x: -24)
+            }
+            .offset(x: -24)
         }
         .overlay(alignment: .leading) {
             Button {
                 createBookcase()
             } label: {
-                Image("bookcase").resizable().scaledToFit().frame(minWidth: 24, maxWidth: 36)
-            }.offset(x: 24)
+                Image("bookcase")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(minWidth: 24, maxWidth: 36)
+            }
+            .offset(x: 24)
         }
     }
 }
@@ -163,7 +225,8 @@ private extension CreateBookUI {
     private func selectBookcase() {
         showSelectBookcase.toggle()
     }
-    func createBookcase(){
+
+    func createBookcase() {
         createBookRouter.navigate(to: .createBookcase)
     }
 }
@@ -172,8 +235,7 @@ private extension CreateBookUI {
 
 private extension CreateBookUI {
     enum Field: Hashable {
-        case vocabulary, meaning
-        case description, sentence
+        case vocabulary, meaning, description, partOfSpeech, sentence
     }
 }
 

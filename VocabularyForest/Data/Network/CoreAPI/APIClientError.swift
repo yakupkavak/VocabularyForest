@@ -10,9 +10,13 @@ public protocol APIError: Decodable {
     var debugMessage: String { get }
     var code: Int { get }
     var result: Bool { get }
+    var error: String { get }
+    var id: String { get }
 }
 
 struct ClientError: APIError {
+    var error: String
+    var id: String
     var message: String
     var debugMessage: String
     var code: Int

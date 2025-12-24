@@ -17,7 +17,7 @@ class CoreDataManager {
     var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
-
+    
     private init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "VocabularyForest")
         
@@ -54,7 +54,7 @@ class CoreDataManager {
         save()
         return bookcase
     }
-
+    
     func fetchBookcases(sortDescriptors: [NSSortDescriptor]? = nil) -> [Bookcase]? {
         let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
         request.sortDescriptors = sortDescriptors ?? [
@@ -85,11 +85,12 @@ class CoreDataManager {
         viewContext.delete(bookcase)
         save()
     }
-        
+    
     func createBook(learningWord: String,
                     meaningWord: String,
                     exampleSentence: String?,
                     descriptionWord: String?,
+                    partOfSpeech: String?,
                     in bookcase: Bookcase) -> Book {
         let book = Book(context: viewContext)
         book.learningWord = learningWord
@@ -98,11 +99,65 @@ class CoreDataManager {
         book.descriptionWord = descriptionWord
         book.createdDate = Date()
         book.bookcase = bookcase
+        book.partOfSpeech = partOfSpeech
         book.shortMemory = true
         save()
         let persistentBookID = book.objectID.uriRepresentation().absoluteString
         NotificationManager.shared.createNotification(bookId: persistentBookID, learningWord: learningWord, meaningWord: meaningWord, description: descriptionWord ?? "", example: exampleSentence ?? "")
         return book
+    }
+    
+    enum ImportBookcaseError: Error {
+        case alreadyExist
+        case missingRequiredFields
+    }
+    
+    func importBookcase(_ request: BookcaseRequest,
+                        overwrite: Bool = true,
+                        completion: @escaping (Result<Bookcase, ImportBookcaseError>) -> Void) {
+        
+        viewContext.perform {
+            do {
+                guard
+                    let source = request.sourceLanguage,
+                    let target = request.targetLanguage,
+                    let name = request.name
+                else { throw ImportBookcaseError.missingRequiredFields }
+                
+                let bookcaseName = name.uppercased()
+                
+                let bookcase: Bookcase
+                if let existing = self.fetchBookcase(name: bookcaseName) {
+                    bookcase = existing
+                    completion(.failure(.alreadyExist))
+                    return
+                } else {
+                    bookcase = Bookcase(context: self.viewContext)
+                    bookcase.name = bookcaseName
+                    bookcase.createdDate = Date()
+                }
+                
+                bookcase.learningLanguage = source
+                bookcase.meaningLanguage = target
+                
+                for w in (request.words ?? []) {
+                    _ = self.createBook(
+                        learningWord: w.term ?? "",
+                        meaningWord: w.definition ?? "",
+                        exampleSentence: w.example,
+                        descriptionWord: w.description,
+                        partOfSpeech: w.partOfSpeech,
+                        in: bookcase
+                    )
+                }
+                
+                self.save()
+                completion(.success(bookcase))
+                
+            } catch {
+                completion(.failure(.missingRequiredFields))
+            }
+        }
     }
     
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
@@ -181,7 +236,7 @@ extension CoreDataManager {
         sampleBook2.exampleSentence = "Arigatou gozaimasu."
         sampleBook2.descriptionWord = "Minnettarlık bildiren bir ifade."
         sampleBook2.bookcase = sampleBookcase
-
+        
         let sampleBook3 = Book(context: context)
         sampleBook3.learningWord = "Sayonara"
         sampleBook3.meaningWord = "Güle güle"
@@ -189,7 +244,7 @@ extension CoreDataManager {
         sampleBook3.exampleSentence = "Sayonara, mata ashita."
         sampleBook3.descriptionWord = "Ayrılırken kullanılan bir veda sözü."
         sampleBook3.bookcase = sampleBookcase
-
+        
         let sampleBookcase2 = Bookcase(context: context)
         sampleBookcase2.name = "English Basics"
         sampleBookcase2.createdDate = Date().addingTimeInterval(-400)
@@ -211,7 +266,7 @@ extension CoreDataManager {
         sampleBook5.exampleSentence = "I need to write some code for my app."
         sampleBook5.descriptionWord = "Bilgisayara talimat vermek için kullanılan komut dizisi."
         sampleBook5.bookcase = sampleBookcase2
-
+        
         let sampleBook6 = Book(context: context)
         sampleBook6.learningWord = "Water"
         sampleBook6.meaningWord = "Su"

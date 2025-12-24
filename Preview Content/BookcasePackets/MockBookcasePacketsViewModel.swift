@@ -9,6 +9,12 @@ import Foundation
 import Combine
 
 class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
+    var downloadState: DownloadState
+    
+    func downloadLibrary(model: Library) {
+        print("model")
+    }
+    
     
     // MARK: - PROPERTIES
     
@@ -21,7 +27,7 @@ class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     init(uiState: UIState = .success, libraries: Libraries? = .mock) {
         self.uiState = uiState
         self.libraries = libraries
-        
+        self.downloadState = .downloading
         // Eğer durum Success ise ve veri varsa otomatik seçim yap (Gerçek senaryodaki gibi)
         if case .success = uiState, let firstLib = libraries?.libraries?.first {
             self.selectedLibrary = firstLib.sourceLanguage

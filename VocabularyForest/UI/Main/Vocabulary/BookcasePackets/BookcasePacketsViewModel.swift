@@ -15,12 +15,21 @@ enum UIState {
     case error(String)
 }
 
+enum DownloadState {
+    case waiting
+    case downloading
+    case success
+    case error(String)
+}
+
 protocol BookcasePacketsViewModelProtocol: ObservableObject {
     var libraries: Libraries? { get }
     var selectedLibrary: String? { get }
     var uiState: UIState { get }
+    var downloadState: DownloadState { get }
     func selectLibrary(code: String)
     func refreshData()
+    func downloadLibrary(model: Library)
 }
 
 class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
@@ -30,12 +39,14 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     @Published var libraries: Libraries? =  nil
     @Published var selectedLibrary: String? = nil
     @Published var uiState: UIState = .loading
+    @Published var downloadState: DownloadState = .waiting
     let networkService: APIServiceProtocol
-    
+    let coreDataService: CoreDataManager
     // MARK: - INIT
     
-    init(networkService: APIServiceProtocol) {
+    init(networkService: APIServiceProtocol, dataManager: CoreDataManager) {
         self.networkService = networkService
+        self.coreDataService = dataManager
         refreshData()
     }
     
@@ -65,15 +76,31 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
         }
     }
     
-    func downloadBookcase(bookcaseID: String) {
-        networkService.fetchBookcaseRequest(values: GetBookcaseRequestModel(bookcaseID: bookcaseID)) { [weak self] result in
+    func downloadLibrary(model: Library) {
+        downloadState = .downloading
+        guard let path = model.id else {
+            downloadState = .error("Dosya bulunamadı")
+            return
+        }
+        networkService.fetchBookcaseRequest(values: GetBookcaseRequestModel(bookcaseID: path)) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success(let result):
-                print("\(result)")
-                // TODO KITAPLIK OLUŞTUR
+            case .success(let requestResult):
+                self.coreDataService.importBookcase(requestResult) { result in
+                    switch result {
+                    case .success(let success):
+                        self.downloadState = .success
+                    case .failure(let failure):
+                        switch failure {
+                        case .alreadyExist:
+                            self.downloadState = .error("Bu isimle kitaplığın var mevcut kitaplık adını değiştimeli ya da kitaplığı kaldırmalısın.")
+                        case .missingRequiredFields:
+                            self.downloadState = .error("Bilinmeyen bir hata oluştu")
+                        }
+                    }
+                }
             case .failure(let error):
-                uiState = .error(error.localizedDescription)
+                downloadState = .error(error.message)
             }
         }
     }
