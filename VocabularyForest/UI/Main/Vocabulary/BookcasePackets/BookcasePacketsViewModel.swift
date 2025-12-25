@@ -15,7 +15,7 @@ enum UIState {
     case error(String)
 }
 
-enum DownloadState {
+enum DownloadState: Equatable {
     case waiting
     case downloading
     case success
@@ -93,7 +93,7 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
                     case .failure(let failure):
                         switch failure {
                         case .alreadyExist:
-                            self.downloadState = .error("Bu isimle kitaplığın var mevcut kitaplık adını değiştimeli ya da kitaplığı kaldırmalısın.")
+                            self.downloadState = .error("Bu isim kullanılıyor. İsmini değiştir ya da silmelisin")
                         case .missingRequiredFields:
                             self.downloadState = .error("Bilinmeyen bir hata oluştu")
                         }

@@ -7,4 +7,6 @@
 
 enum BookcaseNotificationConstants {
     static let createdBookcaseName = "createdBookcaseName"
+    static let createdBookcaseLearning = "createdBookcaseLearning"
+    static let createdBookcaseMeaning = "createdBookcaseMeaning"
 }

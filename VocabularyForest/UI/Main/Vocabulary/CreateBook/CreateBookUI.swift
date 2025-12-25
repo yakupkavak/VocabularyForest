@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Toasts
 
 // MARK: - CREATE BOOK TYPE ENUM
 
@@ -39,7 +38,7 @@ struct CreateBookUI: View {
         ZStack {
             Color.backgroundSystem.ignoresSafeArea()
             VStack {
-                if false {
+                if viewModel.bookcasesList.isEmpty {
                     CreateBookcaseUI()
                 } else {
                     defaultHeader

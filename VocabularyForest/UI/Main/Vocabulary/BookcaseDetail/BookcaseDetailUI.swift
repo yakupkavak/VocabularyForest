@@ -20,12 +20,16 @@ struct BookcaseDetailUI: View {
     @StateObject private var viewModel: BookcaseDetailViewModel
     @FocusState private var searchBarIsFocused: Bool
     var bookcaseName: String
-    
+    var bookcaseLearningCode: String
+    var bookcaseMeaningCode: String
+
     // MARK: - INIT
     
-    init(bookcaseName: String){
+    init(bookcaseName: String, bookcaseLearningCode: String, bookcaseMeaningCode: String){
         self.bookcaseName = bookcaseName
-        _viewModel = StateObject(wrappedValue: BookcaseDetailViewModel(bookcaseName: bookcaseName))
+        self.bookcaseLearningCode = bookcaseLearningCode
+        self.bookcaseMeaningCode = bookcaseMeaningCode
+        _viewModel = StateObject(wrappedValue: BookcaseDetailViewModel(bookcaseName: bookcaseName, learningLanguage: bookcaseLearningCode, meaningLanguage: bookcaseMeaningCode))
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.title]
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.title]
     }
@@ -173,5 +177,5 @@ private extension BookcaseDetailUI {
     sampleBook.exampleSentence = "sentence"
     sampleBook.bookcase = sampleBookcase
     
-    return BookcaseDetailUI(bookcaseName: "sampleBookcase")
+    return BookcaseDetailUI(bookcaseName: "sample", bookcaseLearningCode: "ja", bookcaseMeaningCode: "tr")
 }

@@ -34,9 +34,15 @@ class CreateBookcaseViewModel: ObservableObject {
             learningLanguage: learningLanguage,
             meaningLanguage: meaningLanguage
         )
-        let dic = ["\(BookcaseNotificationConstants.createdBookcaseName)":"\(bookcaseName)"]
+        let userInfo: [String: Any] = [
+                BookcaseNotificationConstants.createdBookcaseName: bookcaseName,
+                BookcaseNotificationConstants.createdBookcaseLearning: learningLanguage,
+                BookcaseNotificationConstants.createdBookcaseMeaning: meaningLanguage
+            ]
         UserDefaults.standard.setValue(bookcase.unwrappedName, forKey: BookcaseConstants.bookcase)
-        NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: dic)
+        UserDefaults.standard.setValue(bookcase.unwrappedLearningLanguage, forKey: BookcaseConstants.learningLanguage)
+        UserDefaults.standard.setValue(bookcase.unwrappedmeaningLanguage, forKey: BookcaseConstants.meaningLanguage)
+        NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: userInfo)
     }
     
     func checkAndCreateBookcase() -> Bool{

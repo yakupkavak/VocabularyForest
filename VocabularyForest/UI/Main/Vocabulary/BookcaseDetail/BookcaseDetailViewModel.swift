@@ -21,12 +21,17 @@ final class BookcaseDetailViewModel: ObservableObject {
     private var allBooks: [Book] = []
     private var cancellables = Set<AnyCancellable>()
     var bookcaseName: String
-    
+    var learningLanguage: String
+    var meaningLanguage: String
+
     // MARK: - INIT
     
-    init(bookcaseName: String) {
+    init(bookcaseName: String, learningLanguage: String, meaningLanguage: String) {
         self.bookcaseName = bookcaseName
-        fetchBookcase(bookcaseName: bookcaseName)
+        self.learningLanguage = learningLanguage
+        self.meaningLanguage = meaningLanguage
+
+        fetchBookcase(bookcaseName: bookcaseName, learningLanguage: learningLanguage, meaningLanguage: meaningLanguage)
         if let bookcase {
             fetchBooks(bookcase: bookcase)
         }
@@ -57,8 +62,8 @@ final class BookcaseDetailViewModel: ObservableObject {
                    (book.exampleSentence ?? "").lowercased().contains(lowercasedText)
         }
     }
-    private func fetchBookcase(bookcaseName: String){
-        bookcase = dataManager.fetchBookcase(name: bookcaseName)
+    private func fetchBookcase(bookcaseName: String, learningLanguage: String, meaningLanguage: String){
+        bookcase = dataManager.fetchBookcase(name: bookcaseName, learningLanguageCode: learningLanguage, meaningLanguageCode: meaningLanguage)
     }
     
     // MARK: - HELPERS

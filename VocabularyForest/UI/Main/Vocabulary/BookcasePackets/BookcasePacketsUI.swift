@@ -13,6 +13,7 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
     // MARK: - PROPERTIES
     
     @EnvironmentObject private var router: BookcaseRouter
+    @Environment(\.presentToast) var presentToast
     @StateObject private var viewModel: ViewModel
     @State private var showEmpty = false
     
@@ -50,6 +51,19 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
                     CustomErrorView(emptyText: string)
                 }
                 Spacer()
+            }
+        }
+        .addToastSafeAreaObserver()
+        .onChange(of: viewModel.downloadState) { state in
+            switch state {
+            case .waiting:
+                print("Waiting")
+            case .downloading:
+                presentToast(ToastValue(message: "Yükleniyor"))
+            case .success:
+                presentToast(ToastValue(message: "Kütüphanen yüklendi!"))
+            case .error(let errorText):
+                presentToast(ToastValue(message: errorText))
             }
         }
     }

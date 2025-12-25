@@ -68,9 +68,9 @@ class CoreDataManager {
         }
     }
     
-    func fetchBookcase(name: String) -> Bookcase? {
+    func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String) -> Bookcase? {
         let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
-        request.predicate = NSPredicate(format: "name == %@", name)
+        request.predicate = NSPredicate(format: "name == %@ AND learningLanguage == %@ AND meaningLanguage == %@", name, learningLanguageCode, meaningLanguageCode)
         request.fetchLimit = 1
         do {
             let bookcases = try viewContext.fetch(request)
@@ -112,10 +112,10 @@ class CoreDataManager {
         case missingRequiredFields
     }
     
+    
     func importBookcase(_ request: BookcaseRequest,
                         overwrite: Bool = true,
                         completion: @escaping (Result<Bookcase, ImportBookcaseError>) -> Void) {
-        
         viewContext.perform {
             do {
                 guard
@@ -127,7 +127,7 @@ class CoreDataManager {
                 let bookcaseName = name.uppercased()
                 
                 let bookcase: Bookcase
-                if let existing = self.fetchBookcase(name: bookcaseName) {
+                if let existing = self.fetchBookcase(name: bookcaseName, learningLanguageCode: source, meaningLanguageCode: target) {
                     bookcase = existing
                     completion(.failure(.alreadyExist))
                     return
@@ -136,17 +136,15 @@ class CoreDataManager {
                     bookcase.name = bookcaseName
                     bookcase.createdDate = Date()
                 }
-                
                 bookcase.learningLanguage = source
                 bookcase.meaningLanguage = target
-                
-                for w in (request.words ?? []) {
+                for word in (request.words ?? []) {
                     _ = self.createBook(
-                        learningWord: w.term ?? "",
-                        meaningWord: w.definition ?? "",
-                        exampleSentence: w.example,
-                        descriptionWord: w.description,
-                        partOfSpeech: w.partOfSpeech,
+                        learningWord: word.term ?? "",
+                        meaningWord: word.definition ?? "",
+                        exampleSentence: word.example,
+                        descriptionWord: word.description,
+                        partOfSpeech: word.partOfSpeech,
                         in: bookcase
                     )
                 }

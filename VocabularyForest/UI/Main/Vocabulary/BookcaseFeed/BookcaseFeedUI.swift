@@ -82,6 +82,7 @@ private extension BookcaseFeedUI {
     var noneDataView: some View {
         VStack(spacing: 24){
             Spacer()
+            Spacer()
             tvDefault(text: "Hiçbir kitaplık bulamadık", color: .brown300)
                 .padding(24)
                 .overlay {
@@ -91,6 +92,18 @@ private extension BookcaseFeedUI {
             TalkingBallons(foregroundColor: .title, delayMultiplier: 1.5)
             LottieView(animation: .named("growingPlant"))
                 .playing(loopMode: .playOnce).resizable().frame(maxWidth: 250).frame(maxHeight: 300)
+            Button {
+                bookcaseRouter.navigate(to: .bookcasePacket)
+            } label: {
+                Text("Hazır kütüphaneler").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+            }.buttonStyle(.plain)
+            Button {
+                bookcaseRouter.navigate(to: .createBookcase)
+            } label: {
+                Text("Kitaplık oluştur").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+            }
+            Spacer()
+
         }
         .onAppear {
             withAnimation(Animation.spring(duration: 1.0).delay(1.8)) {
@@ -108,7 +121,7 @@ private extension BookcaseFeedUI {
                 })
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName))
+                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName, learning: bookcaseDisplayItem.bookcase.unwrappedLearningLanguage,meaning: bookcaseDisplayItem.bookcase.unwrappedmeaningLanguage))
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)

@@ -30,8 +30,8 @@ enum BattleConstant {
     static let mediumEnemyLevel = 10
     static let mediumBossEnemyLevel = 20
     static let hardPlayerLevel = 3
-    static let hardEnemyLevel = 10
-    static let hardBossEnemyLevel = 30
+    static let hardEnemyLevel = 2
+    static let hardBossEnemyLevel = 2
     static let insanePlayerLevel = 3
     static let insaneEnemyLevel = 15
     static let insaneBossEnemyLevel = 2

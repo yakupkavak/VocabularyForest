@@ -7,68 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "89C95AAB-9A47-447B-8A4F-926EB52F66C8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "downloadLibrary(model:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5AA57127-0185-4DD9-B49D-7F31B5D1DF4A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "downloadLibrary(model:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "5AA57127-0185-4DD9-B49D-7F31B5D1DF4A - 7a06853d691092eb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;VocabularyForest.BookcaseRequest, VocabularyForest.APIClientError&gt;) -&gt; () in VocabularyForest.BookcasePacketsViewModel.downloadLibrary(model: VocabularyForest.Library) -&gt; ()"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "89"
-                  endingLineNumber = "89">
-               </Location>
-               <Location
-                  uuid = "5AA57127-0185-4DD9-B49D-7F31B5D1DF4A - bce7d9d453211501"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;VocabularyForest.Bookcase, VocabularyForest.CoreDataManager.ImportBookcaseError&gt;) -&gt; () in closure #1 (Swift.Result&lt;VocabularyForest.BookcaseRequest, VocabularyForest.APIClientError&gt;) -&gt; () in VocabularyForest.BookcasePacketsViewModel.downloadLibrary(model: VocabularyForest.Library) -&gt; ()"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "91"
-                  endingLineNumber = "91">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "B434A0AA-DF11-4DAE-8780-50644C6BCDDD"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -165,64 +103,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F93AFE37-F481-4149-A7C2-BD2152C9AFE2"
+            uuid = "4FE21C10-7648-478E-BE2A-03D808BFDA02"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
+            filePath = "VocabularyForest/UI/Main/Vocabulary/CreateBook/CreateBookViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "downloadLibrary(model:)"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "fetchUserPreferences()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B9B3C6EA-E82C-49AE-A513-C482534A34B8"
+            uuid = "0D8B239E-5303-4888-8A7C-FCB6ED54919C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
+            filePath = "VocabularyForest/UI/Main/Vocabulary/CreateBook/CreateBookViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "downloadLibrary(model:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7C4827E8-2503-4E2E-AA2F-87DE9AA1FA59"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "downloadLibrary(model:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "14E170D8-69C1-4E61-8285-AE2A1B40E862"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/UI/Main/Vocabulary/BookcasePackets/BookcasePacketsViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "downloadLibrary(model:)"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "fetchUserPreferences()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

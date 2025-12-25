@@ -1,5 +1,5 @@
 {
-  "originHash" : "1fd9308077a9801f974e4233005561b89daa4437b5494f0ed116d12e4690a579",
+  "originHash" : "5f9813c7e4413f672dbc614eb19d354b5cadf32db869a540b48398bc8f7d03bb",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -26,24 +26,6 @@
       "state" : {
         "revision" : "a004050748dc197c56256a14dca49a035d74726c",
         "version" : "4.5.2"
-      }
-    },
-    {
-      "identity" : "swiftui-toasts",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sunghyun-k/swiftui-toasts",
-      "state" : {
-        "revision" : "9412602c30dff5cba211a984df12976250daf495",
-        "version" : "1.1.1"
-      }
-    },
-    {
-      "identity" : "swiftui-window-overlay",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sunghyun-k/swiftui-window-overlay.git",
-      "state" : {
-        "revision" : "46739300713772a62a3bf31d77f8f23ba9cf61f7",
-        "version" : "1.0.2"
       }
     }
   ],
