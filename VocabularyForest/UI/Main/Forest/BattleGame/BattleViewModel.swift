@@ -212,19 +212,6 @@ private extension BattleViewModel {
             prepareEnemyLevel(gameLevel: safeGameLevel, characterModel: nextEnemy)
         }
     }
-    func calculateMinBookCount(
-        battleMode: BattleEnemyModel,
-        gameLevel: GameLevel,
-    ) -> Int{
-        var totalCorrectBook = 0
-        var totalWrongBook = 0
-        let assetModels = battleMode.assetModels
-        for characterModel in assetModels {
-            totalCorrectBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
-            totalWrongBook += gameLevel.playerLevel
-        }
-        return totalCorrectBook + totalWrongBook + 1
-    }
 }
 
 // MARK: - BATTLE VIEW MODEL PROTOCOL

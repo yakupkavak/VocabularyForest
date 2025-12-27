@@ -49,11 +49,11 @@ struct SelectBookcaseUI: View {
             }.background(.backgroundSystem)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
-            .navigationTitle("Select Bookcase")
+            .navigationTitle("Kitaplık Seç")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(.backgroundSystem, for: .navigationBar)
-            .searchable(text: $searchText, prompt: "Search Bookcases")
+            .searchable(text: $searchText, prompt: "Kitaplık ara")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

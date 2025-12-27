@@ -42,7 +42,9 @@ struct CreateBookUI: View {
                     CreateBookcaseUI()
                 } else {
                     defaultHeader
-                    textFields
+                    ScrollView(.vertical, showsIndicators: false) {
+                        textFields
+                    }
                 }
                 Spacer()
             }
@@ -59,9 +61,9 @@ struct CreateBookUI: View {
             .onChange(of: viewModel.toastMessageModel) { model in
                 switch model {
                 case .firstBookcaseCreated:
-                    presentToast(ToastValue(message: "Congratulations!"))
+                    presentToast(ToastValue(message: "Tebrikler!"))
                 case .newBookCreated:
-                    presentToast(ToastValue(message: "Book created!"))
+                    presentToast(ToastValue(message: "Kitap oluşturuldu!"))
                 case .none:
                     break
                 }
@@ -193,6 +195,9 @@ private extension CreateBookUI {
                         .font(.system(size: 20, weight: .bold))
                 }
                 .frame(maxWidth: 200)
+                Text(
+                    "\(viewModel.currentBookcase?.unwrappedLearningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.unwrappedmeaningLanguage.toLanguageDisplayName() ?? "")"
+                ) .font(.system(size: 14, weight: .medium))
             }
             Spacer()
         }
@@ -206,7 +211,7 @@ private extension CreateBookUI {
         }
         .overlay(alignment: .leading) {
             Button {
-                createBookcase()
+                selectBookcase()
             } label: {
                 Image("bookcase")
                     .resizable()
@@ -223,10 +228,6 @@ private extension CreateBookUI {
 private extension CreateBookUI {
     private func selectBookcase() {
         showSelectBookcase.toggle()
-    }
-
-    func createBookcase() {
-        createBookRouter.navigate(to: .createBookcase)
     }
 }
 

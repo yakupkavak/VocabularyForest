@@ -71,12 +71,12 @@ struct ForestUI: View {
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showGameSelect {
-                GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
-                    showGameSelect = false
-                    if (viewModel.checkBookCount(battleMode: mode, gameLevel: level)) {
+                GameSelectUI(showGameSelect: $showGameSelect, bookcaseList: viewModel.bookcaseList) { type, mode, level, questionSelection in
+                    if (viewModel.checkBookCount(battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
+                        showGameSelect = false
                         router.navigate(to: .game(type, mode, level))
                     }
-                }.zIndex(4.0)
+                }.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.9)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showForest {

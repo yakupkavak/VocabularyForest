@@ -10,6 +10,16 @@
     "%@" : {
 
     },
+    "%@ - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
     "%%%lld" : {
 
     },
@@ -116,6 +126,26 @@
     "Doluluk oranı %lld / 50" : {
 
     },
+    "Düşmanı %lld doğru seçimle yenebilirsin. %lld canın var." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Düşmanı %1$lld doğru seçimle yenebilirsin. %2$lld canın var."
+          }
+        }
+      }
+    },
+    "Düşmanları %lld, Patronu ise %lld doğru seçimle yenebilirsin. %lld canın var." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Düşmanları %1$lld, Patronu ise %2$lld doğru seçimle yenebilirsin. %3$lld canın var."
+          }
+        }
+      }
+    },
     "Düzenle" : {
 
     },
@@ -138,18 +168,6 @@
 
     },
     "Fantastic!" : {
-
-    },
-    "Game Levels" : {
-
-    },
-    "Game Mode" : {
-
-    },
-    "Game Types" : {
-
-    },
-    "Games" : {
 
     },
     "Gizlilik Politikası" : {
@@ -226,7 +244,13 @@
     "Kitaplık Adı" : {
 
     },
+    "Kitaplık ara" : {
+
+    },
     "Kitaplık oluştur" : {
+
+    },
+    "Kitaplık Seç" : {
 
     },
     "Kitaplıklar Yükleniyor..." : {
@@ -268,6 +292,18 @@
 
     },
     "Örnek Cümle" : {
+
+    },
+    "Oyun çeşitleri" : {
+
+    },
+    "Oyun Modu" : {
+
+    },
+    "Oyuna başlayabilmek için %lld kelimeye ihtiyacın var." : {
+
+    },
+    "Oyunlar" : {
 
     },
     "Progress" : {
@@ -382,16 +418,13 @@
     "Reward claimed" : {
 
     },
-    "Search Bookcases" : {
-
-    },
-    "Select Bookcase" : {
-
-    },
     "Select your \nMagic" : {
 
     },
     "Settings" : {
+
+    },
+    "Seviyeler" : {
 
     },
     "Shall we begin?" : {
@@ -429,6 +462,9 @@
     "Toprak sağlığı: %%%lld" : {
 
     },
+    "Tüm kitaplarla oyna" : {
+
+    },
     "Tüm Veriler Silinsin mi?" : {
 
     },
@@ -449,26 +485,6 @@
     },
     "Yes" : {
 
-    },
-    "You can defeat the enemies with %lld correct selections, and the boss with %lld correct selections and you have %lld health" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "You can defeat the enemies with %1$lld correct selections, and the boss with %2$lld correct selections and you have %3$lld health"
-          }
-        }
-      }
-    },
-    "You can defeat the enemy with %lld correct selections and you have %lld health" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "You can defeat the enemy with %1$lld correct selections and you have %2$lld health"
-          }
-        }
-      }
     }
   },
   "version" : "1.1"

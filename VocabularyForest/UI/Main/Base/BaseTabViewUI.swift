@@ -38,8 +38,8 @@ extension BaseTabViewUI {
         NavigationStack(path: $createBookRouter.navPath) {
             CreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
                 switch destination {
-                case .createBookcase:
-                    CreateBookcaseUI().onAppear {
+                case .bookcaseList:
+                    BookcaseFeedUI().onAppear {
                         withAnimation(.easeInOut(duration: 1.2)) {
                             tabbarController.hideTabbar()
                         }

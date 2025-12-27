@@ -158,6 +158,28 @@ class CoreDataManager {
         }
     }
     
+    func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        if let bookcase = fetchBookcase(
+            name: model.bookcaseName,
+            learningLanguageCode: model.learningLanguage,
+            meaningLanguageCode: model.meaningLanguage
+        ) {
+            let request = NSFetchRequest<Book>(entityName: "Book")
+            request.sortDescriptors = sortDescriptors ?? [
+                NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+            ]
+            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            do {
+                return try viewContext.fetch(request)
+            } catch {
+                print("Books couldn't fetched -> \(error)")
+                return nil
+            }
+        }else {
+            return nil
+        }
+    }
+    
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
         let request = NSFetchRequest<Book>(entityName: "Book")
         request.sortDescriptors = sortDescriptors ?? [
