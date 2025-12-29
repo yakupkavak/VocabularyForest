@@ -91,7 +91,7 @@ struct ForestUI: View {
                         showGameSelect = false
                         router.navigate(to: .game(type, mode, level))
                     }
-                }.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.9)
+                }.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.75)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showForest {

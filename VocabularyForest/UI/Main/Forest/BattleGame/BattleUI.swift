@@ -138,7 +138,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }.onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
-            viewModel.startGameMusic()
+            //viewModel.startGameMusic()
         }
         .onChange(of: musicVolume) { newValue in
             viewModel.updateAudioSettings(music: newValue, sfx: sfxVolume, isMuted: isMuted)

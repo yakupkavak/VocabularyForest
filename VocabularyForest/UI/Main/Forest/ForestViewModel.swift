@@ -54,7 +54,7 @@ class ForestViewModel: BaseViewModel {
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
     
-    init(audioService: AudioServiceProtocol = ForestAudioService()) {
+    init(audioService: AudioServiceProtocol = ForestAudioService.shared) {
         self.audioService = audioService
         super.init()
         if let bookcases = CoreDataManager.shared.fetchBookcases() {

@@ -10,6 +10,7 @@ import AVFoundation
 protocol AudioServiceProtocol {
     func playBackgroundMusic()
     func stopMusic()
+    func startGameMusic()
     func updateVolume(musicLevel: Double, sfxLevel: Double, isMuted: Bool)
     func playSFX(filename: String)
 }
@@ -27,11 +28,11 @@ class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate 
         "nature-0", "nature-1", "nature-2",
         "nature-3", "nature-4", "nature-5"
     ]
-    
     private var playlist: [String] = []
     private var currentTrackIndex = 0
+    static let shared = ForestAudioService()
     
-    override init() {
+    private override init() {
         super.init()
         shufflePlaylist()
     }
@@ -43,7 +44,12 @@ class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate 
         currentTrackIndex = 0
     }
     
+    func startGameMusic() {
+        
+    }
+    
     func playBackgroundMusic() {
+        stopMusic()
         if let player = musicPlayer, player.isPlaying { return }
         playCurrentTrack()
     }

@@ -180,6 +180,7 @@
       }
     },
     "Bilgeliğini yücelt" : {
+      "extractionState" : "stale",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
@@ -394,6 +395,9 @@
         }
       }
     },
+    "Eğlenerek bilgeliğini yücelt" : {
+
+    },
     "Ekle" : {
       "localizations" : {
         "tr" : {
@@ -497,6 +501,7 @@
       }
     },
     "Hızlı kart" : {
+      "extractionState" : "stale",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
@@ -708,6 +713,9 @@
         }
       }
     },
+    "Maceraya Atıl" : {
+
+    },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
 
     },
@@ -839,6 +847,7 @@
       }
     },
     "Oyuna başlayabilmek için %lld kelimeye ihtiyacın var." : {
+      "extractionState" : "stale",
       "localizations" : {
         "tr" : {
           "stringUnit" : {
@@ -847,6 +856,12 @@
           }
         }
       }
+    },
+    "Oyuna başlayabilmek için en az %lld kelimeye ihtiyacın var." : {
+
+    },
+    "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az %lld kelimeye ihtiyacın var." : {
+
     },
     "Oyunlar" : {
       "localizations" : {

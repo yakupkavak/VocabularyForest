@@ -37,7 +37,7 @@ class ForestDataManager {
     }
     
     // MARK: - HELPERS
- 
+    
     func checkAndUpdateRain() -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return .error(error: ForestError.emptyForest)
@@ -76,7 +76,7 @@ class ForestDataManager {
         scheduleHealthNotifications()
         return .success(true)
     }
-        
+    
     private func scheduleHealthNotifications() {
         guard let forest = getCurrentForest() else { return }
         
@@ -121,7 +121,7 @@ class ForestDataManager {
     }
     
     // MARK: - CREATE FOREST
-
+    
     func createForestGame(helper: ForestGameHelperProtocol) -> Resource<Bool> {
         let dailyQuests = helper.initalizeDailyQuests()
         let weeklyQuests = helper.initalizeWeeklyQuests()
@@ -140,23 +140,6 @@ class ForestDataManager {
         for sculpture in baseSculptureList {
             createSculpture(sculpture: sculpture)
         }
-        #if DEBUG
-        let context = viewContext
-        let sampleBookcase = Bookcase(context: context)
-        sampleBookcase.name = "Test Kitaplık"
-        sampleBookcase.learningLanguage = "en"
-        sampleBookcase.meaningLanguage = "tr"
-        sampleBookcase.createdDate = Date()
-        for i in 1...100 {
-            let sampleBook = Book(context: context)
-            sampleBook.learningWord = "Word \(i)"
-            sampleBook.meaningWord = "Anlam \(i)"
-            sampleBook.createdDate = Date()
-            sampleBook.shortMemory = i % 2 == 0
-            sampleBook.longMemory = i % 2 != 0
-            sampleBook.bookcase = sampleBookcase
-        }
-        #endif
         do {
             try save()
             return Resource.success(nil)
@@ -312,11 +295,11 @@ class ForestDataManager {
             return Resource.error(error: ForestError.emptyForest)
         }
         var animalList: [AnimalModel] = []
-         if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
-             for animal in animals {
-                 guard let id = animal.id else {
-                     return Resource.error(error: ForestError.emptyUUID)
-                 }
+        if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
+            for animal in animals {
+                guard let id = animal.id else {
+                    return Resource.error(error: ForestError.emptyUUID)
+                }
                 let animalModel = AnimalModel(
                     id: id,
                     name: animal.name ?? "",
@@ -388,9 +371,9 @@ class ForestDataManager {
     func claimReward(quest: QuestModel) -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return .error(error: ForestError.emptyForest)
-        }
-        if let questSet = forest.quests, let quests =  questSet.allObjects as? [Quest], let quest = quests.first(where: { $0.id == quest.id }) {
-            quest.status = QuestStatus.claimed.valueForCoreData
+        }        
+        if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == quest.id }) {
+            coreDataQuest.status = QuestStatus.claimed.valueForCoreData
             do {
                 try save()
             } catch {
@@ -399,6 +382,7 @@ class ForestDataManager {
         } else {
             return .error(error: ForestError.emptyForest)
         }
+        
         switch quest.reward {
         case .animal(let name):
             let animalModel = AnimalModel(
@@ -412,31 +396,40 @@ class ForestDataManager {
                 yPosition: CGFloat.random(in: -50...50)
             )
             createAnimal(animal: animalModel)
+            
         case .plant(let name):
+            let pos = generateValidPosition(for: .tree)
+            
             let plantModel = TreeModel(
                 id: UUID(),
                 treeName: name,
                 isAlive: true,
                 createdDate: Date(),
                 treeHealthValue: 5,
-                treeXPosition: Double.random(in: -0.33...0.6),
-                treeYPosition: Double.random(in: 0.2...0.4),
+                treeXPosition: pos.x,
+                treeYPosition: pos.y
             )
             createTree(tree: plantModel)
+            
         case .gold(let count):
             updateMoneyValue(money: count)
+            
         case .water(let count):
             updateRainValue(rain: count)
+            
         case .sculpture(let name):
+            let pos = generateValidPosition(for: .sculpture)
+            
             let sculptureModel = SculptureModel(
                 id: UUID(),
                 name: name,
                 createDate: Date(),
-                xPosition: Double.random(in: -0.33...0.6),
-                yPosition: Double.random(in: 0.2...0.4),
+                xPosition: pos.x,
+                yPosition: pos.y
             )
             createSculpture(sculpture: sculptureModel)
         }
+        
         return .success(true)
     }
     
@@ -454,13 +447,13 @@ class ForestDataManager {
         let targetTypeStr = gameType.valueForCoreData
         let dailyTypeStr = QuestType.daily.valueForCoreData
         let completedStatusStr = QuestStatus.completed.valueForCoreData
-
+        
         let filteredQuests = quests.filter { quest in
             return quest.gameLevel == targetLevelStr &&
-                   quest.battleEnemyModel == targetEnemyStr &&
-                   quest.questType == targetTypeStr &&
-                   quest.type != dailyTypeStr &&
-                   quest.status != completedStatusStr
+            quest.battleEnemyModel == targetEnemyStr &&
+            quest.questType == targetTypeStr &&
+            quest.type != dailyTypeStr &&
+            quest.status != completedStatusStr
         }
         var hasChanges = false
         for quest in filteredQuests {
@@ -524,5 +517,57 @@ class ForestDataManager {
         }
         forest.moneyValue += Int16(money)
         return Resource.success(true)
+    }
+}
+
+private extension ForestDataManager {
+    // MARK: - POSITION GENERATOR
+    
+    private enum ForestObjectType {
+        case tree
+        case sculpture
+    }
+    
+    private func generateValidPosition(for type: ForestObjectType) -> (x: Double, y: Double) {
+        let xRange = -0.33...0.6
+        let yRange = 0.2...0.4
+        
+        let minDistance: Double = (type == .tree) ? 0.05 : 0.1
+        let maxAttempts = 50
+        var existingPositions: [(Double, Double)] = []
+        
+        if let forest = getCurrentForest() {
+            if type == .tree {
+                if let trees = forest.trees?.allObjects as? [Tree] {
+                    existingPositions = trees.map { ($0.xPosition, $0.yPosition) }
+                }
+            } else {
+                if let sculptures = forest.sculptures?.allObjects as? [Sculpture] {
+                    existingPositions = sculptures.map { ($0.xPosition, $0.yPosition) }
+                }
+            }
+        }
+        
+        for _ in 0..<maxAttempts {
+            let randomX = Double.random(in: xRange)
+            let randomY = Double.random(in: yRange)
+            
+            var hasCollision = false
+            
+            for (exX, exY) in existingPositions {
+                let dx = randomX - exX
+                let dy = randomY - exY
+                let distance = sqrt(dx*dx + dy*dy)
+                
+                if distance < minDistance {
+                    hasCollision = true
+                    break
+                }
+            }
+            if !hasCollision {
+                return (randomX, randomY)
+            }
+        }
+        return (Double.random(in: xRange), Double.random(in: yRange))
     }
 }
