@@ -26,7 +26,8 @@ protocol ForestViewModelProtocol: AnyObject {
     func fetchForest()
     func claimReward(quest: QuestModel)
     func startRain()
-    func checkBookCount(battleMode: BattleEnemyModel,
+    func checkBookCount(type: BattleQuestionType,
+                        battleMode: BattleEnemyModel,
                         gameLevel: GameLevel,
                         bookcaseSelection: GameBookcaseSelection) -> Bool
     func closeBookError()
@@ -68,24 +69,46 @@ extension ForestViewModel: ForestViewModelProtocol {
         showBookThreshold = false
     }
     
-    func checkBookCount(battleMode: BattleEnemyModel, gameLevel: GameLevel, bookcaseSelection: GameBookcaseSelection) -> Bool {
+    func checkBookCount(type: BattleQuestionType, battleMode: BattleEnemyModel, gameLevel: GameLevel, bookcaseSelection: GameBookcaseSelection) -> Bool {
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
-        switch bookcaseSelection {
-        case .allBookcases:
-            guard let books = CoreDataManager.shared.fetchAllBooks() else {
-                showBookThreshold = true
-                return false }
-            if books.count < minBook {
-                showBookThreshold = true
-                return false
+        if type == .learning {
+            switch bookcaseSelection {
+            case .allBookcases:
+                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription() else {
+                    showBookThreshold = true
+                    return false }
+                if books.count < minBook {
+                    showBookThreshold = true
+                    return false
+                }
+            case .spesific(let bookcase):
+                guard let books = CoreDataManager.shared.fetchBooksExampleDescription(model: bookcase) else {
+                    showBookThreshold = true
+                    return false }
+                if books.count < minBook {
+                    showBookThreshold = true
+                    return false
+                }
             }
-        case .spesific(let bookcase):
-            guard let books = CoreDataManager.shared.fetchBooks(model: bookcase) else {
-                showBookThreshold = true
-                return false }
-            if books.count < minBook {
-                showBookThreshold = true
-                return false
+        }
+        else {
+            switch bookcaseSelection {
+            case .allBookcases:
+                guard let books = CoreDataManager.shared.fetchAllBooks() else {
+                    showBookThreshold = true
+                    return false }
+                if books.count < minBook {
+                    showBookThreshold = true
+                    return false
+                }
+            case .spesific(let bookcase):
+                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase) else {
+                    showBookThreshold = true
+                    return false }
+                if books.count < minBook {
+                    showBookThreshold = true
+                    return false
+                }
             }
         }
         return true

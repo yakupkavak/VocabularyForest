@@ -405,7 +405,7 @@ class ForestDataManager {
         return Resource.success(true)
     }
     
-    func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>{
+    func correctAnswer(questionType: BattleQuestionType,) -> Resource<Bool>{
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.saveError)
         }

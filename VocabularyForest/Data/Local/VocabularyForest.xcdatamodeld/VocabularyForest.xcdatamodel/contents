@@ -15,6 +15,7 @@
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionWord" optional="YES" attributeType="String"/>
         <attribute name="exampleSentence" optional="YES" attributeType="String"/>
+        <attribute name="learningDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="learningWord" optional="YES" attributeType="String"/>
         <attribute name="longMemory" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="meaningWord" optional="YES" attributeType="String"/>

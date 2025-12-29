@@ -19,6 +19,7 @@ extension Book {
     }
 
     @NSManaged public var createdDate: Date?
+    @NSManaged public var learningDate: Date?
     @NSManaged public var descriptionWord: String?
     @NSManaged public var exampleSentence: String?
     @NSManaged public var learningWord: String?

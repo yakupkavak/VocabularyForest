@@ -4,7 +4,9 @@
 //
 //  Created by Yakup Kavak on 18.10.2025.
 //
+
 import SwiftUI
+import StoreKit
 
 struct SettingsUI: View {
     
@@ -12,7 +14,8 @@ struct SettingsUI: View {
     
     @StateObject private var viewModel = SettingsViewModel()
     @State private var showingDeleteAlert = false
-    
+    @Environment(\.requestReview) var requestReview
+
     // MARK: - VIEW
 
     var body: some View {
@@ -46,7 +49,7 @@ struct SettingsUI: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Button {
-                        viewModel.openAppStoreReview()
+                        requestReview()
                     } label: {
                         HStack {
                             Image(systemName: "star.fill")

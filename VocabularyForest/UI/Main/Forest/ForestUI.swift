@@ -72,7 +72,7 @@ struct ForestUI: View {
             }
             if showGameSelect {
                 GameSelectUI(showGameSelect: $showGameSelect, bookcaseList: viewModel.bookcaseList) { type, mode, level, questionSelection in
-                    if (viewModel.checkBookCount(battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
+                    if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
                         showGameSelect = false
                         router.navigate(to: .game(type, mode, level))
                     }

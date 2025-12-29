@@ -206,7 +206,18 @@ private extension BattleUI {
                     Spacer()
                     VStack(alignment: .center) {
                         Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
-                    }.frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * 0.2)
+                        if gameType == .learning {
+                            if let example = question.example {
+                                Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 16)).padding(2)
+                                Text(example).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 15))
+                            } else {
+                                if let description = question.description {
+                                    Text("Açıklama").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 16)).padding(2)
+                                    Text(description).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 15))
+                                }
+                            }
+                        }
+                    }.frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * (gameType == .learning ? 0.25 : 0.2))
                 }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
                     ZStack {
                         Image("pop_up_title_window").resizable().scaledToFit()
