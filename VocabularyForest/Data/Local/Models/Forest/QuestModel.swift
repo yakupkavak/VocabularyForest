@@ -50,11 +50,11 @@ extension QuestStatus {
 }
 
 enum QuestRewardModel: Hashable {
-    case animal(name: String)
-    case plant(name: String)
+    case animal(modelName: String)
+    case plant(modelName: String)
     case gold(count: Int)
     case water(count: Int)
-    case sculpture(name: String)
+    case sculpture(modelName: String)
 }
 
 extension QuestRewardModel {
@@ -82,6 +82,52 @@ extension QuestRewardModel {
             String(count)
         }
     }
+    
+    var rewardName: String {
+        switch self {
+        case .animal(let name):
+            return if name == "WhiteCat" {
+                "Beyaz kedi"
+            }else if name == "Cat" {
+                "Kedi"
+            }else if name == "Dog" {
+                "Köpek"
+            }else {
+                name
+            }
+        case .plant(let name):
+            return if name == "DesertStarBloom" {
+                "Çöl Yıldızı"
+            }else if name == "CrystalReed" {
+                "Kristal Sazlık"
+            }else if name == "BlueFlameBush" {
+                "Mavi Alev Çalısı"
+            }else if name == "Emberbud" {
+                "Köz Tomurcuk"
+            }else if name == "MoonBell" {
+                "Ay Çanı"
+            }else if name == "SunFlower" {
+                "Ayçiçeği"
+            }
+            else {
+                name
+            }
+        case .water(let count):
+            return String(count)
+        case .sculpture(let name):
+            return if name == "EmeraldDragon" {
+                "Zümrüt Ejderi"
+            }else if name == "Deer" {
+                "Kadim Geyik"
+            }else if name == "AncientLancer" {
+                "Antik Muhafız"
+            }else {
+                name
+            }
+        case .gold(count: let count):
+            return String(count)
+        }
+    }
 
     static func convertFromCoreData(type: String?, value: String?) -> QuestRewardModel {
         guard let type, let value else {
@@ -89,13 +135,15 @@ extension QuestRewardModel {
         }
         return switch type {
             case "animal":
-                .animal(name: value)
+                .animal(modelName: value)
             case "plant":
-                .plant(name: value)
+                .plant(modelName: value)
             case "water":
                 .water(count: Int(value) ?? 1)
             case "sculpture":
-                .sculpture(name: value)
+                .sculpture(modelName: value)
+            case "gold":
+                .gold(count: Int(value) ?? 1)
             default:
                 .water(count: 1)
         }

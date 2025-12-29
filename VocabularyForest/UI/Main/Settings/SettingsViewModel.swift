@@ -5,7 +5,6 @@
 //  Created by Yakup Kavak on 5.11.2025.
 //
 
-import SwiftUI
 import CoreData
 import UserNotifications
 import Combine
@@ -21,7 +20,6 @@ class SettingsViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
-    @Environment(\.requestReview) var requestReview
     private var manager: CoreDataManager
     private var notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -68,10 +66,6 @@ class SettingsViewModel: ObservableObject {
         guard let url = URL(string: UIApplication.openSettingsURLString),
               UIApplication.shared.canOpenURL(url) else { return }
         UIApplication.shared.open(url)
-    }
-    
-    func openAppStoreReview() {
-        requestReview()
     }
     
     func showTermsOfUse() {

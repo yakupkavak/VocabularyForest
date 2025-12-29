@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
-enum PartOfSpeech: String {
+let partOfSpeechList: [PartOfSpeech] = [.noun, .verb, .adjective, .adverb, .pronoun, .preposition, .conjunction, .interjection, .determiner]
+
+enum PartOfSpeech: String, CaseIterable, Identifiable {
     case noun
     case verb
     case adjective
@@ -17,27 +20,36 @@ enum PartOfSpeech: String {
     case conjunction
     case interjection
     case determiner
-    
+
+    var id: String { rawValue }
+
     var localizedText: String {
         switch self {
-        case .noun:
-            return "Noun"
-        case .verb:
-            return "Verb"
-        case .adjective:
-            return "Adjective"
-        case .adverb:
-            return "Adverb"
-        case .pronoun:
-            return "Pronoun"
-        case .preposition:
-            return "Preposition"
-        case .conjunction:
-            return "Conjuction"
-        case .interjection:
-            return "Interjection"
-        case .determiner:
-            return "Determiner"
+        case .noun: return "İsim"
+        case .verb: return "Fiil"
+        case .adjective: return "Sıfat"
+        case .adverb: return "Zarf"
+        case .pronoun: return "Zamir"
+        case .preposition: return "Edat"
+        case .conjunction: return "Bağlaç"
+        case .interjection: return "Ünlem"
+        case .determiner: return "Belirteç"
         }
+    }
+    private var backgroundColor: Color {
+        switch self {
+        case .noun: return .blue
+        case .verb: return .red
+        case .adjective: return .green
+        case .adverb: return .orange
+        case .pronoun: return .purple
+        case .preposition: return .teal
+        case .conjunction: return .indigo
+        case .interjection: return .pink
+        case .determiner: return .gray
+        }
+    }
+    var pasterColor: Color {
+        backgroundColor.opacity(0.8)
     }
 }

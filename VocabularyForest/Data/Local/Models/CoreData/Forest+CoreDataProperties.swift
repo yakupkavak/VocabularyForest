@@ -23,7 +23,7 @@ extension Forest {
     @NSManaged public var landHealthPercent: Int16
     @NSManaged public var landStatus: Bool
     @NSManaged public var isRaining: Bool
-    @NSManaged public var rainStartDate: Date?
+    @NSManaged public var lastRainUpdateDate: Date?
     @NSManaged public var quests: NSSet?
     @NSManaged public var sculptures: NSSet?
     @NSManaged public var trees: NSSet?

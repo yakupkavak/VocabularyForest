@@ -13,11 +13,14 @@ struct BookcaseFeedUI: View {
     
     // MARK: - PROPERTIES
     
-    @StateObject private var viewModel = BookcaseFeedViewModel()
+    @StateObject private var viewModel: BookcaseFeedViewModel
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @State private var showEmptyText = false
     @FocusState private var searchBarIsFocused: Bool
-
+    
+    init(viewModel: BookcaseFeedViewModel = BookcaseFeedViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     // MARK: - VIEWS
     
     var body: some View {
@@ -62,17 +65,23 @@ struct BookcaseFeedUI: View {
 
 private extension BookcaseFeedUI {
     var header: some View {
-        HStack{
+        HStack(alignment: .center){
             Button {
-                onClickBookcaseIcon()
+                bookcaseRouter.navigate(to: .bookcasePacket)
             } label: {
-                Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 40)
+                Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
+            Button {
+                bookcaseRouter.navigate(to: .createBookcase)
+            } label: {
+                Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 28).foregroundStyle(.clickableButton)
+            }
         }.padding(.horizontal,32)
     }
     var noneDataView: some View {
         VStack(spacing: 24){
+            Spacer()
             Spacer()
             tvDefault(text: "Hiçbir kitaplık bulamadık", color: .brown300)
                 .padding(24)
@@ -83,6 +92,18 @@ private extension BookcaseFeedUI {
             TalkingBallons(foregroundColor: .title, delayMultiplier: 1.5)
             LottieView(animation: .named("growingPlant"))
                 .playing(loopMode: .playOnce).resizable().frame(maxWidth: 250).frame(maxHeight: 300)
+            Button {
+                bookcaseRouter.navigate(to: .bookcasePacket)
+            } label: {
+                Text("Hazır kütüphaneler").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+            }.buttonStyle(.plain)
+            Button {
+                bookcaseRouter.navigate(to: .createBookcase)
+            } label: {
+                Text("Kitaplık oluştur").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+            }
+            Spacer()
+
         }
         .onAppear {
             withAnimation(Animation.spring(duration: 1.0).delay(1.8)) {
@@ -100,7 +121,7 @@ private extension BookcaseFeedUI {
                 })
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName))
+                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName, learning: bookcaseDisplayItem.bookcase.unwrappedLearningLanguage,meaning: bookcaseDisplayItem.bookcase.unwrappedmeaningLanguage))
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
@@ -122,12 +143,19 @@ private extension BookcaseFeedUI {
 }
 
 #Preview {
-    let context = CoreDataManager.preview.viewContext
+    let previewManager = CoreDataManager.preview
+    let context = previewManager.viewContext
+    
     let sampleBookcase = Bookcase(context: context)
-    sampleBookcase.name = "Örnek Kitaplık (Preview)"
-    sampleBookcase.createdDate = Date()
+    sampleBookcase.name = "Japonca A1 Kelimeler"
     sampleBookcase.learningLanguage = "ja"
     sampleBookcase.meaningLanguage = "tr"
+    sampleBookcase.createdDate = Date()
     
-    return BookcaseFeedUI()
+    try? context.save()
+    
+    let mockViewModel = BookcaseFeedViewModel(manager: previewManager)
+    
+    return BookcaseFeedUI(viewModel: mockViewModel)
+        .environmentObject(BookcaseRouter())
 }

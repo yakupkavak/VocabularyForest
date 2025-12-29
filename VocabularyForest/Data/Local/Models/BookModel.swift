@@ -14,5 +14,6 @@ struct BookModel: Equatable {
     var meaningWord: String
     var exampleSentence: String?
     var descriptionWord: String?
+    var partOfSpeech: String?
     var bookcase: BookcaseModel
 }

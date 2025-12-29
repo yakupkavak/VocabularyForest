@@ -17,22 +17,22 @@ extension BattleQuestionType {
     var title: String {
         switch self {
         case .learning:
-            "Learning"
+            "Öğrenme"
         case .competitive:
-            "Competitive"
+            "Rekabet"
         case .remainder:
-            "Remainder"
+            "Hatırlama"
         }
     }
     
     var description: String {
         switch self {
         case .learning:
-            "Play with only short term memory with description or example."
+            return "Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna."
         case .competitive:
-            "You will see short term memory and when you find correct it will be long term!"
+            return "Kısa süreli hafızandaki kelimeleri gör; doğru bildikçe onları uzun süreli hafızana taşı!"
         case .remainder:
-            "Play with only long term memory."
+            return "Sadece uzun süreli hafızandaki (öğrenilmiş) kelimelerle oyna."
         }
     }
     

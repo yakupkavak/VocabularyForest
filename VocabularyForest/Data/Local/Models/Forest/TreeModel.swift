@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct TreeModel {
-    let id: UUID?
+struct TreeModel: Equatable{
+    let id: UUID
     let treeName: String
     let isAlive: Bool
+    let createdDate: Date
     let treeHealthValue: Int
     let treeXPosition: CGFloat
     let treeYPosition: CGFloat

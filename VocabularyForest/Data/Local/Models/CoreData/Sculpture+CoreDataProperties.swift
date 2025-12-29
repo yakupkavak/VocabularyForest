@@ -17,7 +17,8 @@ extension Sculpture {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Sculpture> {
         return NSFetchRequest<Sculpture>(entityName: "Sculpture")
     }
-
+    
+    @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
     @NSManaged public var name: String?
     @NSManaged public var xPosition: Double

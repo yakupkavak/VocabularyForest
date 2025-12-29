@@ -16,23 +16,23 @@ enum BattleEnemyModel: Hashable, Codable {
     var assetModels: [EnemyCharacterModel] {
         switch self {
         case .iceElemental:
-            [EnemyCharacterModel(assetName: "IceElemental", characterName: "Ice Elemental", isBoss: true)]
+            [EnemyCharacterModel(assetName: "IceElemental", characterName: "Buz Elementi", isBoss: true)]
         case .fireElemental:
-            [EnemyCharacterModel(assetName: "FireElemental", characterName: "Fire Elemental", isBoss: true)]
+            [EnemyCharacterModel(assetName: "FireElemental", characterName: "Ateş Elementi", isBoss: true)]
         case .natureElemental:
-            [EnemyCharacterModel(assetName: "NatureElemental", characterName: "Nature Elemental", isBoss: true)]
+            [EnemyCharacterModel(assetName: "NatureElemental", characterName: "Doğa Elementi", isBoss: true)]
         case .sandDragon:
-            [EnemyCharacterModel(assetName: "SandDragon", characterName: "Sand Dragon", isBoss: true)]
+            [EnemyCharacterModel(assetName: "SandDragon", characterName: "Kum Ejderi", isBoss: true)]
         case .fireDragon:
-            [EnemyCharacterModel(assetName: "FireDragon", characterName: "Fire Dragon", isBoss: true)]
+            [EnemyCharacterModel(assetName: "FireDragon", characterName: "Ateş Ejderi", isBoss: true)]
         case .classic:
             [
-                EnemyCharacterModel(assetName: "Skeleton", characterName: "Skeleton", isBoss: false),
-                EnemyCharacterModel(assetName: "Ghost", characterName: "Ghost", isBoss: false),
-                EnemyCharacterModel(assetName: "DarkKnight", characterName: "Dark Knight", isBoss: false),
-                EnemyCharacterModel(assetName: "BigKnight", characterName: "Big Knight", isBoss: false),
-                EnemyCharacterModel(assetName: "SkeletonDragon", characterName: "Skeleton Dragon", isBoss: false),
-                EnemyCharacterModel(assetName: "Vampire", characterName: "Vampire", isBoss: true)
+                EnemyCharacterModel(assetName: "Skeleton", characterName: "İskelet", isBoss: false),
+                EnemyCharacterModel(assetName: "Ghost", characterName: "Hayalet", isBoss: false),
+                EnemyCharacterModel(assetName: "DarkKnight", characterName: "Kara şovalye", isBoss: false),
+                EnemyCharacterModel(assetName: "BigKnight", characterName: "Asil Şovalye", isBoss: false),
+                EnemyCharacterModel(assetName: "SkeletonDragon", characterName: "İskelet Ejderi", isBoss: false),
+                EnemyCharacterModel(assetName: "Vampire", characterName: "Vampir", isBoss: true)
             ]
         }
     }
@@ -42,17 +42,17 @@ extension BattleEnemyModel {
     var title: String {
         switch self {
         case .iceElemental:
-            "Ice Elemental"
+            "Buz Elementi"
         case .fireElemental:
-            "Fire Elemental"
+            "Ateş Elementi"
         case .natureElemental:
-            "Nature Elemental"
+            "Doğa Elementi"
         case .sandDragon:
-            "Sand Dragon"
+            "Kum Ejderi"
         case .fireDragon:
-            "Fire Dragon"
+            "Ateş Ejderi"
         case .classic:
-            "Classic"
+            "Klasik"
         }
     }
     var background: String {

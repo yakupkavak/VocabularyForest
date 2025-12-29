@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LearningFeedUI: View {
     
@@ -21,7 +22,7 @@ struct LearningFeedUI: View {
             Color.backgroundSystem.ignoresSafeArea()
             VStack{
                 Spacer()
-                tvMainTitle(text: "Öğrenme").padding(.bottom)
+                tvMainTitle(text: "Ormanın").padding(.bottom)
                 ForEach(Constant.quizList, id: \.self) { quiz in
                     QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
                         switch type {

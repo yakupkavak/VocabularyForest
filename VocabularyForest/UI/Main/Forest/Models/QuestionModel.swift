@@ -12,11 +12,12 @@ struct QuestionModel: Hashable {
     let questionTitle: String
     let answers: [AnswerModel]
     let questionNumber: Int
-    let description: String? = nil
-    let example: String? = nil
+    let description: String?
+    let example: String?
 }
 
 struct AnswerModel: Hashable {
+    let book: Book?
     let answer: String
     var isTrue: Bool
 }

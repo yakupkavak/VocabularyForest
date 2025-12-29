@@ -8,7 +8,7 @@
 import Foundation
 
 struct AnimalModel: Equatable {
-    let id: UUID? = nil
+    let id: UUID
     let name: String
     let assetName: String
     let createdDate: Date

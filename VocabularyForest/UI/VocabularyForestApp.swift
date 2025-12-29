@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CoreData
-import Toasts
 
 @main
 struct VocabularyForestApp: App {

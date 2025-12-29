@@ -36,6 +36,6 @@ final class CreateBookRouter: ObservableObject {
 
 extension CreateBookRouter {
     public enum Destination: Codable, Hashable {
-        case createBookcase
+        case bookcaseList
     }
 }

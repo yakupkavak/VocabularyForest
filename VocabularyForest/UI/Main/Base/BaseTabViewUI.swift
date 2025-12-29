@@ -38,8 +38,8 @@ extension BaseTabViewUI {
         NavigationStack(path: $createBookRouter.navPath) {
             CreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
                 switch destination {
-                case .createBookcase:
-                    CreateBookcaseUI().onAppear {
+                case .bookcaseList:
+                    BookcaseFeedUI().onAppear {
                         withAnimation(.easeInOut(duration: 1.2)) {
                             tabbarController.hideTabbar()
                         }
@@ -58,31 +58,31 @@ extension BaseTabViewUI {
         NavigationStack(path: $bookcaseRouter.navPath) {
             BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
                 switch destination {
-                case .bookcaseDetail(let bookcaseName):
-                    BookcaseDetailUI(bookcaseName: bookcaseName).onAppear {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            tabbarController.hideTabbar()
-                        }
-                    }.onDisappear {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            tabbarController.showTabbar()
-                        }
-                    }
+                case .bookcaseDetail(let bookcaseName, let learningCode, let meaningCode):
+                    BookcaseDetailUI(bookcaseName: bookcaseName, bookcaseLearningCode: learningCode, bookcaseMeaningCode: meaningCode)
+                        .toolbar(.hidden, for: .tabBar)
                 case .bookcaseList:
                     BookcaseFeedUI()
                 case .createBookcase:
-                    CreateBookcaseUI().onAppear {
-                        withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.hideTabbar()
+                    CreateBookcaseUI()
+                case .bookcasePacket :
+                    let viewModel = BookcasePacketsViewModel(networkService: APIService(), dataManager: CoreDataManager.shared)
+                    BookcasePacketsUI(viewModel: viewModel)
+                        .navigationBarBackButtonHidden()
+                        .toolbar(.hidden, for: .tabBar)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 1.2)) {
+                                tabbarController.hideTabbar()
+                            }
+                        }.onDisappear {
+                            withAnimation(.easeInOut(duration: 1.2)) {
+                                tabbarController.showTabbar()
+                            }
                         }
-                    }.onDisappear {
-                        withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.showTabbar()
-                        }
-                    }
                 }
             }.tabbarVisibility(visibility: tabbarController.isVisible)
-        }.tabItem {
+        }
+        .tabItem {
                 Label("Kitaplık", systemImage: "books.vertical")
             }.tag(BaseTabTypes.bookcases).tint(.clickableButton)
     }

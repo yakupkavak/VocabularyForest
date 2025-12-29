@@ -19,6 +19,7 @@ class CreateBookViewModel: ObservableObject {
     @Published var bookMeaningWord = ""
     @Published var bookExampleSentence = ""
     @Published var bookDescription = ""
+    @Published var partOfSpeech: PartOfSpeech = .noun
     @Published var emptyBookLearningWord = false
     @Published var emptyBookMeaningWord = false
     @Published var toastMessageModel: CreateBookToastType = .none
@@ -43,10 +44,14 @@ class CreateBookViewModel: ObservableObject {
     private func fetchUserPreferences() {
         guard let lastBookcaseName = UserDefaults.standard.string(
             forKey: BookcaseConstants.bookcase
-        )else {
+        ), let lastBookcaseLearning = UserDefaults.standard.string(
+            forKey: BookcaseConstants.learningLanguage
+        ), let lastBookcaseMeaning = UserDefaults.standard.string(
+            forKey: BookcaseConstants.meaningLanguage
+        ) else {
             return
         }
-        if let bookcase = coreDataManager.fetchBookcase(name: lastBookcaseName) {
+        if let bookcase = coreDataManager.fetchBookcase(name: lastBookcaseName, learningLanguageCode: lastBookcaseLearning, meaningLanguageCode: lastBookcaseMeaning) {
             updateCurrentBookcase(bookcase: bookcase)
         }else {
             UserDefaults.standard.set(nil, forKey: BookcaseConstants.bookcase)
@@ -54,16 +59,19 @@ class CreateBookViewModel: ObservableObject {
     }
     
     func fetchBookWithModel(bookcaseModel: BookcaseModel){
-        if let bookcase = coreDataManager.fetchBookcase(name: bookcaseModel.bookcaseName) {
+        if let bookcase = coreDataManager.fetchBookcase(name: bookcaseModel.bookcaseName, learningLanguageCode: bookcaseModel.learningLanguage, meaningLanguageCode: bookcaseModel.meaningLanguage) {
             updateCurrentBookcase(bookcase: bookcase)
         }
     }
     
     @objc private func refreshBookcase(notification: NSNotification){
-        guard let notificationBookcaseName = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseName] as? String else {
+        guard let notificationBookcaseName = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseName] as? String,
+        let notificationBookcaseLearning = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseLearning] as? String,
+        let notificationBookcaseMeaning = notification.userInfo?[BookcaseNotificationConstants.createdBookcaseMeaning] as? String
+        else {
             return
         }
-        guard let newBookcase = coreDataManager.fetchBookcase(name: notificationBookcaseName) else {
+        guard let newBookcase = coreDataManager.fetchBookcase(name: notificationBookcaseName, learningLanguageCode: notificationBookcaseLearning, meaningLanguageCode: notificationBookcaseMeaning) else {
             return
         }
         updateCurrentBookcase(bookcase: newBookcase)
@@ -93,6 +101,10 @@ class CreateBookViewModel: ObservableObject {
         bookcasesList = coreDataManager.fetchBookcases() ?? []
     }
     
+    func selectTag(model: PartOfSpeech) {
+        partOfSpeech = model
+    }
+    
     func checkAndCreateBook() {
         var isValid = true
         if(bookLearningWord.isEmpty) {
@@ -116,7 +128,7 @@ class CreateBookViewModel: ObservableObject {
         guard let currentBookcase else {
             return
         }
-        let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, in: currentBookcase)
+        let book = coreDataManager.createBook(learningWord: bookLearningWord, meaningWord: bookMeaningWord, exampleSentence: bookExampleSentence, descriptionWord: bookDescription, partOfSpeech: partOfSpeech.rawValue, in: currentBookcase)
         bookLearningWord = ""
         bookMeaningWord = ""
         bookExampleSentence = ""

@@ -143,7 +143,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
     }
     
     func killEnemy(completion: @escaping (Bool) -> Void) {
-        let animate = SKAction.animate(with: deathTextures, timePerFrame: 0.3)
+        let animate = SKAction.animate(with: deathTextures, timePerFrame: min(GameConstant.dyingTime / Double(deathTextures.count), 0.4))
         let notify = SKAction.run {
             completion(
                 ["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"].contains(self.currentEnemyType?.assetName))
@@ -152,15 +152,21 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
             self.enemyNode.removeAllActions()
             self.enemyNode.removeFromParent()
         }
-        let animationDuration = Double(deathTextures.count) * 0.1
-        let targetWidth = BattleConstant.enemySize * 0.6
-        let targetHeight = BattleConstant.enemySize * 0.6
-        let shrink = SKAction.resize(toWidth: targetWidth, height: targetHeight, duration: animationDuration)
-        let visualEffects = SKAction.group([animate, shrink])
-        enemyNode.run(
-            SKAction.sequence([visualEffects, delete,notify]),
-            withKey: GameConstant.deathCharacterAction
-        )
+        guard let firstFrame = deathTextures.first, let scene = scene else { return }
+        enemyNode.texture = firstFrame
+        let originalSize = firstFrame.size()
+        let targetHeight = GameConstant.gameHeightSize * 0.2
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = targetHeight * aspectRatio
+            let animationDuration = Double(deathTextures.count) * 0.1
+            let shrink = SKAction.resize(toWidth: targetWidth, height: targetHeight, duration: animationDuration)
+            let visualEffects = SKAction.group([animate, shrink])
+            enemyNode.run(
+                SKAction.sequence([visualEffects, delete,notify]),
+                withKey: GameConstant.deathCharacterAction
+            )
+        }
     }
     
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void) {

@@ -10,8 +10,8 @@ import SwiftUI
 import AVFoundation
 
 protocol ForectSceneProtocol: AnyObject {
-    func getTrees() -> Resource<[Tree]>
-    func getSculptures() -> Resource<[Sculpture]>
+    func getTrees() -> Resource<[TreeModel]>
+    func getSculptures() -> Resource<[SculptureModel]>
     func getQuests() -> Resource <[QuestModel]>
     func treeOnClick(id: UUID)
     func getForestStatus() -> Resource<ForestStatusModel>
@@ -27,6 +27,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var forestHelper: ForestUIProtocol?
     var helper: ForectSceneProtocol?
     var animalManagers: [AnimalManagerProtocol] = []
+    var plantManagers: [PlantManagerProtocol] = []
     private var isTouching = false
     var timer: Timer?
     
@@ -132,6 +133,10 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
             forestHelper?.showGameSelection()
             return
         }
+        if nodesAtPoint.contains(where: { $0.name == "forest_button" }) {
+            forestHelper?.showForestInfo()
+            return
+        }
         let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
@@ -146,6 +151,43 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
+    func startFade() {
+        for plantManager in self.plantManagers {
+            plantManager.fadePlant()
+        }
+    }
+    
+    func startDrought() {
+        environmentManager.startDrought()
+        for animalManager in self.animalManagers {
+            animalManager.stopMoving()
+        }
+        for plantManager in self.plantManagers {
+            plantManager.perishPlant()
+        }
+    }
+    
+    func finishDrought() {
+        environmentManager.finishDrought()
+        for animalManager in self.animalManagers {
+            animalManager.startMoving()
+        }
+        for plantManager in self.plantManagers {
+            plantManager.recoverPlant()
+        }
+    }
+    
+    func setupSculpture(sculpture: SculptureModel) {
+        let manager = SculptureManager(scene: self)
+        manager.setupSculpture(model: sculpture)
+    }
+    
+    func setupPlant(plant: TreeModel) {
+        let manager = PlantManager(scene: self)
+        manager.setupPlant(model: plant)
+        plantManagers.append(manager)
+    }
+    
     func setupAnimals(animals: AnimalModel?){
         guard let animals else { return }
         let animalManager = AnimalManager(scene: self)
@@ -154,10 +196,11 @@ extension ForestScene: ForestViewModelOutputProcotol {
     }
     
     func startRain() {
-        print("Scene: Yağmur efekti başlatılıyor...")
+        environmentManager.startRain()
+        finishDrought()
     }
     
     func stopRain() {
-        print("Scene: Yağmur durdu.")
+        environmentManager.stopRain()
     }
 }

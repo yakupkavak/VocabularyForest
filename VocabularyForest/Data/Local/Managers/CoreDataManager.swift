@@ -17,7 +17,7 @@ class CoreDataManager {
     var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
-
+    
     private init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "VocabularyForest")
         
@@ -32,9 +32,31 @@ class CoreDataManager {
         }
         
         viewContext.automaticallyMergesChangesFromParent = true
+        DispatchQueue.global(qos: .background).async {
+            self.checkGame()
+        }
     }
     
     // MARK: - HELPERS
+    
+    private func checkGame() {
+        // Eğer bir hafta geçmişse short memory'e atıyoruz
+        if let allBooks = fetchAllBooks() {
+            for book in allBooks {
+                if book.longMemory == true {
+                    if let oneWeekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) {
+                        if let date = book.learningDate, date <= oneWeekAgo {
+                            book.longMemory = false
+                            book.shortMemory = true
+                        }
+                    }
+                }
+            }
+            save()
+        }
+        //Toprak sağlığı kontrolü yapıyoruz
+        ForestDataManager.shared.checkAndUpdateRain()
+    }
     
     func save() {
         guard viewContext.hasChanges else { return }
@@ -54,7 +76,7 @@ class CoreDataManager {
         save()
         return bookcase
     }
-
+    
     func fetchBookcases(sortDescriptors: [NSSortDescriptor]? = nil) -> [Bookcase]? {
         let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
         request.sortDescriptors = sortDescriptors ?? [
@@ -68,9 +90,9 @@ class CoreDataManager {
         }
     }
     
-    func fetchBookcase(name: String) -> Bookcase? {
+    func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String) -> Bookcase? {
         let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
-        request.predicate = NSPredicate(format: "name == %@", name)
+        request.predicate = NSPredicate(format: "name == %@ AND learningLanguage == %@ AND meaningLanguage == %@", name, learningLanguageCode, meaningLanguageCode)
         request.fetchLimit = 1
         do {
             let bookcases = try viewContext.fetch(request)
@@ -85,11 +107,12 @@ class CoreDataManager {
         viewContext.delete(bookcase)
         save()
     }
-        
+    
     func createBook(learningWord: String,
                     meaningWord: String,
                     exampleSentence: String?,
                     descriptionWord: String?,
+                    partOfSpeech: String?,
                     in bookcase: Bookcase) -> Book {
         let book = Book(context: viewContext)
         book.learningWord = learningWord
@@ -98,11 +121,85 @@ class CoreDataManager {
         book.descriptionWord = descriptionWord
         book.createdDate = Date()
         book.bookcase = bookcase
+        book.partOfSpeech = partOfSpeech
         book.shortMemory = true
         save()
         let persistentBookID = book.objectID.uriRepresentation().absoluteString
         NotificationManager.shared.createNotification(bookId: persistentBookID, learningWord: learningWord, meaningWord: meaningWord, description: descriptionWord ?? "", example: exampleSentence ?? "")
         return book
+    }
+    
+    enum ImportBookcaseError: Error {
+        case alreadyExist
+        case missingRequiredFields
+    }
+    
+    
+    func importBookcase(_ request: BookcaseRequest,
+                        overwrite: Bool = true,
+                        completion: @escaping (Result<Bookcase, ImportBookcaseError>) -> Void) {
+        viewContext.perform {
+            do {
+                guard
+                    let source = request.sourceLanguage,
+                    let target = request.targetLanguage,
+                    let name = request.name
+                else { throw ImportBookcaseError.missingRequiredFields }
+                
+                let bookcaseName = name.uppercased()
+                
+                let bookcase: Bookcase
+                if let existing = self.fetchBookcase(name: bookcaseName, learningLanguageCode: source, meaningLanguageCode: target) {
+                    bookcase = existing
+                    completion(.failure(.alreadyExist))
+                    return
+                } else {
+                    bookcase = Bookcase(context: self.viewContext)
+                    bookcase.name = bookcaseName
+                    bookcase.createdDate = Date()
+                }
+                bookcase.learningLanguage = source
+                bookcase.meaningLanguage = target
+                for word in (request.words ?? []) {
+                    _ = self.createBook(
+                        learningWord: word.term ?? "",
+                        meaningWord: word.definition ?? "",
+                        exampleSentence: word.example,
+                        descriptionWord: word.description,
+                        partOfSpeech: word.partOfSpeech,
+                        in: bookcase
+                    )
+                }
+                
+                self.save()
+                completion(.success(bookcase))
+                
+            } catch {
+                completion(.failure(.missingRequiredFields))
+            }
+        }
+    }
+    
+    func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        if let bookcase = fetchBookcase(
+            name: model.bookcaseName,
+            learningLanguageCode: model.learningLanguage,
+            meaningLanguageCode: model.meaningLanguage
+        ) {
+            let request = NSFetchRequest<Book>(entityName: "Book")
+            request.sortDescriptors = sortDescriptors ?? [
+                NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+            ]
+            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            do {
+                return try viewContext.fetch(request)
+            } catch {
+                print("Books couldn't fetched -> \(error)")
+                return nil
+            }
+        }else {
+            return nil
+        }
     }
     
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
@@ -111,6 +208,56 @@ class CoreDataManager {
             NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
         ]
         request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+        do {
+            return try viewContext.fetch(request)
+        } catch {
+            print("Books couldn't fetched -> \(error)")
+            return nil
+        }
+    }
+    
+    func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        let request = NSFetchRequest<Book>(entityName: "Book")
+        request.sortDescriptors = sortDescriptors ?? [
+            NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+        ]
+        request.predicate = NSPredicate(format: "(exampleSentence != nil OR descriptionWord != nil)")
+        do {
+            return try viewContext.fetch(request)
+        } catch {
+            return nil
+        }
+    }
+    
+    func fetchBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        if let bookcase = fetchBookcase(
+            name: model.bookcaseName,
+            learningLanguageCode: model.learningLanguage,
+            meaningLanguageCode: model.meaningLanguage
+        ){
+            let request = NSFetchRequest<Book>(entityName: "Book")
+            request.sortDescriptors = sortDescriptors ?? [
+                NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+            ]
+            request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+            do {
+                return try viewContext.fetch(request)
+            } catch {
+                print("Books couldn't fetched -> \(error)")
+                return nil
+            }
+        }
+        else {
+            return nil
+        }
+    }
+    
+    func fetchBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]? = nil) -> [Book]? {
+        let request = NSFetchRequest<Book>(entityName: "Book")
+        request.sortDescriptors = sortDescriptors ?? [
+            NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
+        ]
+        request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
         do {
             return try viewContext.fetch(request)
         } catch {
@@ -181,7 +328,7 @@ extension CoreDataManager {
         sampleBook2.exampleSentence = "Arigatou gozaimasu."
         sampleBook2.descriptionWord = "Minnettarlık bildiren bir ifade."
         sampleBook2.bookcase = sampleBookcase
-
+        
         let sampleBook3 = Book(context: context)
         sampleBook3.learningWord = "Sayonara"
         sampleBook3.meaningWord = "Güle güle"
@@ -189,7 +336,7 @@ extension CoreDataManager {
         sampleBook3.exampleSentence = "Sayonara, mata ashita."
         sampleBook3.descriptionWord = "Ayrılırken kullanılan bir veda sözü."
         sampleBook3.bookcase = sampleBookcase
-
+        
         let sampleBookcase2 = Bookcase(context: context)
         sampleBookcase2.name = "English Basics"
         sampleBookcase2.createdDate = Date().addingTimeInterval(-400)
@@ -211,7 +358,7 @@ extension CoreDataManager {
         sampleBook5.exampleSentence = "I need to write some code for my app."
         sampleBook5.descriptionWord = "Bilgisayara talimat vermek için kullanılan komut dizisi."
         sampleBook5.bookcase = sampleBookcase2
-
+        
         let sampleBook6 = Book(context: context)
         sampleBook6.learningWord = "Water"
         sampleBook6.meaningWord = "Su"

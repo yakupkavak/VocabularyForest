@@ -9,17 +9,50 @@
 /* Begin PBXBuildFile section */
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B5F2EA8C43A0063F4D8 /* Lottie */; };
-		37D84B882EAA272A0063F4D8 /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B872EAA272A0063F4D8 /* Toasts */; };
+		37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 37D8A7982EF928A700E59CA9 /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MockBookcasePacketsViewModel.swift,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
+		37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MockData.swift,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		37267D222E90E9D90019D139 /* VocabularyForest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VocabularyForest;
+			sourceTree = "<group>";
+		};
+		37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */,
+			);
+			path = BookcasePackets;
+			sourceTree = "<group>";
+		};
+		37D8A8B12EF95A2600E59CA9 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -30,7 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
-				37D84B882EAA272A0063F4D8 /* Toasts in Frameworks */,
+				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,6 +74,7 @@
 		37267D172E90E9D90019D139 = {
 			isa = PBXGroup;
 			children = (
+				37D8A8AF2EF959E500E59CA9 /* Preview Content */,
 				37267D222E90E9D90019D139 /* VocabularyForest */,
 				37267D212E90E9D90019D139 /* Products */,
 			);
@@ -52,6 +86,15 @@
 				37267D202E90E9D90019D139 /* VocabularyForest.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		37D8A8AF2EF959E500E59CA9 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				37D8A8B12EF95A2600E59CA9 /* Models */,
+				37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -76,7 +119,7 @@
 			packageProductDependencies = (
 				37267F0D2E927B8E0019D139 /* Kingfisher */,
 				37D84B5F2EA8C43A0063F4D8 /* Lottie */,
-				37D84B872EAA272A0063F4D8 /* Toasts */,
+				37D8A7982EF928A700E59CA9 /* Alamofire */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -110,7 +153,7 @@
 			packageReferences = (
 				37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				37D84B5E2EA8C43A0063F4D8 /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */,
+				37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -274,6 +317,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -311,6 +355,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -380,12 +425,12 @@
 				minimumVersion = 4.5.2;
 			};
 		};
-		37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */ = {
+		37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunghyun-k/swiftui-toasts";
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
+				minimumVersion = 5.11.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -401,10 +446,10 @@
 			package = 37D84B5E2EA8C43A0063F4D8 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		37D84B872EAA272A0063F4D8 /* Toasts */ = {
+		37D8A7982EF928A700E59CA9 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 37D84B862EAA272A0063F4D8 /* XCRemoteSwiftPackageReference "swiftui-toasts" */;
-			productName = Toasts;
+			package = 37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -13,12 +13,14 @@ import SwiftUI
  Current point curvenin anlık konumunu belirtiyor.
  Offset ile currentPoint'i animasyona dahil ediyoruz
  */
-
 struct LiquidShape: Shape {
     
-    //MARK: Properties
+    // MARK: Properties
     var offset: CGSize
     var currentPoint: CGFloat
+    var curveCenterY: CGFloat
+    var waveHeight: CGFloat = 100
+    
     var animatableData: AnimatablePair<CGSize.AnimatableData, CGFloat> {
         get {
             return AnimatablePair(offset.animatableData, currentPoint)
@@ -28,16 +30,15 @@ struct LiquidShape: Shape {
             currentPoint = newValue.second
         }
     }
-    //Dalgamızın üst sınırı nereden başlayacak y ekseninde
-    let thresholdCurve = CGFloat(80)
-    //Dalgamız en son nerede bitebilecek y ekseninde
-    let endCurve = CGFloat(180)
     
-    //MARK: View
+    // MARK: View
     func path(in rect: CGRect) -> Path {
         return Path { path in
-            //Ofset sola kayıyorsa yani negatif ise genişliğe ekliyoruz
             let width = rect.width + (-offset.width > 0 ? offset.width : 0)
+            
+            // Hesaplamaları curveCenterY'ye göre yapıyoruz
+            let thresholdCurve = curveCenterY - (waveHeight / 2)
+            let endCurve = curveCenterY + (waveHeight / 2)
             
             path.move(to: CGPoint(x: 0, y: 0))
             path.addLine(to: CGPoint(x: rect.width, y: 0))
@@ -52,7 +53,9 @@ struct LiquidShape: Shape {
             
             let mid: CGFloat = thresholdCurve + ((to - thresholdCurve) / 2)
             
-            path.addCurve(to: CGPoint(x: rect.width, y: to), control1: CGPoint(x: width - currentPoint, y: mid), control2: CGPoint(x: width - currentPoint, y: mid))
+            path.addCurve(to: CGPoint(x: rect.width, y: to),
+                          control1: CGPoint(x: width - currentPoint, y: mid),
+                          control2: CGPoint(x: width - currentPoint, y: mid))
         }
     }
 }

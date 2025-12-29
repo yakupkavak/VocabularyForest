@@ -10,4 +10,5 @@ enum AppStorageNames: String {
     case sfxVolume
     case isMuted
     case isHapticsEnabled
+    case shownForestInfo
 }

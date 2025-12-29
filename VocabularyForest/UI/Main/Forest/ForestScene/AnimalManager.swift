@@ -10,6 +10,8 @@ import SpriteKit
 protocol AnimalManagerProtocol: AnyObject {
     var animalNode: SKSpriteNode { get }
     var animalDirection: GameDirection { get }
+    func startMoving()
+    func stopMoving()
     func changeDirection()
     func setupAnimalManager(model: AnimalModel)
 }
@@ -139,8 +141,8 @@ private extension AnimalManager {
     
     func moveAnimal() {
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAction)
-        let moveAmount: CGFloat = (direction == .right) ? (300 + CGFloat.random(in: -10...10)) : (
-            -300 + CGFloat.random(in: -10...10)
+        let moveAmount: CGFloat = (direction == .right) ? (50 + CGFloat.random(in: -15...15)) : (
+            -50 + CGFloat.random(in: -15...15)
         )
         let move = SKAction.moveBy(x: moveAmount, y: 0, duration: 1.0)
         let repeatAction = SKAction.repeatForever(move)
@@ -172,6 +174,16 @@ private extension AnimalManager {
 }
 
 extension AnimalManager: AnimalManagerProtocol {
+    
+    func startMoving() {
+        moveAnimal()
+        walkAnimation()
+    }
+
+    func stopMoving() {
+        stopMove()
+        idleAnimation()
+    }
     
     func changeDirection() {
         direction = direction == .left ? .right : .left

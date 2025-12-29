@@ -15,7 +15,10 @@ struct OnboardingUI: View {
     @State private var currentPage = 0
     @State private var fakeIndex = 0
     @State private var models = OnboardingConstants.onboardingModels
-
+    private var waveCenterY: CGFloat {
+        UIScreen.main.bounds.height * 0.15
+    }
+    
     // MARK: VIEW
     
     var body: some View {
@@ -49,11 +52,9 @@ private extension OnboardingUI {
     var backPage: some View {
         Group {
             if models.indices.contains(fakeIndex + 1) {
-              
                     BaseOnboardingUI(
                         onboardingModel: models[fakeIndex + 1]
                     )
-                
                     .zIndex(0)
             } else {
                 Color.clear
@@ -69,7 +70,8 @@ private extension OnboardingUI {
                     .clipShape(
                         LiquidShape(
                             offset: model.offSet,
-                            currentPoint: 50
+                            currentPoint: 50,
+                            curveCenterY: waveCenterY
                         )
                     )
                     .padding(.trailing, 15)
@@ -99,14 +101,14 @@ private extension OnboardingUI {
                 }
             } label: {
                 if(currentPage == dotCount - 1){
-                    tvSubtitle(text: "Başla").foregroundStyle(.white)
+                    Text("Başla").foregroundStyle(.white).font(.system(size: 24))
                 }else {
-                    tvSubtitle(text: "Diğer").foregroundStyle(.white)
+                    Text("Diğer").foregroundStyle(.white).font(.system(size: 24))
                 }
             }
         }
         .padding(.horizontal, 36)
-        .padding(.vertical, 12)
+        .padding(.vertical, 36)
     }
     
     var gesturableDot: some View {
@@ -153,7 +155,7 @@ private extension OnboardingUI {
                         }
                     }
             )
-            .offset(y: 45)
+            .position(x: UIScreen.main.bounds.width - 30, y: waveCenterY)
             .opacity(isDragging ? 0 : 1)
             .animation(.linear, value: isDragging)
     }

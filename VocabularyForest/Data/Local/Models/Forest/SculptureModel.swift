@@ -7,9 +7,15 @@
 
 import Foundation
 
-struct SculptureModel {
+struct SculptureModel: Equatable {
+    let id: UUID
     let name: String
     let createDate: Date
     let xPosition: CGFloat
     let yPosition: CGFloat
 }
+
+let baseSculptureList = [
+    SculptureModel(id: UUID(), name: "water_statue", createDate: Date(), xPosition: 0.15, yPosition: 0.4),
+    SculptureModel(id: UUID(), name: "grass_statue", createDate: Date(), xPosition: 0.03, yPosition: 0.1)
+]

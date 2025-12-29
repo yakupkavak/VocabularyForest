@@ -7,8 +7,8 @@
 
 // BattleViewModel.swift
 
-import SwiftUI
 import Combine
+import Foundation
 
 protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func askQuestion()
@@ -97,6 +97,7 @@ class BattleViewModel: ObservableObject {
 // MARK: - PRIVATE HELPERS
 
 private extension BattleViewModel {
+    
     func prepareEnemyLevel(gameLevel: GameLevel, characterModel: EnemyCharacterModel) {
         switch gameLevel {
         case .easy:
@@ -144,6 +145,7 @@ private extension BattleViewModel {
         }
     }
     
+    //Learning modunu seçerken kitapların example ya da descriptionu olan halini veriyoruz.
     func setShortBooks(books: [Book], bookCount: Int) {
         let shortBooks = books.filter { (book: Book) -> Bool in
             return book.shortMemory == true
@@ -158,12 +160,14 @@ private extension BattleViewModel {
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
-                    AnswerModel(answer: book.unwrappedMeaningWord, isTrue: true),
-                    AnswerModel(answer: randomBooks[safe: 0]?.unwrappedMeaningWord ?? "Agile", isTrue: false),
-                    AnswerModel(answer: randomBooks[safe: 1]?.unwrappedMeaningWord ?? "Player", isTrue: false),
-                    AnswerModel(answer: randomBooks[safe: 2]?.unwrappedMeaningWord ?? "Who", isTrue: false),
+                    AnswerModel(book: book,answer: book.unwrappedMeaningWord, isTrue: true),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 0]?.unwrappedMeaningWord ?? "Agile", isTrue: false),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 1]?.unwrappedMeaningWord ?? "Player", isTrue: false),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 2]?.unwrappedMeaningWord ?? "Who", isTrue: false),
                 ].shuffled(),
-                questionNumber: questionNumber
+                questionNumber: questionNumber,
+                description: book.learningWord,
+                example: book.exampleSentence,
             )
             questionList.append(model)
             answerBooks.append(book)
@@ -186,12 +190,14 @@ private extension BattleViewModel {
                 let model = QuestionModel(
                     questionTitle: finalQuestionText,
                     answers: [
-                        AnswerModel(answer: answer, isTrue: true),
-                        AnswerModel(answer: randomBooks[safe: 0]?.unwrappedLearningWord ?? "Agile", isTrue: false),
-                        AnswerModel(answer: randomBooks[safe: 1]?.unwrappedLearningWord ?? "Player", isTrue: false),
-                        AnswerModel(answer: randomBooks[safe: 2]?.unwrappedLearningWord ?? "Who", isTrue: false),
+                        AnswerModel(book: book,answer: book.unwrappedMeaningWord, isTrue: true),
+                        AnswerModel(book: nil,answer: randomBooks[safe: 0]?.unwrappedMeaningWord ?? "Agile", isTrue: false),
+                        AnswerModel(book: nil,answer: randomBooks[safe: 1]?.unwrappedMeaningWord ?? "Player", isTrue: false),
+                        AnswerModel(book: nil,answer: randomBooks[safe: 2]?.unwrappedMeaningWord ?? "Who", isTrue: false),
                     ].shuffled(),
-                    questionNumber: questionNumber
+                    questionNumber: questionNumber,
+                    description: nil,
+                    example: nil,
                 )
                 questionList.append(model)
                 answerBooks.append(book)
@@ -211,19 +217,6 @@ private extension BattleViewModel {
             prepareEnemyLevel(gameLevel: safeGameLevel, characterModel: nextEnemy)
         }
     }
-    func calculateMinBookCount(
-        battleMode: BattleEnemyModel,
-        gameLevel: GameLevel,
-    ) -> Int{
-        var totalCorrectBook = 0
-        var totalWrongBook = 0
-        let assetModels = battleMode.assetModels
-        for characterModel in assetModels {
-            totalCorrectBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
-            totalWrongBook += gameLevel.playerLevel
-        }
-        return totalCorrectBook + totalWrongBook + 1
-    }
 }
 
 // MARK: - BATTLE VIEW MODEL PROTOCOL
@@ -236,10 +229,38 @@ extension BattleViewModel: BattleViewModelProtocol {
         battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     ) {
-        guard let books = coreData.fetchAllBooks() else {
-            errorModel = .emptyBookcase
-            return
+        var books: [Book] = []
+        
+        if questionType == .learning {
+            if let bookcase {
+                guard let spesificBooks = coreData.fetchBooksExampleDescription(bookcase: bookcase) else {
+                    errorModel = .emptyBookcase
+                    return
+                }
+                books = spesificBooks
+            } else {
+                guard let allBooks = coreData.fetchAllBooksWithExampleDescription() else {
+                    errorModel = .emptyBookcase
+                    return
+                }
+                books = allBooks
+            }
+        } else {
+            if let bookcase {
+                guard let spesificBooks = coreData.fetchBooks(bookcase: bookcase) else {
+                    errorModel = .emptyBookcase
+                    return
+                }
+                books = spesificBooks
+            } else {
+                guard let allBooks = coreData.fetchAllBooks() else {
+                    errorModel = .emptyBookcase
+                    return
+                }
+                books = allBooks
+            }
         }
+        
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         self.gameLevel = gameLevel
         self.questionType = questionType
@@ -284,8 +305,15 @@ extension BattleViewModel: BattleViewModelProtocol {
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
                     gameStatus.trueCount += 1
-                    // TODO: SHOW SAVE ERROR
                     if let questionType {
+                        if questionType == .learning {
+                            if let answerBook = answer.book {
+                                answerBook.shortMemory = false
+                                answerBook.longMemory = true
+                                answerBook.learningDate = Date()
+                            }
+                        }
+                        // TODO: SHOW SAVE ERROR
                         let saveResult = forestDataManager.correctAnswer(questionType: questionType )
                     }
                     output?.correctAnswer()

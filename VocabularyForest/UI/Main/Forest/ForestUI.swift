@@ -12,6 +12,7 @@ protocol ForestUIProtocol {
     func showOptions()
     func showQuests()
     func showGameSelection()
+    func showForestInfo()
 }
 
 // MARK: - CONSTANTS
@@ -21,6 +22,7 @@ private extension ForestUI {
         static let optionsList: [SettingsModel] = [
             SettingsModel<SettingType>(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
             SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
+            SettingsModel(title: "Orman Bilgileri", icon: "FAQ", color: .brown500, type: .info),
             SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
         ]
     }
@@ -39,22 +41,37 @@ struct ForestUI: View {
     @State private var showSetting = false
     @State private var showGameSelect = false
     @State private var showQuest = false
+    @State private var showForest = false
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
+    @AppStorage(AppStorageNames.shownForestInfo.rawValue) private var forestSeen: Bool = false
     
     // MARK: - UI
     
     var body: some View {
         ZStack {
+            if !forestSeen {
+                GameInfoUI(showForestPopUp: Binding(
+                    get: {
+                        return !forestSeen
+                    },
+                    set: { newValue in
+                        if newValue == false {
+                            forestSeen = true
+                        }
+                    }
+                ))
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }
             if showOption {
-                options
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                options.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showSetting {
-                settings
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                settings.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showQuest {
                 ForestQuestUI(
@@ -65,15 +82,36 @@ struct ForestUI: View {
                     specialQuests: viewModel.specialQuestList
                 ) { model in
                     viewModel.claimReward(quest: model)
-                }
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                }.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showGameSelect {
-                GameSelectUI(showGameSelect: $showGameSelect) { type, mode, level in
-                    showGameSelect = false
-                    router.navigate(to: .game(type, mode, level))
-                }
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(2.0)
+                GameSelectUI(showGameSelect: $showGameSelect, bookcaseList: viewModel.bookcaseList) { type, mode, level, questionSelection in
+                    if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
+                        showGameSelect = false
+                        router.navigate(to: .game(type, mode, level))
+                    }
+                }.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.9)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }
+            if showForest {
+                ForestInfoUI(forestModel: viewModel.forestStatus) {
+                    showForest = false
+                }.zIndex(4.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }
+            if viewModel.showRainButton {
+                VStack{
+                    Spacer()
+                    Button {
+                        viewModel.startRain()
+                    } label: {
+                        Text("Start Rain").modifier(TitleBackground())
+                    }.padding(.bottom, 32)
+                }.zIndex(4.0)
+            }
+            if viewModel.showBookThreshold {
+                ForestPopUp(titleText: "Eksik soru", descriptionText: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin", onConfirm: { router.navigateBack()}, onDenied: {viewModel.closeBookError()}, confirmText: "Kütüphane", deniedText: "Orman", showForestPopUp: $viewModel.showBookThreshold)
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)
@@ -126,6 +164,8 @@ private extension ForestUI {
                     case .home:
                         showOption = false
                         exitForest()
+                    case .info:
+                        forestSeen = false
                     }
                 }
             }
@@ -189,7 +229,6 @@ private extension ForestUI {
 // MARK: - HELPERS
 
 private extension ForestUI {
-    
     func exitForest() {
         viewModel.stopGameMusic()
         router.navigateToRoot()
@@ -197,6 +236,10 @@ private extension ForestUI {
 }
 
 extension ForestUI: ForestUIProtocol {
+    
+    func showForestInfo() {
+        showForest = true
+    }
     
     func showGameSelection() {
         showGameSelect = true

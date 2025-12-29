@@ -17,5 +17,6 @@ struct SettingsModel<T: Hashable>: Hashable {
 enum SettingType {
     case resume
     case settings
+    case info
     case home
 }

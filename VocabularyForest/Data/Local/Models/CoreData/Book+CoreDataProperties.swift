@@ -19,6 +19,7 @@ extension Book {
     }
 
     @NSManaged public var createdDate: Date?
+    @NSManaged public var learningDate: Date?
     @NSManaged public var descriptionWord: String?
     @NSManaged public var exampleSentence: String?
     @NSManaged public var learningWord: String?
@@ -26,6 +27,7 @@ extension Book {
     @NSManaged public var longMemory: Bool
     @NSManaged public var shortMemory: Bool
     @NSManaged public var bookcase: Bookcase?
+    @NSManaged public var partOfSpeech: String?
     
     public var unwrappedDate: Date {
         createdDate ?? Date()
@@ -35,6 +37,9 @@ extension Book {
     }
     public var unwrappedMeaningWord: String {
         meaningWord ?? ""
+    }
+    public var unwrappedPartOfSpeech: String {
+        partOfSpeech ?? ""
     }
 }
 

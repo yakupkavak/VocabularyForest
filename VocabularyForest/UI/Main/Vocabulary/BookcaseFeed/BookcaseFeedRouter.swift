@@ -37,7 +37,8 @@ final class BookcaseRouter: ObservableObject {
 extension BookcaseRouter {
     public enum Destination: Codable, Hashable {
         case bookcaseList
-        case bookcaseDetail(bookcase: String)
+        case bookcaseDetail(bookcase: String, learning: String, meaning: String)
         case createBookcase
+        case bookcasePacket
     }
 }
