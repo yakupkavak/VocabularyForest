@@ -101,13 +101,13 @@ extension GameLevel {
     var title: String {
         switch self {
         case .easy:
-            "Easy"
+            "Kolay"
         case .medium:
-            "Medium"
+            "Orta"
         case .hard:
-            "Hard"
+            "Zor"
         case .insane:
-            "Insane"
+            "İmkansız"
         }
     }
     var valueForCoreData: String {

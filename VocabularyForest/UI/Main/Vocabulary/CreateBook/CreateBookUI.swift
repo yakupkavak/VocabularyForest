@@ -80,12 +80,12 @@ struct CreateBookUI: View {
                 case .meaning:
                     self.focusedField = .description
                 case .description:
-                    self.focusedField = .partOfSpeech
-                case .partOfSpeech:
                     self.focusedField = .sentence
                 case .sentence:
-                    viewModel.checkAndCreateBook()
+                    self.focusedField = .partOfSpeech
                     hideKeyboard()
+                case .partOfSpeech:
+                    viewModel.checkAndCreateBook()
                 }
             }
         }

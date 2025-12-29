@@ -357,13 +357,13 @@ struct ForestQuestUI: View {
                 
                 VStack(spacing: 0) {
                     if showDailyQuest {
-                        questListView(title: "Daily Quests", quests: dailyQuests, closeAction: { showDailyQuest = false }, geo: geometry)
+                        questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { showDailyQuest = false }, geo: geometry)
                     } else if showWeeklyQuest {
-                        questListView(title: "Weekly Quests", quests: weeklyQuests, closeAction: { showWeeklyQuest = false }, geo: geometry)
+                        questListView(title: "Haftalık Görevler", quests: weeklyQuests, closeAction: { showWeeklyQuest = false }, geo: geometry)
                     } else if showMonthlyQuest {
-                        questListView(title: "Monthly Quests", quests: monthlyQuests, closeAction: { showMonthlyQuest = false }, geo: geometry)
+                        questListView(title: "Aylık Görevler", quests: monthlyQuests, closeAction: { showMonthlyQuest = false }, geo: geometry)
                     } else if showSpecialQuest {
-                        questListView(title: "Special Quests", quests: specialQuests, closeAction: { showSpecialQuest = false }, geo: geometry)
+                        questListView(title: "Özel Görevler", quests: specialQuests, closeAction: { showSpecialQuest = false }, geo: geometry)
                     } else {
                         mainMenu
                     }
