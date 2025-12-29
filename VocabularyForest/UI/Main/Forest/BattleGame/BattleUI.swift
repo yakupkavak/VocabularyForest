@@ -354,6 +354,8 @@ private extension BattleUI {
                     case .home:
                         showOption = false
                         showExistAlert = true
+                    case .info:
+                        print("nil")
                     }
                 }
             }

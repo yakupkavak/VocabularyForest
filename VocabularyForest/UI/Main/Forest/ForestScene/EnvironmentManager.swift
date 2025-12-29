@@ -15,6 +15,8 @@ protocol EnvironmentManagerProtocol: AnyObject {
     func update()
     func startRain()
     func stopRain()
+    func startDrought()
+    func finishDrought()
 }
 
 private extension EnvironmentManager {
@@ -132,7 +134,7 @@ class EnvironmentManager {
 }
 
 extension EnvironmentManager: EnvironmentManagerProtocol {
-    
+
     func setupEnvironment() {
         setupSky()
         setupBackgroundDecor()
@@ -224,6 +226,20 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     }
     
     func stopRain() {
-        print("")
+        guard let scene else { return }
+        isRaining = false
+        scene.enumerateChildNodes(withName: "rain") { node, _ in
+            node.removeAction(forKey: GameConstant.rainAnimation)
+            node.isHidden = true
+        }
+    }
+    
+    func startDrought() {
+        floorNode.color = .brown
+        floorNode.colorBlendFactor = 0.8
+    }
+
+    func finishDrought() {
+        floorNode.colorBlendFactor = 0.0
     }
 }

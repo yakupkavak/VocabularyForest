@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import UserNotifications
 
 enum ForestError: Error {
     case emptyList
@@ -35,7 +36,69 @@ class ForestDataManager {
         viewContext.automaticallyMergesChangesFromParent = true
     }
     
-    // MARK: - PRIVATE HELPERS
+    // MARK: - HELPERS
+ 
+    func checkAndUpdateRain() -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return .error(error: ForestError.emptyForest)
+        }
+        
+        let now = Date()
+        
+        guard let lastUpdate = forest.lastRainUpdateDate else {
+            forest.lastRainUpdateDate = now
+            try? save()
+            return .success(true)
+        }
+        
+        let decayInterval: TimeInterval = 3600
+        let decayAmount: Int16 = 4
+        let timeElapsed = now.timeIntervalSince(lastUpdate)
+        
+        if timeElapsed >= decayInterval {
+            let hoursPassed = Int(timeElapsed / decayInterval)
+            if hoursPassed > 0 {
+                let totalDecay = Int16(hoursPassed) * decayAmount
+                let oldRainValue = forest.landHealthPercent
+                let newRainValue = max(0, oldRainValue - totalDecay)
+                
+                forest.landHealthPercent = newRainValue
+                forest.lastRainUpdateDate = lastUpdate.addingTimeInterval(TimeInterval(hoursPassed) * decayInterval)
+                do {
+                    try save()
+                    scheduleHealthNotifications()
+                } catch {
+                    return .error(error: ForestError.saveError)
+                }
+            }
+        }
+        
+        scheduleHealthNotifications()
+        return .success(true)
+    }
+        
+    private func scheduleHealthNotifications() {
+        guard let forest = getCurrentForest() else { return }
+        
+        NotificationManager.shared.cancelHealthNotifications()
+        
+        let currentHealth = Int(forest.landHealthPercent)
+        let decayPerHour: Double = 4.0
+        
+        let targets = [50, 20, 10, 0]
+        for target in targets {
+            if currentHealth > target {
+                let diff = currentHealth - target
+                let hoursUntilDrop = Double(diff) / decayPerHour
+                let secondsUntilDrop = hoursUntilDrop * 3600
+                
+                NotificationManager.shared.scheduleHealthNotification(
+                    targetValue: target,
+                    timeInterval: secondsUntilDrop
+                )
+            }
+        }
+    }
     
     private func save() throws {
         guard viewContext.hasChanges else { return }
@@ -47,7 +110,7 @@ class ForestDataManager {
         }
     }
     
-    private func getCurrentForest() -> Forest? {
+    func getCurrentForest() -> Forest? {
         let request: NSFetchRequest<Forest> = Forest.fetchRequest()
         request.fetchLimit = 1
         do {
@@ -77,6 +140,7 @@ class ForestDataManager {
         for sculpture in baseSculptureList {
             createSculpture(sculpture: sculpture)
         }
+        #if DEBUG
         let context = viewContext
         let sampleBookcase = Bookcase(context: context)
         sampleBookcase.name = "Test Kitaplık"
@@ -92,6 +156,7 @@ class ForestDataManager {
             sampleBook.longMemory = i % 2 != 0
             sampleBook.bookcase = sampleBookcase
         }
+        #endif
         do {
             try save()
             return Resource.success(nil)
@@ -116,6 +181,11 @@ class ForestDataManager {
             quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
             quest.questType = model.questionType.valueForCoreData
             forest.addToQuests(quest)
+        }
+        do {
+            try save()
+        }catch {
+            print(error.localizedDescription)
         }
     }
     
@@ -321,6 +391,11 @@ class ForestDataManager {
         }
         if let questSet = forest.quests, let quests =  questSet.allObjects as? [Quest], let quest = quests.first(where: { $0.id == quest.id }) {
             quest.status = QuestStatus.claimed.valueForCoreData
+            do {
+                try save()
+            } catch {
+                print(error.localizedDescription)
+            }
         } else {
             return .error(error: ForestError.emptyForest)
         }

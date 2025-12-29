@@ -11,6 +11,7 @@ protocol PlantManagerProtocol {
     func setupPlant(model: TreeModel)
     func growPlant()
     func decreasePlant()
+    func fadePlant()
     func perishPlant()
     func recoverPlant()
 }
@@ -87,9 +88,14 @@ extension PlantManager: PlantManagerProtocol {
         plant.texture = firstFrame
     }
     
+    func fadePlant() {
+        plant.color = .brown
+        plant.colorBlendFactor = 0.4
+    }
+    
     func perishPlant() {
         plant.color = .brown
-        plant.colorBlendFactor = 0.5
+        plant.colorBlendFactor = 0.8
     }
     
     func recoverPlant() {

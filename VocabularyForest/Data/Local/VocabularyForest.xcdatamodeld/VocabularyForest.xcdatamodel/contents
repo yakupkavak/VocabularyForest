@@ -35,8 +35,8 @@
         <attribute name="isRaining" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="landHealthPercent" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="landStatus" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastRainUpdateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="moneyValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="rainStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="rainValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="animals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Animal" inverseName="forest" inverseEntity="Animal"/>
         <relationship name="quests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Quest" inverseName="forest" inverseEntity="Quest"/>

@@ -22,6 +22,7 @@ private extension ForestUI {
         static let optionsList: [SettingsModel] = [
             SettingsModel<SettingType>(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
             SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
+            SettingsModel(title: "Orman Bilgileri", icon: "FAQ", color: .brown500, type: .info),
             SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
         ]
     }
@@ -45,11 +46,25 @@ struct ForestUI: View {
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
+    @AppStorage(AppStorageNames.shownForestInfo.rawValue) private var forestSeen: Bool = false
     
     // MARK: - UI
     
     var body: some View {
         ZStack {
+            if !forestSeen {
+                GameInfoUI(showForestPopUp: Binding(
+                    get: {
+                        return !forestSeen
+                    },
+                    set: { newValue in
+                        if newValue == false {
+                            forestSeen = true
+                        }
+                    }
+                ))
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }
             if showOption {
                 options.zIndex(4.0)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
@@ -149,6 +164,8 @@ private extension ForestUI {
                     case .home:
                         showOption = false
                         exitForest()
+                    case .info:
+                        forestSeen = false
                     }
                 }
             }

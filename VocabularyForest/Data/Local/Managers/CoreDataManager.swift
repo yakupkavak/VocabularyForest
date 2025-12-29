@@ -32,7 +32,9 @@ class CoreDataManager {
         }
         
         viewContext.automaticallyMergesChangesFromParent = true
-        checkGame()
+        DispatchQueue.global(qos: .background).async {
+            self.checkGame()
+        }
     }
     
     // MARK: - HELPERS
@@ -52,6 +54,8 @@ class CoreDataManager {
             }
             save()
         }
+        //Toprak sağlığı kontrolü yapıyoruz
+        ForestDataManager.shared.checkAndUpdateRain()
     }
     
     func save() {

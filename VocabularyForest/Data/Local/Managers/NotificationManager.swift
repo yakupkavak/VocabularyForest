@@ -34,6 +34,55 @@ class NotificationManager: ObservableObject {
 
     // MARK: - HELPERS
     
+    private var healthNotificationIDs: [String] {
+        return ["health_limit_50","health_limit_20", "health_limit_10", "health_limit_0"]
+    }
+
+    func cancelHealthNotifications() {
+        center.removePendingNotificationRequests(withIdentifiers: healthNotificationIDs)
+    }
+
+    func scheduleHealthNotification(targetValue: Int, timeInterval: TimeInterval) {
+        guard timeInterval > 60 else { return }
+        
+        let id = "health_limit_\(targetValue)"
+        var title = ""
+        var body = ""
+        
+        switch targetValue {
+        case 50:
+            title = "Orman Sağlığı yarılandı!"
+            body = "Orman sağlığı %50'nin altına inmek üzere. Solmaya başlıyor."
+        case 20:
+            title = "Orman Sağlığı Düşüyor!"
+            body = "Orman sağlığı %20'nin altına inmek üzere. İlgilenmen gerek."
+        case 10:
+            title = "🚨 KRİTİK DURUM!"
+            body = "Orman sağlığı %10 seviyesine geriledi! Orman ölüyor!"
+        case 0:
+            title = "ORMAN KURUDU!"
+            body = "Sağlık %0 oldu. Orman tamamen kurudu."
+        default:
+            return
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
+        let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        
+        center.add(request) { error in
+            if let error = error {
+                print("Sağlık bildirimi kurulamadı: \(error.localizedDescription)")
+            } else {
+                print("🏥 Bildirim kuruldu: %\(targetValue) sınırı için \(Int(timeInterval/60)) dakika sonra.")
+            }
+        }
+    }
+    
     @objc private func handleAppDidBecomeActive() {
         Task {
             await checkNotificationStatus()

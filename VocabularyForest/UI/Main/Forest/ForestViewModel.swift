@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 protocol ForestViewModelOutputProcotol: AnyObject {
+    func startFade()
+    func startDrought()
     func startRain()
     func stopRain()
     func setupAnimals(animals: AnimalModel?)
@@ -192,6 +194,13 @@ extension ForestViewModel: ForestViewModelProtocol {
                 forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
                 if(forestData.rainValue == 50) {
                     showRainButton = true
+                }
+                if let landHealthPercentage = forestStatus?.landHealthPercentage {
+                    if landHealthPercentage == 0 {
+                        output?.startDrought()
+                    }else if landHealthPercentage <= 50 {
+                        output?.startFade()
+                    }
                 }
             }
         case .loading:

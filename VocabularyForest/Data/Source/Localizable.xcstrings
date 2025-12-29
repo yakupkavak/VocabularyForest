@@ -146,6 +146,9 @@
         }
       }
     },
+    "Başla" : {
+
+    },
     "Beklenmedik hata" : {
       "localizations" : {
         "tr" : {
@@ -296,6 +299,9 @@
         }
       }
     },
+    "Diğer" : {
+
+    },
     "Dil seç" : {
       "localizations" : {
         "tr" : {
@@ -426,6 +432,9 @@
           }
         }
       }
+    },
+    "Gelecek güncelleme ile mağazada kullanabileceksin." : {
+
     },
     "Gizlilik Politikası" : {
       "localizations" : {
@@ -699,6 +708,9 @@
         }
       }
     },
+    "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
+
+    },
     "Nice to meet you!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -779,6 +791,12 @@
           }
         }
       }
+    },
+    "Ormanına can vermek için doldurmalısın." : {
+
+    },
+    "Örnek" : {
+
     },
     "Örnek Cümle" : {
       "localizations" : {

@@ -10,6 +10,8 @@ import SpriteKit
 protocol AnimalManagerProtocol: AnyObject {
     var animalNode: SKSpriteNode { get }
     var animalDirection: GameDirection { get }
+    func startMoving()
+    func stopMoving()
     func changeDirection()
     func setupAnimalManager(model: AnimalModel)
 }
@@ -172,6 +174,16 @@ private extension AnimalManager {
 }
 
 extension AnimalManager: AnimalManagerProtocol {
+    
+    func startMoving() {
+        moveAnimal()
+        walkAnimation()
+    }
+
+    func stopMoving() {
+        stopMove()
+        idleAnimation()
+    }
     
     func changeDirection() {
         direction = direction == .left ? .right : .left

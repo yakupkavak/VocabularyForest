@@ -151,6 +151,31 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
+    func startFade() {
+        for plantManager in self.plantManagers {
+            plantManager.fadePlant()
+        }
+    }
+    
+    func startDrought() {
+        environmentManager.startDrought()
+        for animalManager in self.animalManagers {
+            animalManager.stopMoving()
+        }
+        for plantManager in self.plantManagers {
+            plantManager.perishPlant()
+        }
+    }
+    
+    func finishDrought() {
+        environmentManager.finishDrought()
+        for animalManager in self.animalManagers {
+            animalManager.startMoving()
+        }
+        for plantManager in self.plantManagers {
+            plantManager.recoverPlant()
+        }
+    }
     
     func setupSculpture(sculpture: SculptureModel) {
         let manager = SculptureManager(scene: self)
@@ -172,9 +197,10 @@ extension ForestScene: ForestViewModelOutputProcotol {
     
     func startRain() {
         environmentManager.startRain()
+        finishDrought()
     }
     
     func stopRain() {
-        print("Scene: Yağmur durdu.")
+        environmentManager.stopRain()
     }
 }
