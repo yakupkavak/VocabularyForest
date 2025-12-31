@@ -134,7 +134,6 @@ class CoreDataManager {
         case missingRequiredFields
     }
     
-    
     func importBookcase(_ request: BookcaseRequest,
                         overwrite: Bool = true,
                         completion: @escaping (Result<Bookcase, ImportBookcaseError>) -> Void) {

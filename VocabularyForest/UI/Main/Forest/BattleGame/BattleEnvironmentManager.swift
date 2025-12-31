@@ -18,7 +18,7 @@ protocol BattleEnvironmentManagerProtocol: AnyObject {
     func enemyWon()
     func showGate()
     func hideGate()
-    func setupEnvironment()
+    func setupEnvironment(enemyModel: BattleEnemyModel)
     func update()
     func startMagic(magic: MagicType, startPoint: CGPoint, endPoint: CGPoint, hitted: @escaping () -> Void)
 }
@@ -54,9 +54,9 @@ class BattleEnvironmentManager {
         self.scene = scene
     }
     
-    func setupEnvironment() {
+    func setupEnvironment(enemyModel: BattleEnemyModel) {
         setupBackgroundTextures()
-        setupBackground()
+        setupBackground(model: enemyModel)
         setupUI()
     }
     
@@ -244,10 +244,16 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     }
     
     // MARK: - SETUP FUNCTIONS
-    
-    func setupBackground() {
+
+    func setupBackground(model: BattleEnemyModel) {
+        let backTexture = SKTexture(imageNamed: model.background)
         guard let firstFrame = backgroundTextures.first, let scene = scene else { return }
-        backgroundNode.texture = firstFrame
+        switch model {
+        case .classic:
+            backgroundNode.texture = firstFrame
+        default:
+            backgroundNode.texture = backTexture
+        }
         backgroundNode.size = CGSize(width: scene.size.width * 2, height: scene.size.height)
         backgroundNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         backgroundNode.position = CGPoint(

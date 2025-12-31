@@ -105,7 +105,7 @@ private extension BattleEnemyManager {
         enemyNode.position = CGPoint(
             x: ["SandDragon","FireDragon"]
                 .contains(currentEnemyType?.assetName) ? scene.size.width * 0.65 : scene.size.width * 0.7,
-            y:["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"]
+            y:["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental","DarkKnight","BigKnight"]
                 .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
         )
         enemyNode.xScale = -1.0
@@ -174,7 +174,7 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         let moveAnimation = SKAction.repeatForever(moveAnimate)
         let moveAction = SKAction.move(
             to: CGPoint(
-                x: endPointX + CGFloat(["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental"]
+                x: endPointX + CGFloat(["Vampire","SandDragon","FireDragon","IceElemental","NatureElemental","FireElemental","DarkKnight","BigKnight"]
                     .contains(currentEnemyType?.assetName) ? 100 : 30),
                 y:[
                     "Vampire",
@@ -182,7 +182,9 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
                     "FireDragon",
                     "IceElemental",
                     "NatureElemental",
-                    "FireElemental"
+                    "FireElemental",
+                    "DarkKnight",
+                    "BigKnight"
                 ]
                     .contains(currentEnemyType?.assetName) ? BattleConstant.characterPosition : BattleConstant.characterPosition * 0.85
             ),

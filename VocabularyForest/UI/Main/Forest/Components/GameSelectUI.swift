@@ -47,7 +47,7 @@ struct GameSelectUI: View {
                 Image(selectedMode.background).resizable().scaledToFill().frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.18).borderRadius(borderColor: .white)
                 Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
             }
-            ScrollView(showsIndicators: true) {
+            ScrollView(showsIndicators: false) {
                 Text("Oyun çeşitleri").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
                 FlowLayout {
                     ForEach(Constant.gameTypes, id: \.self) { game in
@@ -99,7 +99,7 @@ struct GameSelectUI: View {
                     .multilineTextAlignment(.leading)
                 
                 Text("Kitaplık").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.vertical, 4)
-                Text("Oyuna başlayabilmek için \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var.").frame(maxWidth: .infinity, alignment: .leading)
+                Text(selectedType == .learning ? "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var." : "Oyuna başlayabilmek için en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var.").frame(maxWidth: .infinity, alignment: .leading)
                     .fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
                     .multilineTextAlignment(.leading)
                 
@@ -158,7 +158,7 @@ struct GameSelectUI: View {
                 .strokeBorder(Color("brown300"), lineWidth: 4)
         )
         .zIndex(3.0)
-        .frame(width: UIScreen.main.bounds.width * 0.9)
+        .frame(width: UIScreen.main.bounds.width * 0.85)
         .overlay(alignment: .topTrailing) {
             Button {
                 showGameSelect = false

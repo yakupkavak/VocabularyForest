@@ -356,6 +356,7 @@ struct ForestQuestUI: View {
                     }
                 
                 VStack(spacing: 0) {
+                    Spacer()
                     if showDailyQuest {
                         questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { showDailyQuest = false }, geo: geometry)
                     } else if showWeeklyQuest {
@@ -367,6 +368,7 @@ struct ForestQuestUI: View {
                     } else {
                         mainMenu
                     }
+                    Spacer()
                 }
                 .padding(LayoutConfig.padding)
                 .background(.brown.opacity(0.9))

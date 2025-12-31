@@ -13,7 +13,7 @@ enum GetLibraries: EndPoint {
     case standart
     
     var baseURL: String {
-        return "https://vocab-api.yakupkavk.workers.dev/api/"
+        return AppConfig.baseURL
     }
     
     var path: String {

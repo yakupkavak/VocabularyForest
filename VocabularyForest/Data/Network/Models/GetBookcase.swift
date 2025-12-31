@@ -12,7 +12,7 @@ enum GetBookcase: EndPoint {
     case definition(_ value: GetBookcaseRequestModel)
 
     var baseURL: String {
-        return "https://vocab-api.yakupkavk.workers.dev/api/"
+        return AppConfig.baseURL
     }
     
     var path: String {

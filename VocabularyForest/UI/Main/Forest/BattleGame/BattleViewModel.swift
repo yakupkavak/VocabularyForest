@@ -77,7 +77,7 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
 
-    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService(), forestDataManager: ForestDataManager = .shared) {
+    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService.shared, forestDataManager: ForestDataManager = .shared) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
@@ -280,7 +280,10 @@ extension BattleViewModel: BattleViewModelProtocol {
         case .remainder:
             setLongBooks(books: books, bookCount: minBook)
         }
-        askQuestion()
+        uiStation = .notDetermined
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.askQuestion()
+        }
     }
     
     func askQuestion() {
@@ -312,7 +315,12 @@ extension BattleViewModel: BattleViewModelProtocol {
                                 answerBook.longMemory = true
                                 answerBook.learningDate = Date()
                             }
+                        }else if questionType == .remainder {
+                            if let answerBook = answer.book {
+                                answerBook.learningDate = Date()
+                            }
                         }
+                        
                         // TODO: SHOW SAVE ERROR
                         let saveResult = forestDataManager.correctAnswer(questionType: questionType )
                     }

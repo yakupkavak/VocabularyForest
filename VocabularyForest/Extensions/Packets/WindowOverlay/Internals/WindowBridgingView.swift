@@ -54,6 +54,15 @@ internal struct WindowBridgingView<V: View>: UIViewRepresentable {
     }
 
     required init?(coder: NSCoder) { fatalError() }
+      
+    // MARK: - FIX FOR COMPILER CRASH
+    // Derleyicinin "deinit" oluştururken çökmesini engellemek için
+    // manuel olarak eklenmiştir.
+    deinit {
+        overlayWindow?.isHidden = true
+        overlayWindow?.rootViewController = nil
+        overlayWindow = nil
+    }
 
     override func willMove(toWindow newWindow: UIWindow?) {
       super.willMove(toWindow: newWindow)
@@ -97,7 +106,8 @@ extension UIHostingController {
     if #available(iOS 16.4, *) {
       self.safeAreaRegions = disable ? [] : .all
     } else {
-      self._disableSafeArea = disable
+      guard self.responds(to: Selector(("_disableSafeArea"))) else { return }
+      self.setValue(disable, forKey: "_disableSafeArea")
     }
   }
 }

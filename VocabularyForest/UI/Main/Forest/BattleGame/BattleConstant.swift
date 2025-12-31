@@ -30,11 +30,11 @@ enum BattleConstant {
     static let mediumEnemyLevel = 10
     static let mediumBossEnemyLevel = 20
     static let hardPlayerLevel = 3
-    static let hardEnemyLevel = 2
-    static let hardBossEnemyLevel = 2
+    static let hardEnemyLevel = 15
+    static let hardBossEnemyLevel = 30
     static let insanePlayerLevel = 3
-    static let insaneEnemyLevel = 15
-    static let insaneBossEnemyLevel = 2
+    static let insaneEnemyLevel = 20
+    static let insaneBossEnemyLevel = 50
 }
 
 struct PhysicsCategory {
@@ -64,7 +64,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyPlayerLevel
         case .medium:
-            2
+            BattleConstant.mediumPlayerLevel
         case .hard:
             BattleConstant.hardPlayerLevel
         case .insane:
@@ -77,7 +77,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyEnemyLevel
         case .medium:
-            2
+            BattleConstant.mediumEnemyLevel
         case .hard:
             BattleConstant.hardEnemyLevel
         case .insane:
@@ -89,7 +89,7 @@ enum GameLevel: Hashable, Codable {
         case .easy:
             BattleConstant.easyBossEnemyLevel
         case .medium:
-            2
+            BattleConstant.mediumBossEnemyLevel
         case .hard:
             BattleConstant.hardBossEnemyLevel
         case .insane:
