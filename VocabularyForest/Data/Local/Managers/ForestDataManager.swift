@@ -137,6 +137,23 @@ class ForestDataManager {
         forest.landHealthPercent = 100
         forest.landStatus = true
         forest.moneyValue = 0
+        #if DEBUG
+        let context = viewContext
+        let sampleBookcase = Bookcase(context: context)
+        sampleBookcase.name = "Test Kitaplık"
+        sampleBookcase.learningLanguage = "en-US"
+        sampleBookcase.meaningLanguage = "tr"
+        sampleBookcase.createdDate = Date()
+        for i in 1...100 {
+        let sampleBook = Book(context: context)
+            sampleBook.learningWord = "Word \(i)"
+            sampleBook.meaningWord = "Anlam \(i)"
+            sampleBook.createdDate = Date()
+            sampleBook.shortMemory = i % 2 == 0
+            sampleBook.longMemory = i % 2 != 0
+            sampleBook.bookcase = sampleBookcase
+        }
+        #endif
         for sculpture in baseSculptureList {
             createSculpture(sculpture: sculpture)
         }
@@ -371,7 +388,7 @@ class ForestDataManager {
     func claimReward(quest: QuestModel) -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return .error(error: ForestError.emptyForest)
-        }        
+        }
         if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == quest.id }) {
             coreDataQuest.status = QuestStatus.claimed.valueForCoreData
             do {
@@ -429,7 +446,6 @@ class ForestDataManager {
             )
             createSculpture(sculpture: sculptureModel)
         }
-        
         return .success(true)
     }
     

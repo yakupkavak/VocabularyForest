@@ -15,6 +15,7 @@ struct GameInfoModel {
 
 let gameInfoText: [GameInfoModel] = [
     GameInfoModel(title: "Orman Hakkında", image: "foresttanitim0",description: "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!"),
+    GameInfoModel(title: "Sorular Hakkında", image: "foresttanitim3",description: "Kelimelerin kısa ve uzun hafıza olarak ikiye ayrılmış durumda. Bir kelimeyi rekabet modunda bildiğinde uzun hafızana geçiyor. Ama unutma, bir hafta içerisinde hatırlatıcı modu ile tekrarlamazsan kısa hafızana geçecek!"),
     GameInfoModel(title: "Yağmur Hakkında", image: "foresttanitim1",description: "Görevleri tamamlayarak yağmur taneleri toplayıp, hazneni doldurduğunda ekranında belirecek butona tıklayarak yağmur yağdırabilirsin."),
     GameInfoModel(title: "Canlılar Hakkında",image: "foresttanitim0",description: "Bitkilerin sağlıksız bir toprakta kuruyacaktır, hayvanların ise hareket edemeyecekler..")
 ]

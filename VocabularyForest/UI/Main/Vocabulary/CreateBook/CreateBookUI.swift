@@ -148,7 +148,7 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
                 isEmpty: .constant(false),
-                placeholder: "Açıklaması",
+                placeholder: "Açıklaması (\(viewModel.learningLanguage?.name.split(separator: " ").first ?? ""))",
                 title: "Açıklama",
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
@@ -160,7 +160,7 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookExampleSentence,
                 isSelected: .constant(focusedField == .sentence),
                 isEmpty: .constant(false),
-                placeholder: "Örnek cümle",
+                placeholder: "Örnek cümle (\(viewModel.learningLanguage?.name.split(separator: " ").first ?? ""))",
                 title: "Cümle"
             )
             .focused($focusedField, equals: .sentence)

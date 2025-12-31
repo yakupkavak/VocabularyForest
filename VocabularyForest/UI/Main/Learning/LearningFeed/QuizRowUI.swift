@@ -23,7 +23,7 @@ struct QuizRowUI: View {
             Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3)
             Spacer()
             VStack{
-                Text("Maceraya Atıl").font(.system(size: 24, weight: .bold)).foregroundStyle(.brown300)
+                Text("Maceraya Atıl").font(.system(size: 24, weight: .bold)).foregroundStyle(.brown300).multilineTextAlignment(.center)
                 Text("Eğlenerek bilgeliğini yücelt").font(.system(size: 20, weight: .regular)).foregroundStyle(.gray.opacity(0.9)).multilineTextAlignment(.leading)
             }
             Spacer()

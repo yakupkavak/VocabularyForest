@@ -16,11 +16,22 @@ protocol BattleSceneProtocol: AnyObject {
 class BattleScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: - PROPERTIES
-
+    
+    init(enemyModel: BattleEnemyModel) {
+        self.enemyModel = enemyModel
+        super.init(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        self.scaleMode = .fill
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var playerManager: GamePlayerManagerProtocol!
     var environmentManager: BattleEnvironmentManagerProtocol!
     var enemyManager: BattleEnemyManagerProtocol!
     var helper: BattleSceneProtocol?
+    var enemyModel: BattleEnemyModel
     private var isTouching = false
     private var isGameStarted = false
     private let startLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
@@ -34,7 +45,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
         environmentManager = BattleEnvironmentManager(scene: self)
         playerManager = GamePlayerManager(scene: self)
         enemyManager = BattleEnemyManager(scene: self)
-        environmentManager.setupEnvironment()
+        environmentManager.setupEnvironment(enemyModel: self.enemyModel)
         playerManager.setupPlayer()
         playerManager.startWaiting()
         var runCount = 0
@@ -133,7 +144,6 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - VIEW MODEL OUTPUT
 
 extension BattleScene: BattleViewModelOutputProcotol {
-    
     func setupNextEnemy() {
         environmentManager?.nextBackground()
         environmentManager?.hideGate()

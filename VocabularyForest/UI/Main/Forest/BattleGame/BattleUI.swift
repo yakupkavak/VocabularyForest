@@ -30,17 +30,12 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     @StateObject private var viewModel: ViewModel
     @EnvironmentObject private var forestRouter: LearningRouter
-    @State private var scene: BattleScene = {
-        let scene = BattleScene()
-        scene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        scene.scaleMode = .fill
-        return scene
-    }()
     @State private var showMagics = true
     @State private var showQuestion = false
     @State private var showOption = false
     @State private var showSetting = false
     @State private var showExistAlert = false
+    @State private var scene: BattleScene
     var gameType: BattleQuestionType
     var battleMode: BattleEnemyModel
     var gameLevel: GameLevel
@@ -57,6 +52,8 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
         self.gameType = gameType
         self.battleMode = battleMode
         self.gameLevel = gameLevel
+        let battleScene = BattleScene(enemyModel: battleMode)
+        self._scene = State(wrappedValue: battleScene)
     }
     
     // MARK: - UI

@@ -281,7 +281,6 @@ extension BattleViewModel: BattleViewModelProtocol {
             setLongBooks(books: books, bookCount: minBook)
         }
         uiStation = .notDetermined
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.askQuestion()
         }
@@ -316,7 +315,12 @@ extension BattleViewModel: BattleViewModelProtocol {
                                 answerBook.longMemory = true
                                 answerBook.learningDate = Date()
                             }
+                        }else if questionType == .remainder {
+                            if let answerBook = answer.book {
+                                answerBook.learningDate = Date()
+                            }
                         }
+                        
                         // TODO: SHOW SAVE ERROR
                         let saveResult = forestDataManager.correctAnswer(questionType: questionType )
                     }

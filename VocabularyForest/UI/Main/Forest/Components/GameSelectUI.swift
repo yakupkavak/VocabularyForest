@@ -47,7 +47,7 @@ struct GameSelectUI: View {
                 Image(selectedMode.background).resizable().scaledToFill().frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.18).borderRadius(borderColor: .white)
                 Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
             }
-            ScrollView(showsIndicators: true) {
+            ScrollView(showsIndicators: false) {
                 Text("Oyun çeşitleri").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
                 FlowLayout {
                     ForEach(Constant.gameTypes, id: \.self) { game in
