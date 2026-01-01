@@ -137,23 +137,6 @@ class ForestDataManager {
         forest.landHealthPercent = 100
         forest.landStatus = true
         forest.moneyValue = 0
-        #if DEBUG
-        let context = viewContext
-        let sampleBookcase = Bookcase(context: context)
-        sampleBookcase.name = "Test Kitaplık"
-        sampleBookcase.learningLanguage = "en-US"
-        sampleBookcase.meaningLanguage = "tr"
-        sampleBookcase.createdDate = Date()
-        for i in 1...100 {
-        let sampleBook = Book(context: context)
-            sampleBook.learningWord = "Word \(i)"
-            sampleBook.meaningWord = "Anlam \(i)"
-            sampleBook.createdDate = Date()
-            sampleBook.shortMemory = i % 2 == 0
-            sampleBook.longMemory = i % 2 != 0
-            sampleBook.bookcase = sampleBookcase
-        }
-        #endif
         for sculpture in baseSculptureList {
             createSculpture(sculpture: sculpture)
         }

@@ -309,7 +309,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     playerAnger?.currentLevel += 1
                     gameStatus.trueCount += 1
                     if let questionType {
-                        if questionType == .learning {
+                        if questionType == .competitive {
                             if let answerBook = answer.book {
                                 answerBook.shortMemory = false
                                 answerBook.longMemory = true

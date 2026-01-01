@@ -145,7 +145,7 @@ class CoreDataManager {
                     let name = request.name
                 else { throw ImportBookcaseError.missingRequiredFields }
                 
-                let bookcaseName = name.uppercased()
+                let bookcaseName = name
                 
                 let bookcase: Bookcase
                 if let existing = self.fetchBookcase(name: bookcaseName, learningLanguageCode: source, meaningLanguageCode: target) {

@@ -985,7 +985,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aşağıdakilerden hangisi \\\"%@\\\" anlamına gelmektedir?"
+            "value" : "Aşağıdakilerden hangisi %@ anlamına gelmektedir?"
           }
         }
       }

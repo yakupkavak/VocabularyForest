@@ -221,7 +221,7 @@ private extension BattleUI {
                         let questionString = NSLocalizedString("question_number", comment: "")
                         let finalString = String(format: questionString, question.questionNumber)
                         Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
-                    }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
+                    }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.07)
                 }
                 Spacer()
                 VStack() {

@@ -127,26 +127,26 @@ private extension BookcaseDetailUI {
         }.padding(.bottom, 32)
     }
     var bookArray: some View {
-        List {
-            ForEach(Array(viewModel.books.enumerated()), id: \.element) { index, book in
-                BookRow(
-                    book: book,
-                    showMeaning: $showMeaning,
-                    bookNumber: index + 1,
-                    onEdit: {
-                        bookRowEdit(book: book)
-                    },
-                    onDelete: { book in bookRowDelete(book: book) }
-                ).onAppear {
-                    print(book)
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(viewModel.books.enumerated()), id: \.element) { index, book in
+                        BookRow(
+                            book: book,
+                            showMeaning: $showMeaning,
+                            bookNumber: index + 1,
+                            onEdit: {
+                                bookRowEdit(book: book)
+                            },
+                            onDelete: { book in bookRowDelete(book: book) }
+                        )
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                    }
                 }
-                .listRowInsets(.init())
-                .listRowSeparator(.hidden, edges: .all)
+                .padding(.bottom, 20)
             }
+            .scrollIndicators(.hidden)
         }
-        .scrollContentBackground(.hidden)
-        .scrollIndicators(.hidden)
-    }
 }
 
 // MARK: - HELPERS
