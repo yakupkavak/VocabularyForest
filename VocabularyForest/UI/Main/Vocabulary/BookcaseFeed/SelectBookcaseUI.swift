@@ -41,6 +41,7 @@ struct SelectBookcaseUI: View {
                             meaningLanguage: bookcase.unwrappedmeaningLanguage,
                             books: []
                         )
+                        setBookcaseDefault(bookcase: bookcase)
                     dismiss()
                 }) {
                     BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel(), onEdit: {}, onDelete: {})
