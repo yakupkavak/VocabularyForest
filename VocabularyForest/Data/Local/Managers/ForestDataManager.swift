@@ -36,6 +36,81 @@ class ForestDataManager {
         viewContext.automaticallyMergesChangesFromParent = true
     }
     
+    // MARK: - UPDATE QUESTS
+        
+    func checkAndResetTimeBasedQuests(helper: ForestGameHelperProtocol) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return .error(error: ForestError.emptyForest)
+        }
+        
+        let now = Date()
+        let calendar = Calendar.current
+        var hasChanges = false
+
+        let lastDaily = forest.lastDailyResetDate ?? Date.distantPast
+        if !calendar.isDateInToday(lastDaily) {
+            resetQuests(type: .daily, helper: helper, forest: forest)
+            forest.lastDailyResetDate = now
+            hasChanges = true
+        }
+
+        let lastWeekly = forest.lastWeeklyResetDate ?? Date.distantPast
+        let currentWeek = calendar.component(.weekOfYear, from: now)
+        let lastResetWeek = calendar.component(.weekOfYear, from: lastWeekly)
+        let currentYear = calendar.component(.year, from: now)
+        let lastResetYear = calendar.component(.year, from: lastWeekly)
+        if currentYear != lastResetYear || currentWeek != lastResetWeek {
+            resetQuests(type: .weekly, helper: helper, forest: forest)
+            forest.lastWeeklyResetDate = now
+            hasChanges = true
+        }
+        
+        let lastMonthly = forest.lastMonthlyResetDate ?? Date.distantPast
+        let currentMonth = calendar.component(.month, from: now)
+        let lastResetMonthVal = calendar.component(.month, from: lastMonthly)
+        
+        if currentYear != lastResetYear || currentMonth != lastResetMonthVal {
+            resetQuests(type: .monthly, helper: helper, forest: forest)
+            forest.lastMonthlyResetDate = now
+            hasChanges = true
+        }
+        
+        if hasChanges {
+            do {
+                try save()
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+        
+        return .success(false)
+    }
+    
+    private func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, forest: Forest) {
+        if let currentQuests = forest.quests?.allObjects as? [Quest] {
+            let oldQuests = currentQuests.filter {
+                $0.type == type.valueForCoreData
+            }
+            for oldQuest in oldQuests {
+                viewContext.delete(oldQuest)
+            }
+        }
+        
+        var newQuestsModels: [QuestModel] = []
+        switch type {
+        case .daily:
+            newQuestsModels = helper.initalizeDailyQuests()
+        case .weekly:
+            newQuestsModels = helper.initalizeWeeklyQuests()
+        case .monthly:
+            newQuestsModels = helper.initalizeMonthlyQuests()
+        case .special:
+            break
+        }
+        setupQuests(questList: newQuestsModels, forest: forest)
+    }
+    
     // MARK: - HELPERS
     
     func checkAndUpdateRain() -> Resource<Bool> {
