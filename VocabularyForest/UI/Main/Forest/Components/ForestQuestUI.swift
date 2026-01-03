@@ -140,6 +140,7 @@ struct QuestRewardView: View {
 struct QuestRow: View {
     
     @State private var showDetail = false
+    var onQuestSelect: (QuestModel) -> Void
     var onRewardClaim: (QuestModel) -> Void
     var quest: QuestModel
     
@@ -247,12 +248,12 @@ struct QuestRow: View {
                     
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            infoBadge(icon: "burst", title: "Enemy:", value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
-                            infoBadge(icon: "brain.head.profile", title: "Mode:", value: quest.questionType.valueForCoreData.capitalized)
+                            infoBadge(icon: "burst", title: String(localized: "Enemy:"), value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
+                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.valueForCoreData.capitalized)
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
-                            infoBadge(icon: "flag.fill", title: "Level:", value: quest.gameLevel.valueForCoreData.capitalized)
+                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.valueForCoreData.capitalized)
                             Spacer()
                         }
                     }
@@ -262,10 +263,17 @@ struct QuestRow: View {
                         target: quest.targetCount,
                         color: statusColor
                     )
-                    
+
                     HStack {
                         Spacer()
-                        QuestRewardView(reward: quest.reward)
+                        VStack {
+                            QuestRewardView(reward: quest.reward)
+                            Button {
+                                onQuestSelect(quest)
+                            } label: {
+                                Text("Göreve git").foregroundStyle(Color.clickableText)
+                            }
+                        }
                         Spacer()
                     }
                     
@@ -309,7 +317,6 @@ struct QuestRow: View {
                     .cornerRadius(12)
                     .shadow(radius: 2)
             }
-            .padding(.top, 8)
         } else if quest.status == .claimed || quest.status == .active {
             Text(quest.status == .claimed ? "Reward claimed" : "In progress")
                 .font(.headline.bold())
@@ -322,7 +329,6 @@ struct QuestRow: View {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.white.opacity(0.1), lineWidth: 1)
                 )
-                .padding(.top, 8)
         }
     }
 }
@@ -335,9 +341,9 @@ struct ForestQuestUI: View {
     @State private var showWeeklyQuest = false
     @State private var showMonthlyQuest = false
     @State private var showSpecialQuest = false
-    
     @Binding var showQuest: Bool
-    
+    var selectQuest: (QuestModel) -> Void
+
     var dailyQuests: [QuestModel]?
     var weeklyQuests: [QuestModel]?
     var monthlyQuests: [QuestModel]?
@@ -424,7 +430,7 @@ struct ForestQuestUI: View {
                 ScrollView {
                     LazyVStack(spacing: 20) {
                         ForEach(list, id: \.self) { quest in
-                            QuestRow(onRewardClaim: { model in
+                            QuestRow(onQuestSelect: { model in selectQuest(model)}, onRewardClaim: { model in
                                 claimReward(model)
                             }, quest: quest)
                         }
@@ -569,8 +575,8 @@ struct ScaleButtonStyle: ButtonStyle {
         gameLevel: .easy
     )
     
-    return ForestQuestUI(
-        showQuest: $show,
+    ForestQuestUI(
+        showQuest: $show, selectQuest: { model in },
         dailyQuests: [dummyQuest, dummyQuest],
         weeklyQuests: [],
         monthlyQuests: [],
