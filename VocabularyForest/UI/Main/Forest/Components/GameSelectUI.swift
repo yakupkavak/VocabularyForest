@@ -15,6 +15,10 @@ extension GameSelectUI {
     }
 }
 
+protocol GameSelectUIProtocol {
+    func selectGame(model: QuestModel)
+}
+
 enum GameBookcaseSelection {
     case allBookcases
     case spesific(BookcaseModel)
@@ -24,9 +28,10 @@ struct GameSelectUI: View {
     
     // MARK: - PROPERTIES
     
+    var initialQuest: QuestModel?
     @Binding var showGameSelect: Bool
     var bookcaseList: [Bookcase]
-    @State private var selectedMode: BattleEnemyModel = .iceElemental
+    @State private var selectedMode: BattleEnemyModel = .classic
     @State private var selectedLevel: GameLevel = .easy
     @State private var selectedType: BattleQuestionType = .learning
     @State private var showSelectBookcase = false
@@ -79,7 +84,7 @@ struct GameSelectUI: View {
                         return !model.isBoss
                     }) ? "Düşmanları \(selectedLevel.enemyLevel), Patronu ise \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
                     : "Düşmanı \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
-                ).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
+                ).frame(maxWidth: .infinity, alignment: .leading ).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
                     .multilineTextAlignment(.leading)
                 
                 Text("Oyun Modu").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
@@ -170,6 +175,11 @@ struct GameSelectUI: View {
         .sheet(isPresented: $showSelectBookcase) {
             SelectBookcaseUI(allBookcases: bookcaseList, selectedBookcase: $selectedBookcase)
         }
+        .task {
+            if let initialQuest {
+                selectGame(model: initialQuest)
+            }
+        }
         .onChange(of: selectedBookcase) { bookcase in
             if bookcase == nil {
                 selectAllBookcase = true
@@ -177,6 +187,14 @@ struct GameSelectUI: View {
                 selectAllBookcase = false
             }
         }
+    }
+}
+
+extension GameSelectUI: GameSelectUIProtocol {
+    func selectGame(model: QuestModel) {
+        selectedMode = model.battleEnemyModel
+        selectedLevel = model.gameLevel
+        selectedType = model.questionType
     }
 }
 

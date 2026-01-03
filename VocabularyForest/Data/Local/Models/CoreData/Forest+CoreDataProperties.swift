@@ -24,6 +24,9 @@ extension Forest {
     @NSManaged public var landStatus: Bool
     @NSManaged public var isRaining: Bool
     @NSManaged public var lastRainUpdateDate: Date?
+    @NSManaged public var lastDailyResetDate: Date?
+    @NSManaged public var lastWeeklyResetDate: Date?
+    @NSManaged public var lastMonthlyResetDate: Date?
     @NSManaged public var quests: NSSet?
     @NSManaged public var sculptures: NSSet?
     @NSManaged public var trees: NSSet?

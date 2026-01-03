@@ -74,7 +74,14 @@
 
     },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir."
+          }
+        }
+      }
     },
     "Açıklama" : {
       "localizations" : {
@@ -147,7 +154,14 @@
       }
     },
     "Başla" : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başla"
+          }
+        }
+      }
     },
     "Beklenmedik hata" : {
       "localizations" : {
@@ -396,7 +410,14 @@
       }
     },
     "Eğlenerek bilgeliğini yücelt" : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eğlenerek bilgeliğini yücelt"
+          }
+        }
+      }
     },
     "Ekle" : {
       "localizations" : {
@@ -416,6 +437,16 @@
     },
     "emptyQuestionList" : {
 
+    },
+    "Enemy:" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rakip:"
+          }
+        }
+      }
     },
     "Example" : {
       "localizations" : {
@@ -438,7 +469,14 @@
       }
     },
     "Gelecek güncelleme ile mağazada kullanabileceksin." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelecek güncelleme ile mağazada kullanabileceksin."
+          }
+        }
+      }
     },
     "Gizlilik Politikası" : {
       "localizations" : {
@@ -446,6 +484,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gizlilik Politikası"
+          }
+        }
+      }
+    },
+    "Göreve git" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Göreve git"
           }
         }
       }
@@ -713,11 +761,45 @@
         }
       }
     },
+    "Level:" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seviye:"
+          }
+        }
+      }
+    },
     "Maceraya Atıl" : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maceraya Atıl"
+          }
+        }
+      }
+    },
+    "Mode:" : {
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modu:"
+          }
+        }
+      }
     },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutlu hayvan ve bitkiler için olmazsa olmaz."
+          }
+        }
+      }
     },
     "Nice to meet you!" : {
       "extractionState" : "manual",
@@ -801,10 +883,24 @@
       }
     },
     "Ormanına can vermek için doldurmalısın." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanına can vermek için doldurmalısın."
+          }
+        }
+      }
     },
     "Örnek" : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek"
+          }
+        }
+      }
     },
     "Örnek Cümle" : {
       "localizations" : {
@@ -858,10 +954,24 @@
       }
     },
     "Oyuna başlayabilmek için en az %lld kelimeye ihtiyacın var." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuna başlayabilmek için en az %lld kelimeye ihtiyacın var."
+          }
+        }
+      }
     },
     "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az %lld kelimeye ihtiyacın var." : {
-
+      "localizations" : {
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az %lld kelimeye ihtiyacın var."
+          }
+        }
+      }
     },
     "Oyunlar" : {
       "localizations" : {
@@ -985,7 +1095,7 @@
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aşağıdakilerden hangisi \\\"%@\\\" anlamına gelmektedir?"
+            "value" : "Aşağıdakilerden hangisi %@ anlamına gelmektedir?"
           }
         }
       }

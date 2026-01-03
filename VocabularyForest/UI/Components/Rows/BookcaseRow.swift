@@ -65,11 +65,9 @@ private extension BookcaseRow {
     }
     var languageLine: some View {
         HStack{
-            tvGrayHint(text: " \(bookcase.unwrappedLearningLanguage.getCountryName()) / \(bookcase.unwrappedmeaningLanguage.getCountryName())")
+            tvGrayHint(text: "\(bookcase.unwrappedLearningLanguage.toLanguageDisplayName()) / \(bookcase.unwrappedmeaningLanguage.toLanguageDisplayName())")
             Spacer()
-            
         }
-        
     }
     var bottomLine: some View {
         HStack(alignment: .center){

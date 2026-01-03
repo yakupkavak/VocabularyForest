@@ -30,14 +30,14 @@ struct BookRow: View{
     var body: some View {
         VStack(alignment: .leading){
             HStack(alignment: .top){
-                Text("\(book.bookcase?.unwrappedLearningLanguage.getCountryName() ?? "Learning")").frame(width: Constant.frameWidth, alignment: .leading)
+                Text("\(book.bookcase?.unwrappedLearningLanguage.toLanguageDisplayName() ?? "Learning")").frame(width: Constant.frameWidth, alignment: .leading)
                 Text(":")
                 tvDefault(text: book.unwrappedLearningWord)
                 Spacer()
             }
             if showMeaning.wrappedValue{
                 HStack(alignment: .top){
-                    Text("\(book.bookcase?.unwrappedmeaningLanguage.getCountryName() ?? "Meaning")").frame(width: Constant.frameWidth, alignment: .leading)
+                    Text("\(book.bookcase?.unwrappedmeaningLanguage.toLanguageDisplayName() ?? "Meaning")").frame(width: Constant.frameWidth, alignment: .leading)
                     Text(":")
                     tvDefault(text: book.unwrappedMeaningWord)
                     Spacer()

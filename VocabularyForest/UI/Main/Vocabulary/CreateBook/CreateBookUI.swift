@@ -191,7 +191,7 @@ private extension CreateBookUI {
                 Button {
                     selectBookcase()
                 } label: {
-                    Text(viewModel.currentBookcase?.unwrappedName ?? "Unexpected error")
+                    Text(viewModel.currentBookcase?.unwrappedName ?? "Kitaplık seçilmedi")
                         .font(.system(size: 20, weight: .bold))
                 }
                 .frame(maxWidth: 200)

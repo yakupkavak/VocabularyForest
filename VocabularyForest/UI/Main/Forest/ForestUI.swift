@@ -42,6 +42,7 @@ struct ForestUI: View {
     @State private var showGameSelect = false
     @State private var showQuest = false
     @State private var showForest = false
+    @State private var selectedQuestForGame: QuestModel? = nil
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -76,6 +77,11 @@ struct ForestUI: View {
             if showQuest {
                 ForestQuestUI(
                     showQuest: $showQuest,
+                    selectQuest: { model in
+                        selectedQuestForGame = model
+                        showQuest = false
+                        showGameSelect = true
+                    },
                     dailyQuests: viewModel.dailyQuestList,
                     weeklyQuests: viewModel.weeklyQuestList,
                     monthlyQuests: viewModel.monthlyQuestList,
@@ -86,12 +92,7 @@ struct ForestUI: View {
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showGameSelect {
-                GameSelectUI(showGameSelect: $showGameSelect, bookcaseList: viewModel.bookcaseList) { type, mode, level, questionSelection in
-                    if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
-                        showGameSelect = false
-                        router.navigate(to: .game(type, mode, level))
-                    }
-                }.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.75)
+                gameSelect.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.75)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showForest {
@@ -140,6 +141,22 @@ struct ForestUI: View {
 // MARK: - UI COMPONENTS
 
 private extension ForestUI {
+    var gameSelect: some View {
+        GameSelectUI(
+            initialQuest: selectedQuestForGame,
+            showGameSelect: $showGameSelect,
+            bookcaseList: viewModel.bookcaseList,
+            startGame: { type, mode, level, questionSelection in
+                if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
+                    selectedQuestForGame = nil
+                    showGameSelect = false
+                    router.navigate(to: .game(type, mode, level))
+                }
+            }
+        )
+        .zIndex(4.0)
+        .frame(maxHeight: UIScreen.main.bounds.height * 0.75)
+    }
     var gameScene: SKScene {
         forestScene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         forestScene.scaleMode = .fill
@@ -229,6 +246,12 @@ private extension ForestUI {
 // MARK: - HELPERS
 
 private extension ForestUI {
+    
+    func openQuestGame(model: QuestModel) {
+        showQuest = false
+        showGameSelect = true
+    }
+    
     func exitForest() {
         viewModel.stopGameMusic()
         router.navigateToRoot()

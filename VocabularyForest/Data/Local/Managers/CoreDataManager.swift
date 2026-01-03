@@ -40,7 +40,6 @@ class CoreDataManager {
     // MARK: - HELPERS
     
     private func checkGame() {
-        // Eğer bir hafta geçmişse short memory'e atıyoruz
         if let allBooks = fetchAllBooks() {
             for book in allBooks {
                 if book.longMemory == true {
@@ -54,8 +53,8 @@ class CoreDataManager {
             }
             save()
         }
-        //Toprak sağlığı kontrolü yapıyoruz
         ForestDataManager.shared.checkAndUpdateRain()
+        ForestDataManager.shared.checkAndResetTimeBasedQuests(helper: ForestGameHelper())
     }
     
     func save() {
@@ -145,7 +144,7 @@ class CoreDataManager {
                     let name = request.name
                 else { throw ImportBookcaseError.missingRequiredFields }
                 
-                let bookcaseName = name.uppercased()
+                let bookcaseName = name
                 
                 let bookcase: Bookcase
                 if let existing = self.fetchBookcase(name: bookcaseName, learningLanguageCode: source, meaningLanguageCode: target) {

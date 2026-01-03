@@ -34,15 +34,7 @@ class CreateBookcaseViewModel: ObservableObject {
             learningLanguage: learningLanguage,
             meaningLanguage: meaningLanguage
         )
-        let userInfo: [String: Any] = [
-                BookcaseNotificationConstants.createdBookcaseName: bookcaseName,
-                BookcaseNotificationConstants.createdBookcaseLearning: learningLanguage,
-                BookcaseNotificationConstants.createdBookcaseMeaning: meaningLanguage
-            ]
-        UserDefaults.standard.setValue(bookcase.unwrappedName, forKey: BookcaseConstants.bookcase)
-        UserDefaults.standard.setValue(bookcase.unwrappedLearningLanguage, forKey: BookcaseConstants.learningLanguage)
-        UserDefaults.standard.setValue(bookcase.unwrappedmeaningLanguage, forKey: BookcaseConstants.meaningLanguage)
-        NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: userInfo)
+        setBookcaseDefault(bookcase: bookcase)
     }
     
     func checkAndCreateBookcase() -> Bool{
