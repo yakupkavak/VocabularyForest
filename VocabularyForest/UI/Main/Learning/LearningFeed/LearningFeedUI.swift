@@ -14,7 +14,7 @@ struct LearningFeedUI: View {
     
     @StateObject var viewModel = LearningFeedViewModel()
     @EnvironmentObject var router: LearningRouter
-    
+
     // MARK: - VIEW
     
     var body: some View {

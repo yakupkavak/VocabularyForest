@@ -8,8 +8,6 @@
 
 import SwiftUI
 
-// MARK: - CONSTANTS & CONFIG
-
 private extension ForestQuestUI {
     enum Constant {
         static let questTypeList: [QuestType] = [.daily, .weekly, .monthly, .special]
@@ -22,8 +20,6 @@ private struct LayoutConfig {
     static let popupWidthRatio: CGFloat = 0.85
     static let popupHeightRatio: CGFloat = 0.70
 }
-
-// MARK: - QuestProgressBar
 
 struct QuestProgressBar: View {
     var current: Int
@@ -68,8 +64,6 @@ struct QuestProgressBar: View {
         }
     }
 }
-
-// MARK: - QuestRewardView
 
 struct QuestRewardView: View {
     
@@ -134,8 +128,6 @@ struct QuestRewardView: View {
         .cornerRadius(12)
     }
 }
-
-// MARK: - QUEST ROW
 
 struct QuestRow: View {
     
@@ -263,7 +255,7 @@ struct QuestRow: View {
                         target: quest.targetCount,
                         color: statusColor
                     )
-
+                    
                     HStack {
                         Spacer()
                         VStack {
@@ -332,25 +324,25 @@ struct QuestRow: View {
         }
     }
 }
-// MARK: - MAIN SCREEN
 
 struct ForestQuestUI: View {
     
-    // MARK: - PROPERTIES
     @State private var showDailyQuest = false
     @State private var showWeeklyQuest = false
     @State private var showMonthlyQuest = false
     @State private var showSpecialQuest = false
     @Binding var showQuest: Bool
     var selectQuest: (QuestModel) -> Void
-
+    
     var dailyQuests: [QuestModel]?
     var weeklyQuests: [QuestModel]?
     var monthlyQuests: [QuestModel]?
     var specialQuests: [QuestModel]?
     var claimReward: (QuestModel) -> Void
     
-    // MARK: - UI
+    var isAnySubMenuOpen: Bool {
+        showDailyQuest || showWeeklyQuest || showMonthlyQuest || showSpecialQuest
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -361,31 +353,40 @@ struct ForestQuestUI: View {
                         withAnimation { showQuest = false }
                     }
                 
-                VStack(spacing: 0) {
-                    Spacer()
+                ZStack {
+                    
                     if showDailyQuest {
-                        questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { showDailyQuest = false }, geo: geometry)
+                        questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
+                            .transition(.move(edge: .trailing))
+                            .zIndex(1)
                     } else if showWeeklyQuest {
-                        questListView(title: "Haftalık Görevler", quests: weeklyQuests, closeAction: { showWeeklyQuest = false }, geo: geometry)
+                        questListView(title: "Haftalık Görevler", quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
+                            .transition(.move(edge: .trailing))
+                            .zIndex(1)
                     } else if showMonthlyQuest {
-                        questListView(title: "Aylık Görevler", quests: monthlyQuests, closeAction: { showMonthlyQuest = false }, geo: geometry)
+                        questListView(title: "Aylık Görevler", quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
+                            .transition(.move(edge: .trailing))
+                            .zIndex(1)
                     } else if showSpecialQuest {
-                        questListView(title: "Özel Görevler", quests: specialQuests, closeAction: { showSpecialQuest = false }, geo: geometry)
+                        questListView(title: "Özel Görevler", quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
+                            .transition(.move(edge: .trailing))
+                            .zIndex(1)
                     } else {
                         mainMenu
+                            .transition(.move(edge: .leading).combined(with: .opacity))
+                            .zIndex(0)
                     }
-                    Spacer()
                 }
                 .padding(LayoutConfig.padding)
-                .background(.brown.opacity(0.9))
+                .frame(
+                    width: min(geometry.size.width * LayoutConfig.popupWidthRatio, 500),
+                    height: min(geometry.size.height * LayoutConfig.popupHeightRatio, 800)
+                )
+                .background(.brown.opacity(0.95))
                 .cornerRadius(LayoutConfig.cornerRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: LayoutConfig.cornerRadius)
                         .stroke(Color("brown300"), lineWidth: 4)
-                )
-                .frame(
-                    width: min(geometry.size.width * LayoutConfig.popupWidthRatio, 500),
-                    height: min(geometry.size.height * LayoutConfig.popupHeightRatio, 800)
                 )
                 .shadow(radius: 20)
                 .overlay(alignment: .topTrailing) {
@@ -398,11 +399,14 @@ struct ForestQuestUI: View {
     var closeButton: some View {
         Button {
             withAnimation {
-                showQuest = false
-                showDailyQuest = false
-                showWeeklyQuest = false
-                showMonthlyQuest = false
-                showSpecialQuest = false
+                if isAnySubMenuOpen {
+                    showDailyQuest = false
+                    showWeeklyQuest = false
+                    showMonthlyQuest = false
+                    showSpecialQuest = false
+                } else {
+                    showQuest = false
+                }
             }
         } label: {
             Image("close_button")
@@ -415,7 +419,6 @@ struct ForestQuestUI: View {
     
     @ViewBuilder
     func questListView(title: String, quests: [QuestModel]?, closeAction: @escaping () -> Void, geo: GeometryProxy) -> some View {
-        @State var showAlert = false
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
@@ -556,8 +559,6 @@ struct ScaleButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.9 : 1.0)
     }
 }
-// MARK: - PREVIEW HELPER
-
 #Preview {
     @State var show = true
     
