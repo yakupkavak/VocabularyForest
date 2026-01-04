@@ -119,6 +119,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     func startRain() {
         showRainButton = false
         output?.startRain()
+        coreDataManager.updateRainValue(rain: -50)
         var time = 0
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
@@ -137,79 +138,83 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func fetchForest() {
-    
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
-        if !forestInitalized {
-            let result = coreDataManager.createForestGame(helper: ForestGameHelper())
-            if result.status == .success {
-                UserDefaults.standard.set(true, forKey: "forestInitalized")
-            }
-        }
-        
-        // MARK: - FETCH ANIMAL
-        
-        let resultAnimal = coreDataManager.fetchAnimals()
-        if resultAnimal.status == .success {
-            guard let animals = resultAnimal.data else { return }
-            for animal in animals {
-                if !animalList.contains(where: { $0 == animal}) {
-                    animalList.append(animal)
-                    output?.setupAnimals(animals: animal)
+
+        Task { @MainActor in
+            
+            if !forestInitalized {
+                let result = coreDataManager.createForestGame(helper: ForestGameHelper())
+                if result.status == .success {
+                    UserDefaults.standard.set(true, forKey: "forestInitalized")
                 }
             }
-         }
-        
-        // MARK: - FETCH SCULPTURE
-        
-        let sculptureResult = coreDataManager.fetchSculptures()
-        if sculptureResult.status == .success {
-            guard let sculptures = sculptureResult.data else { return }
-            for sculpture in sculptures {
-                if !sculptureList.contains(where: { $0 == sculpture}) {
-                    sculptureList.append(sculpture)
-                    output?.setupSculpture(sculpture: sculpture)
-                }
-            }
-        }
-        
-        // MARK: - FETCH TREE
-        
-        let resultTree = coreDataManager.fetchTrees()
-        if resultTree.status == .success {
-            guard let trees = resultTree.data else { return }
-            for tree in trees {
-                if !treeList.contains(where: { $0 == tree}) {
-                    treeList.append(tree)
-                    output?.setupPlant(plant: tree)
-                }
-            }
-         }
-        
-        // MARK: - FETCH STATUS
-        
-        let result = coreDataManager.fetchForestStatus()
-        switch result.status {
-        case .success:
-            if let forestData = result.data {
-                forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
-                if(forestData.rainValue == 50) {
-                    showRainButton = true
-                }
-                if let landHealthPercentage = forestStatus?.landHealthPercentage {
-                    if landHealthPercentage == 0 {
-                        output?.startDrought()
-                    }else if landHealthPercentage <= 50 {
-                        output?.startFade()
+            
+            // MARK: - FETCH ANIMAL
+            
+            let resultAnimal = coreDataManager.fetchAnimals()
+            if resultAnimal.status == .success {
+                guard let animals = resultAnimal.data else { return }
+                for animal in animals {
+                    if !animalList.contains(where: { $0 == animal}) {
+                        animalList.append(animal)
+                        output?.setupAnimals(animals: animal)
                     }
                 }
             }
-        case .loading:
-            print("loading")
-        case .error:
-            print("fetch forest error")
+            
+            // MARK: - FETCH SCULPTURE
+            
+            let sculptureResult = coreDataManager.fetchSculptures()
+            if sculptureResult.status == .success {
+                guard let sculptures = sculptureResult.data else { return }
+                for sculpture in sculptures {
+                    if !sculptureList.contains(where: { $0 == sculpture}) {
+                        sculptureList.append(sculpture)
+                        output?.setupSculpture(sculpture: sculpture)
+                    }
+                }
+            }
+            
+            // MARK: - FETCH TREE
+            
+            let resultTree = coreDataManager.fetchTrees()
+            if resultTree.status == .success {
+                guard let trees = resultTree.data else { return }
+                for tree in trees {
+                    if !treeList.contains(where: { $0 == tree}) {
+                        treeList.append(tree)
+                        output?.setupPlant(plant: tree)
+                    }
+                }
+            }
+            
+            // MARK: - FETCH STATUS
+            
+            let result = coreDataManager.fetchForestStatus()
+            switch result.status {
+            case .success:
+                if let forestData = result.data {
+                    forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
+                    if(forestData.rainValue >= 50) {
+                        showRainButton = true
+                    }
+                    if let landHealthPercentage = forestStatus?.landHealthPercentage {
+                        if landHealthPercentage == 0 {
+                            output?.startDrought()
+                        }else if landHealthPercentage <= 50 {
+                            output?.startFade()
+                        }
+                    }
+                }
+            case .loading:
+                print("loading")
+            case .error:
+                print("fetch forest error")
+            }
+            
+            fetchQuests()
+            
         }
-        
-        fetchQuests()
     }
     
     private func fetchQuests() {

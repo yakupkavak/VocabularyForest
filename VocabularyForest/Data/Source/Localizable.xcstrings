@@ -75,9 +75,15 @@
     },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "If you leave it open, you will receive daily reminders for word repetition. If you have not given permission, this setting will ask for your permission."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir."
           }
         }
@@ -85,9 +91,15 @@
     },
     "Açıklama" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Description"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Açıklama"
           }
         }
@@ -95,9 +107,15 @@
     },
     "Altın: %lld" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Gold: %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Altın: %lld"
           }
         }
@@ -115,9 +133,15 @@
     },
     "Anlam" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Meaning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Anlam"
           }
         }
@@ -125,9 +149,15 @@
     },
     "Anlam Dili" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Meaning Language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Anlam Dili"
           }
         }
@@ -135,9 +165,15 @@
     },
     "Anlamı" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Meaning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Anlamı"
           }
         }
@@ -145,9 +181,15 @@
     },
     "Ayarlar" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Ayarlar"
           }
         }
@@ -155,9 +197,15 @@
     },
     "Başla" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Start"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Başla"
           }
         }
@@ -165,9 +213,15 @@
     },
     "Beklenmedik hata" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Unexpected error"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Beklenmedik hata"
           }
         }
@@ -175,9 +229,15 @@
     },
     "Bildirim Ayarlarını Aç" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Enable Notification Settings"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bildirim ayarlarını aç"
           }
         }
@@ -185,9 +245,15 @@
     },
     "Bildirimler" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Notification"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bildirimler"
           }
         }
@@ -196,9 +262,15 @@
     "Bilgeliğini yücelt" : {
       "extractionState" : "stale",
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Exalt your wisdom"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bilgeliğini yücelt"
           }
         }
@@ -206,9 +278,15 @@
     },
     "Biliyorum" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "I know"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Biliyorum"
           }
         }
@@ -216,9 +294,15 @@
     },
     "Bize Puan Verin" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Rate Us"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bize Puan Verin"
           }
         }
@@ -226,9 +310,15 @@
     },
     "Bu dil için kütüphane bulunamadı." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "No library was found for this language."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bu dil için kütüphane bulunamadı"
           }
         }
@@ -236,9 +326,15 @@
     },
     "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "This action cannot be undone. All your libraries and words will be permanently deleted."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir."
           }
         }
@@ -246,9 +342,15 @@
     },
     "Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "This action cannot be undone. All your libraries and words will be permanently deleted."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz."
           }
         }
@@ -256,6 +358,12 @@
     },
     "Cancel" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -266,6 +374,12 @@
     },
     "Claim reward" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim reward"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -276,6 +390,12 @@
     },
     "correct" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "correct"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -286,6 +406,12 @@
     },
     "Delete" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -296,6 +422,12 @@
     },
     "Description" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -306,22 +438,41 @@
     },
     "Detaylar (Opsiyonel)" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Details (Optional)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Detaylar (Opsiyonel)"
           }
         }
       }
     },
     "Diğer" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
     },
     "Dil seç" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Select language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Dil seç"
           }
         }
@@ -329,9 +480,15 @@
     },
     "Dili" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Dili"
           }
         }
@@ -339,9 +496,15 @@
     },
     "Diller" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Languages"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Diller"
           }
         }
@@ -349,9 +512,15 @@
     },
     "Doluluk oranı %lld / 50" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Occupancy rate %lld / 50"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Doluluk oranı %lld / 50"
           }
         }
@@ -361,13 +530,13 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Düşmanı %1$lld doğru seçimle yenebilirsin. %2$lld canın var."
+            "state" : "translated",
+            "value" : "You can defeat the enemy with the right choice. You have %lld health."
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Düşmanı %1$lld doğru seçimle yenebilirsin. %2$lld canın var."
           }
         }
@@ -377,23 +546,29 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Düşmanları %1$lld, Patronu ise %2$lld doğru seçimle yenebilirsin. %3$lld canın var."
+            "state" : "translated",
+            "value" : "You can defeat enemies with %lld health and bosses with %lld health by making the right choices. You have %lld health."
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Düşmanları %1$lld, Patronu ise %2$lld doğru seçimle yenebilirsin. %3$lld canın var."
+            "state" : "needs_review",
+            "value" : "Düşmanların %1$lld, Patronun ise %2$lld doğru seçimle yenebilirsin. %3$lld canın var."
           }
         }
       }
     },
     "Düzenle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Edit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Düzenle"
           }
         }
@@ -401,6 +576,12 @@
     },
     "Edit" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -411,9 +592,15 @@
     },
     "Eğlenerek bilgeliğini yücelt" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Elevate your wisdom through enjoyment"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Eğlenerek bilgeliğini yücelt"
           }
         }
@@ -421,9 +608,15 @@
     },
     "Ekle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Add"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Ekle"
           }
         }
@@ -440,6 +633,12 @@
     },
     "Enemy:" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enemy:"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -450,9 +649,15 @@
     },
     "Example" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Example:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Örnek"
           }
         }
@@ -460,9 +665,15 @@
     },
     "Fantastic!" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Fantastic!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Fantastik!"
           }
         }
@@ -470,9 +681,15 @@
     },
     "Gelecek güncelleme ile mağazada kullanabileceksin." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "You will be able to use it in the store with the next update."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Gelecek güncelleme ile mağazada kullanabileceksin."
           }
         }
@@ -480,9 +697,15 @@
     },
     "Gizlilik Politikası" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Gizlilik Politikası"
           }
         }
@@ -490,9 +713,15 @@
     },
     "Göreve git" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Go on quest"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Göreve git"
           }
         }
@@ -500,9 +729,15 @@
     },
     "Hakkında" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "About"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hakkında"
           }
         }
@@ -510,9 +745,15 @@
     },
     "Hangi dili arıyorsun" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Which language are you looking for?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hangi dili arıyorsun"
           }
         }
@@ -520,9 +761,15 @@
     },
     "Hazır kütüphaneler" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Ready-made libraries"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hazır kütüphaneler"
           }
         }
@@ -530,9 +777,15 @@
     },
     "Hazır Kütüphaneler" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Ready-made libraries"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hazır Kütüphaneler"
           }
         }
@@ -540,21 +793,16 @@
     },
     "Henüz hiç kelime eklememişsin." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Henüz hiç kelime eklememişsin."
+            "value" : "You haven't added any words yet."
           }
-        }
-      }
-    },
-    "Hızlı kart" : {
-      "extractionState" : "stale",
-      "localizations" : {
+        },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hızlı kart"
+            "state" : "needs_review",
+            "value" : "Henüz hiç kelime eklememişsin."
           }
         }
       }
@@ -562,6 +810,12 @@
     "I’m ready" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I’m ready"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -572,6 +826,12 @@
     },
     "In progress" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In progress"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -582,9 +842,15 @@
     },
     "İndir" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Download"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "İndir"
           }
         }
@@ -592,9 +858,15 @@
     },
     "İptal" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "İptal"
           }
         }
@@ -602,9 +874,15 @@
     },
     "Kapat" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kapat"
           }
         }
@@ -612,9 +890,15 @@
     },
     "Kaydet" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kaydet"
           }
         }
@@ -622,9 +906,15 @@
     },
     "Kelime" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Word"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kelime"
           }
         }
@@ -632,9 +922,15 @@
     },
     "Kelime Bildirimleri" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Word Notification"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kelime Bildirimleri"
           }
         }
@@ -642,9 +938,15 @@
     },
     "Kelime Ekle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Add Word"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kelime Ekle"
           }
         }
@@ -652,9 +954,15 @@
     },
     "Kelime Sayısı" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Word Count"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kelime Sayısı"
           }
         }
@@ -662,9 +970,15 @@
     },
     "Kelimeyi Düzenle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Edit Word"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kelimeyi Düzenle"
           }
         }
@@ -673,6 +987,12 @@
     "Key" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -683,9 +1003,15 @@
     },
     "Kitaplığı Düzenle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Edit Bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplığı Düzenle"
           }
         }
@@ -693,9 +1019,15 @@
     },
     "Kitaplık" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplık"
           }
         }
@@ -703,9 +1035,15 @@
     },
     "Kitaplık Adı" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Bookcase Name"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplık Adı"
           }
         }
@@ -713,9 +1051,15 @@
     },
     "Kitaplık ara" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Search bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplık ara"
           }
         }
@@ -723,9 +1067,15 @@
     },
     "Kitaplık oluştur" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Create bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplık oluştur"
           }
         }
@@ -733,9 +1083,15 @@
     },
     "Kitaplık Seç" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Select Bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplık Seç"
           }
         }
@@ -743,9 +1099,15 @@
     },
     "Kitaplıklar Yükleniyor..." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Bookcases loading…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kitaplıklar Yükleniyor.."
           }
         }
@@ -753,9 +1115,15 @@
     },
     "Kullanım Koşulları" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Terms of Use"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Kullanım koşulları"
           }
         }
@@ -763,9 +1131,15 @@
     },
     "Level:" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Level"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Seviye:"
           }
         }
@@ -773,9 +1147,15 @@
     },
     "Maceraya Atıl" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Embark on an Adventure"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Maceraya Atıl"
           }
         }
@@ -783,6 +1163,12 @@
     },
     "Mode:" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode:"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -793,9 +1179,15 @@
     },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Essential for happy animals and plants."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Mutlu hayvan ve bitkiler için olmazsa olmaz."
           }
         }
@@ -804,9 +1196,15 @@
     "Nice to meet you!" : {
       "extractionState" : "manual",
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Nice to meet you!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Tanıştığımıza sevindim!"
           }
         }
@@ -814,6 +1212,12 @@
     },
     "No" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -824,9 +1228,15 @@
     },
     "No quests available." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "No quests available"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hiçbir görev açık değil"
           }
         }
@@ -834,9 +1244,15 @@
     },
     "Öğrenilen Dil" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Learning Language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Öğrenilen Dil"
           }
         }
@@ -844,9 +1260,15 @@
     },
     "Öğrenilen Kelime" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Learning Vocabulary"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Öğrenilen Kelime"
           }
         }
@@ -854,9 +1276,15 @@
     },
     "Öğrenme" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Learning"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Öğrenme"
           }
         }
@@ -864,9 +1292,15 @@
     },
     "Oluştur" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Create"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oluştur"
           }
         }
@@ -874,6 +1308,12 @@
     },
     "Options" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -884,9 +1324,15 @@
     },
     "Ormanına can vermek için doldurmalısın." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "You must fill it to give life to your forest."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Ormanına can vermek için doldurmalısın."
           }
         }
@@ -894,9 +1340,15 @@
     },
     "Örnek" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Example"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Örnek"
           }
         }
@@ -904,9 +1356,15 @@
     },
     "Örnek Cümle" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Example Sentence"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Örnek Cümle"
           }
         }
@@ -914,9 +1372,15 @@
     },
     "Oyun çeşitleri" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Game types"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oyun çeşitleri"
           }
         }
@@ -924,9 +1388,15 @@
     },
     "Oyun Modu" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Game Mode"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oyun Modu"
           }
         }
@@ -934,30 +1404,31 @@
     },
     "Oyuna Başla" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oyuna Başla"
+            "value" : "Start Game"
           }
-        }
-      }
-    },
-    "Oyuna başlayabilmek için %lld kelimeye ihtiyacın var." : {
-      "extractionState" : "stale",
-      "localizations" : {
+        },
         "tr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oyuna başlayabilmek için %lld kelimeye ihtiyacın var."
+            "state" : "needs_review",
+            "value" : "Oyuna Başla"
           }
         }
       }
     },
     "Oyuna başlayabilmek için en az %lld kelimeye ihtiyacın var." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "You need at least %lld words to start the game."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oyuna başlayabilmek için en az %lld kelimeye ihtiyacın var."
           }
         }
@@ -965,9 +1436,15 @@
     },
     "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az %lld kelimeye ihtiyacın var." : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "To start the game, you need at least %lld words that contain examples or explanations."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az %lld kelimeye ihtiyacın var."
           }
         }
@@ -975,9 +1452,15 @@
     },
     "Oyunlar" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Games"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Oyunlar"
           }
         }
@@ -985,6 +1468,12 @@
     },
     "Progress" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progress"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1075,6 +1564,12 @@
     },
     "Quests" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quests"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",

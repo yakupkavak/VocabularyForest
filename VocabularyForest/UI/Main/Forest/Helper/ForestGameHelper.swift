@@ -127,7 +127,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 status: .active,
                 targetCount: 5,
                 currentProgressCount: 0,
-                questionType: .learning,
+                questionType: .competitive,
                 battleEnemyModel: .classic,
                 gameLevel: .medium
             ),
@@ -210,7 +210,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 description: "Buz Elementi ormanı dondurdu! Kelimelerinle buzları çöz ve sevimli kediyi kurtar.",
                 reward: .animal(modelName: "Cat"),
                 status: .active,
-                targetCount: 1,
+                targetCount: 3,
                 currentProgressCount: 0,
                 questionType: .competitive,
                 battleEnemyModel: .iceElemental,
@@ -223,9 +223,9 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 description: "Ateş Ejderhası yolu kesti! Onu bilgeliğinle yen ve sadık köpeği yanına al.",
                 reward: .animal(modelName: "Dog"),
                 status: .active,
-                targetCount: 1,
+                targetCount: 3,
                 currentProgressCount: 0,
-                questionType: .competitive,
+                questionType: .learning,
                 battleEnemyModel: .fireDragon,
                 gameLevel: .hard
             ),
@@ -236,9 +236,9 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 description: "Ormanın derinliklerinde bir sır saklı. Bu zorlu sınavı geç, asil beyaz kediye ulaş.",
                 reward: .animal(modelName: "WhiteCat"),
                 status: .active,
-                targetCount: 1,
+                targetCount: 3,
                 currentProgressCount: 0,
-                questionType: .competitive,
+                questionType: .remainder,
                 battleEnemyModel: .classic,
                 gameLevel: .hard
             )
