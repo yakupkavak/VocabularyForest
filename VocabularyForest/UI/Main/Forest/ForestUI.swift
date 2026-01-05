@@ -150,7 +150,12 @@ private extension ForestUI {
                 if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
                     selectedQuestForGame = nil
                     showGameSelect = false
-                    router.navigate(to: .game(type, mode, level))
+                    switch questionSelection {
+                    case .allBookcases:
+                        router.navigate(to: .game(type, mode, level, nil))
+                    case .spesific(let model):
+                        router.navigate(to: .game(type, mode, level, model))
+                    }
                 }
             }
         )

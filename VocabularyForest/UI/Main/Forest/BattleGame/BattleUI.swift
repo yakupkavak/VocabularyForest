@@ -39,6 +39,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     var gameType: BattleQuestionType
     var battleMode: BattleEnemyModel
     var gameLevel: GameLevel
+    var selectedBookcase: BookcaseModel?
     
     // MARK: - INIT
     
@@ -47,11 +48,13 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
         gameType: BattleQuestionType,
         battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
+        selectedBookcase: BookcaseModel?
     ) {
         self._viewModel = StateObject(wrappedValue: viewModel())
         self.gameType = gameType
         self.battleMode = battleMode
         self.gameLevel = gameLevel
+        self.selectedBookcase = selectedBookcase
         let battleScene = BattleScene(enemyModel: battleMode)
         self._scene = State(wrappedValue: battleScene)
     }
@@ -132,7 +135,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
         .task {
             self.viewModel.output = scene
             self.scene.helper = viewModel
-            self.viewModel.prepareGame(bookcase: nil, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
+            self.viewModel.prepareGame(bookcaseModel: selectedBookcase, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }.onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
             //viewModel.startGameMusic()
@@ -383,6 +386,7 @@ private extension BattleUI {
     }
 }
 
+/*
 #Preview {
     let previewManager = CoreDataManager.preview
     let context = previewManager.viewContext
@@ -404,3 +408,4 @@ private extension BattleUI {
     let viewModel = BattleViewModel(coreDataManager: previewManager)
     return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy)
 }
+*/
