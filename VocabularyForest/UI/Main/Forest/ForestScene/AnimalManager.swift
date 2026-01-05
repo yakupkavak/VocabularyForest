@@ -109,6 +109,8 @@ private extension AnimalManager {
     func stopMove() {
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAction)
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
+        currentAnimalNode.removeAllActions()
+        timer?.invalidate()
     }
 
     func setupAnimal(animal: AnimalModel) {
