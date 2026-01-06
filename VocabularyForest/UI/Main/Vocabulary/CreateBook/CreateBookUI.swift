@@ -204,6 +204,7 @@ private extension CreateBookUI {
         .overlay(alignment: .trailing) {
             Button {
                 viewModel.checkAndCreateBook()
+                focusedField = .vocabulary
             } label: {
                 Text("Ekle").foregroundStyle(.title)
             }

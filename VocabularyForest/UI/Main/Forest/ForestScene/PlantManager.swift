@@ -61,7 +61,7 @@ private extension PlantManager {
             y: GameConstant.materialHeightSize * model.treeYPosition
         )
         plant.name = "plant"
-        plant.zPosition = 5
+        plant.zPosition = 5 - model.treeYPosition * 3.0
         scene.addChild(plant)
     }
 }

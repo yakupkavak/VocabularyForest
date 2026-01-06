@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BookModel: Equatable {
+struct BookModel: Equatable, Codable, Hashable {
     var bookName: String
     var createdDate: Date
     var learningWord: String

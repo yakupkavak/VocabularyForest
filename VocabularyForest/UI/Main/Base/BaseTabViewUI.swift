@@ -97,8 +97,8 @@ extension BaseTabViewUI {
                         .ignoresSafeArea()
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)
-                case .game(let option, let mode, let level):
-                    BattleUI(viewModel: BattleViewModel(), gameType: option, battleMode: mode, gameLevel: level)
+                case .game(let option, let mode, let level, let bookcase):
+                    BattleUI(viewModel: BattleViewModel(), gameType: option, battleMode: mode, gameLevel: level, selectedBookcase: bookcase)
                     .ignoresSafeArea()
                     .navigationBarBackButtonHidden()
                     .toolbar(.hidden, for: .tabBar)

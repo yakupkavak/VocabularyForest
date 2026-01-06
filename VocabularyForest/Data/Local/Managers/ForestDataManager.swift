@@ -598,7 +598,7 @@ private extension ForestDataManager {
     
     private func generateValidPosition(for type: ForestObjectType) -> (x: Double, y: Double) {
         let xRange = -0.33...0.6
-        let yRange = 0.2...0.5
+        let yRange = 0.18...0.5
         
         let minDistance: Double = (type == .tree) ? 0.15 : 0.20
         

@@ -13,7 +13,7 @@ import Foundation
 protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func askQuestion()
     func prepareGame(
-        bookcase: Bookcase?,
+        bookcaseModel: BookcaseModel?,
         questionType: BattleQuestionType,
         battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
@@ -153,7 +153,7 @@ private extension BattleViewModel {
         var questionNumber = 1
         for book in shortBooks.shuffled().prefix(bookCount){
             let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
-                return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
+                return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage && indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, book.unwrappedLearningWord)
@@ -183,7 +183,7 @@ private extension BattleViewModel {
         for book in longBooks.shuffled().prefix(bookCount){
             if let answer = book.learningWord {
                 let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
-                    return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage
+                    return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage && indexBook.meaningWord != book.meaningWord
                 }).shuffled().prefix(3)
                 let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
                 let finalQuestionText = String(format: formatString, answer)
@@ -224,7 +224,7 @@ private extension BattleViewModel {
 extension BattleViewModel: BattleViewModelProtocol {
 
     func prepareGame(
-        bookcase: Bookcase?,
+        bookcaseModel: BookcaseModel?,
         questionType: BattleQuestionType,
         battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
@@ -232,7 +232,11 @@ extension BattleViewModel: BattleViewModelProtocol {
         var books: [Book] = []
         
         if questionType == .learning {
-            if let bookcase {
+            if let bookcaseModel {
+                guard let bookcase = coreData.fetchBookcase(name: bookcaseModel.bookcaseName, learningLanguageCode: bookcaseModel.learningLanguage, meaningLanguageCode: bookcaseModel.meaningLanguage) else {
+                    errorModel = .emptyBookcase
+                    return
+                }
                 guard let spesificBooks = coreData.fetchBooksExampleDescription(bookcase: bookcase) else {
                     errorModel = .emptyBookcase
                     return
@@ -246,7 +250,11 @@ extension BattleViewModel: BattleViewModelProtocol {
                 books = allBooks
             }
         } else {
-            if let bookcase {
+            if let bookcaseModel {
+                guard let bookcase = coreData.fetchBookcase(name: bookcaseModel.bookcaseName, learningLanguageCode: bookcaseModel.learningLanguage, meaningLanguageCode: bookcaseModel.meaningLanguage) else {
+                    errorModel = .emptyBookcase
+                    return
+                }
                 guard let spesificBooks = coreData.fetchBooks(bookcase: bookcase) else {
                     errorModel = .emptyBookcase
                     return

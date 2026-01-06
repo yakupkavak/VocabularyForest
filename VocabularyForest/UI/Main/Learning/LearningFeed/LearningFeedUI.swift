@@ -22,7 +22,7 @@ struct LearningFeedUI: View {
             Color.backgroundSystem.ignoresSafeArea()
             VStack{
                 Spacer()
-                tvMainTitle(text: "Ormanın").padding(.bottom)
+                Text("Your Forest").font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300).padding(.bottom)
                 ForEach(Constant.quizList, id: \.self) { quiz in
                     QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
                         switch type {
@@ -35,7 +35,7 @@ struct LearningFeedUI: View {
                         .listRowSeparator(.hidden, edges: .all)
                 }
                 Spacer()
-                tvMainTitle(text: "Günün kartı")
+                Text("Daily Card").font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300)
                 TodayCardUI(
                     height: UIScreen.main.bounds.height * 0.3,
                     learningWord: viewModel.todaysLearningWord,
