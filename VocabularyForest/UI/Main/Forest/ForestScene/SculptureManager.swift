@@ -10,6 +10,7 @@ import SpriteKit
 protocol SculptureManagerProtocol: AnyObject {
     var sculptureNode: SKSpriteNode { get }
     func setupSculpture(model: SculptureModel)
+    func setZIndex(index: Double)
 }
 
 class SculptureManager {
@@ -36,7 +37,7 @@ private extension SculptureManager {
             y: GameConstant.sculptureHeightSize * model.yPosition
         )
         currentSculptureNode.name = "sculpture"
-        currentSculptureNode.zPosition = 4.0
+        currentSculptureNode.zPosition = 10.0 - model.yPosition * 5.0
         scene?.addChild(currentSculptureNode)
     }
 }
@@ -48,5 +49,8 @@ extension SculptureManager: SculptureManagerProtocol {
     
     var sculptureNode: SKSpriteNode {
         currentSculptureNode
+    }
+    func setZIndex(index: Double) {
+        currentSculptureNode.zPosition = index
     }
 }

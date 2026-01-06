@@ -130,7 +130,7 @@ private extension AnimalManager {
             x: scene.size.width / 2,
             y: GameConstant.floorHeightSize * 0.65 + model.yPosition)
         currentAnimalNode.xScale = -1.0
-        currentAnimalNode.zPosition = 3
+        currentAnimalNode.zPosition = 3.0 - (model.yPosition / 50)
         scene.addChild(currentAnimalNode)
     }
     

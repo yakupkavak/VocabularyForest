@@ -5,10 +5,24 @@
 
     },
     ":" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        }
+      }
     },
     "%@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
     },
     "%@ - %@" : {
       "localizations" : {
@@ -22,6 +36,12 @@
     },
     "%%%lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%%%lld"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -32,6 +52,12 @@
     },
     "%lld" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -42,6 +68,12 @@
     },
     "%lld Gold" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Gold"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -52,6 +84,12 @@
     },
     "%lld Water Drops" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Water Drops"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -71,7 +109,14 @@
       }
     },
     "%lld%%" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
     },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
@@ -123,6 +168,12 @@
     },
     "Amazing!!\nYou remembered everything!" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amazing!!\nYou remembered everything!"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -259,23 +310,6 @@
         }
       }
     },
-    "Bilgeliğini yücelt" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exalt your wisdom"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bilgeliğini yücelt"
-          }
-        }
-      }
-    },
     "Biliyorum" : {
       "localizations" : {
         "en" : {
@@ -400,6 +434,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Doğru"
+          }
+        }
+      }
+    },
+    "Daily Card" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Card"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günün kartı"
           }
         }
       }
@@ -586,22 +636,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Düzenle"
-          }
-        }
-      }
-    },
-    "Eğlenerek bilgeliğini yücelt" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elevate your wisdom through enjoyment"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Eğlenerek bilgeliğini yücelt"
           }
         }
       }
@@ -1150,7 +1184,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Embark on an Adventure"
+            "value" : "Embark on Adventure"
           }
         },
         "tr" : {
@@ -1597,6 +1631,12 @@
     },
     "Return back" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return back"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1607,6 +1647,12 @@
     },
     "Return Forest" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return Forest"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1617,9 +1663,15 @@
     },
     "Review  wrong words" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Review wrong words"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Hatalı kelimelerini incele"
           }
         }
@@ -1627,6 +1679,12 @@
     },
     "Reward" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reward"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1637,6 +1695,12 @@
     },
     "Reward claimed" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reward claimed"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1647,9 +1711,15 @@
     },
     "Select your \nMagic" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Select your \nMagic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Büyünü seç"
           }
         }
@@ -1657,6 +1727,12 @@
     },
     "Settings" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1667,9 +1743,15 @@
     },
     "Seviyeler" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Levels"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Seviyeler"
           }
         }
@@ -1694,9 +1776,15 @@
     },
     "Sil" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Remove"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Sil"
           }
         }
@@ -1704,6 +1792,12 @@
     },
     "So Close!" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So Close!"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1714,6 +1808,12 @@
     },
     "Start Rain" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Rain"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1724,9 +1824,15 @@
     },
     "Tehlikeli Alan" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Dangerous Area"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Tehlikeli Alan"
           }
         }
@@ -1734,9 +1840,15 @@
     },
     "Toprak sağlığı: %%%lld" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Soil health: %%%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Toprak sağlığı: %%%lld"
           }
         }
@@ -1744,9 +1856,15 @@
     },
     "Tüm kitaplarla oyna" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Play with all books"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Tüm kitaplarla oyna"
           }
         }
@@ -1754,9 +1872,15 @@
     },
     "Tüm Veriler Silinsin mi?" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Should All Data Be Deleted?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Tüm Veriler Silinsin mi?"
           }
         }
@@ -1764,9 +1888,15 @@
     },
     "Tüm Verileri Sıfırla" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Clear All Data"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Tüm Verileri Sıfırla"
           }
         }
@@ -1784,9 +1914,15 @@
     },
     "Unuttum" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "I Forgot"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Unuttum"
           }
         }
@@ -1794,9 +1930,15 @@
     },
     "Vazgeç" : {
       "localizations" : {
-        "tr" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Give up"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Vazgeç"
           }
         }
@@ -1804,6 +1946,12 @@
     },
     "wrong" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wrong"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1814,10 +1962,32 @@
     },
     "Yes" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Evet"
+          }
+        }
+      }
+    },
+    "Your Forest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Forest"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanın"
           }
         }
       }

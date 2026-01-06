@@ -386,7 +386,7 @@ private extension BattleUI {
     }
 }
 
-/*
+
 #Preview {
     let previewManager = CoreDataManager.preview
     let context = previewManager.viewContext
@@ -406,6 +406,6 @@ private extension BattleUI {
     }
     try? context.save()
     let viewModel = BattleViewModel(coreDataManager: previewManager)
-    return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy)
+    return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy, selectedBookcase: nil)
 }
-*/
+

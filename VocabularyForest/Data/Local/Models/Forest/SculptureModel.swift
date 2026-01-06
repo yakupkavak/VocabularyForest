@@ -17,5 +17,5 @@ struct SculptureModel: Equatable {
 
 let baseSculptureList = [
     SculptureModel(id: UUID(), name: "water_statue", createDate: Date(), xPosition: 0.15, yPosition: 0.4),
-    SculptureModel(id: UUID(), name: "grass_statue", createDate: Date(), xPosition: 0.03, yPosition: 0.1)
+    SculptureModel(id: UUID(), name: "grass_statue", createDate: Date(), xPosition: 0.03, yPosition: 0.23)
 ]
