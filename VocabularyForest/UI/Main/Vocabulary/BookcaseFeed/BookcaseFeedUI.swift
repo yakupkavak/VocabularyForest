@@ -71,7 +71,7 @@ private extension BookcaseFeedUI {
             } label: {
                 Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
-            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kitaplık ara").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kitaplık ara")).focused($searchBarIsFocused)
             Button {
                 bookcaseRouter.navigate(to: .createBookcase)
             } label: {
@@ -83,7 +83,7 @@ private extension BookcaseFeedUI {
         VStack(spacing: 24){
             Spacer()
             Spacer()
-            tvDefault(text: "Hiçbir kitaplık bulamadık", color: .brown300)
+            tvDefault(text: String(localized: "Hiçbir kitaplık bulamadık"), color: .brown300)
                 .padding(24)
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)

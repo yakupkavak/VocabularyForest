@@ -87,27 +87,27 @@ extension QuestRewardModel {
         switch self {
         case .animal(let name):
             return if name == "WhiteCat" {
-                "Beyaz kedi"
+                "white_cat_name"
             }else if name == "Cat" {
-                "Kedi"
+                "cat_name"
             }else if name == "Dog" {
-                "Köpek"
+                "dog_name"
             }else {
                 name
             }
         case .plant(let name):
             return if name == "DesertStarBloom" {
-                "Çöl Yıldızı"
+                "desert_star_bloom_name"
             }else if name == "CrystalReed" {
-                "Kristal Sazlık"
+                "crystal_reed_name"
             }else if name == "BlueFlameBush" {
-                "Mavi Alev Çalısı"
+                "blue_flame_bush_name"
             }else if name == "Emberbud" {
-                "Köz Tomurcuk"
+                "emberbud_name"
             }else if name == "MoonBell" {
-                "Ay Çanı"
+                "moon_beel_name"
             }else if name == "SunFlower" {
-                "Ayçiçeği"
+                "sun_flower_name"
             }
             else {
                 name
@@ -116,11 +116,11 @@ extension QuestRewardModel {
             return String(count)
         case .sculpture(let name):
             return if name == "EmeraldDragon" {
-                "Zümrüt Ejderi"
+                "emerald_dragon_name"
             }else if name == "Deer" {
-                "Kadim Geyik"
+                "ancient_deer_name"
             }else if name == "AncientLancer" {
-                "Antik Muhafız"
+                "ancient_lancer"
             }else {
                 name
             }

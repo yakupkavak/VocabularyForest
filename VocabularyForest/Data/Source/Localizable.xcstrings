@@ -118,6 +118,38 @@
         }
       }
     },
+    "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanın derinliklerinde bir sır saklı. Bu zorlu sınavı geç, asil beyaz kediye ulaş."
+          }
+        }
+      }
+    },
+    "A Sip of Water 💧" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Sip of Water 💧"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bir Yudum Su "
+          }
+        }
+      }
+    },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
         "en" : {
@@ -146,6 +178,25 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Açıklama"
+          }
+        }
+      }
+    },
+    "Açıklaması: %@" : {
+
+    },
+    "Almanca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Germany"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Almanca"
           }
         }
       }
@@ -182,6 +233,40 @@
         }
       }
     },
+    "ancient_deer_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ancient Deer"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antik Geyik"
+          }
+        }
+      }
+    },
+    "ancient_lancer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ancient Lancer"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antik Muhafız"
+          }
+        }
+      }
+    },
     "Anlam" : {
       "localizations" : {
         "en" : {
@@ -214,6 +299,22 @@
         }
       }
     },
+    "Anlam dilini seçin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select meaning language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anlam dilini seçin"
+          }
+        }
+      }
+    },
     "Anlamı" : {
       "localizations" : {
         "en" : {
@@ -230,6 +331,92 @@
         }
       }
     },
+    "Anlamı: %@" : {
+
+    },
+    "Anlamı: %@ 🥰" : {
+
+    },
+    "Anlamının dili" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meaning language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anlamının dili"
+          }
+        }
+      }
+    },
+    "Arapça" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arabic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Arapça"
+          }
+        }
+      }
+    },
+    "Ateş Ejderi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fire Dragon"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Ejderi"
+          }
+        }
+      }
+    },
+    "Ateş Elementi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fire Elemental"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Elementi"
+          }
+        }
+      }
+    },
+    "Awakening of the Ancient Guardian 🗿" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Awakening of Ancient Guardian 🗿"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kadim Muhafızın Uyanışı 🗿"
+          }
+        }
+      }
+    },
     "Ayarlar" : {
       "localizations" : {
         "en" : {
@@ -242,6 +429,22 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Ayarlar"
+          }
+        }
+      }
+    },
+    "Aylık Görevler" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aylık Görevler"
           }
         }
       }
@@ -310,6 +513,9 @@
         }
       }
     },
+    "Bilinmiyor" : {
+
+    },
     "Biliyorum" : {
       "localizations" : {
         "en" : {
@@ -326,6 +532,38 @@
         }
       }
     },
+    "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By learning together, we can rebuild our forest from scratch."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz"
+          }
+        }
+      }
+    },
+    "Bitkilerin sağlıksız bir toprakta kuruyacaktır, hayvanların ise hareket edemeyecekler.." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plants will dry up in unhealthy soil, and animals will be unable to move."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitkilerin sağlıksız bir toprakta kuruyacaktır, hayvanların ise hareket edemeyecekler.."
+          }
+        }
+      }
+    },
     "Bize Puan Verin" : {
       "localizations" : {
         "en" : {
@@ -338,6 +576,39 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Bize Puan Verin"
+          }
+        }
+      }
+    },
+    "blue_flame_bush_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue Flame Bush"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mavi Alev Çalısı"
+          }
+        }
+      }
+    },
+    "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Ejderhası'nı 4 kez dize getir, Mavi Alev Çalısı senin olsun."
           }
         }
       }
@@ -390,6 +661,25 @@
         }
       }
     },
+    "Bunu hatırlıyor musun 👀" : {
+
+    },
+    "Buz Elementi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ice Elemental"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buz Elementi"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "en" : {
@@ -402,6 +692,71 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İptal"
+          }
+        }
+      }
+    },
+    "Canlılar Hakkında" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Living Things"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canlılar Hakkında"
+          }
+        }
+      }
+    },
+    "cat_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kedi"
+          }
+        }
+      }
+    },
+    "Chasing the Sunflower 🌻" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chasing the Sunflower 🌻"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Güneş Çiçeği Peşinde 🌻"
+          }
+        }
+      }
+    },
+    "Çince (Basitleştirilmiş)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chinese (Simplified)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Çince (Basitleştirilmiş)"
           }
         }
       }
@@ -438,6 +793,39 @@
         }
       }
     },
+    "Crystal Reed Quest ✨" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crystal Reed Quest ✨"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kristal Sazlık Görevi ✨"
+          }
+        }
+      }
+    },
+    "crystal_reed_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crystal Reed"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kristal Sazlık"
+          }
+        }
+      }
+    },
     "Daily Card" : {
       "localizations" : {
         "en" : {
@@ -450,6 +838,134 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Günün kartı"
+          }
+        }
+      }
+    },
+    "Dance with Fire 🔥" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dance with Fire 🔥"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateşle Dans 🔥"
+          }
+        }
+      }
+    },
+    "Dark\nMagic" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark\nMagic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kara\nBüyü"
+          }
+        }
+      }
+    },
+    "Death" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Death"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ölüm"
+          }
+        }
+      }
+    },
+    "Defeat the Fire Elemental 5 times and earn the sacred Emberbud." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defeat the Fire Elemental 5 times and earn the sacred Emberbud."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Elementini 5 kez yen ve kutsal Köz Tomurcuğu'nu kazan."
+          }
+        }
+      }
+    },
+    "Defeat the Ice Elemental 5 times, grab the Moon Bell!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defeat the Ice Elemental 5 times, grab the Moon Bell!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buz Elementini 5 kez mağlup et, Ay Çanı Çiçeği'ni kap!"
+          }
+        }
+      }
+    },
+    "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğa Elementini 7 defa alt et ve parlayan Kristal Sazlığı topla!"
+          }
+        }
+      }
+    },
+    "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kum Ejderhasını 7 kez yen ve nadir bulunan Çöl Yıldızı Çiçeği'ne sahip ol!"
+          }
+        }
+      }
+    },
+    "Defeat the Vampire 5 times and add that rare SunFlower to your collection." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defeat the Vampire 5 times and add that rare SunFlower to your collection."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vampiri 5 kez alt et ve o nadide Güneş Çiçeği'ni koleksiyonuna kat."
           }
         }
       }
@@ -486,6 +1002,23 @@
         }
       }
     },
+    "desert_star_bloom_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desert Star Bloom"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çöl Yıldızı"
+          }
+        }
+      }
+    },
     "Detaylar (Opsiyonel)" : {
       "localizations" : {
         "en" : {
@@ -508,6 +1041,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer"
           }
         }
       }
@@ -556,6 +1095,55 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Diller"
+          }
+        }
+      }
+    },
+    "dog_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dog"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köpek"
+          }
+        }
+      }
+    },
+    "Doğa Dengesi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nature Balance"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğa Dengesi"
+          }
+        }
+      }
+    },
+    "Doğa Elementi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nature Elemental"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doğa Elementi"
           }
         }
       }
@@ -656,6 +1244,56 @@
         }
       }
     },
+    "emberbud_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emberbud"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köz Tomurcuk"
+          }
+        }
+      }
+    },
+    "Emerald Legend 🐉" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emerald Legend 🐉"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zümrüt Efsanesi 🐉"
+          }
+        }
+      }
+    },
+    "emerald_dragon_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emerald Dragon"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zümrüt Ejderi"
+          }
+        }
+      }
+    },
     "emptyBookcase" : {
 
     },
@@ -664,6 +1302,22 @@
     },
     "emptyQuestionList" : {
 
+    },
+    "Endless Water 💧" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endless Water 💧"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sınırsız Su"
+          }
+        }
+      }
     },
     "Enemy:" : {
       "localizations" : {
@@ -713,6 +1367,54 @@
         }
       }
     },
+    "Fiery Friendship 🔥" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiery Friendship 🔥"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateşli Dostluk 🔥"
+          }
+        }
+      }
+    },
+    "Fire" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fire"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş"
+          }
+        }
+      }
+    },
+    "Fransızca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "French"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fransızca"
+          }
+        }
+      }
+    },
     "Gelecek güncelleme ile mağazada kullanabileceksin." : {
       "localizations" : {
         "en" : {
@@ -745,6 +1447,22 @@
         }
       }
     },
+    "Gold Hunt 💰" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gold Hunt 💰"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altın Avı 💰"
+          }
+        }
+      }
+    },
     "Göreve git" : {
       "localizations" : {
         "en" : {
@@ -757,6 +1475,70 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Göreve git"
+          }
+        }
+      }
+    },
+    "Görevleri tamamlayarak yağmur taneleri toplayıp, hazneni doldurduğunda ekranında belirecek butona tıklayarak yağmur yağdırabilirsin." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By completing the quests and collecting raindrops, you can make it rain by clicking the button that appears on your screen when your reservoir is full.\n"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görevleri tamamlayarak yağmur taneleri toplayıp, hazneni doldurduğunda ekranında belirecek butona tıklayarak yağmur yağdırabilirsin."
+          }
+        }
+      }
+    },
+    "Günlük Görevler" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük Görevler"
+          }
+        }
+      }
+    },
+    "Günlük kelimeler, hobiler vs." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily words, hobbies, etc."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük kelimeler, hobiler vs."
+          }
+        }
+      }
+    },
+    "Haftalık Görevler" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haftalık Görevler"
           }
         }
       }
@@ -793,6 +1575,25 @@
         }
       }
     },
+    "Hatırlama" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remember"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hatırlama"
+          }
+        }
+      }
+    },
+    "Hatırlama Vakti 📚" : {
+
+    },
     "Hazır kütüphaneler" : {
       "localizations" : {
         "en" : {
@@ -825,6 +1626,22 @@
         }
       }
     },
+    "Hazırsan başlayalım mı ?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you ready? Shall we begin?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırsan başlayalım mı ?"
+          }
+        }
+      }
+    },
     "Henüz hiç kelime eklememişsin." : {
       "localizations" : {
         "en" : {
@@ -837,6 +1654,60 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Henüz hiç kelime eklememişsin."
+          }
+        }
+      }
+    },
+    "Hiçbir kitap bulamadık" : {
+
+    },
+    "Hiçbir kitaplık bulamadık" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We couldn’t find any book"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir kitaplık bulamadık"
+          }
+        }
+      }
+    },
+    "Hiçbir kitaplık bulunamadı" : {
+
+    },
+    "Hintçe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hintçe"
+          }
+        }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ev"
           }
         }
       }
@@ -854,6 +1725,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hazırım"
+          }
+        }
+      }
+    },
+    "Ice" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ice"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buz"
+          }
+        }
+      }
+    },
+    "Ice Cold Victory ❄️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ice Cold Victory ❄️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soğuk zafer ❄️"
+          }
+        }
+      }
+    },
+    "Icy Paws ❄️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icy Paws ❄️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buzul Patiler ❄️"
+          }
+        }
+      }
+    },
+    "İmkansız" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmkansız"
           }
         }
       }
@@ -890,6 +1825,70 @@
         }
       }
     },
+    "İngilizce (Amerikan)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English (US)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilizce (US)"
+          }
+        }
+      }
+    },
+    "İngilizce (Birleşik Krallık)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English (UK)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilizce (UK)"
+          }
+        }
+      }
+    },
+    "İngilizce (Birleşik Krallık) " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English (UK)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilizce (UK) "
+          }
+        }
+      }
+    },
+    "İngilizce (US)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English (UK)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilizce (US)"
+          }
+        }
+      }
+    },
     "İptal" : {
       "localizations" : {
         "en" : {
@@ -902,6 +1901,38 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "İptal"
+          }
+        }
+      }
+    },
+    "İspanyolca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spanish"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "İspanyolca"
+          }
+        }
+      }
+    },
+    "Japonca" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Japanese"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Japonca"
           }
         }
       }
@@ -954,6 +1985,9 @@
         }
       }
     },
+    "Kelime ara" : {
+
+    },
     "Kelime Bildirimleri" : {
       "localizations" : {
         "en" : {
@@ -1001,6 +2035,25 @@
           }
         }
       }
+    },
+    "Kelimelerin kısa ve uzun hafıza olarak ikiye ayrılmış durumda. Bir kelimeyi rekabet modunda bildiğinde uzun hafızana geçiyor. Ama unutma, bir hafta içerisinde hatırlatıcı modu ile tekrarlamazsan kısa hafızana geçecek!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words are divided into short-term and long-term memory. When you know a word in competition mode, it moves to your long-term memory. But remember, if you don't repeat it in reminder mode within a week, it will move back to your short-term memory!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kelimelerin kısa ve uzun hafıza olarak ikiye ayrılmış durumda. Bir kelimeyi rekabet modunda bildiğinde uzun hafızana geçiyor. Ama unutma, bir hafta içerisinde hatırlatıcı modu ile tekrarlamazsan kısa hafızana geçecek!"
+          }
+        }
+      }
+    },
+    "Kelimemiz: %@ 📚" : {
+
     },
     "Kelimeyi Düzenle" : {
       "localizations" : {
@@ -1063,6 +2116,22 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Kitaplık"
+          }
+        }
+      }
+    },
+    "Kitaplık adı" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bookcase name"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Kitaplık Adı"
           }
         }
       }
@@ -1131,6 +2200,22 @@
         }
       }
     },
+    "Kitaplık seçiniz" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select bookcase"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kitaplık seçiniz"
+          }
+        }
+      }
+    },
     "Kitaplıklar Yükleniyor..." : {
       "localizations" : {
         "en" : {
@@ -1143,6 +2228,70 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Kitaplıklar Yükleniyor.."
+          }
+        }
+      }
+    },
+    "Kısa süreli hafızandaki kelimeleri gör; doğru bildikçe onları uzun süreli hafızana taşı!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the words in your short-term memory; as you get them right, transfer them to your long-term memory!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa süreli hafızandaki kelimeleri gör; doğru bildikçe onları uzun süreli hafızana taşı!"
+          }
+        }
+      }
+    },
+    "Klasik" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klasik"
+          }
+        }
+      }
+    },
+    "Kolay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Easy"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolay"
+          }
+        }
+      }
+    },
+    "Korece" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korean"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Korece"
           }
         }
       }
@@ -1162,6 +2311,25 @@
           }
         }
       }
+    },
+    "Kum Ejderi" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sand Dragon"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kum Ejderi"
+          }
+        }
+      }
+    },
+    "Kütüphanen yüklendi!" : {
+
     },
     "Level:" : {
       "localizations" : {
@@ -1195,6 +2363,38 @@
         }
       }
     },
+    "Meet 10 new words and learn their meanings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meet 10 new words and learn their meanings."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10 yeni kelimeyle tanış ve anlamlarını öğren."
+          }
+        }
+      }
+    },
+    "Meet 20 new words and learn their meanings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meet 20 new words and learn their meanings."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "20 yeni kelimeyle tanış ve anlamlarını öğren."
+          }
+        }
+      }
+    },
     "Mode:" : {
       "localizations" : {
         "en" : {
@@ -1211,6 +2411,23 @@
         }
       }
     },
+    "moon_beel_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moon Bell"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ay Çanı"
+          }
+        }
+      }
+    },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
       "localizations" : {
         "en" : {
@@ -1223,6 +2440,54 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Mutlu hayvan ve bitkiler için olmazsa olmaz."
+          }
+        }
+      }
+    },
+    "New Discoveries 🗺️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Discoveries 🗺️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Keşifler🗺️"
+          }
+        }
+      }
+    },
+    "New Discoveries 2🗺️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Discoveries 2🗺️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Keşifler 2🗺️"
+          }
+        }
+      }
+    },
+    "New Discoveries 3🗺️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Discoveries 3🗺️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Keşifler 3🗺️"
           }
         }
       }
@@ -1260,6 +2525,38 @@
         }
       }
     },
+    "No hints, only victory! Pass 4 new words on your own merit." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hints, only victory! Pass 4 new words on your own merit."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucu yok, sadece zafer var! 4 yeni kelimeyi bileğinin hakkıyla geç."
+          }
+        }
+      }
+    },
+    "No hints, only victory! Pass 10 new words on your own merit." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hints, only victory! Pass 10 new words on your own merit."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İpucu yok, sadece zafer var! Kendi başınıza 10 yeni kelimeyi geçin."
+          }
+        }
+      }
+    },
     "No quests available." : {
       "localizations" : {
         "en" : {
@@ -1272,6 +2569,38 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Hiçbir görev açık değil"
+          }
+        }
+      }
+    },
+    "Öğrendiğin dil" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learning language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğrendiğin dil"
+          }
+        }
+      }
+    },
+    "Öğrendiğin dili seç" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select learning language"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğrendiğin dili seç"
           }
         }
       }
@@ -1324,6 +2653,9 @@
         }
       }
     },
+    "Öğrenme Zamanı 🥰" : {
+
+    },
     "Oluştur" : {
       "localizations" : {
         "en" : {
@@ -1336,6 +2668,22 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Oluştur"
+          }
+        }
+      }
+    },
+    "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadece en bilgeler bu geyiği görebilir. Zihnini zorlayacak bir savaşa hazır mısın?"
           }
         }
       }
@@ -1356,6 +2704,38 @@
         }
       }
     },
+    "Orman Bilgileri" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest Information"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orman Bilgileri"
+          }
+        }
+      }
+    },
+    "Orman Hakkında" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Forest"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orman Hakkında"
+          }
+        }
+      }
+    },
     "Ormanına can vermek için doldurmalısın." : {
       "localizations" : {
         "en" : {
@@ -1371,6 +2751,25 @@
           }
         }
       }
+    },
+    "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to your forest! You can bring your forest to life by completing tasks. The soil will dry out over time, so don't forget to make it rain!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!"
+          }
+        }
+      }
+    },
+    "Örneği: %@" : {
+
     },
     "Örnek" : {
       "localizations" : {
@@ -1400,6 +2799,22 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Örnek Cümle"
+          }
+        }
+      }
+    },
+    "Orta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orta"
           }
         }
       }
@@ -1500,6 +2915,38 @@
         }
       }
     },
+    "Özel Görevler" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Special Quests"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özel Görevler"
+          }
+        }
+      }
+    },
+    "Portekizce (Brezilya)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portuguese (Brazil)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Portekizce (Brezilya)"
+          }
+        }
+      }
+    },
     "Progress" : {
       "localizations" : {
         "en" : {
@@ -1512,6 +2959,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İlerlemede"
+          }
+        }
+      }
+    },
+    "Psychic" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psychic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psişik"
+          }
+        }
+      }
+    },
+    "Quest for the Desert Star 🌵" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quest for the Desert Star 🌵"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çöl Yıldızı Arayışı 🌵"
           }
         }
       }
@@ -1629,6 +3108,38 @@
         }
       }
     },
+    "Rekabet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Competitive"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rekabet"
+          }
+        }
+      }
+    },
+    "Resume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam Et"
+          }
+        }
+      }
+    },
     "Return back" : {
       "localizations" : {
         "en" : {
@@ -1677,6 +3188,54 @@
         }
       }
     },
+    "Revive your memory: Repeat 5 old words and master them!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revive your memory: Repeat 5 old words and master them!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hafızanı canlandır: 5 eski kelimeyi tekrar et ve ustalaş!"
+          }
+        }
+      }
+    },
+    "Revive your memory: Repeat 10 old words and master them!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revive your memory: Repeat 10 old words and master them!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hafızanı canlandır: 10 eski kelimeyi tekrar et ve ustalaş"
+          }
+        }
+      }
+    },
+    "Revive your memory: Repeat 20 old words and master them!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revive your memory: Repeat 20 old words and master them!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hafızanı canlandır: 20 eski kelimeyi tekrar et ve ustalaş"
+          }
+        }
+      }
+    },
     "Reward" : {
       "localizations" : {
         "en" : {
@@ -1705,6 +3264,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ödül alındı"
+          }
+        }
+      }
+    },
+    "Rusça" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Russian"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Rusça"
+          }
+        }
+      }
+    },
+    "Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play only with words from your short-term memory; use explanations or examples to help you."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna."
+          }
+        }
+      }
+    },
+    "Sadece uzun süreli hafızandaki (öğrenilmiş) kelimelerle oyna." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play only with words stored in your long-term memory (learned words)."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadece uzun süreli hafızandaki (öğrenilmiş) kelimelerle oyna."
           }
         }
       }
@@ -1806,6 +3413,38 @@
         }
       }
     },
+    "Sorular Hakkında" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Questions"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorular Hakkında"
+          }
+        }
+      }
+    },
+    "Spirit of the Forest 🦌" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spirit of the Forest 🦌"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanın Ruhu 🦌"
+          }
+        }
+      }
+    },
     "Start Rain" : {
       "localizations" : {
         "en" : {
@@ -1818,6 +3457,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yağmuru başlat"
+          }
+        }
+      }
+    },
+    "sun_flower_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun Flower"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayçiçeği"
           }
         }
       }
@@ -1838,6 +3494,86 @@
         }
       }
     },
+    "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Ejderhası yolu kesti! Onu bilgeliğinle yen ve sadık köpeği yanına al."
+          }
+        }
+      }
+    },
+    "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ateş Ejderhası çok öfkeli! Bu kaosu dindir ve efsanevi Zümrüt Ejderha heykelini hak et."
+          }
+        }
+      }
+    },
+    "The forest is expanding! Meet 5 new words and learn their meanings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The forest is expanding! Meet 5 new words and learn their meanings."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orman genişliyor! 5 yeni kelimeyle tanış ve anlamlarını öğren."
+          }
+        }
+      }
+    },
+    "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buz Elementi ormanı dondurdu! Kelimelerinle buzları çöz ve sevimli kediyi kurtar."
+          }
+        }
+      }
+    },
+    "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kum Ejderhası antik harabeleri koruyor. Onu yen ve Yosunlu Muhafız heykelini koleksiyonuna kat!"
+          }
+        }
+      }
+    },
     "Toprak sağlığı: %%%lld" : {
       "localizations" : {
         "en" : {
@@ -1850,6 +3586,22 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Toprak sağlığı: %%%lld"
+          }
+        }
+      }
+    },
+    "Trail of the Blue Flame" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trail of the Blue Flame"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mavi Alevin İzinde"
           }
         }
       }
@@ -1902,6 +3654,38 @@
         }
       }
     },
+    "Türkçe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turkish"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Türkçe"
+          }
+        }
+      }
+    },
+    "Two Sips of Water 💧" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Two Sips of Water 💧"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "İki Yudum Su 💧"
+          }
+        }
+      }
+    },
     "unexpectedError" : {
       "localizations" : {
         "tr" : {
@@ -1928,6 +3712,22 @@
         }
       }
     },
+    "Uzun zamandır sana ihtiyacımız vardı" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We've needed you for a long time."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun zamandır sana ihtiyacımız vardı"
+          }
+        }
+      }
+    },
     "Vazgeç" : {
       "localizations" : {
         "en" : {
@@ -1944,6 +3744,39 @@
         }
       }
     },
+    "White Shadow ☁️" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White Shadow ☁️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beyaz Gölge ☁️"
+          }
+        }
+      }
+    },
+    "white_cat_name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White Cat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beyaz kedi"
+          }
+        }
+      }
+    },
     "wrong" : {
       "localizations" : {
         "en" : {
@@ -1956,6 +3789,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "yanlış"
+          }
+        }
+      }
+    },
+    "Yağmur Hakkında" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About Rain"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yağmur Hakkında"
           }
         }
       }
@@ -1988,6 +3837,25 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ormanın"
+          }
+        }
+      }
+    },
+    "Yükleniyor" : {
+
+    },
+    "Zor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hard"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zor"
           }
         }
       }

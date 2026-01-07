@@ -14,10 +14,10 @@ struct GameInfoModel {
 }
 
 let gameInfoText: [GameInfoModel] = [
-    GameInfoModel(title: "Orman Hakkında", image: "foresttanitim0",description: "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!"),
-    GameInfoModel(title: "Sorular Hakkında", image: "foresttanitim3",description: "Kelimelerin kısa ve uzun hafıza olarak ikiye ayrılmış durumda. Bir kelimeyi rekabet modunda bildiğinde uzun hafızana geçiyor. Ama unutma, bir hafta içerisinde hatırlatıcı modu ile tekrarlamazsan kısa hafızana geçecek!"),
-    GameInfoModel(title: "Yağmur Hakkında", image: "foresttanitim1",description: "Görevleri tamamlayarak yağmur taneleri toplayıp, hazneni doldurduğunda ekranında belirecek butona tıklayarak yağmur yağdırabilirsin."),
-    GameInfoModel(title: "Canlılar Hakkında",image: "foresttanitim0",description: "Bitkilerin sağlıksız bir toprakta kuruyacaktır, hayvanların ise hareket edemeyecekler..")
+    GameInfoModel(title: String(localized: "Orman Hakkında"), image: "foresttanitim0",description: String(localized: "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!")),
+    GameInfoModel(title: String(localized: "Sorular Hakkında"), image: "foresttanitim3",description: String(localized: "Kelimelerin kısa ve uzun hafıza olarak ikiye ayrılmış durumda. Bir kelimeyi rekabet modunda bildiğinde uzun hafızana geçiyor. Ama unutma, bir hafta içerisinde hatırlatıcı modu ile tekrarlamazsan kısa hafızana geçecek!")),
+    GameInfoModel(title: String(localized: "Yağmur Hakkında"), image: "foresttanitim1",description: String(localized: "Görevleri tamamlayarak yağmur taneleri toplayıp, hazneni doldurduğunda ekranında belirecek butona tıklayarak yağmur yağdırabilirsin.")),
+    GameInfoModel(title: String(localized: "Canlılar Hakkında"),image: "foresttanitim0",description: String(localized: "Bitkilerin sağlıksız bir toprakta kuruyacaktır, hayvanların ise hareket edemeyecekler.."))
 ]
 
 struct GameInfoUI: View {
@@ -31,14 +31,14 @@ struct GameInfoUI: View {
         VStack {
             TabView(selection: $currentPage) {
                 ForEach(0..<gameInfoText.count, id: \.self) { index in
-                    VStack(spacing: 16) {
-                        Text(gameInfoText[index].title)
+                    VStack(spacing: 8) {
+                        Text(LocalizedStringKey(gameInfoText[index].title))
                             .modifier(TitleBackground()).padding()
                         Image(gameInfoText[index].image).resizable().scaledToFill().frame(maxWidth: min(UIScreen.main.bounds.width * 0.75 ,400), maxHeight: 150).cornerRadius(20)
                         Spacer()
-                        Text(gameInfoText[index].description)
+                        Text(LocalizedStringKey(gameInfoText[index].description))
                             .foregroundStyle(.white)
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 13, weight: .medium))
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer()
@@ -51,7 +51,7 @@ struct GameInfoUI: View {
         }
         .padding(12)
         .background(Color.brown.opacity(0.95))
-        .frame(maxWidth: min(UIScreen.main.bounds.width * 0.8 ,400), maxHeight: 460)
+        .frame(maxWidth: min(UIScreen.main.bounds.width * 0.8 ,400), maxHeight: 480)
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)

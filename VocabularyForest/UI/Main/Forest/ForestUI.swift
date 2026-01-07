@@ -20,10 +20,10 @@ protocol ForestUIProtocol {
 private extension ForestUI {
     enum Constant {
         static let optionsList: [SettingsModel] = [
-            SettingsModel<SettingType>(title: "Resume", icon: "forward_button", color: .brown500, type: .resume),
-            SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
-            SettingsModel(title: "Orman Bilgileri", icon: "FAQ", color: .brown500, type: .info),
-            SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
+            SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "forward_button", color: .brown500, type: .resume),
+            SettingsModel(title: String(localized: "Settings"), icon: "settings_button", color: .brown500, type: .settings),
+            SettingsModel(title: String(localized: "Orman Bilgileri"), icon: "FAQ", color: .brown500, type: .info),
+            SettingsModel(title: String(localized: "Home"), icon: "exit_button", color: .brown500, type: .home)
         ]
     }
 }

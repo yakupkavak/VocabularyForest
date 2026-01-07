@@ -17,7 +17,7 @@ struct ForestInfoUI: View {
     // MARK: - UI VIEW
     
     var body: some View {
-        GamePopUpContainer(title: "Doğa Dengesi", onClose: onClose) {
+        GamePopUpContainer(title: String(localized: "Doğa Dengesi"), onClose: onClose) {
             VStack(spacing: 24) {
                 if let forestModel {
                     HStack {

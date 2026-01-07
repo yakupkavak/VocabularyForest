@@ -27,19 +27,19 @@ struct Library: Decodable, Identifiable, Hashable {
 extension String {
     func toLanguageDisplayName() -> String {
         let languages: [String: String] = [
-            "en-US": "İngilizce (Amerikan)",
-            "en-GB": "İngilizce (Birleşik Krallık) ",
-            "es":    "İspanyolca",
-            "pt-BR": "Portekizce (Brezilya)",
-            "zh-CN": "Çince (Basitleştirilmiş)",
-            "ar":    "Arapça",
-            "hi":    "Hintçe",
-            "ru":    "Rusça",
-            "tr":    "Türkçe",
-            "fr":    "Fransızca",
-            "ja":    "Japonca",
-            "ko":    "Korece",
-            "de": "Almanca"
+            "en-US": String(localized: "İngilizce (Amerikan)"),
+            "en-GB": String(localized: "İngilizce (Birleşik Krallık) "),
+            "es":    String(localized: "İspanyolca"),
+            "pt-BR": String(localized: "Portekizce (Brezilya)"),
+            "zh-CN": String(localized: "Çince (Basitleştirilmiş)"),
+            "ar":    String(localized: "Arapça"),
+            "hi":    String(localized: "Hintçe"),
+            "ru":    String(localized: "Rusça"),
+            "tr":    String(localized: "Türkçe"),
+            "fr":    String(localized: "Fransızca"),
+            "ja":    String(localized: "Japonca"),
+            "ko":    String(localized: "Korece"),
+            "de":    String(localized: "Almanca")
         ]
         return languages[self] ?? self
     }

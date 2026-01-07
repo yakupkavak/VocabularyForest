@@ -5,6 +5,7 @@
 //  Created by Yakup Kavak on 1.12.2025.
 //
 
+internal import Foundation
 enum BattleEnemyModel: Hashable, Codable {
     case iceElemental
     case fireElemental
@@ -42,17 +43,17 @@ extension BattleEnemyModel {
     var title: String {
         switch self {
         case .iceElemental:
-            "Buz Elementi"
+            String(localized: "Buz Elementi")
         case .fireElemental:
-            "Ateş Elementi"
+            String(localized: "Ateş Elementi")
         case .natureElemental:
-            "Doğa Elementi"
+            String(localized: "Doğa Elementi")
         case .sandDragon:
-            "Kum Ejderi"
+            String(localized: "Kum Ejderi")
         case .fireDragon:
-            "Ateş Ejderi"
+            String(localized: "Ateş Ejderi")
         case .classic:
-            "Klasik"
+            String(localized: "Klasik")
         }
     }
     var background: String {

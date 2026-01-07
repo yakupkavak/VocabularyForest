@@ -22,11 +22,11 @@ struct GameConfirmationUI: View {
         VStack() {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .foregroundStyle(.white)
                     .font(.system(size: 24, weight: .bold))
             }
-            Text(message ?? "")
+            Text(LocalizedStringKey(message ?? ""))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.center)
                 .font(.system(size: 18, weight: .medium))

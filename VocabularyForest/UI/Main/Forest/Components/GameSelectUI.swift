@@ -100,7 +100,7 @@ struct GameSelectUI: View {
                         ))
                     }
                 }
-                Text("\(selectedType.description)").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
+                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.leading)
                 
                 Text("Kitaplık").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.vertical, 4)
@@ -112,7 +112,7 @@ struct GameSelectUI: View {
                     Button {
                         showSelectBookcase = true
                     } label: {
-                        Text("\(selectedBookcase?.bookcaseName ?? "Kitaplık seçiniz")")
+                        Text(LocalizedStringKey("\(selectedBookcase?.bookcaseName ?? String(localized: "Kitaplık seçiniz"))"))
                             .fixedSize()
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
@@ -235,7 +235,7 @@ struct TagView: View {
                 isSelected.toggle()
             }
         } label: {
-            Text(tag)
+            Text(LocalizedStringKey(tag))
                 .fixedSize()
                 .padding(.vertical, 4)
                 .padding(.horizontal, 8)

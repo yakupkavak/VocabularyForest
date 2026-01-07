@@ -4,6 +4,7 @@
 //
 //  Created by Yakup Kavak on 24.11.2025.
 //
+import Foundation
 
 enum BattleQuestionType: Hashable, Codable {
     case learning // short memory words with their description or example
@@ -17,22 +18,22 @@ extension BattleQuestionType {
     var title: String {
         switch self {
         case .learning:
-            "Öğrenme"
+            String(localized: "Öğrenme")
         case .competitive:
-            "Rekabet"
+            String(localized: "Rekabet")
         case .remainder:
-            "Hatırlama"
+            String(localized: "Hatırlama")
         }
     }
     
     var description: String {
         switch self {
         case .learning:
-            return "Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna."
+            return String(localized:"Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna.")
         case .competitive:
-            return "Kısa süreli hafızandaki kelimeleri gör; doğru bildikçe onları uzun süreli hafızana taşı!"
+            return String(localized: "Kısa süreli hafızandaki kelimeleri gör; doğru bildikçe onları uzun süreli hafızana taşı!")
         case .remainder:
-            return "Sadece uzun süreli hafızandaki (öğrenilmiş) kelimelerle oyna."
+            return String(localized: "Sadece uzun süreli hafızandaki (öğrenilmiş) kelimelerle oyna.")
         }
     }
     

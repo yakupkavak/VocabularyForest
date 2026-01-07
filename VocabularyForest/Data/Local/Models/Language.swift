@@ -28,18 +28,18 @@ struct Language: Identifiable, Hashable {
 class LanguageData {
     
     static let allLanguages: [Language] = [
-        Language(id: "en-US", name: "İngilizce (US)"),
-        Language(id: "en-GB", name: "İngilizce (Birleşik Krallık)"),
-        Language(id: "es",    name: "İspanyolca"),
-        Language(id: "pt-BR", name: "Portekizce (Brezilya)"),
-        Language(id: "zh-CN", name: "Çince (Basitleştirilmiş)"),
-        Language(id: "ar",    name: "Arapça"),
-        Language(id: "hi",    name: "Hintçe"),
-        Language(id: "ru",    name: "Rusça"),
-        Language(id: "tr",    name: "Türkçe"),
-        Language(id: "fr",    name: "Fransızca"),
-        Language(id: "de",    name: "Almanca"),
-        Language(id: "ja",    name: "Japonca"),
-        Language(id: "ko",    name: "Korece")
+        Language(id: "en-US", name: String(localized: "İngilizce (US)")),
+        Language(id: "en-GB", name: String(localized: "İngilizce (Birleşik Krallık)")),
+        Language(id: "es",    name: String(localized: "İspanyolca")),
+        Language(id: "pt-BR", name: String(localized: "Portekizce (Brezilya)")),
+        Language(id: "zh-CN", name: String(localized: "Çince (Basitleştirilmiş)")),
+        Language(id: "ar",    name: String(localized: "Arapça")),
+        Language(id: "hi",    name: String(localized: "Hintçe")),
+        Language(id: "ru",    name: String(localized: "Rusça")),
+        Language(id: "tr",    name: String(localized: "Türkçe")),
+        Language(id: "fr",    name: String(localized: "Fransızca")),
+        Language(id: "de",    name: String(localized: "Almanca")),
+        Language(id: "ja",    name: String(localized: "Japonca")),
+        Language(id: "ko",    name: String(localized: "Korece"))
     ]
 }

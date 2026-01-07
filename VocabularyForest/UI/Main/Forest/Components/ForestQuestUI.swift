@@ -38,7 +38,7 @@ struct QuestProgressBar: View {
                     .font(.caption).bold()
                     .foregroundStyle(.white.opacity(0.8))
                 Spacer()
-                Text("\(current)/\(target)")
+                Text(LocalizedStringKey("\(current)/\(target)"))
                     .font(.caption).bold()
                     .foregroundStyle(.white)
             }
@@ -107,7 +107,7 @@ struct QuestRewardView: View {
                 
                 switch reward {
                 case .animal, .plant, .sculpture:
-                    Text(reward.rewardName)
+                    Text(LocalizedStringKey(reward.rewardName))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.brown)
                         .minimumScaleFactor(0.8)
@@ -194,13 +194,13 @@ struct QuestRow: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(quest.title)
-                            .font(.system(size: 14, weight: .heavy, design: .rounded))
+                        Text(LocalizedStringKey(quest.title))
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white)
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
                         
-                        Text(statusText)
+                        Text(LocalizedStringKey(statusText))
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(statusColor)
@@ -217,7 +217,7 @@ struct QuestRow: View {
                             .rotationEffect(.degrees(showDetail ? 180 : 0))
                     }
                 }
-                .padding()
+                .padding(8)
                 .frame(maxWidth: .infinity)
                 .contentShape(Rectangle())
                 .opacity(quest.status == .locked ? 0.6 : 1.0)
@@ -231,7 +231,7 @@ struct QuestRow: View {
                     
                     HStack(alignment: .top) {
                         Image(systemName: "scroll.fill").foregroundStyle(statusColor)
-                        Text(quest.description)
+                        Text(LocalizedStringKey(quest.description))
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.9))
                             .fixedSize(horizontal: false, vertical: true)
@@ -289,8 +289,8 @@ struct QuestRow: View {
     func infoBadge(icon: String, title: String, value: String) -> some View {
         HStack(alignment: .top, spacing: 4) {
             Image(systemName: icon).font(.caption).foregroundStyle(statusColor)
-            Text(title).font(.caption).foregroundStyle(.white.opacity(0.7))
-            Text(value).font(.caption).bold().foregroundStyle(statusColor)
+            Text(LocalizedStringKey(title)).font(.caption).foregroundStyle(.white.opacity(0.7))
+            Text(LocalizedStringKey(value)).font(.caption).bold().foregroundStyle(statusColor)
         }
     }
     
@@ -356,19 +356,19 @@ struct ForestQuestUI: View {
                 ZStack {
                     
                     if showDailyQuest {
-                        questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Günlük Görevler"), quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showWeeklyQuest {
-                        questListView(title: "Haftalık Görevler", quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized: "Haftalık Görevler"), quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showMonthlyQuest {
-                        questListView(title: "Aylık Görevler", quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Aylık Görevler"), quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showSpecialQuest {
-                        questListView(title: "Özel Görevler", quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Özel Görevler"), quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else {
@@ -422,7 +422,7 @@ struct ForestQuestUI: View {
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .foregroundStyle(.white)
                     .font(.system(size: 20, weight: .bold))
                     .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
@@ -509,7 +509,7 @@ struct ForestQuestUI: View {
                                         .shadow(radius: 2)
                                 }
                                 
-                                Text(model.localizedTitle)
+                                Text(LocalizedStringKey(model.localizedTitle))
                                     .font(.title3.bold())
                                     .foregroundStyle(.white)
                                 
@@ -551,6 +551,7 @@ struct ForestQuestUI: View {
         return list?.contains(where: { $0.status == .completed }) ?? false
     }
 }
+
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -559,6 +560,7 @@ struct ScaleButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.9 : 1.0)
     }
 }
+
 #Preview {
     @State var show = true
     
