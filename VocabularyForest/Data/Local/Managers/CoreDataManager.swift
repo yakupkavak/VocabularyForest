@@ -103,6 +103,11 @@ class CoreDataManager {
     }
     
     func deleteBookcase(bookcase: Bookcase) {
+        if let books = bookcase.books as? Set<Book> {
+            for book in books {
+                deleteBook(book: book)
+            }
+        }
         viewContext.delete(bookcase)
         save()
     }
