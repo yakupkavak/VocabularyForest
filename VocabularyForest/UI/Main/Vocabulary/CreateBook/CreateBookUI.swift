@@ -61,9 +61,9 @@ struct CreateBookUI: View {
             .onChange(of: viewModel.toastMessageModel) { model in
                 switch model {
                 case .firstBookcaseCreated:
-                    presentToast(ToastValue(message: "Tebrikler!"))
+                    presentToast(ToastValue(message: String(localized: "Tebrikler!")))
                 case .newBookCreated:
-                    presentToast(ToastValue(message: "Kitap oluşturuldu!"))
+                    presentToast(ToastValue(message: String(localized: "Kitap oluşturuldu!")))
                 case .none:
                     break
                 }
@@ -126,7 +126,7 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookLearningWord,
                 isSelected: .constant(focusedField == .vocabulary),
                 isEmpty: $viewModel.emptyBookLearningWord,
-                placeholder: "Hangi kelimeyi öğreniyorsun (Gerekli)",
+                placeholder: String(localized: "Hangi kelimeyi öğreniyorsun (Gerekli)"),
                 title: viewModel.learningLanguage?.name,
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
@@ -138,18 +138,19 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookMeaningWord,
                 isSelected: .constant(focusedField == .meaning),
                 isEmpty: $viewModel.emptyBookMeaningWord,
-                placeholder: "Anlamı nedir (Gerekli)",
+                placeholder: String(localized: "Anlamı nedir (Gerekli)"),
                 title: viewModel.meaningLanguage?.localizedName
             )
             .focused($focusedField, equals: .meaning)
             .submitLabel(.next)
-
+            
+            let languageName = viewModel.learningLanguage?.name.split(separator: " ").first ?? ""
             VocabularyTextField(
                 userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
                 isEmpty: .constant(false),
-                placeholder: "Açıklaması (\(viewModel.learningLanguage?.name.split(separator: " ").first ?? ""))",
-                title: "Açıklama",
+                placeholder: String(localized: "Açıklaması (\(languageName))"),
+                title: String(localized: "Açıklama"),
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             )
@@ -160,8 +161,8 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookExampleSentence,
                 isSelected: .constant(focusedField == .sentence),
                 isEmpty: .constant(false),
-                placeholder: "Örnek cümle (\(viewModel.learningLanguage?.name.split(separator: " ").first ?? ""))",
-                title: "Cümle"
+                placeholder: String(localized: "Örnek Cümle (\(languageName))"),
+                title: String(localized: "Cümle")
             )
             .focused($focusedField, equals: .sentence)
             .submitLabel(.done)
@@ -191,7 +192,7 @@ private extension CreateBookUI {
                 Button {
                     selectBookcase()
                 } label: {
-                    Text(viewModel.currentBookcase?.unwrappedName ?? "Kitaplık seçilmedi")
+                    Text(viewModel.currentBookcase?.unwrappedName ?? String(localized: "Kitaplık seçilmedi"))
                         .font(.system(size: 20, weight: .bold))
                 }
                 .frame(maxWidth: 200)

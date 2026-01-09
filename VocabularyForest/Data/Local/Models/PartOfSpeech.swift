@@ -25,15 +25,15 @@ enum PartOfSpeech: String, CaseIterable, Identifiable {
 
     var localizedText: String {
         switch self {
-        case .noun: return "İsim"
-        case .verb: return "Fiil"
-        case .adjective: return "Sıfat"
-        case .adverb: return "Zarf"
-        case .pronoun: return "Zamir"
-        case .preposition: return "Edat"
-        case .conjunction: return "Bağlaç"
-        case .interjection: return "Ünlem"
-        case .determiner: return "Belirteç"
+        case .noun: return String(localized: "İsim")
+        case .verb: return String(localized: "Fiil")
+        case .adjective: return String(localized: "Sıfat")
+        case .adverb: return String(localized: "Zarf")
+        case .pronoun: return String(localized: "Zamir")
+        case .preposition: return String(localized: "Edat")
+        case .conjunction: return String(localized: "Bağlaç")
+        case .interjection: return String(localized: "Ünlem")
+        case .determiner: return String(localized: "Belirteç")
         }
     }
     private var backgroundColor: Color {

@@ -109,7 +109,7 @@ struct QuestRewardView: View {
                 case .animal, .plant, .sculpture:
                     Text(LocalizedStringKey(reward.rewardName))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.brown)
+                        .foregroundStyle(.white)
                         .minimumScaleFactor(0.8)
                         .lineLimit(1)
                 case .water(let count):
@@ -149,10 +149,10 @@ struct QuestRow: View {
     
     var statusText: String {
         switch quest.status {
-        case .locked: return "Locked"
-        case .active: return "In Progress"
-        case .completed: return "Completed!"
-        case .claimed: return "Claimed"
+        case .locked: return String(localized: "Locked")
+        case .active: return String(localized: "In Progress")
+        case .completed: return String(localized: "Completed!")
+        case .claimed: return String(localized: "Claimed")
         }
     }
     
@@ -241,11 +241,11 @@ struct QuestRow: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             infoBadge(icon: "burst", title: String(localized: "Enemy:"), value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
-                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.valueForCoreData.capitalized)
+                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.title.firstCapitalized)
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
-                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.valueForCoreData.capitalized)
+                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.title.firstCapitalized)
                             Spacer()
                         }
                     }

@@ -35,11 +35,11 @@ public enum APIClientError: Error {
         case .handledError(let error):
             error.message
         case .networkError:
-            "Bağlantı hatası"
+            String(localized: "Bağlantı hatası")
         case .decoding(let error):
-            "Decode Hatası Oluştu: \(String(describing: error))"
+            String(localized:"Decode Hatası Oluştu: \(String(describing: error))")
         case .timeout:
-            "İstek zaman aşımına uğradı"
+            String(localized: "İstek zaman aşımına uğradı")
         case .message(let message):
             message
         }

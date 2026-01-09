@@ -209,11 +209,11 @@ private extension BattleUI {
                         if gameType == .learning {
                             if let example = question.example, !example.isEmpty {
                                 Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(.top, 4)
-                                Text(example).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
                             } else {
                                 if let description = question.description, !description.isEmpty {
                                     Text("Açıklama").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(2)
-                                    Text(description).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                    Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
                                 }
                             }
                         }
@@ -373,7 +373,7 @@ private extension BattleUI {
     func answerComponent(text: String) -> some View {
         ZStack {
             Image(.popUpBackground).resizable().frame(width: UIScreen.main.bounds.width * 0.35, height: UIScreen.main.bounds.width * 0.2).opacity(0.9)
-            Text(text).foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.33, height: UIScreen.main.bounds.height * 0.11).multilineTextAlignment(.center)
+            Text(text.firstUppercased).font(.system(size: 14)).foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.33, height: UIScreen.main.bounds.height * 0.11).multilineTextAlignment(.center)
         }
     }
 }

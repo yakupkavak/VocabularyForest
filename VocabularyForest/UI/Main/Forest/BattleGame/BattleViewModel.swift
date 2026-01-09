@@ -104,28 +104,28 @@ private extension BattleViewModel {
             playerAnger = CharacterAnger(
                 totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
                 currentLevel: 0,
-                name: "Ichigo",
+                name: String(localized: "Ichigo"),
                 imageFileName: "\(characterModel.assetName)_profile_icon"
             )
         case .medium:
             playerAnger = CharacterAnger(
                 totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
                 currentLevel: 0,
-                name: "Ichigo",
+                name: String(localized:"Ichigo"),
                 imageFileName: "\(characterModel.assetName)_profile_icon"
             )
         case .hard:
             playerAnger = CharacterAnger(
                 totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
                 currentLevel: 0,
-                name: "Ichigo",
+                name: String(localized:"Ichigo"),
                 imageFileName: "\(characterModel.assetName)_profile_icon"
             )
         case .insane:
             playerAnger = CharacterAnger(
                 totalLevel: characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel,
                 currentLevel: 0,
-                name: "Ichigo",
+                name: String(localized:"Ichigo"),
                 imageFileName: "\(characterModel.assetName)_profile_icon"
             )
         }
@@ -156,7 +156,7 @@ private extension BattleViewModel {
                 return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage && indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
-            let finalQuestionText = String(format: formatString, book.unwrappedLearningWord)
+            let finalQuestionText = String(format: formatString, book.unwrappedLearningWord.firstUppercased)
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [

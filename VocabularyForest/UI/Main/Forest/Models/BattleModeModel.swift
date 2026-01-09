@@ -17,23 +17,23 @@ enum BattleEnemyModel: Hashable, Codable {
     var assetModels: [EnemyCharacterModel] {
         switch self {
         case .iceElemental:
-            [EnemyCharacterModel(assetName: "IceElemental", characterName: "Buz Elementi", isBoss: true)]
+            [EnemyCharacterModel(assetName: "IceElemental", characterName: String(localized: "Buz Elementi"), isBoss: true)]
         case .fireElemental:
-            [EnemyCharacterModel(assetName: "FireElemental", characterName: "Ateş Elementi", isBoss: true)]
+            [EnemyCharacterModel(assetName: "FireElemental", characterName: String(localized: "Ateş Elementi"), isBoss: true)]
         case .natureElemental:
-            [EnemyCharacterModel(assetName: "NatureElemental", characterName: "Doğa Elementi", isBoss: true)]
+            [EnemyCharacterModel(assetName: "NatureElemental", characterName: String(localized: "Doğa Elementi"), isBoss: true)]
         case .sandDragon:
-            [EnemyCharacterModel(assetName: "SandDragon", characterName: "Kum Ejderi", isBoss: true)]
+            [EnemyCharacterModel(assetName: "SandDragon", characterName: String(localized: "Kum Ejderi"), isBoss: true)]
         case .fireDragon:
-            [EnemyCharacterModel(assetName: "FireDragon", characterName: "Ateş Ejderi", isBoss: true)]
+            [EnemyCharacterModel(assetName: "FireDragon", characterName: String(localized: "Ateş Ejderi"), isBoss: true)]
         case .classic:
             [
-                EnemyCharacterModel(assetName: "Skeleton", characterName: "İskelet", isBoss: false),
-                EnemyCharacterModel(assetName: "Ghost", characterName: "Hayalet", isBoss: false),
-                EnemyCharacterModel(assetName: "DarkKnight", characterName: "Kara şovalye", isBoss: false),
-                EnemyCharacterModel(assetName: "BigKnight", characterName: "Asil Şovalye", isBoss: false),
-                EnemyCharacterModel(assetName: "SkeletonDragon", characterName: "İskelet Ejderi", isBoss: false),
-                EnemyCharacterModel(assetName: "Vampire", characterName: "Vampir", isBoss: true)
+                EnemyCharacterModel(assetName: "Skeleton", characterName: String(localized: "İskelet"), isBoss: false),
+                EnemyCharacterModel(assetName: "Ghost", characterName: String(localized: "Hayalet"), isBoss: false),
+                EnemyCharacterModel(assetName: "DarkKnight", characterName: String(localized: "Kara şovalye"), isBoss: false),
+                EnemyCharacterModel(assetName: "BigKnight", characterName: String(localized: "Asil Şovalye"), isBoss: false),
+                EnemyCharacterModel(assetName: "SkeletonDragon", characterName: String(localized: "İskelet Ejderi"), isBoss: false),
+                EnemyCharacterModel(assetName: "Vampire", characterName: String(localized: "Vampir"), isBoss: true)
             ]
         }
     }
