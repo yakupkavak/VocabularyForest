@@ -34,6 +34,8 @@ struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
+    @Binding var tabBar: BaseTabTypes
+    @ObservedObject var bookcaseRouter: BookcaseRouter
     @EnvironmentObject var router: LearningRouter
     @StateObject private var viewModel = ForestViewModel()
     @State private var forestScene = ForestScene()
@@ -112,7 +114,11 @@ struct ForestUI: View {
                 }.zIndex(4.0)
             }
             if viewModel.showBookThreshold {
-                ForestPopUp(titleText: "Eksik soru", descriptionText: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin", onConfirm: { router.navigateBack()}, onDenied: {viewModel.closeBookError()}, confirmText: "Kütüphane", deniedText: "Orman", showForestPopUp: $viewModel.showBookThreshold)
+                ForestPopUp(titleText: String(localized: "Eksik soru"), descriptionText: String(localized: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin"), onConfirm: {
+                    tabBar = .bookcases
+                    bookcaseRouter.navigate(to: .bookcasePacket)
+                    exitForest()
+                }, onDenied: {viewModel.closeBookError()}, confirmText: String(localized: "Kütüphane"), deniedText: String(localized: "Orman"), showForestPopUp: $viewModel.showBookThreshold)
             }
             SpriteView(scene: gameScene)
                 .ignoresSafeArea(.all)
@@ -290,5 +296,5 @@ extension ForestUI: ForestUIProtocol {
 }
 
 #Preview {
-    ForestUI()
+    //ForestUI()
 }

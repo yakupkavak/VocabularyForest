@@ -5,6 +5,8 @@
 //  Created by Yakup Kavak on 22.12.2025.
 //
 
+internal import Foundation
+
 public protocol APIError: Decodable {
     var message: String { get }
     var debugMessage: String { get }

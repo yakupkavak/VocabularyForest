@@ -93,7 +93,7 @@ extension BaseTabViewUI {
                     case .flashCard:
                     FlashCardUI(tabBar: $selectedTab)
                     case .forest:
-                    ForestUI()
+                    ForestUI(tabBar: $selectedTab, bookcaseRouter: bookcaseRouter)
                         .ignoresSafeArea()
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)

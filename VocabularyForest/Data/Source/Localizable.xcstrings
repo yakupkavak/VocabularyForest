@@ -552,6 +552,9 @@
         }
       }
     },
+    "Bağlantı hatası" : {
+
+    },
     "Başla" : {
       "localizations" : {
         "en" : {
@@ -1099,6 +1102,9 @@
         }
       }
     },
+    "Decode Hatası Oluştu: %@" : {
+
+    },
     "Defeat the Fire Elemental 5 times and earn the sacred Emberbud." : {
       "localizations" : {
         "en" : {
@@ -1468,6 +1474,9 @@
           }
         }
       }
+    },
+    "Eksik soru" : {
+
     },
     "emberbud_name" : {
       "extractionState" : "manual",
@@ -2073,6 +2082,9 @@
         }
       }
     },
+    "Ichigo" : {
+
+    },
     "Icy Paws ❄️" : {
       "localizations" : {
         "en" : {
@@ -2296,6 +2308,9 @@
           }
         }
       }
+    },
+    "İstek zaman aşımına uğradı" : {
+
     },
     "Japonca" : {
       "localizations" : {
@@ -2538,6 +2553,9 @@
         }
       }
     },
+    "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin" : {
+
+    },
     "Kitaplık" : {
       "localizations" : {
         "en" : {
@@ -2777,6 +2795,9 @@
           }
         }
       }
+    },
+    "Kütüphane" : {
+
     },
     "Kütüphanen yüklendi!" : {
       "localizations" : {
@@ -3195,6 +3216,9 @@
           }
         }
       }
+    },
+    "Orman" : {
+
     },
     "Orman Bilgileri" : {
       "localizations" : {

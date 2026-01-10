@@ -76,7 +76,7 @@ extension ForestViewModel: ForestViewModelProtocol {
                 guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription() else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
+                if books.filter({ $0.shortMemory == true }).count < minBook {
                     showBookThreshold = true
                     return false
                 }
@@ -84,7 +84,7 @@ extension ForestViewModel: ForestViewModelProtocol {
                 guard let books = CoreDataManager.shared.fetchBooksExampleDescription(model: bookcase) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
+                if books.filter({ $0.shortMemory == true }).count < minBook {
                     showBookThreshold = true
                     return false
                 }
@@ -96,17 +96,31 @@ extension ForestViewModel: ForestViewModelProtocol {
                 guard let books = CoreDataManager.shared.fetchAllBooks() else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
-                    showBookThreshold = true
-                    return false
+                if type == .competitive {
+                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
+                }else { // remainder
+                    if books.filter({ $0.longMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
                 }
             case .spesific(let bookcase):
                 guard let books = CoreDataManager.shared.fetchBooks(model: bookcase) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
-                    showBookThreshold = true
-                    return false
+                if type == .competitive {
+                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
+                }else {
+                    if books.filter({ $0.longMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
                 }
             }
         }
