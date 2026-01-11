@@ -18,6 +18,7 @@ class SculptureManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
+    private var sculptureModel: SculptureModel? = nil
     var currentSculptureNode = SKSpriteNode()
     
     // MARK: - INIT
@@ -38,6 +39,7 @@ private extension SculptureManager {
         )
         currentSculptureNode.name = "sculpture"
         currentSculptureNode.zPosition = 10.0 - model.yPosition * 5.0
+        sculptureModel = model
         scene?.addChild(currentSculptureNode)
     }
 }
@@ -52,5 +54,49 @@ extension SculptureManager: SculptureManagerProtocol {
     }
     func setZIndex(index: Double) {
         currentSculptureNode.zPosition = index
+    }
+}
+
+extension SculptureManager: UpdatePositionProtocol {
+    var node: SKSpriteNode {
+        currentSculptureNode
+    }
+    
+    func startChange() {
+        currentSculptureNode.color = .clickableText
+        currentSculptureNode.colorBlendFactor = 0.9
+    }
+    
+    func horizontalChange(direction: HorizontalDirection) {
+        switch direction {
+        case .right:
+            self.sculptureModel?.xPosition += 0.01
+        case .left:
+            self.sculptureModel?.xPosition -= 0.01
+        }
+        currentSculptureNode.position = CGPoint(
+            x: GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0),
+            y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? 0)
+        )
+    }
+    
+    func verticalChange(direction: VerticalDirection) {
+        switch direction {
+        case .up:
+            self.sculptureModel?.yPosition += 0.01
+        case .down:
+            self.sculptureModel?.yPosition -= 0.01
+        }
+        currentSculptureNode.position = CGPoint(
+            x: GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0),
+            y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? 0)
+        )
+    }
+    
+    func removeChange(x: CGFloat, y: CGFloat) {
+        currentSculptureNode.position = CGPoint(
+            x: GameConstant.gameWidthSize * x,
+            y: GameConstant.sculptureHeightSize * y
+        )
     }
 }

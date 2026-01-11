@@ -9,10 +9,10 @@ import SpriteKit
 
 protocol GamePlayerManagerProtocol: AnyObject {
     var playerNode: SKSpriteNode { get }
-    var direction: GameDirection { get }
+    var direction: HorizontalDirection { get }
     var isMoving: Bool { get }
     func setupPlayer()
-    func startWalking(direction: GameDirection)
+    func startWalking(direction: HorizontalDirection)
     func startWaiting()
     func stopWalking()
     func stopPhysicalMovement()
@@ -30,7 +30,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
     private var walkTextures: [SKTexture] = []
     private var idleTextures: [SKTexture] = []
     private var dieTextures: [SKTexture] = []
-    var direction: GameDirection = .right
+    var direction: HorizontalDirection = .right
     var isMoving: Bool = false
     
     // MARK: - INIT
@@ -124,7 +124,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         playerNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
     }
     
-    func startWalking(direction: GameDirection) {
+    func startWalking(direction: HorizontalDirection) {
         stopWaiting()
         self.direction = direction
         self.isMoving = true
@@ -136,7 +136,7 @@ class GamePlayerManager: GamePlayerManagerProtocol {
         movePlayerNode(direction: direction)
     }
     
-    private func movePlayerNode(direction: GameDirection) {
+    private func movePlayerNode(direction: HorizontalDirection) {
         let moveAmount: CGFloat = (direction == .right) ? 100 : -100
         let moveAction = SKAction.moveBy(x: moveAmount, y: 0, duration: 1.0)
         let repeatAction = SKAction.repeatForever(moveAction)

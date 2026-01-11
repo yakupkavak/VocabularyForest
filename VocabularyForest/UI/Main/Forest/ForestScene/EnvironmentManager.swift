@@ -10,7 +10,7 @@ import SpriteKit
 protocol EnvironmentManagerProtocol: AnyObject {
     var floorNode: SKSpriteNode { get }
     func setupEnvironment()
-    func moveBackground(direction: GameDirection)
+    func moveBackground(direction: HorizontalDirection)
     func stopBackground()
     func update()
     func startRain()
@@ -185,7 +185,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     
     // MARK: - MOVEMENT LOGIC
     
-    func moveBackground(direction: GameDirection) {
+    func moveBackground(direction: HorizontalDirection) {
         guard let scene = scene else { return }
         
         for node in scene.children {

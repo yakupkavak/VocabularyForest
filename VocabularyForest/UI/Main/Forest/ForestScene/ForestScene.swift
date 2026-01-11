@@ -9,6 +9,23 @@ import SpriteKit
 import SwiftUI
 import AVFoundation
 
+protocol ShowClickable: AnyObject {
+    func showButton()
+}
+
+protocol TalkProtocol: AnyObject {
+    var node: SKSpriteNode { get }
+    func talk(text: String)
+}
+
+protocol UpdatePositionProtocol: AnyObject {
+    var node: SKSpriteNode { get }
+    func startChange()
+    func horizontalChange(direction: HorizontalDirection)
+    func verticalChange(direction: VerticalDirection)
+    func removeChange(x: CGFloat, y: CGFloat)
+}
+
 protocol ForectSceneProtocol: AnyObject {
     func getTrees() -> Resource<[TreeModel]>
     func getSculptures() -> Resource<[SculptureModel]>
@@ -137,7 +154,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
             forestHelper?.showForestInfo()
             return
         }
-        let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
+        let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
     

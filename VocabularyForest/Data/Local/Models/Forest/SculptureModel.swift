@@ -10,9 +10,10 @@ import Foundation
 struct SculptureModel: Equatable {
     let id: UUID
     let name: String
+    let characterName: String = ""
     let createDate: Date
-    let xPosition: CGFloat
-    let yPosition: CGFloat
+    var xPosition: CGFloat
+    var yPosition: CGFloat
 }
 
 let baseSculptureList = [

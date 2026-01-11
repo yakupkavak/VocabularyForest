@@ -10,6 +10,7 @@ import Foundation
 struct AnimalModel: Equatable {
     let id: UUID
     let name: String
+    let characterName: String = ""
     let assetName: String
     let createdDate: Date
     let healthValue: Int

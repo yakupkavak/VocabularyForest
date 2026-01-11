@@ -9,7 +9,7 @@ import SpriteKit
 
 protocol AnimalManagerProtocol: AnyObject {
     var animalNode: SKSpriteNode { get }
-    var animalDirection: GameDirection { get }
+    var animalDirection: HorizontalDirection { get }
     func startMoving()
     func stopMoving()
     func changeDirection()
@@ -26,7 +26,7 @@ class AnimalManager {
     private var walkingTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
     private var animalModel: AnimalModel? = nil
-    var direction: GameDirection = .right
+    var direction: HorizontalDirection = .right
     private var timer: Timer? = nil
     private var isJumping: Bool = false
     
@@ -201,7 +201,7 @@ extension AnimalManager: AnimalManagerProtocol {
         currentAnimalNode
     }
     
-    var animalDirection: GameDirection {
+    var animalDirection: HorizontalDirection {
         direction
     }
 }

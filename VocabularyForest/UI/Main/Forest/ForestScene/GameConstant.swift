@@ -37,7 +37,11 @@ enum GameConstant {
     static let walkingTime: Double = 1.5
 }
 
-enum GameDirection {
+enum HorizontalDirection {
     case right
     case left
+}
+enum VerticalDirection {
+    case up
+    case down
 }

@@ -10,6 +10,7 @@ import Foundation
 struct TreeModel: Equatable{
     let id: UUID
     let treeName: String
+    let characterName: String = ""
     let isAlive: Bool
     let createdDate: Date
     let treeHealthValue: Int

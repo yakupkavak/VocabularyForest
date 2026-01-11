@@ -9,7 +9,7 @@ import SpriteKit
 
 protocol BattleEnvironmentManagerProtocol: AnyObject {
     var backgroundNode: SKSpriteNode { get }
-    func moveBackground(direction: GameDirection)
+    func moveBackground(direction: HorizontalDirection)
     func stopBackground()
     func nextBackground()
     func correctAnswer()
@@ -293,7 +293,7 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
         //print("upd")
     }
     
-    func moveBackground(direction: GameDirection) {
+    func moveBackground(direction: HorizontalDirection) {
         guard let scene = scene else { return }
         
         for node in scene.children {

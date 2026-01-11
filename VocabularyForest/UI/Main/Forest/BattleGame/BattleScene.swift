@@ -128,7 +128,7 @@ class BattleScene: SKScene, SKPhysicsContactDelegate {
             guard let touch = touches.first else { return }
             let location = touch.location(in: self)
             let nodesAtPoint = nodes(at: location)
-            let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
+            let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
             playerManager.startWalking(direction: direction)
         }
     }
