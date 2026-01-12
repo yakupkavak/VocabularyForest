@@ -7,13 +7,21 @@
 
 import SpriteKit
 
+protocol ComponentSelectProtocol {
+    func updateName()
+    func updatePosition()
+}
+
 protocol PlantManagerProtocol {
+    var plantNode: SKSpriteNode { get }
     func setupPlant(model: TreeModel)
     func growPlant()
     func decreasePlant()
     func fadePlant()
     func perishPlant()
     func recoverPlant()
+    func tapPlant()
+    func handleMenuAction(nodeName: String)
 }
 
 class PlantManager {
@@ -21,6 +29,8 @@ class PlantManager {
     // MARK: - PROPERTIES
     
     var plant = SKSpriteNode()
+    var output: ComponentSelectProtocol?
+    private var isMenuOpen = false
     private weak var scene: SKScene?
     private var textures: [SKTexture] = []
     
@@ -60,15 +70,104 @@ private extension PlantManager {
             x: GameConstant.gameWidthSize * model.treeXPosition,
             y: GameConstant.materialHeightSize * model.treeYPosition
         )
-        plant.name = model.treeName
+        plant.name = "plant"
         plant.zPosition = 5 - model.treeYPosition * 3.0
         scene.addChild(plant)
+    }
+    
+    func createInteractionBubble() {
+        if let existingBubble = plant.childNode(withName: "menu_bubble") {
+            existingBubble.removeFromParent()
+            isMenuOpen = false
+            return
+        }
+        
+        isMenuOpen = true
+        let bubbleWidth: CGFloat = 120
+        let bubbleHeight: CGFloat = 60
+        let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
+        bubble.name = "menu_bubble"
+        bubble.fillColor = .white
+        bubble.strokeColor = .black
+        bubble.lineWidth = 2
+        bubble.zPosition = 100
+        bubble.position = CGPoint(x: 0, y: plant.size.height + 40)
+        
+        let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
+        nameBtn.position = CGPoint(x: -30, y: -5)
+        bubble.addChild(nameBtn)
+        
+        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
+        separator.fillColor = .gray
+        separator.strokeColor = .gray
+        separator.position = CGPoint(x: 0, y: 0)
+        bubble.addChild(separator)
+        
+        let posBtn = createButtonLabel(text: "Taşı", name: "btn_update_pos")
+        posBtn.position = CGPoint(x: 30, y: -5)
+        bubble.addChild(posBtn)
+        
+        bubble.setScale(0)
+        plant.addChild(bubble)
+        bubble.run(.scale(to: 1.0, duration: 0.2))
+        
+        let waitAction = SKAction.wait(forDuration: 3.0)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let remove = SKAction.removeFromParent()
+        let updateState = SKAction.run { [weak self] in
+            self?.isMenuOpen = false
+        }
+        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
+        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
+    }
+    
+    func createButtonLabel(text: String, name: String) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = 14
+        label.fontColor = .black
+        label.name = name
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        return label
+    }
+
+    func removeBubble() {
+        if let bubble = plant.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
     }
 }
 
 // MARK: - PLANT MANAGER PROTOCOL
 
 extension PlantManager: PlantManagerProtocol {
+    
+    var plantNode: SKSpriteNode {
+        plant
+    }
+    
+    func handleMenuAction(nodeName: String) {
+        // Balonu kapat
+        removeBubble()
+        
+        // Hangi butona basıldıysa delegate'e (ViewModel/SwiftUI) haber ver
+        if nodeName == "btn_update_name" {
+            print("İsim güncelleme istendi")
+            output?.updateName()
+        } else if nodeName == "btn_update_pos" {
+            print("Pozisyon güncelleme istendi")
+            output?.updatePosition()
+        }
+    }
+    
+    func tapPlant() {
+        createInteractionBubble()
+    }
     
     func setupPlant(model: TreeModel) {
         loadTextures(for: model)
@@ -100,5 +199,15 @@ extension PlantManager: PlantManagerProtocol {
     
     func recoverPlant() {
         plant.colorBlendFactor = 0.0
+    }
+}
+
+extension PlantManager: TalkProtocol {
+    var node: SKSpriteNode {
+        plant
+    }
+    
+    func talk(text: String) {
+        print("")
     }
 }

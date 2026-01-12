@@ -45,6 +45,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var helper: ForectSceneProtocol?
     var animalManagers: [AnimalManagerProtocol] = []
     var plantManagers: [PlantManagerProtocol] = []
+    var sculptureManagers: [SculptureManagerProtocol] = []
     private var isTouching = false
     var timer: Timer?
     
@@ -154,6 +155,34 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
             forestHelper?.showForestInfo()
             return
         }
+        
+        if let btnNode = nodesAtPoint.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }) {
+            if let bubble = btnNode.parent, let plantNode = bubble.parent as? SKSpriteNode {
+                if let targetManager = plantManagers.first(where: { $0.plantNode === plantNode }) {
+                    guard let name = btnNode.name else { return }
+                    targetManager.handleMenuAction(nodeName: name)
+                    return
+                }
+            }
+        }
+        if let clickedNode = nodesAtPoint.first(where: { $0.name == "plant" || $0.name == "animal" || $0.name == "sculpture" }) as? SKSpriteNode {
+            if let targetManager = plantManagers.first(where: { $0.plantNode === clickedNode }) {
+                targetManager.tapPlant()
+                isTouching = false
+                return
+            }
+            if let targetManager = animalManagers.first(where: { $0.animalNode === clickedNode }) {
+                targetManager.tapAnimal()
+                isTouching = false
+                return
+            }
+            
+            if let targetManager = sculptureManagers.first(where: { $0.sculptureNode === clickedNode }) {
+                targetManager.tapSculpture()
+                isTouching = false
+                return
+            }
+        }
         let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
@@ -197,6 +226,7 @@ extension ForestScene: ForestViewModelOutputProcotol {
     func setupSculpture(sculpture: SculptureModel) {
         let manager = SculptureManager(scene: self)
         manager.setupSculpture(model: sculpture)
+        sculptureManagers.append(manager)
     }
     
     func setupPlant(plant: TreeModel) {

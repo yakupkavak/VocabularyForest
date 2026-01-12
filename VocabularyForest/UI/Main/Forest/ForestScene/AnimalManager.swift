@@ -14,6 +14,7 @@ protocol AnimalManagerProtocol: AnyObject {
     func stopMoving()
     func changeDirection()
     func setupAnimalManager(model: AnimalModel)
+    func tapAnimal()
 }
 
 class AnimalManager {
@@ -21,15 +22,16 @@ class AnimalManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
-    let currentAnimalNode = SKSpriteNode()
     private var idleTextures: [SKTexture] = []
     private var walkingTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
     private var animalModel: AnimalModel? = nil
-    var direction: HorizontalDirection = .right
     private var timer: Timer? = nil
     private var isJumping: Bool = false
-    
+    private var isMenuOpen = false
+    let currentAnimalNode = SKSpriteNode()
+    var direction: HorizontalDirection = .right
+
     // MARK: - INIT
     
     init(scene: SKScene) {
@@ -173,9 +175,84 @@ private extension AnimalManager {
             withKey: GameConstant.jumpAnimation
         )
     }
+    
+    //MARK: - TAP GESTURE
+    
+    func createInteractionBubble() {
+        if let existingBubble = animalNode.childNode(withName: "menu_bubble") {
+            existingBubble.removeFromParent()
+            isMenuOpen = false
+            return
+        }
+        
+        isMenuOpen = true
+        let bubbleWidth: CGFloat = 120
+        let bubbleHeight: CGFloat = 60
+        let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
+        bubble.name = "menu_bubble"
+        bubble.fillColor = .white
+        bubble.strokeColor = .black
+        bubble.lineWidth = 2
+        bubble.zPosition = 100
+        bubble.position = CGPoint(x: 0, y: animalNode.size.height + 40)
+        
+        let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
+        nameBtn.position = CGPoint(x: -30, y: -5)
+        bubble.addChild(nameBtn)
+        
+        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
+        separator.fillColor = .gray
+        separator.strokeColor = .gray
+        separator.position = CGPoint(x: 0, y: 0)
+        bubble.addChild(separator)
+        
+        let posBtn = createButtonLabel(text: "Taşı", name: "btn_update_pos")
+        posBtn.position = CGPoint(x: 30, y: -5)
+        bubble.addChild(posBtn)
+        
+        bubble.setScale(0)
+        animalNode.addChild(bubble)
+        bubble.run(.scale(to: 1.0, duration: 0.2))
+        
+        let waitAction = SKAction.wait(forDuration: 3.0)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let remove = SKAction.removeFromParent()
+        let updateState = SKAction.run { [weak self] in
+            self?.isMenuOpen = false
+        }
+        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
+        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
+    }
+    
+    func createButtonLabel(text: String, name: String) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = 14
+        label.fontColor = .black
+        label.name = name
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        return label
+    }
+
+    func removeBubble() {
+        if let bubble = animalNode.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
+    }
 }
 
+// MARK: - ANIMAL MANAGER PROTOCOL
+
 extension AnimalManager: AnimalManagerProtocol {
+    
+    func tapAnimal() {
+        createInteractionBubble()
+    }
     
     func startMoving() {
         moveAnimal()
@@ -203,5 +280,15 @@ extension AnimalManager: AnimalManagerProtocol {
     
     var animalDirection: HorizontalDirection {
         direction
+    }
+}
+
+extension AnimalManager: TalkProtocol {
+    var node: SKSpriteNode {
+        animalNode
+    }
+    
+    func talk(text: String) {
+        print("")
     }
 }
