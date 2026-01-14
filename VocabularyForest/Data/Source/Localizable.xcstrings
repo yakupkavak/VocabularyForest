@@ -3141,6 +3141,9 @@
         }
       }
     },
+    "İsim Değiştir" : {
+
+    },
     "İskelet" : {
       "localizations" : {
         "en" : {
@@ -5654,6 +5657,9 @@
           }
         }
       }
+    },
+    "Taşı" : {
+
     },
     "Tebrikler!" : {
       "localizations" : {

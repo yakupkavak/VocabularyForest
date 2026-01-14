@@ -133,6 +133,12 @@ private extension AnimalManager {
             y: GameConstant.floorHeightSize * 0.65 + model.yPosition)
         currentAnimalNode.xScale = -1.0
         currentAnimalNode.zPosition = 3.0 - (model.yPosition / 50)
+        let originalSize = firstFrame.size()
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = ComponentSizeConstant.animalHeight * aspectRatio
+            currentAnimalNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.animalHeight)
+        }
         scene.addChild(currentAnimalNode)
     }
     

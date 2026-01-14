@@ -63,7 +63,7 @@ class PlayerManager: PlayerManagerProtocol {
             x: scene.size.width / 2,
             y: GameConstant.floorHeightSize * 0.83
         )
-        playerNode.zPosition = 3
+        playerNode.zPosition = 2
         
         startWaiting()
         scene.addChild(playerNode)

@@ -296,5 +296,7 @@ extension ForestUI: ForestUIProtocol {
 }
 
 #Preview {
-    //ForestUI()
+    @State var tabbar = BaseTabTypes.bookcases
+    var router = BookcaseRouter()
+    ForestUI(tabBar: $tabbar, bookcaseRouter: router)
 }

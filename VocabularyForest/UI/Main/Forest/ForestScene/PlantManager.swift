@@ -54,7 +54,7 @@ private extension PlantManager {
     }
     
     func setPlant(model: TreeModel) {
-        guard let firstFrame = textures.first, let scene else {
+        guard let firstFrame = textures[safe: 1], let scene else {
             return
         }
         plant.texture = firstFrame
@@ -62,8 +62,8 @@ private extension PlantManager {
         let originalSize = firstFrame.size()
         if originalSize.height > 0 {
             let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = GameConstant.plantHeightSize * aspectRatio
-            plant.size = CGSize(width: targetWidth, height: GameConstant.plantHeightSize)
+            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
+            plant.size = CGSize(width: targetWidth, height: ComponentSizeConstant.plantHeight)
         }
         plant.anchorPoint = CGPoint(x: 0.5, y: 0)
         plant.position = CGPoint(
@@ -71,7 +71,7 @@ private extension PlantManager {
             y: GameConstant.materialHeightSize * model.treeYPosition
         )
         plant.name = "plant"
-        plant.zPosition = 5 - model.treeYPosition * 3.0
+        plant.zPosition = 10 - model.treeYPosition * 20.0
         scene.addChild(plant)
     }
     

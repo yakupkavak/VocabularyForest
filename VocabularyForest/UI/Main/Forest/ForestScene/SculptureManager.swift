@@ -40,8 +40,14 @@ private extension SculptureManager {
             x: GameConstant.gameWidthSize * model.xPosition,
             y: GameConstant.sculptureHeightSize * model.yPosition
         )
+        let originalSize = currentSculptureNode.size
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
+            currentSculptureNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.sculptureHeight)
+        }
         currentSculptureNode.name = "sculpture"
-        currentSculptureNode.zPosition = 10.0 - model.yPosition * 5.0
+        currentSculptureNode.zPosition = 10.0 - model.yPosition * 20.0
         sculptureModel = model
         scene?.addChild(currentSculptureNode)
     }
@@ -52,32 +58,31 @@ private extension SculptureManager {
             isMenuOpen = false
             return
         }
-        
         isMenuOpen = true
-        let bubbleWidth: CGFloat = 120
+        let bubbleWidth: CGFloat = 134
         let bubbleHeight: CGFloat = 60
         let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
         bubble.name = "menu_bubble"
-        bubble.fillColor = .white
+        bubble.fillColor = .brown500.withAlphaComponent(0.9)
         bubble.strokeColor = .black
         bubble.lineWidth = 2
         bubble.zPosition = 100
-        bubble.position = CGPoint(x: 0, y: currentSculptureNode.size.height + 40)
+        bubble.position = CGPoint(x: 0, y: currentSculptureNode.size.height + 30)
         
-        let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
-        nameBtn.position = CGPoint(x: -30, y: -5)
+        let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
+        nameBtn.position = CGPoint(x: -32, y: 0)
+        nameBtn.fontColor = .black
         bubble.addChild(nameBtn)
         
         let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
-        separator.fillColor = .gray
-        separator.strokeColor = .gray
+        separator.fillColor = .logoGreen
+        separator.strokeColor = .logoGreen
         separator.position = CGPoint(x: 0, y: 0)
         bubble.addChild(separator)
-        
-        let posBtn = createButtonLabel(text: "Taşı", name: "btn_update_pos")
-        posBtn.position = CGPoint(x: 30, y: -5)
+        let posBtn = createButtonLabel(text: String(localized: "Taşı"), name: "btn_update_pos", maxWidth: 60)
+        posBtn.position = CGPoint(x: 32, y: 0)
+        posBtn.fontColor = .black
         bubble.addChild(posBtn)
-        
         bubble.setScale(0)
         currentSculptureNode.addChild(bubble)
         bubble.run(.scale(to: 1.0, duration: 0.2))
@@ -92,7 +97,7 @@ private extension SculptureManager {
         bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
     }
     
-    func createButtonLabel(text: String, name: String) -> SKLabelNode {
+    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: "Arial-BoldMT")
         label.text = text
         label.fontSize = 14
@@ -100,6 +105,11 @@ private extension SculptureManager {
         label.name = name
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
+        if let width = maxWidth {
+            label.numberOfLines = 0
+            label.preferredMaxLayoutWidth = width
+            label.lineBreakMode = .byWordWrapping
+        }
         return label
     }
 
