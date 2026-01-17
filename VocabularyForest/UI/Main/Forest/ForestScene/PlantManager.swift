@@ -7,13 +7,9 @@
 
 import SpriteKit
 
-protocol ComponentSelectProtocol {
-    func updateName()
-    func updatePosition()
-}
-
 protocol PlantManagerProtocol {
     var plantNode: SKSpriteNode { get }
+    var model: TreeModel? { get }
     func setupPlant(model: TreeModel)
     func growPlant()
     func decreasePlant()
@@ -21,7 +17,6 @@ protocol PlantManagerProtocol {
     func perishPlant()
     func recoverPlant()
     func tapPlant()
-    func handleMenuAction(nodeName: String)
 }
 
 class PlantManager {
@@ -29,7 +24,7 @@ class PlantManager {
     // MARK: - PROPERTIES
     
     var plant = SKSpriteNode()
-    var output: ComponentSelectProtocol?
+    private var treeModel: TreeModel? = nil
     private var isMenuOpen = false
     private weak var scene: SKScene?
     private var textures: [SKTexture] = []
@@ -46,14 +41,15 @@ class PlantManager {
 private extension PlantManager {
     
     func loadTextures(for model: TreeModel) {
-        let atlas = SKTextureAtlas(named: model.treeName)
+        let atlas = SKTextureAtlas(named: model.assetName)
         for i in 0..<atlas.textureNames.count {
-            textures.append(atlas.textureNamed("\(model.treeName.lowercased())_\(i)"))
+            textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
         }
         setPlant(model: model)
     }
     
     func setPlant(model: TreeModel) {
+        // FUTURE: - GROW PLANT
         guard let firstFrame = textures[safe: 1], let scene else {
             return
         }
@@ -67,11 +63,12 @@ private extension PlantManager {
         }
         plant.anchorPoint = CGPoint(x: 0.5, y: 0)
         plant.position = CGPoint(
-            x: GameConstant.gameWidthSize * model.treeXPosition,
-            y: GameConstant.materialHeightSize * model.treeYPosition
+            x: GameConstant.gameWidthSize * model.xPosition,
+            y: GameConstant.materialHeightSize * model.yPosition
         )
         plant.name = "plant"
-        plant.zPosition = 10 - model.treeYPosition * 20.0
+        plant.zPosition = 10 - model.yPosition * 20.0
+        treeModel = model
         scene.addChild(plant)
     }
     
@@ -132,37 +129,18 @@ private extension PlantManager {
         return label
     }
 
-    func removeBubble() {
-        if let bubble = plant.childNode(withName: "menu_bubble") {
-            bubble.run(.sequence([
-                .scale(to: 0, duration: 0.1),
-                .removeFromParent()
-            ]))
-            isMenuOpen = false
-        }
-    }
 }
 
 // MARK: - PLANT MANAGER PROTOCOL
 
 extension PlantManager: PlantManagerProtocol {
     
-    var plantNode: SKSpriteNode {
-        plant
+    var model: TreeModel? {
+        treeModel
     }
     
-    func handleMenuAction(nodeName: String) {
-        // Balonu kapat
-        removeBubble()
-        
-        // Hangi butona basıldıysa delegate'e (ViewModel/SwiftUI) haber ver
-        if nodeName == "btn_update_name" {
-            print("İsim güncelleme istendi")
-            output?.updateName()
-        } else if nodeName == "btn_update_pos" {
-            print("Pozisyon güncelleme istendi")
-            output?.updatePosition()
-        }
+    var plantNode: SKSpriteNode {
+        plant
     }
     
     func tapPlant() {
@@ -209,5 +187,15 @@ extension PlantManager: TalkProtocol {
     
     func talk(text: String) {
         print("")
+    }
+    
+    func removeBubble() {
+        if let bubble = plant.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
     }
 }

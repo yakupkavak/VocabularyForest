@@ -7,13 +7,20 @@
 
 import Foundation
 
-struct TreeModel: Equatable{
+struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
     let id: UUID
-    let treeName: String
-    let characterName: String = ""
+    let assetName: String
+    var characterName: String = ""
     let isAlive: Bool
     let createdDate: Date
     let treeHealthValue: Int
-    let treeXPosition: CGFloat
-    let treeYPosition: CGFloat
+    var xPosition: CGFloat
+    var yPosition: CGFloat
+}
+
+protocol ComponentModelProtocol {
+    var assetName: String { get }
+    var createdDate: Date { get }
+    var xPosition: CGFloat { get set }
+    var yPosition: CGFloat { get set }
 }

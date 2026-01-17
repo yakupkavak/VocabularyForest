@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct AnimalModel: Equatable {
+struct AnimalModel: Equatable, ComponentNameable {
     let id: UUID
     let name: String
-    let characterName: String = ""
+    var characterName: String = ""
     let assetName: String
     let createdDate: Date
     let healthValue: Int

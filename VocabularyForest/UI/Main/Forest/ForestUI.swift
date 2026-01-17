@@ -13,6 +13,7 @@ protocol ForestUIProtocol {
     func showQuests()
     func showGameSelection()
     func showForestInfo()
+    func updateComponentName(model: ComponentNameable, type: ComponentType)
 }
 
 // MARK: - CONSTANTS
@@ -20,7 +21,7 @@ protocol ForestUIProtocol {
 private extension ForestUI {
     enum Constant {
         static let optionsList: [SettingsModel] = [
-            SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "forward_button", color: .brown500, type: .resume),
+            SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "right_icon", color: .brown500, type: .resume),
             SettingsModel(title: String(localized: "Settings"), icon: "settings_button", color: .brown500, type: .settings),
             SettingsModel(title: String(localized: "Orman Bilgileri"), icon: "FAQ", color: .brown500, type: .info),
             SettingsModel(title: String(localized: "Home"), icon: "exit_button", color: .brown500, type: .home)
@@ -44,6 +45,8 @@ struct ForestUI: View {
     @State private var showGameSelect = false
     @State private var showQuest = false
     @State private var showForest = false
+    @State private var showUpdateName = false
+    @State private var componentName = ""
     @State private var selectedQuestForGame: QuestModel? = nil
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
@@ -102,6 +105,24 @@ struct ForestUI: View {
                     showForest = false
                 }.zIndex(4.0)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }
+            if showUpdateName {
+                HStack {
+                    Spacer()
+                    Button {
+                        showUpdateName = false
+                    } label: {
+                        Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
+                    }
+                    TextField("Name", text: $componentName).frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal).background(.brown300.opacity(0.7)).cornerRadius(16)
+                    Button {
+                        viewModel.updateComponentName(name: componentName)
+                        showUpdateName = false
+                    } label: {
+                        Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
+                    }
+                    Spacer()
+                }.compositingGroup().zIndex(3.0)
             }
             if viewModel.showRainButton {
                 VStack{
@@ -270,6 +291,12 @@ private extension ForestUI {
 }
 
 extension ForestUI: ForestUIProtocol {
+    
+    func updateComponentName(model: any ComponentNameable, type: ComponentType) {
+        componentName = model.characterName
+        viewModel.setComponent(uuid: model.id, for: type)
+        showUpdateName = true
+    }
     
     func showForestInfo() {
         showForest = true

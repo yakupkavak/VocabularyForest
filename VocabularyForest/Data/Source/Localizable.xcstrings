@@ -2700,6 +2700,9 @@
         }
       }
     },
+    "Heykel" : {
+
+    },
     "Hiçbir kitap bulamadık" : {
       "localizations" : {
         "en" : {
@@ -4135,6 +4138,9 @@
           }
         }
       }
+    },
+    "Name" : {
+
     },
     "New Discoveries 🗺️" : {
       "localizations" : {

@@ -7,8 +7,9 @@
 
 import SpriteKit
 
-protocol SculptureManagerProtocol: AnyObject {
+protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol {
     var sculptureNode: SKSpriteNode { get }
+    var model: SculptureModel? { get }
     func setupSculpture(model: SculptureModel)
     func setZIndex(index: Double)
     func tapSculpture()
@@ -58,31 +59,51 @@ private extension SculptureManager {
             isMenuOpen = false
             return
         }
+        
         isMenuOpen = true
-        let bubbleWidth: CGFloat = 134
-        let bubbleHeight: CGFloat = 60
+        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.name
+        
+        let bubbleWidth: CGFloat = 140
+        let bubbleHeight: CGFloat = 90
+        
         let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
         bubble.name = "menu_bubble"
-        bubble.fillColor = .brown500.withAlphaComponent(0.9)
+        bubble.fillColor = .brown500.withAlphaComponent(0.95)
         bubble.strokeColor = .black
         bubble.lineWidth = 2
         bubble.zPosition = 100
-        bubble.position = CGPoint(x: 0, y: currentSculptureNode.size.height + 30)
+        bubble.position = CGPoint(x: 0, y: currentSculptureNode.size.height + 40)
         
+        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        titleLabel.text = displayName ?? String(localized: "Heykel")
+        titleLabel.fontSize = 16
+        titleLabel.fontColor = .white
+        titleLabel.position = CGPoint(x: 0, y: 15)
+        bubble.addChild(titleLabel)
+
+        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
+        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
+        headerSeparator.strokeColor = .clear
+        headerSeparator.position = CGPoint(x: 0, y: 5)
+        bubble.addChild(headerSeparator)
+        
+
         let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
-        nameBtn.position = CGPoint(x: -32, y: 0)
+        nameBtn.position = CGPoint(x: -32, y: -15)
         nameBtn.fontColor = .black
         bubble.addChild(nameBtn)
         
-        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
+        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 25))
         separator.fillColor = .logoGreen
         separator.strokeColor = .logoGreen
-        separator.position = CGPoint(x: 0, y: 0)
+        separator.position = CGPoint(x: 0, y: -15)
         bubble.addChild(separator)
+        
         let posBtn = createButtonLabel(text: String(localized: "Taşı"), name: "btn_update_pos", maxWidth: 60)
-        posBtn.position = CGPoint(x: 32, y: 0)
+        posBtn.position = CGPoint(x: 32, y: -15)
         posBtn.fontColor = .black
         bubble.addChild(posBtn)
+        
         bubble.setScale(0)
         currentSculptureNode.addChild(bubble)
         bubble.run(.scale(to: 1.0, duration: 0.2))
@@ -112,19 +133,15 @@ private extension SculptureManager {
         }
         return label
     }
-
-    func removeBubble() {
-        if let bubble = currentSculptureNode.childNode(withName: "menu_bubble") {
-            bubble.run(.sequence([
-                .scale(to: 0, duration: 0.1),
-                .removeFromParent()
-            ]))
-            isMenuOpen = false
-        }
-    }
 }
 
+// MARK: - SCULPTURE MANAGER PROTOCOL
+
 extension SculptureManager: SculptureManagerProtocol {
+    
+    var model: SculptureModel? {
+        sculptureModel
+    }
     
     func tapSculpture() {
         createInteractionBubble()
@@ -142,18 +159,16 @@ extension SculptureManager: SculptureManagerProtocol {
     }
 }
 
+// MARK: - UPDATE POSITION PROTOCOL
+
 extension SculptureManager: UpdatePositionProtocol {
-    var node: SKSpriteNode {
-        currentSculptureNode
-    }
     
-    func startChange() {
-        currentSculptureNode.color = .clickableText
-        currentSculptureNode.colorBlendFactor = 0.9
-    }
-    
-    func horizontalChange(direction: HorizontalDirection) {
+    func positionChange(direction: Directions) {
         switch direction {
+        case .up:
+            self.sculptureModel?.yPosition += 0.01
+        case .down:
+            self.sculptureModel?.yPosition -= 0.01
         case .right:
             self.sculptureModel?.xPosition += 0.01
         case .left:
@@ -165,23 +180,38 @@ extension SculptureManager: UpdatePositionProtocol {
         )
     }
     
-    func verticalChange(direction: VerticalDirection) {
-        switch direction {
-        case .up:
-            self.sculptureModel?.yPosition += 0.01
-        case .down:
-            self.sculptureModel?.yPosition -= 0.01
-        }
-        currentSculptureNode.position = CGPoint(
-            x: GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0),
-            y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? 0)
-        )
+    var node: SKSpriteNode {
+        currentSculptureNode
     }
     
+    func startPositionChange() {
+        currentSculptureNode.color = .clickableText
+        currentSculptureNode.colorBlendFactor = 0.9
+    }
+
     func removeChange(x: CGFloat, y: CGFloat) {
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * x,
             y: GameConstant.sculptureHeightSize * y
         )
+    }
+}
+
+// MARK: - TALK PROTOCOL
+
+extension SculptureManager: TalkProtocol {
+    
+    func talk(text: String) {
+        print("text")
+    }
+    
+    func removeBubble() {
+        if let bubble = currentSculptureNode.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
     }
 }

@@ -23,7 +23,7 @@ extension Bookcase {
     @NSManaged public var meaningLanguage: String?
     @NSManaged public var name: String?
     @NSManaged public var books: NSSet?
-    
+
     public var unwrappedName: String {
         name ?? "Unknown name"
     }

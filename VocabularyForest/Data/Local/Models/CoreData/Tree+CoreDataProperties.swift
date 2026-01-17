@@ -27,6 +27,7 @@ extension Tree {
     @NSManaged public var xPosition: Double
     @NSManaged public var yPosition: Double
     @NSManaged public var forest: Forest?
+    @NSManaged public var characterName: String?
 
 }
 

@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct SculptureModel: Equatable {
+struct SculptureModel: Equatable, ComponentNameable {
     let id: UUID
     let name: String
-    let characterName: String = ""
+    var characterName: String = ""
     let createDate: Date
     var xPosition: CGFloat
     var yPosition: CGFloat

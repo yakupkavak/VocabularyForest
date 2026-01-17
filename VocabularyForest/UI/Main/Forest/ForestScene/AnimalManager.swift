@@ -10,6 +10,7 @@ import SpriteKit
 protocol AnimalManagerProtocol: AnyObject {
     var animalNode: SKSpriteNode { get }
     var animalDirection: HorizontalDirection { get }
+    var model: AnimalModel? { get }
     func startMoving()
     func stopMoving()
     func changeDirection()
@@ -240,21 +241,15 @@ private extension AnimalManager {
         label.horizontalAlignmentMode = .center
         return label
     }
-
-    func removeBubble() {
-        if let bubble = animalNode.childNode(withName: "menu_bubble") {
-            bubble.run(.sequence([
-                .scale(to: 0, duration: 0.1),
-                .removeFromParent()
-            ]))
-            isMenuOpen = false
-        }
-    }
 }
 
 // MARK: - ANIMAL MANAGER PROTOCOL
 
 extension AnimalManager: AnimalManagerProtocol {
+    
+    var model: AnimalModel? {
+        animalModel
+    }
     
     func tapAnimal() {
         createInteractionBubble()
@@ -296,5 +291,15 @@ extension AnimalManager: TalkProtocol {
     
     func talk(text: String) {
         print("")
+    }
+    
+    func removeBubble() {
+        if let bubble = animalNode.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
     }
 }

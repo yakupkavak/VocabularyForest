@@ -87,32 +87,6 @@ class ForestDataManager {
         return .success(false)
     }
     
-    private func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, forest: Forest) {
-        if let currentQuests = forest.quests?.allObjects as? [Quest] {
-            let oldQuests = currentQuests.filter {
-                $0.type == type.valueForCoreData
-            }
-            for oldQuest in oldQuests {
-                viewContext.delete(oldQuest)
-            }
-        }
-        
-        var newQuestsModels: [QuestModel] = []
-        switch type {
-        case .daily:
-            newQuestsModels = helper.initalizeDailyQuests()
-        case .weekly:
-            newQuestsModels = helper.initalizeWeeklyQuests()
-        case .monthly:
-            newQuestsModels = helper.initalizeMonthlyQuests()
-        case .special:
-            break
-        }
-        setupQuests(questList: newQuestsModels, forest: forest)
-    }
-    
-    // MARK: - HELPERS
-    
     func checkAndUpdateRain() -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return .error(error: ForestError.emptyForest)
@@ -152,7 +126,37 @@ class ForestDataManager {
         return .success(true)
     }
     
-    private func scheduleHealthNotifications() {
+}
+
+// MARK: - PRIVATE HELPERS
+
+private extension ForestDataManager {
+    
+    func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, forest: Forest) {
+        if let currentQuests = forest.quests?.allObjects as? [Quest] {
+            let oldQuests = currentQuests.filter {
+                $0.type == type.valueForCoreData
+            }
+            for oldQuest in oldQuests {
+                viewContext.delete(oldQuest)
+            }
+        }
+        
+        var newQuestsModels: [QuestModel] = []
+        switch type {
+        case .daily:
+            newQuestsModels = helper.initalizeDailyQuests()
+        case .weekly:
+            newQuestsModels = helper.initalizeWeeklyQuests()
+        case .monthly:
+            newQuestsModels = helper.initalizeMonthlyQuests()
+        case .special:
+            break
+        }
+        setupQuests(questList: newQuestsModels, forest: forest)
+    }
+    
+    func scheduleHealthNotifications() {
         guard let forest = getCurrentForest() else { return }
         
         NotificationManager.shared.cancelHealthNotifications()
@@ -175,7 +179,7 @@ class ForestDataManager {
         }
     }
     
-    private func save() throws {
+    func save() throws {
         guard viewContext.hasChanges else { return }
         do {
             try viewContext.save()
@@ -184,18 +188,35 @@ class ForestDataManager {
             throw error
         }
     }
-    
-    func getCurrentForest() -> Forest? {
-        let request: NSFetchRequest<Forest> = Forest.fetchRequest()
-        request.fetchLimit = 1
+        
+    func setupQuests(questList: [QuestModel], forest: Forest) {
+        for model in questList {
+            let quest = Quest(context: viewContext)
+            quest.id = model.id
+            quest.type = model.type.valueForCoreData
+            quest.title = model.title
+            quest.description_quest = model.description
+            quest.rewardType = model.reward.typeName
+            quest.rewardValue = model.reward.valueString
+            quest.status = model.status.valueForCoreData
+            quest.targetCount = Int16(model.targetCount)
+            quest.currentProgressCount = 0
+            quest.gameLevel = model.gameLevel.valueForCoreData
+            quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
+            quest.questType = model.questionType.valueForCoreData
+            forest.addToQuests(quest)
+        }
         do {
-            return try viewContext.fetch(request).first
+            try save()
         }catch {
-            return nil
+            print(error.localizedDescription)
         }
     }
-    
-    // MARK: - CREATE FOREST
+}
+
+// MARK: - CREATE HELPERS
+
+extension ForestDataManager {
     
     func createForestGame(helper: ForestGameHelperProtocol) -> Resource<Bool> {
         let dailyQuests = helper.initalizeDailyQuests()
@@ -222,31 +243,7 @@ class ForestDataManager {
             return Resource.error(error: ForestError.saveError)
         }
     }
-    
-    private func setupQuests(questList: [QuestModel], forest: Forest) {
-        for model in questList {
-            let quest = Quest(context: viewContext)
-            quest.id = model.id
-            quest.type = model.type.valueForCoreData
-            quest.title = model.title
-            quest.description_quest = model.description
-            quest.rewardType = model.reward.typeName
-            quest.rewardValue = model.reward.valueString
-            quest.status = model.status.valueForCoreData
-            quest.targetCount = Int16(model.targetCount)
-            quest.currentProgressCount = 0
-            quest.gameLevel = model.gameLevel.valueForCoreData
-            quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
-            quest.questType = model.questionType.valueForCoreData
-            forest.addToQuests(quest)
-        }
-        do {
-            try save()
-        }catch {
-            print(error.localizedDescription)
-        }
-    }
-    
+
     func createTree(tree model: TreeModel) -> Resource<Bool>{
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.emptyForest)
@@ -256,9 +253,9 @@ class ForestDataManager {
         tree.createdDate = Date()
         tree.healthValue = Int16(model.treeHealthValue)
         tree.isAlive = model.isAlive
-        tree.name = model.treeName
-        tree.xPosition = Double(model.treeXPosition)
-        tree.yPosition = Double(model.treeYPosition)
+        tree.name = model.assetName
+        tree.xPosition = Double(model.xPosition)
+        tree.yPosition = Double(model.yPosition)
         forest.addToTrees(tree)
         do {
             try save()
@@ -308,8 +305,33 @@ class ForestDataManager {
             return Resource.error(error: ForestError.saveError)
         }
     }
+}
+
+// MARK: - FETCH HELPERS
+
+extension ForestDataManager {
     
-    // MARK: - FETCH HELPERS
+    func fetchSculpture() -> SculptureModel? {
+        nil
+    }
+    
+    func fetchAnimal() -> AnimalModel? {
+        nil
+    }
+    
+    func fetchPlant() -> TreeModel? {
+        nil
+    }
+    
+    func getCurrentForest() -> Forest? {
+        let request: NSFetchRequest<Forest> = Forest.fetchRequest()
+        request.fetchLimit = 1
+        do {
+            return try viewContext.fetch(request).first
+        }catch {
+            return nil
+        }
+    }
     
     func fetchForestStatus() -> Resource<ForestStatusModel> {
         guard let forest = getCurrentForest() else {
@@ -381,12 +403,12 @@ class ForestDataManager {
                 }
                 let model = TreeModel(
                     id: id,
-                    treeName: tree.name ?? "grass_sculpure",
+                    assetName: tree.name ?? "grass_sculpure",
                     isAlive: tree.isAlive,
                     createdDate: tree.createdDate ?? Date(),
                     treeHealthValue: Int(tree.healthValue),
-                    treeXPosition: tree.xPosition,
-                    treeYPosition: tree.yPosition,
+                    xPosition: tree.xPosition,
+                    yPosition: tree.yPosition,
                 )
                 sculptureList.append(model)
             }
@@ -406,6 +428,7 @@ class ForestDataManager {
                 let model = SculptureModel(
                     id: id,
                     name: sculpture.name ?? "grass_sculpure",
+                    characterName: sculpture.characterName ?? "",
                     createDate: sculpture.createdDate ?? Date(),
                     xPosition: sculpture.xPosition,
                     yPosition: sculpture.yPosition
@@ -416,9 +439,11 @@ class ForestDataManager {
         }
         return Resource.error(error: ForestError.emptyList)
     }
-    
-    // MARK: - UPDATE
-    
+}
+
+// MARK: - UPDATE HELPERS
+
+extension ForestDataManager {
     func claimReward(quest: QuestModel) -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return .error(error: ForestError.emptyForest)
@@ -453,12 +478,12 @@ class ForestDataManager {
             
             let plantModel = TreeModel(
                 id: UUID(),
-                treeName: name,
+                assetName: name,
                 isAlive: true,
                 createdDate: Date(),
                 treeHealthValue: 5,
-                treeXPosition: pos.x,
-                treeYPosition: pos.y
+                xPosition: pos.x,
+                yPosition: pos.y
             )
             createTree(tree: plantModel)
             
@@ -556,8 +581,44 @@ class ForestDataManager {
         return Resource.error(error: ForestError.emptyList)
     }
     
-    func updateForestStatus(model: ForestStatusModel) {
-        
+    func updateComponentName(id: UUID, type: ComponentType, newName: String) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return .error(error: ForestError.emptyForest)
+        }
+        var isFound = false
+        switch type {
+        case .animal:
+            if let animals = forest.animals?.allObjects as? [Animal],
+               let target = animals.first(where: { $0.id == id }) {
+                target.characterName = newName
+                isFound = true
+            }
+            
+        case .plant:
+            if let trees = forest.trees?.allObjects as? [Tree],
+               let target = trees.first(where: { $0.id == id }) {
+                target.characterName = newName
+                isFound = true
+            }
+            
+        case .sculpture:
+            if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
+               let target = sculptures.first(where: { $0.id == id }) {
+                target.characterName = newName
+                isFound = true
+            }
+        default:
+            break
+        }
+        if isFound {
+            do {
+                try save()
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+        return .error(error: ForestError.emptyUUID)
     }
     
     func updateRainValue(rain: Int) -> Resource<Bool> {
@@ -573,6 +634,7 @@ class ForestDataManager {
         }
         return Resource.success(true)
     }
+    
     func updateMoneyValue(money: Int)  -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.saveError)
@@ -588,9 +650,10 @@ class ForestDataManager {
     }
 }
 
+// MARK: - POSITION HELPERS
+
 private extension ForestDataManager {
-    // MARK: - POSITION GENERATOR
-    
+        
     private enum ForestObjectType {
         case tree
         case sculpture

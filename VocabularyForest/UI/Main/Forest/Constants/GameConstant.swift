@@ -40,7 +40,13 @@ enum HorizontalDirection {
     case right
     case left
 }
-enum VerticalDirection {
-    case up
-    case down
+
+enum Directions {
+    case up, down
+    case right,left
+}
+
+struct DirectionWithCount{
+    var direction: Directions
+    var count: Int
 }
