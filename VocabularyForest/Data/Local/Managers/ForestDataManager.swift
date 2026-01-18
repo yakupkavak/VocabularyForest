@@ -293,8 +293,8 @@ extension ForestDataManager {
         }
         let sculpture = Sculpture(context: viewContext)
         sculpture.id = model.id
-        sculpture.name = model.name
-        sculpture.createdDate = model.createDate
+        sculpture.name = model.assetName
+        sculpture.createdDate = model.createdDate
         sculpture.xPosition = model.xPosition
         sculpture.yPosition = model.yPosition
         forest.addToSculptures(sculpture)
@@ -427,9 +427,9 @@ extension ForestDataManager {
                 guard let id = sculpture.id else { return Resource.error(error: ForestError.emptyUUID) }
                 let model = SculptureModel(
                     id: id,
-                    name: sculpture.name ?? "grass_sculpure",
+                    assetName: sculpture.name ?? "grass_sculpure",
                     characterName: sculpture.characterName ?? "",
-                    createDate: sculpture.createdDate ?? Date(),
+                    createdDate: sculpture.createdDate ?? Date(),
                     xPosition: sculpture.xPosition,
                     yPosition: sculpture.yPosition
                 )
@@ -498,8 +498,8 @@ extension ForestDataManager {
             
             let sculptureModel = SculptureModel(
                 id: UUID(),
-                name: name,
-                createDate: Date(),
+                assetName: name,
+                createdDate: Date(),
                 xPosition: pos.x,
                 yPosition: pos.y
             )
@@ -579,6 +579,49 @@ extension ForestDataManager {
             return Resource.success(true)
         }
         return Resource.error(error: ForestError.emptyList)
+    }
+    
+    func updateComponentPosition(model: ComponentModelProtocol, xValue: CGFloat, yValue: CGFloat) -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return .error(error: ForestError.emptyForest)
+        }
+        var isFound = false
+        switch model.type {
+        case .animal:
+            if let animals = forest.animals?.allObjects as? [Animal],
+               let target = animals.first(where: { $0.id == model.id }) {
+                target.xPosition = xValue
+                target.yPosition = yValue
+                isFound = true
+            }
+            
+        case .plant:
+            if let trees = forest.trees?.allObjects as? [Tree],
+               let target = trees.first(where: { $0.id == model.id }) {
+                target.xPosition = xValue
+                target.yPosition = yValue
+                isFound = true
+            }
+            
+        case .sculpture:
+            if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
+               let target = sculptures.first(where: { $0.id == model.id }) {
+                target.xPosition = xValue
+                target.yPosition = yValue
+                isFound = true
+            }
+        default:
+            break
+        }
+        if isFound {
+            do {
+                try save()
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+        return .error(error: ForestError.emptyUUID)
     }
     
     func updateComponentName(id: UUID, type: ComponentType, newName: String) -> Resource<Bool> {

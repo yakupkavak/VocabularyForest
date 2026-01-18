@@ -7,15 +7,13 @@
 
 import SpriteKit
 
-protocol AnimalManagerProtocol: AnyObject {
-    var animalNode: SKSpriteNode { get }
+protocol AnimalManagerProtocol: AnyObject, TapComponentProtocol, UpdatePositionProtocol {
     var animalDirection: HorizontalDirection { get }
     var model: AnimalModel? { get }
     func startMoving()
     func stopMoving()
     func changeDirection()
     func setupAnimalManager(model: AnimalModel)
-    func tapAnimal()
 }
 
 class AnimalManager {
@@ -186,7 +184,7 @@ private extension AnimalManager {
     //MARK: - TAP GESTURE
     
     func createInteractionBubble() {
-        if let existingBubble = animalNode.childNode(withName: "menu_bubble") {
+        if let existingBubble = node.childNode(withName: "menu_bubble") {
             existingBubble.removeFromParent()
             isMenuOpen = false
             return
@@ -201,7 +199,7 @@ private extension AnimalManager {
         bubble.strokeColor = .black
         bubble.lineWidth = 2
         bubble.zPosition = 100
-        bubble.position = CGPoint(x: 0, y: animalNode.size.height + 40)
+        bubble.position = CGPoint(x: 0, y: node.size.height + 40)
         
         let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
         nameBtn.position = CGPoint(x: -30, y: -5)
@@ -218,7 +216,7 @@ private extension AnimalManager {
         bubble.addChild(posBtn)
         
         bubble.setScale(0)
-        animalNode.addChild(bubble)
+        node.addChild(bubble)
         bubble.run(.scale(to: 1.0, duration: 0.2))
         
         let waitAction = SKAction.wait(forDuration: 3.0)
@@ -243,6 +241,42 @@ private extension AnimalManager {
     }
 }
 
+// MARK: - UPDATE POSITION PROTOCOL
+
+extension AnimalManager: UpdatePositionProtocol {
+    
+    func positionChange(direction: Directions) {
+        switch direction {
+        case .up:
+            self.animalModel?.yPosition += 0.01
+        case .down:
+            self.animalModel?.yPosition -= 0.01
+        case .right:
+            self.animalModel?.xPosition += 0.01
+        case .left:
+            self.animalModel?.xPosition -= 0.01
+        }
+        currentAnimalNode.position = CGPoint(
+            x: GameConstant.gameWidthSize * (self.animalModel?.xPosition ?? 0),
+            y: GameConstant.sculptureHeightSize * (self.animalModel?.yPosition ?? 0)
+        )
+    }
+    
+    func startPositionChange() {
+        currentAnimalNode.color = .clickableText
+        currentAnimalNode.colorBlendFactor = 0.9
+    }
+
+    func removeChange(x: CGFloat, y: CGFloat) {
+        currentAnimalNode.position = CGPoint(
+            x: GameConstant.gameWidthSize * x,
+            y: GameConstant.sculptureHeightSize * y
+        )
+        self.animalModel?.yPosition = y
+        self.animalModel?.xPosition = x
+    }
+}
+
 // MARK: - ANIMAL MANAGER PROTOCOL
 
 extension AnimalManager: AnimalManagerProtocol {
@@ -251,7 +285,7 @@ extension AnimalManager: AnimalManagerProtocol {
         animalModel
     }
     
-    func tapAnimal() {
+    func tapComponent() {
         createInteractionBubble()
     }
     
@@ -275,7 +309,7 @@ extension AnimalManager: AnimalManagerProtocol {
         setupAnimal(animal: model)
     }
     
-    var animalNode: SKSpriteNode {
+    var node: SKSpriteNode {
         currentAnimalNode
     }
     
@@ -285,16 +319,13 @@ extension AnimalManager: AnimalManagerProtocol {
 }
 
 extension AnimalManager: TalkProtocol {
-    var node: SKSpriteNode {
-        animalNode
-    }
     
     func talk(text: String) {
         print("")
     }
     
     func removeBubble() {
-        if let bubble = animalNode.childNode(withName: "menu_bubble") {
+        if let bubble = node.childNode(withName: "menu_bubble") {
             bubble.run(.sequence([
                 .scale(to: 0, duration: 0.1),
                 .removeFromParent()

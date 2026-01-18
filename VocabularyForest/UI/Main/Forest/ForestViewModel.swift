@@ -302,9 +302,22 @@ extension ForestViewModel: ForestViewModelProtocol {
 // MARK: FOREST SCENE PROTOCOL
 
 extension ForestViewModel: ForectSceneProtocol {
-    func updatePosition(uuid: UUID, for componentType: ComponentType, directionList: [DirectionWithCount]) {
-        componentUUID = uuid
-        selectedModel = componentType
+    func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount]) {
+        var xValue = model.xPosition
+        var yValue = model.yPosition
+        for direction in directionList {
+            switch direction.direction {
+            case .up:
+                yValue += CGFloat(direction.count) * ForestConstant.perVerticalMove
+            case .down:
+                yValue -= CGFloat(direction.count) * ForestConstant.perVerticalMove
+            case .right:
+                xValue += CGFloat(direction.count) * ForestConstant.perHorizontalMove
+            case .left:
+                xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
+            }
+        }
+        coreDataManager.updateComponentPosition(model: model, xValue: xValue, yValue: yValue)
     }
 }
 

@@ -7,12 +7,15 @@
 
 import SpriteKit
 
-protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol {
+protocol TapComponentProtocol {
+    func tapComponent()
+}
+
+protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol, TapComponentProtocol {
     var sculptureNode: SKSpriteNode { get }
     var model: SculptureModel? { get }
     func setupSculpture(model: SculptureModel)
     func setZIndex(index: Double)
-    func tapSculpture()
 }
 
 class SculptureManager {
@@ -35,7 +38,7 @@ class SculptureManager {
 private extension SculptureManager {
     
     func setModel(model: SculptureModel) {
-        currentSculptureNode = SKSpriteNode(imageNamed: model.name)
+        currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
         currentSculptureNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
@@ -61,7 +64,7 @@ private extension SculptureManager {
         }
         
         isMenuOpen = true
-        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.name
+        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.assetName
         
         let bubbleWidth: CGFloat = 140
         let bubbleHeight: CGFloat = 90
@@ -143,7 +146,7 @@ extension SculptureManager: SculptureManagerProtocol {
         sculptureModel
     }
     
-    func tapSculpture() {
+    func tapComponent() {
         createInteractionBubble()
     }
     
@@ -194,6 +197,8 @@ extension SculptureManager: UpdatePositionProtocol {
             x: GameConstant.gameWidthSize * x,
             y: GameConstant.sculptureHeightSize * y
         )
+        self.sculptureModel?.xPosition = x
+        self.sculptureModel?.yPosition = y
     }
 }
 

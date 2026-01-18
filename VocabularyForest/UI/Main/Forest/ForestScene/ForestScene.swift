@@ -27,7 +27,7 @@ protocol UpdatePositionProtocol: AnyObject {
 }
 
 protocol ForectSceneProtocol: AnyObject {
-    func updatePosition(uuid: UUID, for componentType: ComponentType, directionList: [DirectionWithCount])
+    func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount])
 }
 
 class ForestScene: SKScene, SKPhysicsContactDelegate {
@@ -43,6 +43,8 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var sculptureManagers: [SculptureManagerProtocol] = []
     private var isTouching = false
     private var previewDirectionList: [DirectionWithCount] = []
+    private var selectedManager: UpdatePositionProtocol? = nil
+    private var selectedModel: ComponentModelProtocol? = nil
     var timer: Timer?
     
     // MARK: - LIFECYCLE
@@ -108,7 +110,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         }
         
         for animal in animalManagers {
-            let animalNode = animal.animalNode
+            let animalNode = animal.node
             let floor = environmentManager.floorNode
             let animalX = animalNode.position.x
             let halfAnimalWidth = animalNode.size.width / 2
@@ -135,88 +137,11 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
-        if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
-            forestHelper?.showOptions()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "quest_button" }) {
-            forestHelper?.showQuests()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "play_button" }) {
-            forestHelper?.showGameSelection()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "forest_button" }) {
-            forestHelper?.showForestInfo()
-            return
-        }
         
-        if let btnNode = nodesAtPoint.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }) {
-            if let bubble = btnNode.parent, let targetNode = bubble.parent as? SKSpriteNode {
-                if let targetManager = plantManagers.first(where: { $0.plantNode === targetNode }) {
-                    guard let name = btnNode.name else { return }
-                    switch name {
-                    case "btn_update_name":
-                        if let model = targetManager.model {
-                            forestHelper?.updateComponentName(model: model, type: .plant)
-                        }else { return }
-                    case "btn_update_pos":
-                        targetManager.tapPlant()
-                    default:
-                        print("unknown post")
-                    }
-                    return
-                }
-                if let targetManager = animalManagers.first(where: { $0.animalNode === targetNode }) {
-                    guard let name = btnNode.name else { return }
-                    switch name {
-                    case "btn_update_name":
-                        if let model = targetManager.model {
-                            forestHelper?.updateComponentName(model: model, type: .animal)
-                        }else { return }
-                    case "btn_update_pos":
-                        targetManager.tapAnimal()
-                    default:
-                        print("unknown post")
-                    }
-                    return
-                }
-                if let targetManager = sculptureManagers.first(where: { $0.sculptureNode === targetNode }) {
-                    guard let name = btnNode.name else { return }
-                    switch name {
-                    case "btn_update_name":
-                        if let model = targetManager.model {
-                            forestHelper?.updateComponentName(model: model, type: .sculpture)
-                        }else { return }
-                    case "btn_update_pos":
-                        environmentManager.showPositionArrows()
-                        targetManager.startPositionChange()
-                    default:
-                        print("unknown post")
-                    }
-                    return
-                }
-            }
-        }
-        if let clickedNode = nodesAtPoint.first(where: { $0.name == "plant" || $0.name == "animal" || $0.name == "sculpture" }) as? SKSpriteNode {
-            if let targetManager = plantManagers.first(where: { $0.plantNode === clickedNode }) {
-                targetManager.tapPlant()
-                isTouching = false
-                return
-            }
-            if let targetManager = animalManagers.first(where: { $0.animalNode === clickedNode }) {
-                targetManager.tapAnimal()
-                isTouching = false
-                return
-            }
-            
-            if let targetManager = sculptureManagers.first(where: { $0.sculptureNode === clickedNode }) {
-                targetManager.tapSculpture()
-                isTouching = false
-                return
-            }
-        }
+        if handleMenuTaps(nodes: nodesAtPoint) { return }
+        if handleBubbleButtonTaps(nodes: nodesAtPoint) { return }
+        if handleEntityTaps(nodes: nodesAtPoint) { return }
+        if handleArrowTaps(nodes: nodesAtPoint) { return }
         let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
@@ -250,7 +175,8 @@ private extension ForestScene {
         }
         return false
     }
-    private func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {
+    
+    func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {
         guard let btnNode = nodes.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }),
               let bubble = btnNode.parent,
               let targetNode = bubble.parent as? SKSpriteNode,
@@ -258,68 +184,108 @@ private extension ForestScene {
             return false
         }
         
-        if let manager = plantManagers.first(where: { $0.plantNode === targetNode }) {
-            handleBubbleAction(manager: manager, buttonName: buttonName, type: .plant)
+        if let manager = plantManagers.first(where: { $0.node === targetNode }) {
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: manager ,nameModel: model, generalModel: model, buttonName: buttonName, type: .plant)
             return true
         }
         
-        if let manager = animalManagers.first(where: { $0.animalNode === targetNode }) {
-            handleBubbleAction(manager: manager, buttonName: buttonName, type: .animal)
+        if let manager = animalManagers.first(where: { $0.node === targetNode }) {
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: nil, nameModel: model, generalModel: model, buttonName: buttonName, type: .animal)
             return true
         }
         
         if let manager = sculptureManagers.first(where: { $0.sculptureNode === targetNode }) {
-            if buttonName == "btn_update_pos" {
-                environmentManager.showPositionArrows()
-                manager.startPositionChange()
-            } else {
-                handleBubbleAction(manager: manager, buttonName: buttonName, type: .sculpture)
-            }
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: manager ,nameModel: model, generalModel: model, buttonName: buttonName, type: .sculpture)
             return true
         }
         return false
     }
-    private func handleBubbleAction(manager: any ComponentNameable, buttonName: String, type: ComponentType) {
-        // Not: Manager'ların ortak bir protokolü (örn: ComponentNameableManager) olduğunu varsayıyorum.
-        // Eğer yoksa burada 'Any' kullanıp cast etmen gerekebilir veya kod tekrarı yapabilirsin.
-        
-        // Basitlik adına senin switch yapını buraya uyarlıyorum:
+    
+    func handleBubbleAction(manager: UpdatePositionProtocol?, nameModel: ComponentNameable,generalModel: ComponentModelProtocol ,buttonName: String, type: ComponentType) {
         switch buttonName {
         case "btn_update_name":
-            if let model = manager.model {
-                forestHelper?.updateComponentName(model: model, type: type)
-            }
+            forestHelper?.updateComponentName(model: nameModel, type: type)
         case "btn_update_pos":
-            // Her manager'ın kendi tap/move fonksiyonu var
-            if let plantManager = manager as? PlantManager { plantManager.tapPlant() }
-            else if let animalManager = manager as? AnimalManager { animalManager.tapAnimal() }
+            if let manager {
+                selectedManager = manager
+                selectedModel = generalModel
+                environmentManager.showPositionArrows()
+                manager.startPositionChange()
+            }
         default:
             break
         }
     }
 
-    private func handleEntityTaps(nodes: [SKNode]) -> Bool {
-        // Doğrudan bitki, hayvan veya heykele tıklandı mı?
+    func handleEntityTaps(nodes: [SKNode]) -> Bool {
         guard let clickedNode = nodes.first(where: { ["plant", "animal", "sculpture"].contains($0.name) }) as? SKSpriteNode else {
             return false
         }
         
-        if let manager = plantManagers.first(where: { $0.plantNode === clickedNode }) {
-            manager.tapPlant()
+        if let manager = plantManagers.first(where: { $0.node === clickedNode }) {
+            manager.tapComponent()
             return true
         }
-        if let manager = animalManagers.first(where: { $0.animalNode === clickedNode }) {
-            manager.tapAnimal()
+        if let manager = animalManagers.first(where: { $0.node === clickedNode }) {
+            manager.tapComponent()
             return true
         }
         if let manager = sculptureManagers.first(where: { $0.sculptureNode === clickedNode }) {
-            manager.tapSculpture()
+            manager.tapComponent()
             return true
         }
         
         return false
     }
     
+    func handleArrowTaps(nodes: [SKNode]) -> Bool {
+        guard let btnNode = nodes.first(where: { ForestConstant.allButtons.contains($0.name ?? "") })
+        else {
+            return false
+        }
+        guard let selectedModel else { return false }
+        
+        if btnNode.name == ForestConstant.confirmIconName {
+            helper?.updatePosition(model: selectedModel, directionList: previewDirectionList)
+            clearSelection()
+        }else if btnNode.name == ForestConstant.refuseIconName {
+            selectedManager?.removeChange(
+                x: selectedModel.xPosition,
+                y: selectedModel.yPosition
+            )
+            clearSelection()
+        }else if btnNode.name == ForestConstant.rightIconName {
+            updateDirectionList(.right)
+        }else if btnNode.name == ForestConstant.leftIconName {
+            updateDirectionList(.left)
+        }else if btnNode.name == ForestConstant.upIconName {
+            updateDirectionList(.up)
+        }else if btnNode.name == ForestConstant.downIconName {
+            updateDirectionList(.down)
+        }else {
+            return false
+        }
+        return true
+    }
+    
+    func updateDirectionList(_ direction: Directions) {
+        if let index = previewDirectionList.firstIndex(where: { $0.direction == direction}) {
+            previewDirectionList[index].count += 1
+        }else {
+            previewDirectionList.append(DirectionWithCount(direction: direction, count: 1))
+        }
+        selectedManager?.positionChange(direction: direction)
+    }
+    
+    func clearSelection() {
+        selectedModel = nil
+        selectedModel = nil
+        previewDirectionList = []
+        environmentManager?.closePositionArrows()
+    }
 }
 
 // MARK: - VIEW MODEL OUTPUT

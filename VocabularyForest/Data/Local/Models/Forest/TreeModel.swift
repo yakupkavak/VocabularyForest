@@ -8,7 +8,8 @@
 import Foundation
 
 struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
-    let id: UUID
+    var id: UUID
+    var type: ComponentType = .plant
     let assetName: String
     var characterName: String = ""
     let isAlive: Bool
@@ -19,8 +20,10 @@ struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
 }
 
 protocol ComponentModelProtocol {
+    var id: UUID { get }
     var assetName: String { get }
     var createdDate: Date { get }
     var xPosition: CGFloat { get set }
     var yPosition: CGFloat { get set }
+    var type: ComponentType { get }
 }

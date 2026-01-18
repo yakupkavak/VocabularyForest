@@ -7,8 +7,7 @@
 
 import SpriteKit
 
-protocol PlantManagerProtocol {
-    var plantNode: SKSpriteNode { get }
+protocol PlantManagerProtocol: UpdatePositionProtocol, TapComponentProtocol {
     var model: TreeModel? { get }
     func setupPlant(model: TreeModel)
     func growPlant()
@@ -16,7 +15,6 @@ protocol PlantManagerProtocol {
     func fadePlant()
     func perishPlant()
     func recoverPlant()
-    func tapPlant()
 }
 
 class PlantManager {
@@ -131,6 +129,42 @@ private extension PlantManager {
 
 }
 
+// MARK: - UPDATE PlantManager PROTOCOL
+
+extension PlantManager: UpdatePositionProtocol {
+    
+    func positionChange(direction: Directions) {
+        switch direction {
+        case .up:
+            self.treeModel?.yPosition += 0.01
+        case .down:
+            self.treeModel?.yPosition -= 0.01
+        case .right:
+            self.treeModel?.xPosition += 0.01
+        case .left:
+            self.treeModel?.xPosition -= 0.01
+        }
+        plant.position = CGPoint(
+            x: GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0),
+            y: GameConstant.sculptureHeightSize * (self.treeModel?.yPosition ?? 0)
+        )
+    }
+    
+    func startPositionChange() {
+        plant.color = .clickableText
+        plant.colorBlendFactor = 0.9
+    }
+
+    func removeChange(x: CGFloat, y: CGFloat) {
+        plant.position = CGPoint(
+            x: GameConstant.gameWidthSize * x,
+            y: GameConstant.sculptureHeightSize * y
+        )
+        self.treeModel?.yPosition = y
+        self.treeModel?.xPosition = x
+    }
+}
+
 // MARK: - PLANT MANAGER PROTOCOL
 
 extension PlantManager: PlantManagerProtocol {
@@ -139,11 +173,11 @@ extension PlantManager: PlantManagerProtocol {
         treeModel
     }
     
-    var plantNode: SKSpriteNode {
+    var node: SKSpriteNode {
         plant
     }
     
-    func tapPlant() {
+    func tapComponent() {
         createInteractionBubble()
     }
     
@@ -181,9 +215,6 @@ extension PlantManager: PlantManagerProtocol {
 }
 
 extension PlantManager: TalkProtocol {
-    var node: SKSpriteNode {
-        plant
-    }
     
     func talk(text: String) {
         print("")

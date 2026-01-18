@@ -7,16 +7,17 @@
 
 import Foundation
 
-struct SculptureModel: Equatable, ComponentNameable {
-    let id: UUID
-    let name: String
+struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
+    var id: UUID
+    var type: ComponentType = .sculpture
+    let assetName: String
     var characterName: String = ""
-    let createDate: Date
+    let createdDate: Date
     var xPosition: CGFloat
     var yPosition: CGFloat
 }
 
 let baseSculptureList = [
-    SculptureModel(id: UUID(), name: "water_statue", createDate: Date(), xPosition: 0.15, yPosition: 0.4),
-    SculptureModel(id: UUID(), name: "grass_statue", createDate: Date(), xPosition: 0.03, yPosition: 0.23)
+    SculptureModel(id: UUID(), assetName: "water_statue", createdDate: Date(), xPosition: 0.15, yPosition: 0.4),
+    SculptureModel(id: UUID(), assetName: "grass_statue", createdDate: Date(), xPosition: 0.03, yPosition: 0.23)
 ]
