@@ -78,28 +78,47 @@ private extension PlantManager {
         }
         
         isMenuOpen = true
-        let bubbleWidth: CGFloat = 120
-        let bubbleHeight: CGFloat = 60
+        let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.characterName : treeModel?.assetName
+        
+        let bubbleWidth: CGFloat = 140
+        let bubbleHeight: CGFloat = 90
+        
         let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
         bubble.name = "menu_bubble"
-        bubble.fillColor = .white
+        bubble.fillColor = .brown500.withAlphaComponent(0.95)
         bubble.strokeColor = .black
         bubble.lineWidth = 2
         bubble.zPosition = 100
         bubble.position = CGPoint(x: 0, y: plant.size.height + 40)
         
-        let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
-        nameBtn.position = CGPoint(x: -30, y: -5)
+        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        titleLabel.text = displayName ?? String(localized: "Heykel")
+        titleLabel.fontSize = 16
+        titleLabel.fontColor = .white
+        titleLabel.position = CGPoint(x: 0, y: 15)
+        bubble.addChild(titleLabel)
+
+        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
+        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
+        headerSeparator.strokeColor = .clear
+        headerSeparator.position = CGPoint(x: 0, y: 5)
+        bubble.addChild(headerSeparator)
+        
+
+        let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
+        nameBtn.position = CGPoint(x: -32, y: -15)
+        nameBtn.fontColor = .black
         bubble.addChild(nameBtn)
         
-        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
-        separator.fillColor = .gray
-        separator.strokeColor = .gray
-        separator.position = CGPoint(x: 0, y: 0)
+        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 25))
+        separator.fillColor = .logoGreen
+        separator.strokeColor = .logoGreen
+        separator.position = CGPoint(x: 0, y: -15)
         bubble.addChild(separator)
         
-        let posBtn = createButtonLabel(text: "Taşı", name: "btn_update_pos")
-        posBtn.position = CGPoint(x: 30, y: -5)
+        let posBtn = createButtonLabel(text: String(localized: "Taşı"), name: "btn_update_pos", maxWidth: 60)
+        posBtn.position = CGPoint(x: 32, y: -15)
+        posBtn.fontColor = .black
         bubble.addChild(posBtn)
         
         bubble.setScale(0)
@@ -116,7 +135,7 @@ private extension PlantManager {
         bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
     }
     
-    func createButtonLabel(text: String, name: String) -> SKLabelNode {
+    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: "Arial-BoldMT")
         label.text = text
         label.fontSize = 14
@@ -124,9 +143,20 @@ private extension PlantManager {
         label.name = name
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
+        if let width = maxWidth {
+            label.numberOfLines = 0
+            label.preferredMaxLayoutWidth = width
+            label.lineBreakMode = .byWordWrapping
+        }
         return label
     }
 
+    func getScrollOffset() -> CGFloat {
+        guard let scene = scene,
+              let floor = scene.childNode(withName: ForestConstant.floorName) else { return 0 }
+        let initialX = scene.size.width / 2
+        return floor.position.x - initialX
+    }
 }
 
 // MARK: - UPDATE PlantManager PROTOCOL
@@ -153,8 +183,12 @@ extension PlantManager: UpdatePositionProtocol {
         case .left:
             self.treeModel?.xPosition -= ForestConstant.perHorizontalMove
         }
+        let scrollOffset = getScrollOffset()
+        if let yPosisiton = self.treeModel?.yPosition {
+             plant.zPosition = getZIndex(yPosition: yPosisiton)
+        }
         plant.position = CGPoint(
-            x: GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0),
+            x: (GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0)) + scrollOffset,
             y: GameConstant.sculptureHeightSize * (self.treeModel?.yPosition ?? 0)
         )
     }
@@ -165,12 +199,16 @@ extension PlantManager: UpdatePositionProtocol {
     }
 
     func removeChange(x: CGFloat, y: CGFloat) {
+        let scrollOffset = getScrollOffset()
         plant.position = CGPoint(
-            x: GameConstant.gameWidthSize * x,
+            x: (GameConstant.gameWidthSize * x) + scrollOffset,
             y: GameConstant.sculptureHeightSize * y
         )
-        self.treeModel?.yPosition = y
         self.treeModel?.xPosition = x
+        self.treeModel?.yPosition = y
+        plant.zPosition = getZIndex(yPosition: y)
+        plant.color = .white
+        plant.colorBlendFactor = 0.0
     }
 }
 

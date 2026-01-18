@@ -28,6 +28,7 @@ class SculptureManager {
     var currentSculptureNode = SKSpriteNode()
     
     // MARK: - INIT
+    
     init(scene: SKScene? = nil) {
         self.scene = scene
     }
@@ -51,7 +52,7 @@ private extension SculptureManager {
             currentSculptureNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.sculptureHeight)
         }
         currentSculptureNode.name = "sculpture"
-        currentSculptureNode.zPosition = 10.0 - model.yPosition * 20.0
+        currentSculptureNode.zPosition = getZIndex(yPosition: model.yPosition)
         sculptureModel = model
         scene?.addChild(currentSculptureNode)
     }
@@ -136,6 +137,13 @@ private extension SculptureManager {
         }
         return label
     }
+    
+    func getScrollOffset() -> CGFloat {
+        guard let scene = scene,
+              let floor = scene.childNode(withName: ForestConstant.floorName) else { return 0 }
+        let initialX = scene.size.width / 2
+        return floor.position.x - initialX
+    }
 }
 
 // MARK: - SCULPTURE MANAGER PROTOCOL
@@ -182,8 +190,12 @@ extension SculptureManager: UpdatePositionProtocol {
         case .left:
             self.sculptureModel?.xPosition -= ForestConstant.perHorizontalMove
         }
+        let scrollOffset = getScrollOffset()
+        if let yPosisiton = self.sculptureModel?.yPosition {
+             currentSculptureNode.zPosition = getZIndex(yPosition: yPosisiton)
+        }
         currentSculptureNode.position = CGPoint(
-            x: GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0),
+            x: (GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0)) + scrollOffset,
             y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? 0)
         )
     }
@@ -198,12 +210,16 @@ extension SculptureManager: UpdatePositionProtocol {
     }
 
     func removeChange(x: CGFloat, y: CGFloat) {
+        let scrollOffset = getScrollOffset()
         currentSculptureNode.position = CGPoint(
-            x: GameConstant.gameWidthSize * x,
+            x: (GameConstant.gameWidthSize * x) + scrollOffset,
             y: GameConstant.sculptureHeightSize * y
         )
         self.sculptureModel?.xPosition = x
         self.sculptureModel?.yPosition = y
+        currentSculptureNode.zPosition = getZIndex(yPosition: y)
+        currentSculptureNode.color = .white
+        currentSculptureNode.colorBlendFactor = 0.0
     }
 }
 

@@ -107,22 +107,27 @@ struct ForestUI: View {
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if showUpdateName {
-                HStack {
-                    Spacer()
-                    Button {
-                        showUpdateName = false
-                    } label: {
-                        Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
+                VStack {
+                    Text("Update name").foregroundStyle(.white).font(.system(size: 20))
+                    HStack {
+                        Spacer()
+                        Button {
+                            showUpdateName = false
+                        } label: {
+                            Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
+                        }
+                        TextField("Name", text: $componentName).frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal).background(.brown300.opacity(0.9)).cornerRadius(16)
+                        Button {
+                            viewModel.updateComponentName(name: componentName)
+                            showUpdateName = false
+                        } label: {
+                            Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
+                        }
+                        Spacer()
                     }
-                    TextField("Name", text: $componentName).frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal).background(.brown300.opacity(0.7)).cornerRadius(16)
-                    Button {
-                        viewModel.updateComponentName(name: componentName)
-                        showUpdateName = false
-                    } label: {
-                        Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
-                    }
-                    Spacer()
-                }.compositingGroup().zIndex(3.0)
+                }
+                .compositingGroup().zIndex(3.0)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             if viewModel.showRainButton {
                 VStack{

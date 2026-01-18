@@ -112,6 +112,7 @@ private extension EnvironmentManager {
         floorNode.position = CGPoint(x: scene.size.width / 2, y: 0)
         floorNode.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.floorHeightSize)
         floorNode.zPosition = 1
+        floorNode.name = ForestConstant.floorName
         floorNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         scene.addChild(floorNode)
     }
