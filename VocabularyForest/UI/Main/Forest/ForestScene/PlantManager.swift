@@ -26,7 +26,7 @@ class PlantManager {
     private var isMenuOpen = false
     private weak var scene: SKScene?
     private var textures: [SKTexture] = []
-    
+    private var isPerished = false
     // MARK: - INIT
     
     init(scene: SKScene? = nil) {
@@ -133,16 +133,25 @@ private extension PlantManager {
 
 extension PlantManager: UpdatePositionProtocol {
     
+    func confirmeChange() {
+        if isPerished {
+            plant.color = .white
+            plant.colorBlendFactor = 0.0
+        }else {
+            perishPlant()
+        }
+    }
+    
     func positionChange(direction: Directions) {
         switch direction {
         case .up:
-            self.treeModel?.yPosition += 0.01
+            self.treeModel?.yPosition += ForestConstant.perVerticalMove
         case .down:
-            self.treeModel?.yPosition -= 0.01
+            self.treeModel?.yPosition -= ForestConstant.perVerticalMove
         case .right:
-            self.treeModel?.xPosition += 0.01
+            self.treeModel?.xPosition += ForestConstant.perHorizontalMove
         case .left:
-            self.treeModel?.xPosition -= 0.01
+            self.treeModel?.xPosition -= ForestConstant.perHorizontalMove
         }
         plant.position = CGPoint(
             x: GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0),
@@ -207,9 +216,12 @@ extension PlantManager: PlantManagerProtocol {
     func perishPlant() {
         plant.color = .brown
         plant.colorBlendFactor = 0.8
+        isPerished = true
     }
     
     func recoverPlant() {
+        isPerished = false
+        plant.color = .white
         plant.colorBlendFactor = 0.0
     }
 }

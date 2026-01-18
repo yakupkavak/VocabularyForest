@@ -7,8 +7,9 @@
 
 import SpriteKit
 
-protocol AnimalManagerProtocol: AnyObject, TapComponentProtocol, UpdatePositionProtocol {
+protocol AnimalManagerProtocol: AnyObject, TapComponentProtocol {
     var animalDirection: HorizontalDirection { get }
+    var node: SKSpriteNode { get }
     var model: AnimalModel? { get }
     func startMoving()
     func stopMoving()
@@ -238,42 +239,6 @@ private extension AnimalManager {
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
         return label
-    }
-}
-
-// MARK: - UPDATE POSITION PROTOCOL
-
-extension AnimalManager: UpdatePositionProtocol {
-    
-    func positionChange(direction: Directions) {
-        switch direction {
-        case .up:
-            self.animalModel?.yPosition += 0.01
-        case .down:
-            self.animalModel?.yPosition -= 0.01
-        case .right:
-            self.animalModel?.xPosition += 0.01
-        case .left:
-            self.animalModel?.xPosition -= 0.01
-        }
-        currentAnimalNode.position = CGPoint(
-            x: GameConstant.gameWidthSize * (self.animalModel?.xPosition ?? 0),
-            y: GameConstant.sculptureHeightSize * (self.animalModel?.yPosition ?? 0)
-        )
-    }
-    
-    func startPositionChange() {
-        currentAnimalNode.color = .clickableText
-        currentAnimalNode.colorBlendFactor = 0.9
-    }
-
-    func removeChange(x: CGFloat, y: CGFloat) {
-        currentAnimalNode.position = CGPoint(
-            x: GameConstant.gameWidthSize * x,
-            y: GameConstant.sculptureHeightSize * y
-        )
-        self.animalModel?.yPosition = y
-        self.animalModel?.xPosition = x
     }
 }
 

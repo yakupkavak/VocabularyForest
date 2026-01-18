@@ -305,6 +305,7 @@ extension ForestViewModel: ForectSceneProtocol {
     func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount]) {
         var xValue = model.xPosition
         var yValue = model.yPosition
+        print("current -> \(yValue)")
         for direction in directionList {
             switch direction.direction {
             case .up:
@@ -317,6 +318,7 @@ extension ForestViewModel: ForectSceneProtocol {
                 xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
             }
         }
+        print("new -> \(yValue)")
         coreDataManager.updateComponentPosition(model: model, xValue: xValue, yValue: yValue)
     }
 }

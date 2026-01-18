@@ -24,6 +24,7 @@ protocol UpdatePositionProtocol: AnyObject {
     func startPositionChange()
     func positionChange(direction: Directions)
     func removeChange(x: CGFloat, y: CGFloat)
+    func confirmeChange()
 }
 
 protocol ForectSceneProtocol: AnyObject {
@@ -250,6 +251,7 @@ private extension ForestScene {
         
         if btnNode.name == ForestConstant.confirmIconName {
             helper?.updatePosition(model: selectedModel, directionList: previewDirectionList)
+            selectedManager?.confirmeChange()
             clearSelection()
         }else if btnNode.name == ForestConstant.refuseIconName {
             selectedManager?.removeChange(

@@ -166,16 +166,21 @@ extension SculptureManager: SculptureManagerProtocol {
 
 extension SculptureManager: UpdatePositionProtocol {
     
+    func confirmeChange() {
+        currentSculptureNode.color = .white
+        currentSculptureNode.colorBlendFactor = 0.0
+    }
+    
     func positionChange(direction: Directions) {
         switch direction {
         case .up:
-            self.sculptureModel?.yPosition += 0.01
+            self.sculptureModel?.yPosition += ForestConstant.perVerticalMove
         case .down:
-            self.sculptureModel?.yPosition -= 0.01
+            self.sculptureModel?.yPosition -= ForestConstant.perVerticalMove
         case .right:
-            self.sculptureModel?.xPosition += 0.01
+            self.sculptureModel?.xPosition += ForestConstant.perHorizontalMove
         case .left:
-            self.sculptureModel?.xPosition -= 0.01
+            self.sculptureModel?.xPosition -= ForestConstant.perHorizontalMove
         }
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0),
