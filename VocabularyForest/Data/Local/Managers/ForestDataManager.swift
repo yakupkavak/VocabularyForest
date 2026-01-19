@@ -275,7 +275,6 @@ extension ForestDataManager {
         animal.assetName = model.assetName
         animal.healtValue = Int16(model.healthValue)
         animal.isAlive = model.isAlive
-        animal.name = model.name
         animal.xPosition = Double(model.xPosition)
         animal.yPosition = Double(model.yPosition)
         forest.addToAnimals(animal)
@@ -311,16 +310,61 @@ extension ForestDataManager {
 
 extension ForestDataManager {
     
-    func fetchSculpture() -> SculptureModel? {
-        nil
+    func fetchSculpture(id: UUID) -> SculptureModel? {
+        guard let forest = getCurrentForest() else {
+            return nil
+        }
+        if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
+               let sculpture = sculptures.first(where: { $0.id == id }) {
+            return SculptureModel(
+                id: id,
+                assetName: sculpture.name ?? "",
+                characterName: sculpture.characterName ?? "",
+                createdDate: sculpture.createdDate ?? Date(),
+                xPosition: sculpture.xPosition,
+                yPosition: sculpture.yPosition
+            )
+        }
+        return nil
     }
     
-    func fetchAnimal() -> AnimalModel? {
-        nil
+    func fetchAnimal(id: UUID) -> AnimalModel? {
+        guard let forest = getCurrentForest() else {
+            return nil
+        }
+        if let animals = forest.animals?.allObjects as? [Animal],
+               let animal = animals.first(where: { $0.id == id }) {
+            return AnimalModel(
+                id: id,
+                characterName: animal.characterName ?? "",
+                assetName: animal.assetName ?? "",
+                createdDate: animal.createdDate ?? Date(),
+                healthValue: Int(animal.healtValue),
+                isAlive: animal.isAlive,
+                xPosition: animal.xPosition,
+                yPosition: animal.yPosition
+            )
+        }
+        return nil
     }
     
-    func fetchPlant() -> TreeModel? {
-        nil
+    func fetchPlant(id: UUID) -> TreeModel? {
+        guard let forest = getCurrentForest() else {
+            return nil
+        }
+        if let plants = forest.trees?.allObjects as? [Tree],
+               let plant = plants.first(where: { $0.id == id }) {
+            return TreeModel(
+                id: id,
+                assetName: plant.assetName ?? "",
+                isAlive: plant.isAlive,
+                createdDate: plant.createdDate ?? Date(),
+                treeHealthValue: Int(plant.healthValue),
+                xPosition: plant.xPosition,
+                yPosition: plant.yPosition
+            )
+        }
+        return nil
     }
     
     func getCurrentForest() -> Forest? {
@@ -375,7 +419,7 @@ extension ForestDataManager {
                 }
                 let animalModel = AnimalModel(
                     id: id,
-                    name: animal.name ?? "",
+                    characterName: animal.name ?? "",
                     assetName: animal.assetName ?? "Cat",
                     createdDate: animal.createdDate ?? Date(),
                     healthValue: Int(animal.healtValue),
@@ -463,7 +507,7 @@ extension ForestDataManager {
         case .animal(let name):
             let animalModel = AnimalModel(
                 id: UUID(),
-                name: "\(name)",
+                characterName: "\(name)",
                 assetName: name,
                 createdDate: Date(),
                 healthValue: 10,

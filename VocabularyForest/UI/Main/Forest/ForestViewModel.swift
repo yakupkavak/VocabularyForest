@@ -13,7 +13,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func startDrought()
     func startRain()
     func stopRain()
-    func setupAnimals(animals: AnimalModel?)
+    func setupAnimal(animal: AnimalModel?)
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
 }
@@ -180,7 +180,7 @@ extension ForestViewModel {
                 if !newTrees.isEmpty { self.treeList.append(contentsOf: newTrees) }
 
                 for animal in newAnimals {
-                    self.output?.setupAnimals(animals: animal)
+                    self.output?.setupAnimal(animal: animal)
                 }
                 
                 for sculpture in newSculptures {
@@ -277,14 +277,17 @@ extension ForestViewModel: ForestViewModelProtocol {
         if result.status == .success {
             switch selectedModel {
             case .animal:
-                print("animal")
+                if let model = coreDataManager.fetchAnimal(id: componentUUID) {
+                    self.output?.setupAnimal(animal: model)
+                }
             case .plant:
-                print("animal")
+                if let model = coreDataManager.fetchPlant(id: componentUUID) {
+                    self.output?.setupPlant(plant: model)
+                }
             case .sculpture:
-                print("animal")
-                // GEt sculpture
-                //ForestDataManager.shared.f
-                //self.output?.setupSculpture(sculpture: sculpture)
+                if let model = coreDataManager.fetchSculpture(id: componentUUID) {
+                    self.output?.setupSculpture(sculpture: model)
+                }
             }
         }
         self.selectedModel = nil

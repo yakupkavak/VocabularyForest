@@ -106,7 +106,7 @@ struct ForestUI: View {
                 }.zIndex(4.0)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
-            if showUpdateName {
+            if showUpdateName { // TODO: - SOLVE UPDATE NAME PROBLEM
                 VStack {
                     Text("Update name").foregroundStyle(.white).font(.system(size: 20))
                     HStack {

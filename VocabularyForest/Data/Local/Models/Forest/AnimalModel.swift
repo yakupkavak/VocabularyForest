@@ -10,8 +10,7 @@ import Foundation
 struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var id: UUID
     var type: ComponentType = .animal
-    let name: String
-    var characterName: String = ""
+    var characterName: String
     let assetName: String
     let createdDate: Date
     let healthValue: Int

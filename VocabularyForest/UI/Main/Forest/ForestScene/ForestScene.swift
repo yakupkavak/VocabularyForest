@@ -332,15 +332,27 @@ extension ForestScene: ForestViewModelOutputProcotol {
     }
     
     func setupPlant(plant: TreeModel) {
+        for plantManager in self.plantManagers {
+            if let model = plantManager.model, model == plant {
+                plantManager.setupPlant(model: plant)
+                return
+            }
+        }
         let manager = PlantManager(scene: self)
         manager.setupPlant(model: plant)
         plantManagers.append(manager)
     }
     
-    func setupAnimals(animals: AnimalModel?){
-        guard let animals else { return }
+    func setupAnimal(animal: AnimalModel?){
+        guard let animal else { return }
+        for animalManager in self.animalManagers {
+            if let model = animalManager.model, model == animal {
+                animalManager.setupAnimalManager(model: animal)
+                return
+            }
+        }
         let animalManager = AnimalManager(scene: self)
-        animalManager.setupAnimalManager(model: animals)
+        animalManager.setupAnimalManager(model: animal)
         animalManagers.append(animalManager)
     }
     
