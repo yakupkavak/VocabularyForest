@@ -72,7 +72,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             .zIndex(3.0)
             if showOption {
                 if showExistAlert {
-                    GameConfirmationUI(title: "Are you sure?", message: "Your progress won't be saved") {
+                    GameConfirmationUI(title: String(localized: "Are you sure?"), message: String(localized: "Your progress won't be saved")) {
                         forestRouter.navigateBack()
                     } onCancel: {
                         showExistAlert = false
@@ -299,7 +299,9 @@ private extension BattleUI {
                 if let playerAnger = viewModel.playerAnger {
                     VStack {
                         Image("player_title_header").resizable().scaledToFit().overlay{
-                            Text(playerAnger.name).foregroundStyle(.white).padding(4)
+                            Text(playerAnger.name).foregroundStyle(.white).padding(8)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
                             Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)

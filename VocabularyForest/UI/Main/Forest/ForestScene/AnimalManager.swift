@@ -121,6 +121,7 @@ private extension AnimalManager {
         idleAnimation()
         randomActions()
         currentAnimalNode.name = "Animal"
+        animalModel = animal
     }
     
     func setupAnimalFrames(model: AnimalModel) {
@@ -192,33 +193,55 @@ private extension AnimalManager {
         }
         
         isMenuOpen = true
+        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.characterName : animalModel?.assetName
         let bubbleWidth: CGFloat = 120
-        let bubbleHeight: CGFloat = 60
+        let bubbleHeight: CGFloat = 80
         let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
         bubble.name = "menu_bubble"
-        bubble.fillColor = .white
+        bubble.fillColor = .brown500.withAlphaComponent(0.95)
         bubble.strokeColor = .black
         bubble.lineWidth = 2
         bubble.zPosition = 100
         bubble.position = CGPoint(x: 0, y: node.size.height + 40)
         
-        let nameBtn = createButtonLabel(text: "İsim", name: "btn_update_name")
-        nameBtn.position = CGPoint(x: -30, y: -5)
-        bubble.addChild(nameBtn)
+        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        titleLabel.text = displayName ?? String(localized: "Animal")
+        titleLabel.fontSize = 16
+        titleLabel.fontColor = .white
+        titleLabel.position = CGPoint(x: 0, y: 15)
+        bubble.addChild(titleLabel)
         
-        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 30))
-        separator.fillColor = .gray
-        separator.strokeColor = .gray
-        separator.position = CGPoint(x: 0, y: 0)
-        bubble.addChild(separator)
+        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
+        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
+        headerSeparator.strokeColor = .clear
+        headerSeparator.position = CGPoint(x: 0, y: 5)
+        bubble.addChild(headerSeparator)
         
-        let posBtn = createButtonLabel(text: "Taşı", name: "btn_update_pos")
-        posBtn.position = CGPoint(x: 30, y: -5)
-        bubble.addChild(posBtn)
+        let buttonSize = CGSize(width: 100, height: 30)
+        let buttonHitBox = SKShapeNode(rectOf: buttonSize, cornerRadius: 5)
+        buttonHitBox.fillColor = .white.withAlphaComponent(0.01)
+        buttonHitBox.strokeColor = .clear
+        buttonHitBox.name = "btn_update_name"
+        buttonHitBox.position = CGPoint(x: 0, y: -15)
+        buttonHitBox.zPosition = 5
+        
+        let btnLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        btnLabel.text = String(localized: "İsim Değiştir")
+        btnLabel.fontSize = 14
+        btnLabel.fontColor = .black
+        btnLabel.verticalAlignmentMode = .center
+        btnLabel.horizontalAlignmentMode = .center
+        btnLabel.zPosition = 1
+        
+        buttonHitBox.addChild(btnLabel)
+        bubble.addChild(buttonHitBox)
         
         bubble.setScale(0)
         node.addChild(bubble)
-        bubble.run(.scale(to: 1.0, duration: 0.2))
+        
+        let targetXScale: CGFloat = node.xScale < 0 ? -1.0 : 1.0
+        let scaleAction = SKAction.scaleX(to: targetXScale, y: 1.0, duration: 0.2)
+        bubble.run(scaleAction)
         
         let waitAction = SKAction.wait(forDuration: 3.0)
         let fadeOut = SKAction.fadeOut(withDuration: 0.5)
@@ -230,7 +253,7 @@ private extension AnimalManager {
         bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
     }
     
-    func createButtonLabel(text: String, name: String) -> SKLabelNode {
+    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
         let label = SKLabelNode(fontNamed: "Arial-BoldMT")
         label.text = text
         label.fontSize = 14
@@ -238,6 +261,11 @@ private extension AnimalManager {
         label.name = name
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
+        if let width = maxWidth {
+            label.numberOfLines = 0
+            label.preferredMaxLayoutWidth = width
+            label.lineBreakMode = .byWordWrapping
+        }
         return label
     }
 }
@@ -248,6 +276,10 @@ extension AnimalManager: AnimalManagerProtocol {
     
     var model: AnimalModel? {
         animalModel
+    }
+    
+    func updateName(name: String) {
+        animalModel?.characterName = name
     }
     
     func tapComponent() {
@@ -266,7 +298,11 @@ extension AnimalManager: AnimalManagerProtocol {
     
     func changeDirection() {
         direction = direction == .left ? .right : .left
-        currentAnimalNode.xScale = direction == .left ? -1 : 1
+        let newScale: CGFloat = direction == .left ? -1 : 1
+        currentAnimalNode.xScale = newScale
+        if let bubble = currentAnimalNode.childNode(withName: "menu_bubble") {
+            bubble.xScale = newScale
+        }
         moveAnimal()
     }
     

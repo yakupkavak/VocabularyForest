@@ -113,10 +113,12 @@ struct GameSelectUI: View {
                         showSelectBookcase = true
                     } label: {
                         Text(LocalizedStringKey("\(selectedBookcase?.bookcaseName ?? String(localized: "Kitaplık seçiniz"))"))
-                            .fixedSize()
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
                             .foregroundColor(.white)
+                            .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
 
                     }
                     .background(Image("title_header")

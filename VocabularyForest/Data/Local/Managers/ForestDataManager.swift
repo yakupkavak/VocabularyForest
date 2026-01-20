@@ -419,7 +419,7 @@ extension ForestDataManager {
                 }
                 let animalModel = AnimalModel(
                     id: id,
-                    characterName: animal.name ?? "",
+                    characterName: animal.characterName ?? "",
                     assetName: animal.assetName ?? "Cat",
                     createdDate: animal.createdDate ?? Date(),
                     healthValue: Int(animal.healtValue),
@@ -448,6 +448,7 @@ extension ForestDataManager {
                 let model = TreeModel(
                     id: id,
                     assetName: tree.name ?? "grass_sculpure",
+                    characterName: tree.characterName ?? "Tree", 
                     isAlive: tree.isAlive,
                     createdDate: tree.createdDate ?? Date(),
                     treeHealthValue: Int(tree.healthValue),

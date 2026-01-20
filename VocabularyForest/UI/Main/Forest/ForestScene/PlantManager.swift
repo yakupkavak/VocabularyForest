@@ -44,10 +44,12 @@ private extension PlantManager {
             textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
         }
         setPlant(model: model)
+        plant.zPosition = getZIndex(yPosition: model.yPosition)
     }
     
     func setPlant(model: TreeModel) {
         // FUTURE: - GROW PLANT
+        plant.removeFromParent()
         guard let firstFrame = textures[safe: 1], let scene else {
             return
         }
@@ -92,7 +94,7 @@ private extension PlantManager {
         bubble.position = CGPoint(x: 0, y: plant.size.height + 40)
         
         let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
-        titleLabel.text = displayName ?? String(localized: "Heykel")
+        titleLabel.text = displayName ?? String(localized: "Bitki")
         titleLabel.fontSize = 16
         titleLabel.fontColor = .white
         titleLabel.position = CGPoint(x: 0, y: 15)
@@ -103,7 +105,6 @@ private extension PlantManager {
         headerSeparator.strokeColor = .clear
         headerSeparator.position = CGPoint(x: 0, y: 5)
         bubble.addChild(headerSeparator)
-        
 
         let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
         nameBtn.position = CGPoint(x: -32, y: -15)
@@ -165,10 +166,10 @@ extension PlantManager: UpdatePositionProtocol {
     
     func confirmeChange() {
         if isPerished {
+            perishPlant()
+        }else {
             plant.color = .white
             plant.colorBlendFactor = 0.0
-        }else {
-            perishPlant()
         }
     }
     
@@ -184,8 +185,8 @@ extension PlantManager: UpdatePositionProtocol {
             self.treeModel?.xPosition -= ForestConstant.perHorizontalMove
         }
         let scrollOffset = getScrollOffset()
-        if let yPosisiton = self.treeModel?.yPosition {
-             plant.zPosition = getZIndex(yPosition: yPosisiton)
+        if let yPosition = self.treeModel?.yPosition {
+             plant.zPosition = getZIndex(yPosition: yPosition)
         }
         plant.position = CGPoint(
             x: (GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0)) + scrollOffset,
@@ -222,6 +223,10 @@ extension PlantManager: PlantManagerProtocol {
     
     var node: SKSpriteNode {
         plant
+    }
+    
+    func updateName(name: String) {
+        treeModel?.characterName = name
     }
     
     func tapComponent() {

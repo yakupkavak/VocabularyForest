@@ -222,7 +222,7 @@ private extension ForestScene {
     }
 
     func handleEntityTaps(nodes: [SKNode]) -> Bool {
-        guard let clickedNode = nodes.first(where: { ["plant", "animal", "sculpture"].contains($0.name) }) as? SKSpriteNode else {
+        guard let clickedNode = nodes.first(where: { ["plant", "Animal", "sculpture"].contains($0.name) }) as? SKSpriteNode else {
             return false
         }
         
@@ -321,8 +321,8 @@ extension ForestScene: ForestViewModelOutputProcotol {
     
     func setupSculpture(sculpture: SculptureModel) {
         for sculptureManager in self.sculptureManagers {
-            if let model = sculptureManager.model, model == sculpture {
-                sculptureManager.setupSculpture(model: sculpture)
+            if let model = sculptureManager.model, model.id == sculpture.id {
+                sculptureManager.updateName(name: sculpture.characterName)
                 return
             }
         }
@@ -333,8 +333,8 @@ extension ForestScene: ForestViewModelOutputProcotol {
     
     func setupPlant(plant: TreeModel) {
         for plantManager in self.plantManagers {
-            if let model = plantManager.model, model == plant {
-                plantManager.setupPlant(model: plant)
+            if let model = plantManager.model, model.id == plant.id {
+                plantManager.updateName(name: plant.characterName)
                 return
             }
         }
@@ -346,8 +346,8 @@ extension ForestScene: ForestViewModelOutputProcotol {
     func setupAnimal(animal: AnimalModel?){
         guard let animal else { return }
         for animalManager in self.animalManagers {
-            if let model = animalManager.model, model == animal {
-                animalManager.setupAnimalManager(model: animal)
+            if let model = animalManager.model, model.id == animal.id {
+                animalManager.updateName(name: animal.characterName)
                 return
             }
         }

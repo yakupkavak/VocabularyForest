@@ -9,6 +9,7 @@ import SpriteKit
 
 protocol TapComponentProtocol {
     func tapComponent()
+    func updateName(name: String)
 }
 
 protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol, TapComponentProtocol {
@@ -149,6 +150,10 @@ private extension SculptureManager {
 // MARK: - SCULPTURE MANAGER PROTOCOL
 
 extension SculptureManager: SculptureManagerProtocol {
+    
+    func updateName(name: String) {
+        sculptureModel?.characterName = name
+    }
     
     var model: SculptureModel? {
         sculptureModel

@@ -65,6 +65,16 @@ struct QuestProgressBar: View {
     }
 }
 
+func getWaterDropSize(count: Int) -> CGFloat {
+    let minCount: CGFloat = 3
+    let maxCount: CGFloat = 25
+    let minSize: CGFloat = 18
+    let maxSize: CGFloat = 36
+    let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
+    let percentage = (safeCount - minCount) / (maxCount - minCount)
+    return minSize + ((maxSize - minSize) * percentage)
+}
+
 struct QuestRewardView: View {
     
     let reward: QuestRewardModel
@@ -88,10 +98,15 @@ struct QuestRewardView: View {
                     Image(name).resizable().scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
-                case .water:
+                    
+                case .water(let count):
+                    let dynamicSize = getWaterDropSize(count: count)
+                    
                     Image(systemName: "drop.fill").resizable().scaledToFit()
-                        .frame(width: smallIconSize, height: smallIconSize)
+                        .frame(width: dynamicSize, height: dynamicSize)
                         .foregroundStyle(.blue)
+                        .animation(.spring(), value: count)
+                    
                 case .gold:
                     Image(systemName: "circle.circle.fill").resizable().scaledToFit()
                         .frame(width: smallIconSize, height: smallIconSize)
@@ -138,6 +153,19 @@ struct QuestRow: View {
     
     @ScaledMetric var iconBoxSize: CGFloat = 60
     
+    func getWaterDropSize(count: Int) -> CGFloat {
+        let minCount: CGFloat = 3
+        let maxCount: CGFloat = 25
+        
+        let minSize: CGFloat = iconBoxSize * 0.3
+        let maxSize: CGFloat = iconBoxSize * 0.6
+        
+        let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
+        let percentage = (safeCount - minCount) / (maxCount - minCount)
+        
+        return minSize + ((maxSize - minSize) * percentage)
+    }
+    
     var statusColor: Color {
         switch quest.status {
         case .locked: return .gray
@@ -176,10 +204,14 @@ struct QuestRow: View {
                             Image(name).resizable().scaledToFit()
                                 .frame(maxWidth: iconBoxSize * 0.85, maxHeight: iconBoxSize * 0.85)
                                 .shadow(radius: 2)
-                        case .water:
+                            
+                        case .water(let count):
+                            let dynamicSize = getWaterDropSize(count: count)
+                            
                             Image(systemName: "drop.fill").resizable().scaledToFit()
-                                .frame(maxWidth: iconBoxSize * 0.4)
+                                .frame(width: dynamicSize, height: dynamicSize)
                                 .foregroundStyle(.blue)
+                            
                         case .gold:
                             Image(systemName: "circle.circle.fill").resizable().scaledToFit()
                                 .frame(maxWidth: iconBoxSize * 0.7)

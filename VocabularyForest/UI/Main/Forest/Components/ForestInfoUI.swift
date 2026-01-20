@@ -54,7 +54,7 @@ struct ForestInfoUI: View {
                     Text("Beklenmedik hata").foregroundStyle(.white)
                 }
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 2)
         }
     }
 }

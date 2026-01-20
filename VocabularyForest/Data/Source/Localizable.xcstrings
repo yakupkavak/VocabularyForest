@@ -374,6 +374,28 @@
         }
       }
     },
+    "Animal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animal"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Животное"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hayvan"
+          }
+        }
+      }
+    },
     "Anlam" : {
       "localizations" : {
         "en" : {
@@ -568,6 +590,28 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Arapça"
+          }
+        }
+      }
+    },
+    "Are you sure?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы уверены?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emin misin?"
           }
         }
       }
@@ -920,6 +964,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz"
+          }
+        }
+      }
+    },
+    "Bitki" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plant"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Растение"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitki"
           }
         }
       }
@@ -2370,6 +2436,28 @@
         }
       }
     },
+    "Gold Hunt 2💰" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gold Hunt 2💰"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Охота за золотом 2💰"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altın Avı 2💰"
+          }
+        }
+      }
+    },
     "Göreve git" : {
       "localizations" : {
         "en" : {
@@ -2701,7 +2789,26 @@
       }
     },
     "Heykel" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sculpture"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скульптура"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heykel"
+          }
+        }
+      }
     },
     "Hiçbir kitap bulamadık" : {
       "localizations" : {
@@ -3145,7 +3252,26 @@
       }
     },
     "İsim Değiştir" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Name"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить имя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsmi Değiştir"
+          }
+        }
+      }
     },
     "İskelet" : {
       "localizations" : {
@@ -4140,7 +4266,26 @@
       }
     },
     "Name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsim"
+          }
+        }
+      }
     },
     "New Discoveries 🗺️" : {
       "localizations" : {
@@ -5665,7 +5810,26 @@
       }
     },
     "Taşı" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Перемещение"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taşı"
+          }
+        }
+      }
     },
     "Tebrikler!" : {
       "localizations" : {
@@ -6030,7 +6194,26 @@
       }
     },
     "Update name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update name"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновление имени"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsmi değiştir"
+          }
+        }
+      }
     },
     "Uzun zamandır sana ihtiyacımız vardı" : {
       "localizations" : {
@@ -6227,6 +6410,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ormanın"
+          }
+        }
+      }
+    },
+    "Your progress won't be saved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your progress won't be saved"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш прогресс не будет сохранен"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlerlemen kaydedilmeyecek."
           }
         }
       }

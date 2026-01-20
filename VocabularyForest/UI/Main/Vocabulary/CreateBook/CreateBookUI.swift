@@ -108,9 +108,10 @@ struct PartOfSpeechTag: View {
             }
         } label: {
             Text(partOfSpeech.localizedText)
+                .font(.system(size: 14))
                 .fixedSize()
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
                 .foregroundColor(.white)
                 .fontWeight(.medium)
         }
