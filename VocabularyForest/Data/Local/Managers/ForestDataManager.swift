@@ -723,6 +723,22 @@ extension ForestDataManager {
         return Resource.success(true)
     }
     
+    func startRain() -> Resource<Bool> {
+        guard let forest = getCurrentForest() else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        forest.rainValue -= Int16(ForestConstant.rainValue)
+        forest.landStatus = true
+        forest.landHealthPercent = Int16(ForestConstant.healthyLandHealth)
+        do {
+            try save()
+        }
+        catch {
+            return Resource.error(error: error)
+        }
+        return Resource.success(true)
+    }
+    
     func updateMoneyValue(money: Int)  -> Resource<Bool> {
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.saveError)

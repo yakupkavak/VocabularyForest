@@ -220,9 +220,9 @@ extension ForestViewModel {
     func startRain() {
         showRainButton = false
         output?.startRain()
-        coreDataManager.updateRainValue(rain: -50)
+        coreDataManager.startRain()
         var time = 0
-        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
             time += 1
             if time == 40 {

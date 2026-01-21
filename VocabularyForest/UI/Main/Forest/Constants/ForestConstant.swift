@@ -21,6 +21,8 @@ enum ForestConstant {
     static let sculptureName = "sculptureNode"
     static let animalName = "animalNode"
     static let plantName = "plantNode"
+    static let rainValue = 50
+    static let healthyLandHealth = 100
 }
 
 
