@@ -59,17 +59,17 @@ class ForestDataManager {
         let lastResetWeek = calendar.component(.weekOfYear, from: lastWeekly)
         let currentYear = calendar.component(.year, from: now)
         let lastResetYear = calendar.component(.year, from: lastWeekly)
+        
         if currentYear != lastResetYear || currentWeek != lastResetWeek {
             resetQuests(type: .weekly, helper: helper, forest: forest)
             forest.lastWeeklyResetDate = now
             hasChanges = true
         }
-        
         let lastMonthly = forest.lastMonthlyResetDate ?? Date.distantPast
         let currentMonth = calendar.component(.month, from: now)
-        let lastResetMonthVal = calendar.component(.month, from: lastMonthly)
+        let lastResetMonth = calendar.component(.month, from: lastMonthly)
         
-        if currentYear != lastResetYear || currentMonth != lastResetMonthVal {
+        if currentYear != lastResetYear || currentMonth != lastResetMonth {
             resetQuests(type: .monthly, helper: helper, forest: forest)
             forest.lastMonthlyResetDate = now
             hasChanges = true
@@ -83,7 +83,6 @@ class ForestDataManager {
                 return .error(error: ForestError.saveError)
             }
         }
-        
         return .success(false)
     }
     
@@ -205,11 +204,6 @@ private extension ForestDataManager {
             quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
             quest.questType = model.questionType.valueForCoreData
             forest.addToQuests(quest)
-        }
-        do {
-            try save()
-        }catch {
-            print(error.localizedDescription)
         }
     }
 }
@@ -599,7 +593,7 @@ extension ForestDataManager {
         return Resource.success(true)
     }
     
-    func correctAnswer(questionType: BattleQuestionType,) -> Resource<Bool>{
+    func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>{
         guard let forest = getCurrentForest() else {
             return Resource.error(error: ForestError.saveError)
         }
