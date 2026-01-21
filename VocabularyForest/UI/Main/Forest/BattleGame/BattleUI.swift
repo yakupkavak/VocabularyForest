@@ -217,14 +217,14 @@ private extension BattleUI {
                                 }
                             }
                         }
-                    }.frame(width: UIScreen.main.bounds.width * 0.6, height: UIScreen.main.bounds.height * (gameType == .learning ? 0.25 : 0.2))
+                    }.frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * (gameType == .learning ? 0.25 : 0.2))
                 }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
                     ZStack {
                         Image("pop_up_title_window").resizable().scaledToFit()
                         let questionString = NSLocalizedString("question_number", comment: "")
                         let finalString = String(format: questionString, question.questionNumber)
                         Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
-                    }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.07)
+                    }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.08)
                 }
                 Spacer()
                 VStack() {
@@ -374,8 +374,22 @@ private extension BattleUI {
     
     func answerComponent(text: String) -> some View {
         ZStack {
-            Image(.popUpBackground).resizable().frame(width: UIScreen.main.bounds.width * 0.35, height: UIScreen.main.bounds.width * 0.2).opacity(0.9)
-            Text(text.firstUppercased).font(.system(size: 14)).foregroundStyle(.white).frame(width: UIScreen.main.bounds.width * 0.33, height: UIScreen.main.bounds.height * 0.11).multilineTextAlignment(.center)
+            Image(.popUpBackground)
+                .resizable()
+                .frame(
+                    width: UIScreen.main.bounds.width * 0.35,
+                    height: UIScreen.main.bounds.width * 0.2
+                )
+                .opacity(0.9)
+            Text(text.firstUppercased)
+                .font(.system(size: 13))
+                .foregroundStyle(.white)
+                .minimumScaleFactor(0.7)
+                .frame(
+                    width: UIScreen.main.bounds.width * 0.33,
+                    height: UIScreen.main.bounds.height * 0.11
+                )
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -388,7 +402,6 @@ private extension BattleUI {
     }
 }
 
-
 #Preview {
     let previewManager = CoreDataManager.preview
     let context = previewManager.viewContext
@@ -400,7 +413,7 @@ private extension BattleUI {
     for i in 1...100 {
         let sampleBook = Book(context: context)
         sampleBook.learningWord = "Word \(i)"
-        sampleBook.meaningWord = "Anlam \(i)"
+        sampleBook.meaningWord = "Anlam AnlamAnlamAnlamAnlamAnlamAnlam\(i)"
         sampleBook.createdDate = Date()
         sampleBook.shortMemory = i % 2 == 0
         sampleBook.longMemory = i % 2 != 0
@@ -410,4 +423,3 @@ private extension BattleUI {
     let viewModel = BattleViewModel(coreDataManager: previewManager)
     return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy, selectedBookcase: nil)
 }
-
