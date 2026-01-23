@@ -10,6 +10,12 @@
             "value" : "VocabForest"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -31,6 +37,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "VocabForest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
           }
         },
         "ru" : {

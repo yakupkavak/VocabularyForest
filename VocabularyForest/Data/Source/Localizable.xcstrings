@@ -74,6 +74,12 @@
             "value" : "%lld Gold"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Oro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -94,6 +100,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Water Drops"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Gotas de agua"
           }
         },
         "ru" : {
@@ -138,6 +150,12 @@
             "value" : "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hay un secreto escondido en lo profundo del bosque. Supera esta difícil prueba y llega hasta el noble gato blanco."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -158,6 +176,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A Sip of Water 💧"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un sorbo de agua 💧"
           }
         },
         "ru" : {
@@ -182,6 +206,12 @@
             "value" : "If you leave it open, you will receive daily reminders for word repetition. If you have not given permission, this setting will ask for your permission."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si lo dejas abierto, recibirás recordatorios diarios para repetir palabras. Si no has dado tu permiso, esta configuración te lo solicitará."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -202,6 +232,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Description"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción"
           }
         },
         "ru" : {
@@ -226,6 +262,12 @@
             "value" : "Description (%@)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción (%@)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -246,6 +288,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Description: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción: %@"
           }
         },
         "ru" : {
@@ -270,6 +318,12 @@
             "value" : "Germany"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alemania"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -292,6 +346,12 @@
             "value" : "Gold: %lld"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oro: %lld"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -312,6 +372,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amazing!!\nYou remembered everything!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Increíble!\n¡Te acordaste de todo!"
           }
         },
         "ru" : {
@@ -337,6 +403,12 @@
             "value" : "Ancient Deer"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciervo antiguo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -360,6 +432,12 @@
             "value" : "Ancient Lancer"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lancero antiguo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -377,6 +455,12 @@
     "Animal" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animal"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Animal"
@@ -404,6 +488,12 @@
             "value" : "Meaning"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -424,6 +514,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meaning Language"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado Idioma"
           }
         },
         "ru" : {
@@ -448,6 +544,12 @@
             "value" : "Select meaning language"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar idioma de significado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -468,6 +570,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meaning"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado"
           }
         },
         "ru" : {
@@ -492,6 +600,12 @@
             "value" : "What is the meaning? (Required)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cuál es el significado? (Obligatorio)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -512,6 +626,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meaning: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@"
           }
         },
         "ru" : {
@@ -536,6 +656,12 @@
             "value" : "Meaning: %@ 🥰"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@ 🥰"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -556,6 +682,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meaning language"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado del lenguaje"
           }
         },
         "ru" : {
@@ -580,6 +712,12 @@
             "value" : "Arabic"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Árabe"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -600,6 +738,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro?"
           }
         },
         "ru" : {
@@ -624,6 +768,12 @@
             "value" : "Royal Knight"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caballero Real"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -644,6 +794,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fire Dragon"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragón de Fuego"
           }
         },
         "ru" : {
@@ -668,6 +824,12 @@
             "value" : "Fire Elemental"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental de fuego"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -688,6 +850,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Awakening of Ancient Guardian 🗿"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El despertar del antiguo guardián 🗿"
           }
         },
         "ru" : {
@@ -712,6 +880,12 @@
             "value" : "Settings"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuración"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -732,6 +906,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monthly Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones mensuales"
           }
         },
         "ru" : {
@@ -756,6 +936,12 @@
             "value" : "Conjunction"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conjunción"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -776,6 +962,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connection error"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de conexión"
           }
         },
         "ru" : {
@@ -800,6 +992,12 @@
             "value" : "Start"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -820,6 +1018,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unexpected error"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error inesperado"
           }
         },
         "ru" : {
@@ -844,6 +1048,12 @@
             "value" : "Determiner"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "determinante"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -864,6 +1074,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Notification Settings"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar configuración de notificaciones"
           }
         },
         "ru" : {
@@ -888,6 +1104,12 @@
             "value" : "Notification"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificación"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -908,6 +1130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconocido"
           }
         },
         "ru" : {
@@ -932,6 +1160,12 @@
             "value" : "I know"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo sé."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -952,6 +1186,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "By learning together, we can rebuild our forest from scratch."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendiendo juntos, podemos reconstruir nuestro bosque desde cero."
           }
         },
         "ru" : {
@@ -976,6 +1216,12 @@
             "value" : "Plant"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -998,6 +1244,12 @@
             "value" : "Plants will dry up in unhealthy soil, and animals will be unable to move."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las plantas se secarán en un suelo poco saludable y los animales no podrán moverse."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1018,6 +1270,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rate Us"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Califíquenos"
           }
         },
         "ru" : {
@@ -1043,6 +1301,12 @@
             "value" : "Blue Flame Bush"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arbusto de llama azul"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1063,6 +1327,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Pon al Dragón de Fuego de rodillas 4 veces y el Arbusto de Llama Azul será tuyo!"
           }
         },
         "ru" : {
@@ -1087,6 +1357,12 @@
             "value" : "No library was found for this language."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna biblioteca para este idioma."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1107,6 +1383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This action cannot be undone. All your libraries and words will be permanently deleted."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción no se puede deshacer. Todas tus bibliotecas y palabras se eliminarán de forma permanente."
           }
         },
         "ru" : {
@@ -1131,6 +1413,12 @@
             "value" : "This action cannot be undone. All your libraries and words will be permanently deleted."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta acción no se puede deshacer. Todas tus bibliotecas y palabras se eliminarán de forma permanente."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1151,6 +1439,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Do you remember this? 👀"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Te acuerdas de esto? 👀"
           }
         },
         "ru" : {
@@ -1175,6 +1469,12 @@
             "value" : "Ice Elemental"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental de hielo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1197,6 +1497,12 @@
             "value" : "Cancel"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1217,6 +1523,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "About Living Things"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de los seres vivos"
           }
         },
         "ru" : {
@@ -1242,6 +1554,12 @@
             "value" : "Cat"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gato"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1262,6 +1580,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chasing the Sunflower 🌻"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persiguiendo el girasol 🌻"
           }
         },
         "ru" : {
@@ -1286,6 +1610,12 @@
             "value" : "Chinese (Simplified)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chino (simplificado)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1306,6 +1636,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Claim reward"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reclamar recompensa"
           }
         },
         "ru" : {
@@ -1330,6 +1666,12 @@
             "value" : "Claimed"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reclamado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1350,6 +1692,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completed!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Terminado!"
           }
         },
         "ru" : {
@@ -1374,6 +1722,12 @@
             "value" : "correct"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "correcto"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1394,6 +1748,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create your first book"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crea tu primer libro"
           }
         },
         "ru" : {
@@ -1418,6 +1778,12 @@
             "value" : "Crystal Reed Quest ✨"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misión de Crystal Reed ✨"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1436,6 +1802,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crystal Reed"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crystal Reed"
@@ -1463,6 +1835,12 @@
             "value" : "Sentence"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oración"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1483,6 +1861,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily Card"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarjeta diaria"
           }
         },
         "ru" : {
@@ -1507,6 +1891,12 @@
             "value" : "Dance with Fire 🔥"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baila con el fuego 🔥"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1527,6 +1917,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dark\nMagic"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Magia\nOscura"
           }
         },
         "ru" : {
@@ -1551,6 +1947,12 @@
             "value" : "Death"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muerte"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1571,6 +1973,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Decoding Error Occurred: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se ha producido un error de decodificación: %@"
           }
         },
         "ru" : {
@@ -1595,6 +2003,12 @@
             "value" : "Defeat the Fire Elemental 5 times and earn the sacred Emberbud."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrota al Elemental de Fuego 5 veces y obtén el sagrado Emberbud."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1615,6 +2029,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Defeat the Ice Elemental 5 times, grab the Moon Bell!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrota al elemental de hielo 5 veces y hazte con la campana lunar."
           }
         },
         "ru" : {
@@ -1639,6 +2059,12 @@
             "value" : "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Derrota al Elemental de la Naturaleza 7 veces y consigue el Brillante Cristal de Caña!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1659,6 +2085,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Derrota al Dragón de Arena 7 veces y hazte con la rara Flor Estrella del Desierto!"
           }
         },
         "ru" : {
@@ -1683,6 +2115,12 @@
             "value" : "Defeat the Vampire 5 times and add that rare SunFlower to your collection."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrota al vampiro 5 veces y añade ese raro girasol a tu colección."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1705,6 +2143,12 @@
             "value" : "Delete"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1725,6 +2169,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Description"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción"
           }
         },
         "ru" : {
@@ -1750,6 +2200,12 @@
             "value" : "Desert Star Bloom"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flor estrella del desierto"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1770,6 +2226,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Details (Optional)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles (opcional)"
           }
         },
         "ru" : {
@@ -1794,6 +2256,12 @@
             "value" : "Other"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otros"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1814,6 +2282,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select language"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar idioma"
           }
         },
         "ru" : {
@@ -1838,6 +2312,12 @@
             "value" : "Language"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1858,6 +2338,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Languages"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idiomas"
           }
         },
         "ru" : {
@@ -1883,6 +2369,12 @@
             "value" : "Dog"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1903,6 +2395,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nature Balance"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equilibrio natural"
           }
         },
         "ru" : {
@@ -1927,6 +2425,12 @@
             "value" : "Nature Elemental"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental de la naturaleza"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1949,6 +2453,12 @@
             "value" : "Occupancy rate %lld / 50"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasa de ocupación %lld / 50"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1968,12 +2478,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can defeat the enemy with the %lld right choice. You have %lld health."
+            "value" : "You can defeat the enemy with %lld right choices. You have %lld health."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Puedes derrotar al enemigo con %lld respuestas correctas. Tienes %lld de salud."
           }
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Вы можете победить врага, сделав %lld верных выборов. У вас %lld здоровья."
           }
         },
@@ -1990,13 +2506,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can defeat enemies with %lld health and bosses with %lld health by making the right choices. You have %lld health."
+            "value" : "You can defeat enemies with %lld, and the Boss with %lld correct choices. You have %lld health."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Puedes derrotar a enemigos con %lld de salud y a jefes con %lld de salud tomando las decisiones correctas. Tienes %lld de salud."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вы можете победить врагов с %lld здоровья и боссов с %lld здоровья, выбирая правильные варианты. У вас %lld здоровья."
+            "value" : "Вы можете победить врагов, сделав %lld, а Босса — %lld правильных выборов. У вас %lld здоровья."
           }
         },
         "tr" : {
@@ -2013,6 +2535,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
           }
         },
         "ru" : {
@@ -2037,6 +2565,12 @@
             "value" : "Preposition"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preposición"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2057,6 +2591,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
           }
         },
         "ru" : {
@@ -2081,6 +2621,12 @@
             "value" : "Add"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2101,6 +2647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Missing question"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pregunta faltante"
           }
         },
         "ru" : {
@@ -2126,6 +2678,12 @@
             "value" : "Emberbud"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amigo humano"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2146,6 +2704,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Emerald Legend 🐉"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leyenda Esmeralda 🐉"
           }
         },
         "ru" : {
@@ -2171,6 +2735,12 @@
             "value" : "Emerald Dragon"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragón Esmeralda"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2186,13 +2756,34 @@
       }
     },
     "emptyBookcase" : {
-
+      "localizations" : {
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "emptyBookcase"
+          }
+        }
+      }
     },
     "emptyEnemyAsset" : {
-
+      "localizations" : {
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "emptyEnemyAsset"
+          }
+        }
+      }
     },
     "emptyQuestionList" : {
-
+      "localizations" : {
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "emptyQuestionList"
+          }
+        }
+      }
     },
     "Endless Water 💧" : {
       "localizations" : {
@@ -2200,6 +2791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endless Water 💧"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agua infinita 💧"
           }
         },
         "ru" : {
@@ -2224,6 +2821,12 @@
             "value" : "Enemy:"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enemigo:"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2244,6 +2847,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Example:"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo:"
           }
         },
         "ru" : {
@@ -2268,6 +2877,12 @@
             "value" : "Fantastic!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Fantástico!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2288,6 +2903,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiery Friendship 🔥"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amistad ardiente 🔥"
           }
         },
         "ru" : {
@@ -2312,6 +2933,12 @@
             "value" : "Verb"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2332,6 +2959,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fire"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuego"
           }
         },
         "ru" : {
@@ -2356,6 +2989,12 @@
             "value" : "French"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francés"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2376,6 +3015,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You will be able to use it in the store with the next update."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podrás utilizarlo en la tienda con la próxima actualización."
           }
         },
         "ru" : {
@@ -2400,6 +3045,12 @@
             "value" : "Privacy Policy"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2420,6 +3071,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gold Hunt 💰"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Búsqueda del oro 💰"
           }
         },
         "ru" : {
@@ -2444,6 +3101,12 @@
             "value" : "Gold Hunt 2💰"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Búsqueda del oro 2💰"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2464,6 +3127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Go on quest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emprender una misión"
           }
         },
         "ru" : {
@@ -2488,6 +3157,12 @@
             "value" : "By completing the quests and collecting raindrops, you can make it rain by clicking the button that appears on your screen when your reservoir is full.\n"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al completar las misiones y recolectar gotas de lluvia, puedes hacer que llueva haciendo clic en el botón que aparece en tu pantalla cuando tu depósito esté lleno."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2508,6 +3183,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones diarias"
           }
         },
         "ru" : {
@@ -2532,6 +3213,12 @@
             "value" : "Daily words, hobbies, etc."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabras cotidianas, pasatiempos, etc."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2552,6 +3239,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weekly Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones semanales"
           }
         },
         "ru" : {
@@ -2576,6 +3269,12 @@
             "value" : "About"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2596,6 +3295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Which language are you looking for?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué idioma estás buscando?"
           }
         },
         "ru" : {
@@ -2620,6 +3325,12 @@
             "value" : "Which word are you learning? (Required)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué palabra estás aprendiendo? (Obligatorio)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2640,6 +3351,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remember"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recuerda"
           }
         },
         "ru" : {
@@ -2664,6 +3381,12 @@
             "value" : "Time to Remember 📚"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempo para recordar 📚"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2684,6 +3407,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ghost"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fantasma"
           }
         },
         "ru" : {
@@ -2708,6 +3437,12 @@
             "value" : "Ready-made libraries"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotecas ya preparadas"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2728,6 +3463,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ready-made libraries"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotecas ya preparadas"
           }
         },
         "ru" : {
@@ -2752,6 +3493,12 @@
             "value" : "Are you ready? Shall we begin?"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás listo? ¿Empezamos?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2772,6 +3519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You haven't added any words yet."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no has añadido ninguna palabra."
           }
         },
         "ru" : {
@@ -2796,6 +3549,12 @@
             "value" : "Sculpture"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escultura"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2816,6 +3575,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "We couldn't find any books."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pudimos encontrar ningún libro."
           }
         },
         "ru" : {
@@ -2840,6 +3605,12 @@
             "value" : "We couldn’t find any book"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pudimos encontrar ningún libro."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2862,6 +3633,12 @@
             "value" : "We couldn't find any bookcase."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No pudimos encontrar ninguna estantería."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2879,6 +3656,12 @@
     "Hintçe" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hindi"
@@ -2906,6 +3689,12 @@
             "value" : "Home"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2927,6 +3716,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "I’m ready"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estoy listo."
           }
         },
         "ru" : {
@@ -2951,6 +3746,12 @@
             "value" : "Ice"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hielo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2971,6 +3772,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ice Cold Victory ❄️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Victoria helada ❄️"
           }
         },
         "ru" : {
@@ -2995,6 +3802,12 @@
             "value" : "Ichigo"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zorro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3015,6 +3828,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Icy Paws ❄️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patas heladas ❄️"
           }
         },
         "ru" : {
@@ -3039,6 +3858,12 @@
             "value" : "Impossible"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imposible"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3059,6 +3884,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In progress"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En curso"
           }
         },
         "ru" : {
@@ -3083,6 +3914,12 @@
             "value" : "In Progress"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En curso"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3103,6 +3940,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Download"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar"
           }
         },
         "ru" : {
@@ -3215,6 +4058,12 @@
             "value" : "Cancel"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3235,6 +4084,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Noun"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sustantivo"
           }
         },
         "ru" : {
@@ -3259,6 +4114,12 @@
             "value" : "Change Name"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar nombre"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3279,6 +4140,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skeleton"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esqueleto"
           }
         },
         "ru" : {
@@ -3303,6 +4170,12 @@
             "value" : "Skeleton Dragon"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragón esqueleto"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3323,6 +4196,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spanish"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Español"
           }
         },
         "ru" : {
@@ -3347,6 +4226,12 @@
             "value" : "The request has timed out"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La solicitud ha expirado."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3367,6 +4252,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Japanese"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "japonés"
           }
         },
         "ru" : {
@@ -3391,6 +4282,12 @@
             "value" : "Close"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3411,6 +4308,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dark Knight"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caballero Oscuro"
           }
         },
         "ru" : {
@@ -3435,6 +4338,12 @@
             "value" : "Save"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3455,6 +4364,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Word"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabra"
           }
         },
         "ru" : {
@@ -3479,6 +4394,12 @@
             "value" : "Search for a word"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar una palabra"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3499,6 +4420,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Word Notification"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificación por correo electrónico"
           }
         },
         "ru" : {
@@ -3523,6 +4450,12 @@
             "value" : "Add Word"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir palabra"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3543,6 +4476,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Word Count"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recuento de palabras"
           }
         },
         "ru" : {
@@ -3567,6 +4506,12 @@
             "value" : "Words are divided into short-term and long-term memory. When you know a word in competition mode, it moves to your long-term memory. But remember, if you don't repeat it in reminder mode within a week, it will move back to your short-term memory!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las palabras se dividen en memoria a corto plazo y memoria a largo plazo. Cuando aprendes una palabra en el modo competición, esta pasa a tu memoria a largo plazo. Pero recuerda que, si no la repites en el modo recordatorio en el plazo de una semana, volverá a tu memoria a corto plazo."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3589,6 +4534,12 @@
             "value" : "Our word: %@ 📚"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuestra palabra: %@ 📚"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3609,6 +4560,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit Word"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Word"
           }
         },
         "ru" : {
@@ -3634,6 +4591,12 @@
             "value" : "Key"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3654,6 +4617,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Book created!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Libro creado!"
           }
         },
         "ru" : {
@@ -3678,6 +4647,12 @@
             "value" : "Edit Bookcase"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar estantería"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3698,6 +4673,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There aren't enough words in your library for this game. You can download a ready-made library to play quickly."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay suficientes palabras en tu biblioteca para este juego. Puedes descargar una biblioteca ya preparada para jugar rápidamente."
           }
         },
         "ru" : {
@@ -3722,6 +4703,12 @@
             "value" : "Bookcase"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Librería"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3742,6 +4729,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bookcase name"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de la estantería"
           }
         },
         "ru" : {
@@ -3766,6 +4759,12 @@
             "value" : "Bookcase Name"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de la estantería"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3786,6 +4785,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search bookcase"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar estantería"
           }
         },
         "ru" : {
@@ -3810,6 +4815,12 @@
             "value" : "Create bookcase"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear estantería"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3830,6 +4841,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select Bookcase"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar estantería"
           }
         },
         "ru" : {
@@ -3854,6 +4871,12 @@
             "value" : "No bookcase selected"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha seleccionado ninguna estantería."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3874,6 +4897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select bookcase"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar estantería"
           }
         },
         "ru" : {
@@ -3898,6 +4927,12 @@
             "value" : "Bookcases loading…"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Librerías cargando..."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3918,6 +4953,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "See the words in your short-term memory; as you get them right, transfer them to your long-term memory!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Observa las palabras en tu memoria a corto plazo; a medida que las aprendas correctamente, ¡transfiérelas a tu memoria a largo plazo!"
           }
         },
         "ru" : {
@@ -3942,6 +4983,12 @@
             "value" : "Classic"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clásico"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3962,6 +5009,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Easy"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fácil"
           }
         },
         "ru" : {
@@ -3986,6 +5039,12 @@
             "value" : "Korean"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "coreano"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4006,6 +5065,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terms of Use"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Condiciones de uso"
           }
         },
         "ru" : {
@@ -4030,6 +5095,12 @@
             "value" : "Sand Dragon"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragón de arena"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4050,6 +5121,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Library"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca"
           }
         },
         "ru" : {
@@ -4074,6 +5151,12 @@
             "value" : "Your library has been loaded!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Tu biblioteca se ha cargado!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4094,6 +5177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Level"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nivel"
           }
         },
         "ru" : {
@@ -4118,6 +5207,12 @@
             "value" : "Locked"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4138,6 +5233,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Embark on Adventure"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Embárcate en la aventura"
           }
         },
         "ru" : {
@@ -4162,6 +5263,12 @@
             "value" : "Meet 10 new words and learn their meanings."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conoce 10 palabras nuevas y aprende su significado."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4184,6 +5291,12 @@
             "value" : "Meet 20 new words and learn their meanings."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conoce 20 palabras nuevas y aprende su significado."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4204,6 +5317,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mode:"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo:"
           }
         },
         "ru" : {
@@ -4229,6 +5348,12 @@
             "value" : "Moon Bell"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Campana de la Luna"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4249,6 +5374,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Essential for happy animals and plants."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esencial para la felicidad de los animales y las plantas."
           }
         },
         "ru" : {
@@ -4273,6 +5404,12 @@
             "value" : "Name"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4293,6 +5430,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Discoveries 🗺️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevos descubrimientos 🗺️"
           }
         },
         "ru" : {
@@ -4317,6 +5460,12 @@
             "value" : "New Discoveries 2🗺️"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevos descubrimientos 2🗺️"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4337,6 +5486,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Discoveries 3🗺️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevos descubrimientos 3🗺️"
           }
         },
         "ru" : {
@@ -4362,6 +5517,12 @@
             "value" : "Nice to meet you!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Encantado de conocerte!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4379,6 +5540,12 @@
     "No" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
@@ -4406,6 +5573,12 @@
             "value" : "No hints, only victory! Pass 4 new words on your own merit."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Sin pistas, solo victoria! Acierta 4 palabras nuevas por tus propios méritos."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4426,6 +5599,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hints, only victory! Pass 10 new words on your own merit."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Sin pistas, solo victoria! Acierta 10 palabras nuevas por tus propios méritos."
           }
         },
         "ru" : {
@@ -4450,6 +5629,12 @@
             "value" : "No quests available"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay misiones disponibles."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4470,6 +5655,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Learning language"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprender idiomas"
           }
         },
         "ru" : {
@@ -4494,6 +5685,12 @@
             "value" : "Select learning language"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar idioma de aprendizaje"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4514,6 +5711,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Learning Language"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendizaje de idiomas"
           }
         },
         "ru" : {
@@ -4538,6 +5741,12 @@
             "value" : "Learning Vocabulary"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendizaje de vocabulario"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4558,6 +5767,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Learning"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendizaje"
           }
         },
         "ru" : {
@@ -4582,6 +5797,12 @@
             "value" : "Time to Learn 🥰"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es hora de aprender 🥰"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4602,6 +5823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear"
           }
         },
         "ru" : {
@@ -4626,6 +5853,12 @@
             "value" : "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo los más sabios pueden ver este ciervo. ¿Estás listo para una batalla que pondrá a prueba tu mente?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4646,6 +5879,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Options"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones"
           }
         },
         "ru" : {
@@ -4670,6 +5909,12 @@
             "value" : "Forest"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bosque"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4690,6 +5935,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Forest Information"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información forestal"
           }
         },
         "ru" : {
@@ -4714,6 +5965,12 @@
             "value" : "About Forest"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de Forest"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4734,6 +5991,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You must fill it to give life to your forest."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes llenarlo para dar vida a tu bosque."
           }
         },
         "ru" : {
@@ -4758,6 +6021,12 @@
             "value" : "Welcome to your forest! You can bring your forest to life by completing tasks. The soil will dry out over time, so don't forget to make it rain!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Bienvenido a tu bosque! Puedes darle vida a tu bosque completando tareas. El suelo se secará con el tiempo, ¡así que no olvides hacer llover!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4778,6 +6047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Example: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo: %@"
           }
         },
         "ru" : {
@@ -4802,6 +6077,12 @@
             "value" : "Example"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4822,6 +6103,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Example Sentence"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo de oración"
           }
         },
         "ru" : {
@@ -4846,6 +6133,12 @@
             "value" : "Example Sentence (%@)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo de oración (%@) "
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4866,6 +6159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medium"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medio"
           }
         },
         "ru" : {
@@ -4890,6 +6189,12 @@
             "value" : "Game types"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipos de juegos"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4910,6 +6215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Game Mode"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de juego"
           }
         },
         "ru" : {
@@ -4934,6 +6245,12 @@
             "value" : "Start Game"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar juego"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4954,6 +6271,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You need at least %lld words to start the game."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Necesitas al menos %lld palabras para comenzar el juego."
           }
         },
         "ru" : {
@@ -4978,6 +6301,12 @@
             "value" : "To start the game, you need at least %lld words that contain examples or explanations."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para iniciar el juego, necesitas al menos %lld palabras que contengan ejemplos o explicaciones."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4998,6 +6327,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Games"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juegos"
           }
         },
         "ru" : {
@@ -5022,6 +6357,12 @@
             "value" : "Special Quests"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones especiales"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5042,6 +6383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Portuguese (Brazil)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portugués (Brasil)"
           }
         },
         "ru" : {
@@ -5066,6 +6413,12 @@
             "value" : "Progress"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progreso"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5086,6 +6439,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Psychic"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Psíquico"
           }
         },
         "ru" : {
@@ -5110,6 +6469,12 @@
             "value" : "Quest for the Desert Star 🌵"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En busca de la estrella del desierto 🌵"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5130,6 +6495,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daily Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones diarias"
           }
         },
         "ru" : {
@@ -5154,6 +6525,12 @@
             "value" : "Special Quests"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones especiales"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5174,6 +6551,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monthly Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones mensuales"
           }
         },
         "ru" : {
@@ -5198,6 +6581,12 @@
             "value" : "Weekly Quests"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones semanales"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5220,6 +6609,12 @@
             "value" : "Question\n%1$(variableName)lld"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pregunta\n%1$(variableName)lld"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5240,6 +6635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quests"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misiones"
           }
         },
         "ru" : {
@@ -5265,6 +6666,12 @@
             "value" : "What is the meaning of %@?"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Qué significa %@?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5287,6 +6694,12 @@
             "value" : "Competitive"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Competitivo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5304,6 +6717,12 @@
     "Resume" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        },
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume"
@@ -5331,6 +6750,12 @@
             "value" : "Return back"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regresar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5351,6 +6776,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Return Forest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regresar al bosque"
           }
         },
         "ru" : {
@@ -5375,6 +6806,12 @@
             "value" : "Review wrong words"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisar palabras incorrectas"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5395,6 +6832,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Revive your memory: Repeat 5 old words and master them!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Reaviva tu memoria: repite 5 palabras antiguas y domínalas!"
           }
         },
         "ru" : {
@@ -5419,6 +6862,12 @@
             "value" : "Revive your memory: Repeat 10 old words and master them!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Reaviva tu memoria: repite 10 palabras antiguas y domínalas!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5439,6 +6888,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Revive your memory: Repeat 20 old words and master them!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Reaviva tu memoria: repite 20 palabras antiguas y domínalas!"
           }
         },
         "ru" : {
@@ -5463,6 +6918,12 @@
             "value" : "Reward"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5483,6 +6944,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reward claimed"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa reclamada"
           }
         },
         "ru" : {
@@ -5507,6 +6974,12 @@
             "value" : "Russian"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruso"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5527,6 +7000,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play only with words from your short-term memory; use explanations or examples to help you."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega solo con palabras de tu memoria a corto plazo; usa explicaciones o ejemplos para ayudarte."
           }
         },
         "ru" : {
@@ -5551,6 +7030,12 @@
             "value" : "Play only with words stored in your long-term memory (learned words)."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega solo con palabras de tu memoria a largo plazo (palabras aprendidas)."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5571,6 +7056,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select your \nMagic"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecciona tu \nmagia"
           }
         },
         "ru" : {
@@ -5595,6 +7086,12 @@
             "value" : "Settings"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuración"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5615,6 +7112,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Levels"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niveles"
           }
         },
         "ru" : {
@@ -5640,6 +7143,12 @@
             "value" : "Shall we begin?"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Empezamos?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5660,6 +7169,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
           }
         },
         "ru" : {
@@ -5684,6 +7199,12 @@
             "value" : "Adjective"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjetivo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5704,6 +7225,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "So Close!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Tan cerca!"
           }
         },
         "ru" : {
@@ -5728,6 +7255,12 @@
             "value" : "About Questions"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de las preguntas"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5750,6 +7283,12 @@
             "value" : "Spirit of the Forest 🦌"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espíritu del bosque 🦌"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5770,6 +7309,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start Rain"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comienza la lluvia"
           }
         },
         "ru" : {
@@ -5795,6 +7340,12 @@
             "value" : "Sun Flower"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Girasol"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5815,6 +7366,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Move"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover"
           }
         },
         "ru" : {
@@ -5839,6 +7396,12 @@
             "value" : "Congratulations!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Felicidades!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5859,6 +7422,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dangerous Area"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Área peligrosa"
           }
         },
         "ru" : {
@@ -5883,6 +7452,12 @@
             "value" : "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El Dragón de Fuego bloqueó el camino! Derrótalo con tu sabiduría y llévate al perro leal contigo."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5903,6 +7478,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El Dragón de Fuego está furioso! Pon fin a este caos y gana la legendaria estatua del Dragón Esmeralda."
           }
         },
         "ru" : {
@@ -5927,6 +7508,12 @@
             "value" : "The forest is expanding! Meet 5 new words and learn their meanings."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El bosque se expande! Conoce 5 palabras nuevas y aprende sus significados."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5947,6 +7534,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El elemental de hielo ha congelado el bosque! Derrite el hielo con tus palabras y salva al adorable gatito."
           }
         },
         "ru" : {
@@ -5971,6 +7564,12 @@
             "value" : "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Dragón de Arena protege las ruinas antiguas. ¡Derrótalo y añade la estatua del Guardián Musgoso a tu colección!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5991,6 +7590,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Soil health: %%%lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salud del suelo: %%%lld"
           }
         },
         "ru" : {
@@ -6015,6 +7620,12 @@
             "value" : "Trail of the Blue Flame"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El rastro de la llama azul"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6035,6 +7646,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play with all books"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar con todos los libros"
           }
         },
         "ru" : {
@@ -6059,6 +7676,12 @@
             "value" : "Should All Data Be Deleted?"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Se deben eliminar todos los datos?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6079,6 +7702,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear All Data"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todos los datos"
           }
         },
         "ru" : {
@@ -6103,6 +7732,12 @@
             "value" : "Turkish"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turco"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6123,6 +7758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Two Sips of Water 💧"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dos sorbos de agua 💧"
           }
         },
         "ru" : {
@@ -6157,6 +7798,12 @@
             "value" : "Interjection"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interjección"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6177,6 +7824,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "I Forgot"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lo olvidé."
           }
         },
         "ru" : {
@@ -6201,6 +7854,12 @@
             "value" : "Update name"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar nombre"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6221,6 +7880,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "We've needed you for a long time."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te hemos necesitado durante mucho tiempo."
           }
         },
         "ru" : {
@@ -6245,6 +7910,12 @@
             "value" : "Vampire"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vampiro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6267,6 +7938,12 @@
             "value" : "Give up"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendirse"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6287,6 +7964,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "White Shadow ☁️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sombra blanca ☁️"
           }
         },
         "ru" : {
@@ -6312,6 +7995,12 @@
             "value" : "White Cat"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gato blanco"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6332,6 +8021,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wrong"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "incorrecto"
           }
         },
         "ru" : {
@@ -6356,6 +8051,12 @@
             "value" : "About Rain"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerca de Rain"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6376,6 +8077,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yes"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
           }
         },
         "ru" : {
@@ -6400,6 +8107,12 @@
             "value" : "Your Forest"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu bosque"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6420,6 +8133,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your progress won't be saved"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu progreso no se guardará."
           }
         },
         "ru" : {
@@ -6444,6 +8163,12 @@
             "value" : "Loading"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6464,6 +8189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pronoun"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronombre"
           }
         },
         "ru" : {
@@ -6488,6 +8219,12 @@
             "value" : "Adverb"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adverbio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6508,6 +8245,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hard"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difícil"
           }
         },
         "ru" : {
