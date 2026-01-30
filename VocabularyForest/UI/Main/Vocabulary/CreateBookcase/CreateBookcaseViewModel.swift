@@ -32,7 +32,8 @@ class CreateBookcaseViewModel: ObservableObject {
         let bookcase = coreDataManager.createBookcase(
             name: bookcaseName,
             learningLanguage: learningLanguage,
-            meaningLanguage: meaningLanguage
+            meaningLanguage: meaningLanguage,
+            contextType: .main
         )
         setBookcaseDefault(bookcase: bookcase)
     }

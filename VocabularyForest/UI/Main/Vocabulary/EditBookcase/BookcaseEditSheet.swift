@@ -111,7 +111,7 @@ struct BookcaseEditSheet: View {
 
 #Preview {
     let manager = CoreDataManager.preview
-    let sampleBookcase = manager.fetchBookcases()!.first!
+    let sampleBookcase = manager.fetchBookcases(contextType: .main)!.first!
     let sampleItem = BookcaseDisplayItem(
         id: sampleBookcase.objectID,
         bookcase: sampleBookcase,

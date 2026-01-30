@@ -212,7 +212,7 @@ private extension BattleUI {
                                 Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
                             } else {
                                 if let description = question.description, !description.isEmpty {
-                                    Text("Açıklama").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(2)
+                                    Text("Description").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(2)
                                     Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
                                 }
                             }

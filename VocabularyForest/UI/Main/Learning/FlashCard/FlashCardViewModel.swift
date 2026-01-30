@@ -43,7 +43,7 @@ class FlashCardViewModel: ObservableObject {
     // MARK: - DATA FUNCTIONS
     
     private func fetchBooks() {
-        self.books = manager.fetchAllBooks() ?? []
+        self.books = manager.fetchAllBooks(contextType: .background) ?? []
         noWordsFound = books.isEmpty
     }
     
@@ -96,7 +96,7 @@ class FlashCardViewModel: ObservableObject {
         guard let currentBook = currentBook else { return }
         currentBook.longMemory = remembered
         currentBook.shortMemory = !remembered
-        manager.save()
+        manager.save(type: .main)
         goToNextCard()
     }
     

@@ -73,12 +73,17 @@ extension ForestViewModel {
         showBookThreshold = false
     }
     
-    func checkBookCount(type: BattleQuestionType, battleMode: BattleEnemyModel, gameLevel: GameLevel, bookcaseSelection: GameBookcaseSelection) -> Bool {
+    func checkBookCount(
+        type: BattleQuestionType,
+        battleMode: BattleEnemyModel,
+        gameLevel: GameLevel,
+        bookcaseSelection: GameBookcaseSelection
+    ) -> Bool {
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         if type == .learning {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription() else {
+                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription(contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -86,7 +91,7 @@ extension ForestViewModel {
                     return false
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooksExampleDescription(model: bookcase) else {
+                guard let books = CoreDataManager.shared.fetchBooksExampleDescription(model: bookcase, contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -98,7 +103,7 @@ extension ForestViewModel {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooks() else {
+                guard let books = CoreDataManager.shared.fetchAllBooks(contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -113,7 +118,7 @@ extension ForestViewModel {
                     }
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase) else {
+                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase, contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -152,7 +157,7 @@ extension ForestViewModel {
             let fetchedAnimals = coreDataManager.fetchAnimals().data ?? []
             let fetchedSculptures = coreDataManager.fetchSculptures().data ?? []
             let fetchedTrees = coreDataManager.fetchTrees().data ?? []
-            let fetchedBookcases = CoreDataManager.shared.fetchBookcases()
+            let fetchedBookcases = CoreDataManager.shared.fetchBookcases(contextType: .background)
             let statusResult = coreDataManager.fetchForestStatus()
             let questResult = coreDataManager.fetchQuests()
 

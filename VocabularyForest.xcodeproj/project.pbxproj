@@ -159,6 +159,7 @@
 				tr,
 				ru,
 				"es-419",
+				"pt-BR",
 			);
 			mainGroup = 37267D172E90E9D90019D139;
 			minimizedProjectReferenceProxies = 1;

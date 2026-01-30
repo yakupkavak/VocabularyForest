@@ -202,6 +202,6 @@ class SettingsViewModel: ObservableObject {
     }
     
     func deleteAllData() {
-        manager.deleteEverything()
+        manager.deleteEverything(contextType: .background)
     }
 }

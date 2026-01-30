@@ -23,7 +23,7 @@ final class BookcaseDetailViewModel: ObservableObject {
     var bookcaseName: String
     var learningLanguage: String
     var meaningLanguage: String
-
+    
     // MARK: - INIT
     
     init(bookcaseName: String, learningLanguage: String, meaningLanguage: String) {
@@ -63,7 +63,12 @@ final class BookcaseDetailViewModel: ObservableObject {
         }
     }
     private func fetchBookcase(bookcaseName: String, learningLanguage: String, meaningLanguage: String){
-        bookcase = dataManager.fetchBookcase(name: bookcaseName, learningLanguageCode: learningLanguage, meaningLanguageCode: meaningLanguage)
+        bookcase = dataManager.fetchBookcase(
+            name: bookcaseName,
+            learningLanguageCode: learningLanguage,
+            meaningLanguageCode: meaningLanguage,
+            contextType: .main
+        )
     }
     
     // MARK: - HELPERS
@@ -71,7 +76,7 @@ final class BookcaseDetailViewModel: ObservableObject {
     func deleteBook(at offsets: IndexSet) {
         let booksToDelete = offsets.map { self.books[$0] }
         for book in booksToDelete {
-            dataManager.deleteBook(book: book)
+            dataManager.deleteBook(book: book, contextType: .main)
             if let index = allBooks.firstIndex(of: book) {
                 allBooks.remove(at: index)
             }
@@ -82,14 +87,14 @@ final class BookcaseDetailViewModel: ObservableObject {
         filterBooks(searchText: self.searchText)
     }
     func deleteBookModel(at book: Book) {
-        dataManager.deleteBook(book: book)
+        dataManager.deleteBook(book: book, contextType: .main)
         if let index = allBooks.firstIndex(of: book) {
             allBooks.remove(at: index)
         }
         filterBooks(searchText: self.searchText)
     }
     func fetchBooks(bookcase: Bookcase){
-        books = dataManager.fetchBooks(bookcase: bookcase) ?? []
+        books = dataManager.fetchBooks(bookcase: bookcase, contextType: .background) ?? []
         allBooks = books
         if !books.isEmpty{
             createdAnyBook = true
@@ -106,15 +111,11 @@ final class BookcaseDetailViewModel: ObservableObject {
         descriptionWord: String?,
         exampleSentence: String?
     ) {
-        bookToUpdate.learningWord = learningWord
-        bookToUpdate.meaningWord = meaningWord
-        bookToUpdate.descriptionWord = (descriptionWord?.isEmpty == false) ? descriptionWord : nil
-        bookToUpdate.exampleSentence = (exampleSentence?.isEmpty == false) ? exampleSentence : nil
-        
-        dataManager.save()
-        if let bookcase = self.bookcase {
-            fetchBooks(bookcase: bookcase)
-        }
-        self.editingBook = nil
+        CoreDataManager.shared.updateBook(bookToUpdate: bookToUpdate, learningWord: learningWord, meaningWord: meaningWord, descriptionWord: descriptionWord, exampleSentence: exampleSentence, onComplete: {
+            if let bookcase = self.bookcase {
+                fetchBooks(bookcase: bookcase)
+            }
+            self.editingBook = nil
+        }, contextType: .main)
     }
 }

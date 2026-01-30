@@ -180,8 +180,8 @@ class NotificationManager: ObservableObject {
     private func askDescription(learningWord: String, meaningWord: String, description: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
-        content.subtitle = String(localized:"Anlamı: \(meaningWord) 🥰")
-        content.body = String(localized:"Açıklaması: \(description)")
+        content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
+        content.body = String(localized:"Description: \(description)")
         
         return content
     }
@@ -189,8 +189,8 @@ class NotificationManager: ObservableObject {
     private func askExample(learningWord: String, meaningWord: String, example: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
-        content.subtitle = String(localized:"Anlamı: \(meaningWord) 🥰")
-        content.body = String(localized:"Örneği: \(example)")
+        content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
+        content.body = String(localized:"Example: \(example)")
         
         return content
     }
@@ -199,7 +199,7 @@ class NotificationManager: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = getRandomWordTitle()
         content.subtitle = String(localized:"\(learningWord)")
-        content.body = String(localized:"Anlamı: \(meaningWord)")
+        content.body = String(localized:"Meaning: \(meaningWord)")
         
         return content
     }

@@ -233,17 +233,22 @@ extension BattleViewModel: BattleViewModelProtocol {
         
         if questionType == .learning {
             if let bookcaseModel {
-                guard let bookcase = coreData.fetchBookcase(name: bookcaseModel.bookcaseName, learningLanguageCode: bookcaseModel.learningLanguage, meaningLanguageCode: bookcaseModel.meaningLanguage) else {
+                guard let bookcase = coreData.fetchBookcase(
+                    name: bookcaseModel.bookcaseName,
+                    learningLanguageCode: bookcaseModel.learningLanguage,
+                    meaningLanguageCode: bookcaseModel.meaningLanguage,
+                    contextType: .main
+                ) else {
                     errorModel = .emptyBookcase
                     return
                 }
-                guard let spesificBooks = coreData.fetchBooksExampleDescription(bookcase: bookcase) else {
+                guard let spesificBooks = coreData.fetchBooksExampleDescription(bookcase: bookcase, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooksWithExampleDescription() else {
+                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -251,17 +256,25 @@ extension BattleViewModel: BattleViewModelProtocol {
             }
         } else {
             if let bookcaseModel {
-                guard let bookcase = coreData.fetchBookcase(name: bookcaseModel.bookcaseName, learningLanguageCode: bookcaseModel.learningLanguage, meaningLanguageCode: bookcaseModel.meaningLanguage) else {
+                guard let bookcase = coreData.fetchBookcase(
+                    name: bookcaseModel.bookcaseName,
+                    learningLanguageCode: bookcaseModel.learningLanguage,
+                    meaningLanguageCode: bookcaseModel.meaningLanguage,
+                    contextType: .background
+                ) else {
                     errorModel = .emptyBookcase
                     return
                 }
-                guard let spesificBooks = coreData.fetchBooks(bookcase: bookcase) else {
+                guard let spesificBooks = coreData.fetchBooks(
+                    bookcase: bookcase,
+                    contextType: .background
+                ) else {
                     errorModel = .emptyBookcase
                     return
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooks() else {
+                guard let allBooks = coreData.fetchAllBooks(contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }

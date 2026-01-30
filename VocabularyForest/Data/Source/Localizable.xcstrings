@@ -80,6 +80,12 @@
             "value" : "%lld Oro"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Ouro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -106,6 +112,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Gotas de agua"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Gotas de água"
           }
         },
         "ru" : {
@@ -156,6 +168,12 @@
             "value" : "Hay un secreto escondido en lo profundo del bosque. Supera esta difícil prueba y llega hasta el noble gato blanco."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um segredo está escondido nas profundezas da floresta. Passe neste difícil teste e alcance o nobre gato branco."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -182,6 +200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Un sorbo de agua 💧"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um gole de água 💧"
           }
         },
         "ru" : {
@@ -212,6 +236,12 @@
             "value" : "Si lo dejas abierto, recibirás recordatorios diarios para repetir palabras. Si no has dado tu permiso, esta configuración te lo solicitará."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se você deixar essa opção ativada, receberá lembretes diários para repetir palavras. Se você não tiver dado permissão, essa configuração solicitará sua permissão."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -240,6 +270,12 @@
             "value" : "Descripción"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrição"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -250,62 +286,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Açıklama"
-          }
-        }
-      }
-    },
-    "Açıklaması (%@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Description (%@)"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descripción (%@)"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Описание (%@)"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Açıklaması (%@)"
-          }
-        }
-      }
-    },
-    "Açıklaması: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Description: %@"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Descripción: %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Описание: %@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Açıklaması: %@"
           }
         }
       }
@@ -322,6 +302,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alemania"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alemanha"
           }
         },
         "ru" : {
@@ -352,6 +338,12 @@
             "value" : "Oro: %lld"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouro: %lld"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -378,6 +370,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Increíble!\n¡Te acordaste de todo!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incrível!\nVocê se lembrou de tudo!"
           }
         },
         "ru" : {
@@ -409,6 +407,12 @@
             "value" : "Ciervo antiguo"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veado Antigo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -438,6 +442,12 @@
             "value" : "Lancero antiguo"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lançador Antigo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -461,6 +471,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Animal"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Animal"
@@ -494,6 +510,12 @@
             "value" : "Significado"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -520,6 +542,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Significado Idioma"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado da linguagem"
           }
         },
         "ru" : {
@@ -550,6 +578,12 @@
             "value" : "Seleccionar idioma de significado"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione o idioma do significado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -573,6 +607,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Significado"
@@ -606,6 +646,12 @@
             "value" : "¿Cuál es el significado? (Obligatorio)"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual é o significado? (Obrigatório)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -616,62 +662,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anlamı nedir (Gerekli)"
-          }
-        }
-      }
-    },
-    "Anlamı: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meaning: %@"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Significado: %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Значение: %@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlamı: %@"
-          }
-        }
-      }
-    },
-    "Anlamı: %@ 🥰" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meaning: %@ 🥰"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Significado: %@ 🥰"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Значение: %@ 🥰"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anlamı: %@ 🥰"
           }
         }
       }
@@ -688,6 +678,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Significado del lenguaje"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado da linguagem"
           }
         },
         "ru" : {
@@ -713,6 +709,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Árabe"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Árabe"
@@ -746,6 +748,12 @@
             "value" : "¿Estás seguro?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tem certeza?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -772,6 +780,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Caballero Real"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cavaleiro Real"
           }
         },
         "ru" : {
@@ -802,6 +816,12 @@
             "value" : "Dragón de Fuego"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragão de Fogo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -828,6 +848,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Elemental de fuego"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental do Fogo"
           }
         },
         "ru" : {
@@ -858,6 +884,12 @@
             "value" : "El despertar del antiguo guardián 🗿"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Despertar do Guardião Antigo 🗿"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -884,6 +916,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Configuración"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurações"
           }
         },
         "ru" : {
@@ -914,6 +952,12 @@
             "value" : "Misiones mensuales"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões mensais"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -940,6 +984,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conjunción"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conjunção"
           }
         },
         "ru" : {
@@ -970,6 +1020,12 @@
             "value" : "Error de conexión"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro de conexão"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -996,6 +1052,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inicio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar"
           }
         },
         "ru" : {
@@ -1026,6 +1088,12 @@
             "value" : "Error inesperado"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro inesperado"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1049,6 +1117,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "determinante"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "determinante"
@@ -1082,6 +1156,12 @@
             "value" : "Habilitar configuración de notificaciones"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativar configurações de notificação"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1108,6 +1188,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notificación"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificação"
           }
         },
         "ru" : {
@@ -1138,6 +1224,12 @@
             "value" : "Desconocido"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconhecido"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1164,6 +1256,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lo sé."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eu sei"
           }
         },
         "ru" : {
@@ -1194,6 +1292,12 @@
             "value" : "Aprendiendo juntos, podemos reconstruir nuestro bosque desde cero."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ao aprendermos juntos, podemos reconstruir nossa floresta do zero."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1217,6 +1321,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planta"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Planta"
@@ -1250,6 +1360,12 @@
             "value" : "Las plantas se secarán en un suelo poco saludable y los animales no podrán moverse."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As plantas secarão em solo insalubre e os animais não conseguirão se mover."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1276,6 +1392,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Califíquenos"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avalie-nos"
           }
         },
         "ru" : {
@@ -1307,6 +1429,12 @@
             "value" : "Arbusto de llama azul"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arbusto de Chama Azul"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1333,6 +1461,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Pon al Dragón de Fuego de rodillas 4 veces y el Arbusto de Llama Azul será tuyo!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Dragão de Fogo 4 vezes e o Arbusto de Chamas Azuis será seu."
           }
         },
         "ru" : {
@@ -1363,6 +1497,12 @@
             "value" : "No se encontró ninguna biblioteca para este idioma."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi encontrada nenhuma biblioteca para este idioma."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1389,6 +1529,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esta acción no se puede deshacer. Todas tus bibliotecas y palabras se eliminarán de forma permanente."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta ação não pode ser desfeita. Todas as suas bibliotecas e palavras serão excluídas permanentemente."
           }
         },
         "ru" : {
@@ -1419,6 +1565,12 @@
             "value" : "Esta acción no se puede deshacer. Todas tus bibliotecas y palabras se eliminarán de forma permanente."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta ação não pode ser desfeita. Todas as suas bibliotecas e palavras serão excluídas permanentemente."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1445,6 +1597,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Te acuerdas de esto? 👀"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você se lembra disso? 👀"
           }
         },
         "ru" : {
@@ -1475,6 +1633,12 @@
             "value" : "Elemental de hielo"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental de Gelo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1498,6 +1662,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
@@ -1531,6 +1701,12 @@
             "value" : "Acerca de los seres vivos"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre os seres vivos"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1555,6 +1731,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gato"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gato"
@@ -1588,6 +1770,12 @@
             "value" : "Persiguiendo el girasol 🌻"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perseguindo o girassol 🌻"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1614,6 +1802,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chino (simplificado)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chinês (simplificado)"
           }
         },
         "ru" : {
@@ -1644,6 +1838,12 @@
             "value" : "Reclamar recompensa"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reivindicar recompensa"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1670,6 +1870,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reclamado"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reivindicado"
           }
         },
         "ru" : {
@@ -1700,6 +1906,12 @@
             "value" : "¡Terminado!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concluído!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1726,6 +1938,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "correcto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "correto"
           }
         },
         "ru" : {
@@ -1756,6 +1974,12 @@
             "value" : "Crea tu primer libro"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crie seu primeiro livro"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1784,6 +2008,12 @@
             "value" : "Misión de Crystal Reed ✨"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missão Crystal Reed ✨"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1808,6 +2038,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crystal Reed"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crystal Reed"
@@ -1841,6 +2077,12 @@
             "value" : "Oración"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frase"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1867,6 +2109,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tarjeta diaria"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cartão Diário"
           }
         },
         "ru" : {
@@ -1897,6 +2145,12 @@
             "value" : "Baila con el fuego 🔥"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dança com o Fogo 🔥"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1923,6 +2177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Magia\nOscura"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Magia\nNegra"
           }
         },
         "ru" : {
@@ -1953,6 +2213,12 @@
             "value" : "Muerte"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morte"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1979,6 +2245,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se ha producido un error de decodificación: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu erro de decodificação: %@"
           }
         },
         "ru" : {
@@ -2009,6 +2281,12 @@
             "value" : "Derrota al Elemental de Fuego 5 veces y obtén el sagrado Emberbud."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Elemental do Fogo 5 vezes e ganhe o sagrado Emberbud."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2035,6 +2313,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Derrota al elemental de hielo 5 veces y hazte con la campana lunar."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Elemental de Gelo 5 vezes e pegue o Sino da Lua!"
           }
         },
         "ru" : {
@@ -2065,6 +2349,12 @@
             "value" : "¡Derrota al Elemental de la Naturaleza 7 veces y consigue el Brillante Cristal de Caña!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Elemental da Natureza 7 vezes e recolha o Cristal de Junco brilhante!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2091,6 +2381,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Derrota al Dragón de Arena 7 veces y hazte con la rara Flor Estrella del Desierto!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Dragão das Areias 7 vezes e ganhe a rara Flor Estrela do Deserto!"
           }
         },
         "ru" : {
@@ -2121,6 +2417,12 @@
             "value" : "Derrota al vampiro 5 veces y añade ese raro girasol a tu colección."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derrote o Vampiro 5 vezes e adicione essa rara Flor do Sol à sua coleção."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2147,6 +2449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir"
           }
         },
         "ru" : {
@@ -2177,6 +2485,12 @@
             "value" : "Descripción"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrição"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2187,6 +2501,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Açıklama"
+          }
+        }
+      }
+    },
+    "Description (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description (%@)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción (%@)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrição (%@)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Описание (%@)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açıklaması (%@)"
+          }
+        }
+      }
+    },
+    "Description: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descrição: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Описание: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açıklaması: %@"
           }
         }
       }
@@ -2204,6 +2586,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flor estrella del desierto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flor Estrela do Deserto"
           }
         },
         "ru" : {
@@ -2234,6 +2622,12 @@
             "value" : "Detalles (opcional)"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalhes (opcional)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2260,6 +2654,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Otros"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outros"
           }
         },
         "ru" : {
@@ -2290,6 +2690,12 @@
             "value" : "Seleccionar idioma"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione o idioma"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2318,6 +2724,12 @@
             "value" : "Idioma"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2341,6 +2753,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idiomas"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Idiomas"
@@ -2375,6 +2793,12 @@
             "value" : "Perro"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cão"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2401,6 +2825,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Equilibrio natural"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equilíbrio da Natureza"
           }
         },
         "ru" : {
@@ -2431,6 +2861,12 @@
             "value" : "Elemental de la naturaleza"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elemental da Natureza"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2457,6 +2893,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tasa de ocupación %lld / 50"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taxa de ocupação %lld / 50"
           }
         },
         "ru" : {
@@ -2487,6 +2929,12 @@
             "value" : "Puedes derrotar al enemigo con %lld respuestas correctas. Tienes %lld de salud."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode derrotar o inimigo com %lld escolhas certas. Você tem %lld de vida."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "needs_review",
@@ -2515,6 +2963,12 @@
             "value" : "Puedes derrotar a enemigos con %lld de salud y a jefes con %lld de salud tomando las decisiones correctas. Tienes %lld de salud."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode derrotar inimigos com %lld, e o Chefe com %lld escolhas certas. Você tem %lld de vida."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2538,6 +2992,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Editar"
@@ -2571,6 +3031,12 @@
             "value" : "Preposición"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preposição"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2594,6 +3060,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Editar"
@@ -2627,6 +3099,12 @@
             "value" : "Añadir"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2655,6 +3133,12 @@
             "value" : "Pregunta faltante"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pergunta em falta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2679,6 +3163,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amigo humano"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amigo humano"
@@ -2712,6 +3202,12 @@
             "value" : "Leyenda Esmeralda 🐉"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lenda Esmeralda 🐉"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2739,6 +3235,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dragón Esmeralda"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragão Esmeralda"
           }
         },
         "ru" : {
@@ -2799,6 +3301,12 @@
             "value" : "Agua infinita 💧"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Água infinita 💧"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2825,6 +3333,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enemigo:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inimigo:"
           }
         },
         "ru" : {
@@ -2855,6 +3369,12 @@
             "value" : "Ejemplo:"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo:"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2865,6 +3385,40 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Örnek"
+          }
+        }
+      }
+    },
+    "Example: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Example: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ejemplo: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пример: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Örnek: %@"
           }
         }
       }
@@ -2881,6 +3435,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Fantástico!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fantástico!"
           }
         },
         "ru" : {
@@ -2911,6 +3471,12 @@
             "value" : "Amistad ardiente 🔥"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amizade ardente 🔥"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2934,6 +3500,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbo"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbo"
@@ -2967,6 +3539,12 @@
             "value" : "Fuego"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fogo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2993,6 +3571,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Francés"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francês"
           }
         },
         "ru" : {
@@ -3023,6 +3607,12 @@
             "value" : "Podrás utilizarlo en la tienda con la próxima actualización."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você poderá usá-lo na loja com a próxima atualização."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3049,6 +3639,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Política de privacidad"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de Privacidade"
           }
         },
         "ru" : {
@@ -3079,6 +3675,12 @@
             "value" : "Búsqueda del oro 💰"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caça ao ouro 💰"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3105,6 +3707,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Búsqueda del oro 2💰"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caça ao Ouro 2💰"
           }
         },
         "ru" : {
@@ -3135,6 +3743,12 @@
             "value" : "Emprender una misión"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vá em busca"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3161,6 +3775,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Al completar las misiones y recolectar gotas de lluvia, puedes hacer que llueva haciendo clic en el botón que aparece en tu pantalla cuando tu depósito esté lleno."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ao completar as missões e coletar gotas de chuva, você pode fazer chover clicando no botão que aparece na tela quando o reservatório estiver cheio."
           }
         },
         "ru" : {
@@ -3191,6 +3811,12 @@
             "value" : "Misiones diarias"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões diárias"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3217,6 +3843,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Palabras cotidianas, pasatiempos, etc."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palavras do dia-a-dia, passatempos, etc."
           }
         },
         "ru" : {
@@ -3247,6 +3879,12 @@
             "value" : "Misiones semanales"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões semanais"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3273,6 +3911,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre"
           }
         },
         "ru" : {
@@ -3303,6 +3947,12 @@
             "value" : "¿Qué idioma estás buscando?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual idioma você está procurando?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3329,6 +3979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Qué palabra estás aprendiendo? (Obligatorio)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual palavra você está aprendendo? (Obrigatório)"
           }
         },
         "ru" : {
@@ -3359,6 +4015,12 @@
             "value" : "Recuerda"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lembre-se"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3387,6 +4049,12 @@
             "value" : "Tiempo para recordar 📚"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de lembrar 📚"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3410,6 +4078,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fantasma"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fantasma"
@@ -3443,6 +4117,12 @@
             "value" : "Bibliotecas ya preparadas"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotecas prontas"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3469,6 +4149,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bibliotecas ya preparadas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotecas prontas"
           }
         },
         "ru" : {
@@ -3499,6 +4185,12 @@
             "value" : "¿Estás listo? ¿Empezamos?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você está pronto? Vamos começar?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3527,6 +4219,12 @@
             "value" : "Aún no has añadido ninguna palabra."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você ainda não adicionou nenhuma palavra."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3550,6 +4248,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escultura"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Escultura"
@@ -3583,6 +4287,12 @@
             "value" : "No pudimos encontrar ningún libro."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos encontrar nenhum livro."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3609,6 +4319,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No pudimos encontrar ningún libro."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos encontrar nenhum livro"
           }
         },
         "ru" : {
@@ -3639,6 +4355,12 @@
             "value" : "No pudimos encontrar ninguna estantería."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos encontrar nenhuma estante."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3662,6 +4384,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hindi"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hindi"
@@ -3695,6 +4423,12 @@
             "value" : "Inicio"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Página inicial"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3722,6 +4456,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estoy listo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estou pronto"
           }
         },
         "ru" : {
@@ -3752,6 +4492,12 @@
             "value" : "Hielo"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3778,6 +4524,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Victoria helada ❄️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitória gelada ❄️"
           }
         },
         "ru" : {
@@ -3808,6 +4560,12 @@
             "value" : "Zorro"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeca"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3834,6 +4592,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Patas heladas ❄️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patas geladas ❄️"
           }
         },
         "ru" : {
@@ -3864,6 +4628,12 @@
             "value" : "Imposible"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossível"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3890,6 +4660,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En curso"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em andamento"
           }
         },
         "ru" : {
@@ -3920,6 +4696,12 @@
             "value" : "En curso"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em andamento"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3948,6 +4730,12 @@
             "value" : "Descargar"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baixar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3968,6 +4756,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "English (US)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglés (EE. UU.)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglês (EUA)"
           }
         },
         "ru" : {
@@ -3992,6 +4792,18 @@
             "value" : "English (UK)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglés (Reino Unido)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglês (Americano)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4014,6 +4826,18 @@
             "value" : "English (UK)"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglés (Reino Unido)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglês (Americano)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4034,6 +4858,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "English (US)"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglés (EE. UU.)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inglês (EUA)"
           }
         },
         "ru" : {
@@ -4059,6 +4895,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelar"
@@ -4092,6 +4934,12 @@
             "value" : "Sustantivo"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Substantivo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4120,6 +4968,12 @@
             "value" : "Cambiar nombre"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alterar nome"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4143,6 +4997,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esqueleto"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esqueleto"
@@ -4176,6 +5036,12 @@
             "value" : "Dragón esqueleto"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragão Esqueleto"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4202,6 +5068,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Español"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espanhol"
           }
         },
         "ru" : {
@@ -4232,6 +5104,12 @@
             "value" : "La solicitud ha expirado."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A solicitação expirou."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4258,6 +5136,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "japonés"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Japonês"
           }
         },
         "ru" : {
@@ -4288,6 +5172,12 @@
             "value" : "Cerrar"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fechar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4314,6 +5204,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Caballero Oscuro"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cavaleiro das Trevas"
           }
         },
         "ru" : {
@@ -4344,6 +5240,12 @@
             "value" : "Guardar"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvar"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4370,6 +5272,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Palabra"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palavra"
           }
         },
         "ru" : {
@@ -4400,6 +5308,12 @@
             "value" : "Buscar una palabra"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pesquisar uma palavra"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4426,6 +5340,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notificación por correo electrónico"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificação por palavra"
           }
         },
         "ru" : {
@@ -4456,6 +5376,12 @@
             "value" : "Añadir palabra"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar palavra"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4482,6 +5408,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recuento de palabras"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contagem de palavras"
           }
         },
         "ru" : {
@@ -4512,6 +5444,12 @@
             "value" : "Las palabras se dividen en memoria a corto plazo y memoria a largo plazo. Cuando aprendes una palabra en el modo competición, esta pasa a tu memoria a largo plazo. Pero recuerda que, si no la repites en el modo recordatorio en el plazo de una semana, volverá a tu memoria a corto plazo."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As palavras são divididas em memória de curto prazo e memória de longo prazo. Quando você aprende uma palavra no modo competição, ela passa para a sua memória de longo prazo. Mas lembre-se: se você não repeti-la no modo lembrete dentro de uma semana, ela voltará para a sua memória de curto prazo!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4540,6 +5478,12 @@
             "value" : "Nuestra palabra: %@ 📚"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nossa palavra: %@ 📚"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4563,6 +5507,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar Word"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Editar Word"
@@ -4597,6 +5547,12 @@
             "value" : "Clave"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chave"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4623,6 +5579,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Libro creado!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Livro criado!"
           }
         },
         "ru" : {
@@ -4653,6 +5615,12 @@
             "value" : "Editar estantería"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar estante"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4679,6 +5647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hay suficientes palabras en tu biblioteca para este juego. Puedes descargar una biblioteca ya preparada para jugar rápidamente."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não há palavras suficientes na sua biblioteca para este jogo. Você pode baixar uma biblioteca pronta para jogar rapidamente."
           }
         },
         "ru" : {
@@ -4709,6 +5683,12 @@
             "value" : "Librería"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estante"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4735,6 +5715,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nombre de la estantería"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome da estante"
           }
         },
         "ru" : {
@@ -4765,6 +5751,12 @@
             "value" : "Nombre de la estantería"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome da estante"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4791,6 +5783,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Buscar estantería"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pesquisar estante"
           }
         },
         "ru" : {
@@ -4821,6 +5819,12 @@
             "value" : "Crear estantería"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criar estante"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4847,6 +5851,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleccionar estantería"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecionar estante"
           }
         },
         "ru" : {
@@ -4877,6 +5887,12 @@
             "value" : "No se ha seleccionado ninguna estantería."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma estante selecionada"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4903,6 +5919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seleccionar estantería"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione estante"
           }
         },
         "ru" : {
@@ -4933,6 +5955,12 @@
             "value" : "Librerías cargando..."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estantes carregando..."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4959,6 +5987,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Observa las palabras en tu memoria a corto plazo; a medida que las aprendas correctamente, ¡transfiérelas a tu memoria a largo plazo!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veja as palavras na sua memória de curto prazo; à medida que as acertar, transfira-as para a sua memória de longo prazo!"
           }
         },
         "ru" : {
@@ -4989,6 +6023,12 @@
             "value" : "Clásico"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clássico"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5012,6 +6052,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fácil"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fácil"
@@ -5045,6 +6091,12 @@
             "value" : "coreano"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coreano"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5071,6 +6123,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Condiciones de uso"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termos de uso"
           }
         },
         "ru" : {
@@ -5101,6 +6159,12 @@
             "value" : "Dragón de arena"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dragão das Areias"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5124,6 +6188,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Biblioteca"
@@ -5157,6 +6227,12 @@
             "value" : "¡Tu biblioteca se ha cargado!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua biblioteca foi carregada!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5185,6 +6261,12 @@
             "value" : "Nivel"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nível"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5208,6 +6290,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueado"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bloqueado"
@@ -5241,6 +6329,12 @@
             "value" : "Embárcate en la aventura"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Embarque em uma aventura"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5251,6 +6345,74 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Maceraya Atıl"
+          }
+        }
+      }
+    },
+    "Meaning: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meaning: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Значение: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anlamı: %@"
+          }
+        }
+      }
+    },
+    "Meaning: %@ 🥰" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meaning: %@ 🥰"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@ 🥰"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Significado: %@ 🥰"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Значение: %@ 🥰"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anlamı: %@ 🥰"
           }
         }
       }
@@ -5267,6 +6429,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Conoce 10 palabras nuevas y aprende su significado."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conheça 10 novas palavras e aprenda seus significados."
           }
         },
         "ru" : {
@@ -5297,6 +6465,12 @@
             "value" : "Conoce 20 palabras nuevas y aprende su significado."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conheça 20 novas palavras e aprenda seus significados."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5320,6 +6494,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo:"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Modo:"
@@ -5354,6 +6534,12 @@
             "value" : "Campana de la Luna"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sino da Lua"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5380,6 +6566,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esencial para la felicidad de los animales y las plantas."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essencial para animais e plantas felizes."
           }
         },
         "ru" : {
@@ -5410,6 +6602,12 @@
             "value" : "Nombre"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5436,6 +6634,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nuevos descubrimientos 🗺️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novas descobertas 🗺️"
           }
         },
         "ru" : {
@@ -5466,6 +6670,12 @@
             "value" : "Nuevos descubrimientos 2🗺️"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novas descobertas 2🗺️"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5492,6 +6702,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nuevos descubrimientos 3🗺️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novas descobertas 3🗺️"
           }
         },
         "ru" : {
@@ -5523,6 +6739,12 @@
             "value" : "¡Encantado de conocerte!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prazer em conhecê-lo!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5549,6 +6771,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não"
           }
         },
         "ru" : {
@@ -5579,6 +6807,12 @@
             "value" : "¡Sin pistas, solo victoria! Acierta 4 palabras nuevas por tus propios méritos."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem dicas, apenas vitória! Aprovem 4 novas palavras por mérito próprio."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5605,6 +6839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Sin pistas, solo victoria! Acierta 10 palabras nuevas por tus propios méritos."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem dicas, apenas vitória! Aprovem 10 novas palavras por mérito próprio."
           }
         },
         "ru" : {
@@ -5635,6 +6875,12 @@
             "value" : "No hay misiones disponibles."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não há missões disponíveis"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5661,6 +6907,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprender idiomas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendendo idiomas"
           }
         },
         "ru" : {
@@ -5691,6 +6943,12 @@
             "value" : "Seleccionar idioma de aprendizaje"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione o idioma de aprendizagem"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5717,6 +6975,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprendizaje de idiomas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendendo idiomas"
           }
         },
         "ru" : {
@@ -5747,6 +7011,12 @@
             "value" : "Aprendizaje de vocabulario"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendendo vocabulário"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5773,6 +7043,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprendizaje"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendizagem"
           }
         },
         "ru" : {
@@ -5803,6 +7079,12 @@
             "value" : "Es hora de aprender 🥰"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora de aprender 🥰"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5829,6 +7111,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Crear"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criar"
           }
         },
         "ru" : {
@@ -5859,6 +7147,12 @@
             "value" : "Solo los más sabios pueden ver este ciervo. ¿Estás listo para una batalla que pondrá a prueba tu mente?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Somente os mais sábios podem ver este veado. Você está pronto para uma batalha que desafiará sua mente?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5885,6 +7179,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opciones"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opções"
           }
         },
         "ru" : {
@@ -5915,6 +7215,12 @@
             "value" : "Bosque"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floresta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5941,6 +7247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Información forestal"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informações sobre a floresta"
           }
         },
         "ru" : {
@@ -5971,6 +7283,12 @@
             "value" : "Acerca de Forest"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre a Floresta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5997,6 +7315,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Debes llenarlo para dar vida a tu bosque."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você deve preenchê-lo para dar vida à sua floresta."
           }
         },
         "ru" : {
@@ -6027,6 +7351,12 @@
             "value" : "¡Bienvenido a tu bosque! Puedes darle vida a tu bosque completando tareas. El suelo se secará con el tiempo, ¡así que no olvides hacer llover!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bem-vindo à sua floresta! Você pode dar vida à sua floresta completando tarefas. O solo vai secar com o tempo, então não se esqueça de fazer chover!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6037,34 +7367,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ormanına hoşgeldin! Görevleri tamamlayarak ormanına hayat katabilirsin. Toprağın zamanla kuruyacaktır, bunun için yağmur yağdırmayı unutma!"
-          }
-        }
-      }
-    },
-    "Örneği: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Example: %@"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ejemplo: %@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пример: %@"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Örneği: %@"
           }
         }
       }
@@ -6081,6 +7383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ejemplo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo"
           }
         },
         "ru" : {
@@ -6111,6 +7419,12 @@
             "value" : "Ejemplo de oración"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo de frase"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6137,6 +7451,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ejemplo de oración (%@) "
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplo de frase (%@)"
           }
         },
         "ru" : {
@@ -6167,6 +7487,12 @@
             "value" : "Medio"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Médio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6193,6 +7519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tipos de juegos"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipos de jogos"
           }
         },
         "ru" : {
@@ -6223,6 +7555,12 @@
             "value" : "Modo de juego"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de jogo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6249,6 +7587,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Iniciar juego"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciar jogo"
           }
         },
         "ru" : {
@@ -6279,6 +7623,12 @@
             "value" : "Necesitas al menos %lld palabras para comenzar el juego."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você precisa de pelo menos %lld palavras para iniciar o jogo."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6305,6 +7655,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para iniciar el juego, necesitas al menos %lld palabras que contengan ejemplos o explicaciones."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para iniciar o jogo, você precisa de pelo menos %lld palavras que contenham exemplos ou explicações."
           }
         },
         "ru" : {
@@ -6335,6 +7691,12 @@
             "value" : "Juegos"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogos"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6361,6 +7723,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Misiones especiales"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões Especiais"
           }
         },
         "ru" : {
@@ -6391,6 +7759,12 @@
             "value" : "Portugués (Brasil)"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Português (Brasil)"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6417,6 +7791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Progreso"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progresso"
           }
         },
         "ru" : {
@@ -6447,6 +7827,12 @@
             "value" : "Psíquico"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidente"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6473,6 +7859,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En busca de la estrella del desierto 🌵"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em busca da Estrela do Deserto 🌵"
           }
         },
         "ru" : {
@@ -6503,6 +7895,12 @@
             "value" : "Misiones diarias"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões diárias"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6529,6 +7927,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Misiones especiales"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões Especiais"
           }
         },
         "ru" : {
@@ -6559,6 +7963,12 @@
             "value" : "Misiones mensuales"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões mensais"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6585,6 +7995,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Misiones semanales"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões semanais"
           }
         },
         "ru" : {
@@ -6615,6 +8031,12 @@
             "value" : "Pregunta\n%1$(variableName)lld"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pergunta\n%(variableName)lld"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6641,6 +8063,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Misiones"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missões"
           }
         },
         "ru" : {
@@ -6672,6 +8100,12 @@
             "value" : "¿Qué significa %@?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qual é o significado de %@?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6695,6 +8129,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Competitivo"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Competitivo"
@@ -6728,6 +8168,12 @@
             "value" : "Resume"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumo"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6754,6 +8200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Regresar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voltar"
           }
         },
         "ru" : {
@@ -6784,6 +8236,12 @@
             "value" : "Regresar al bosque"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retorno à Floresta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6810,6 +8268,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Revisar palabras incorrectas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revisar palavras erradas"
           }
         },
         "ru" : {
@@ -6840,6 +8304,12 @@
             "value" : "¡Reaviva tu memoria: repite 5 palabras antiguas y domínalas!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviva sua memória: repita 5 palavras antigas e domine-as!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6866,6 +8336,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡Reaviva tu memoria: repite 10 palabras antiguas y domínalas!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviva sua memória: repita 10 palavras antigas e domine-as!"
           }
         },
         "ru" : {
@@ -6896,6 +8372,12 @@
             "value" : "¡Reaviva tu memoria: repite 20 palabras antiguas y domínalas!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviva sua memória: repita 20 palavras antigas e domine-as!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6919,6 +8401,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recompensa"
@@ -6952,6 +8440,12 @@
             "value" : "Recompensa reclamada"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa reivindicada"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6978,6 +8472,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ruso"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Russo"
           }
         },
         "ru" : {
@@ -7008,6 +8508,12 @@
             "value" : "Juega solo con palabras de tu memoria a corto plazo; usa explicaciones o ejemplos para ayudarte."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brinque apenas com palavras da sua memória de curto prazo; use explicações ou exemplos para ajudá-lo."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7034,6 +8540,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Juega solo con palabras de tu memoria a largo plazo (palabras aprendidas)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogue apenas com palavras armazenadas na sua memória de longo prazo (palavras aprendidas)."
           }
         },
         "ru" : {
@@ -7064,6 +8576,12 @@
             "value" : "Selecciona tu \nmagia"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecione sua \nMagia"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7092,6 +8610,12 @@
             "value" : "Configuración"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurações"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7118,6 +8642,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niveles"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Níveis"
           }
         },
         "ru" : {
@@ -7149,6 +8679,12 @@
             "value" : "¿Empezamos?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vamos começar?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7177,6 +8713,12 @@
             "value" : "Eliminar"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remover"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7200,6 +8742,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjetivo"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adjetivo"
@@ -7233,6 +8781,12 @@
             "value" : "¡Tan cerca!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tão perto!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7259,6 +8813,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de las preguntas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre as perguntas"
           }
         },
         "ru" : {
@@ -7289,6 +8849,12 @@
             "value" : "Espíritu del bosque 🦌"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espírito da Floresta 🦌"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7315,6 +8881,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Comienza la lluvia"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Começar a chover"
           }
         },
         "ru" : {
@@ -7346,6 +8918,12 @@
             "value" : "Girasol"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Girassol"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7369,6 +8947,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mover"
@@ -7402,6 +8986,12 @@
             "value" : "¡Felicidades!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parabéns!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7428,6 +9018,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Área peligrosa"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Área perigosa"
           }
         },
         "ru" : {
@@ -7458,6 +9054,12 @@
             "value" : "¡El Dragón de Fuego bloqueó el camino! Derrótalo con tu sabiduría y llévate al perro leal contigo."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Dragão de Fogo bloqueou o caminho! Derrote-o com sua sabedoria e leve o cão leal com você."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7484,6 +9086,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡El Dragón de Fuego está furioso! Pon fin a este caos y gana la legendaria estatua del Dragón Esmeralda."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Dragão de Fogo está furioso! Acabe com esse caos e ganhe a lendária estátua do Dragão Esmeralda."
           }
         },
         "ru" : {
@@ -7514,6 +9122,12 @@
             "value" : "¡El bosque se expande! Conoce 5 palabras nuevas y aprende sus significados."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A floresta está se expandindo! Conheça 5 novas palavras e aprenda seus significados."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7540,6 +9154,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¡El elemental de hielo ha congelado el bosque! Derrite el hielo con tus palabras y salva al adorable gatito."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Elemental do Gelo congelou a floresta! Derreta o gelo com suas palavras e salve o gatinho fofo."
           }
         },
         "ru" : {
@@ -7570,6 +9190,12 @@
             "value" : "El Dragón de Arena protege las ruinas antiguas. ¡Derrótalo y añade la estatua del Guardián Musgoso a tu colección!"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Dragão de Areia protege as ruínas antigas. Derrote-o e adicione a estátua do Guardião Musgoso à sua coleção!"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7596,6 +9222,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Salud del suelo: %%%lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saúde do solo: %%%lld"
           }
         },
         "ru" : {
@@ -7626,6 +9258,12 @@
             "value" : "El rastro de la llama azul"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trilha da Chama Azul"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7652,6 +9290,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugar con todos los libros"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogue com todos os livros"
           }
         },
         "ru" : {
@@ -7682,6 +9326,12 @@
             "value" : "¿Se deben eliminar todos los datos?"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os dados devem ser excluídos?"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7710,6 +9360,12 @@
             "value" : "Borrar todos los datos"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar todos os dados"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7733,6 +9389,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turco"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turco"
@@ -7764,6 +9426,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dos sorbos de agua 💧"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dois goles de água 💧"
           }
         },
         "ru" : {
@@ -7804,6 +9472,12 @@
             "value" : "Interjección"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interjeição"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7830,6 +9504,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lo olvidé."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esqueci"
           }
         },
         "ru" : {
@@ -7860,6 +9540,12 @@
             "value" : "Actualizar nombre"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atualizar nome"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7888,6 +9574,12 @@
             "value" : "Te hemos necesitado durante mucho tiempo."
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Há muito tempo que precisávamos de você."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7911,6 +9603,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vampiro"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vampiro"
@@ -7944,6 +9642,12 @@
             "value" : "Rendirse"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desistir"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7970,6 +9674,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sombra blanca ☁️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sombra Branca ☁️"
           }
         },
         "ru" : {
@@ -8001,6 +9711,12 @@
             "value" : "Gato blanco"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gato Branco"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8027,6 +9743,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "incorrecto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "errado"
           }
         },
         "ru" : {
@@ -8057,6 +9779,12 @@
             "value" : "Acerca de Rain"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre a Rain"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8083,6 +9811,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sí"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sim"
           }
         },
         "ru" : {
@@ -8113,6 +9847,12 @@
             "value" : "Tu bosque"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua Floresta"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8139,6 +9879,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu progreso no se guardará."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu progresso não será salvo"
           }
         },
         "ru" : {
@@ -8169,6 +9915,12 @@
             "value" : "Cargando"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8195,6 +9947,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pronombre"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pronominal"
           }
         },
         "ru" : {
@@ -8225,6 +9983,12 @@
             "value" : "Adverbio"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advérbio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8248,6 +10012,12 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difícil"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Difícil"

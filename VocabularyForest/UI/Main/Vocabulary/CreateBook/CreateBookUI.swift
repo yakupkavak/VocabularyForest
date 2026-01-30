@@ -150,8 +150,8 @@ private extension CreateBookUI {
                 userInput: $viewModel.bookDescription,
                 isSelected: .constant(focusedField == .description),
                 isEmpty: .constant(false),
-                placeholder: String(localized: "Açıklaması (\(languageName))"),
-                title: String(localized: "Açıklama"),
+                placeholder: String(localized: "Description (\(languageName))"),
+                title: String(localized: "Description"),
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             )

@@ -53,7 +53,7 @@ class BookcaseFeedViewModel: ObservableObject {
     }
     
     func fetchBookcases(){
-        let fetchedBookcases = manager.fetchBookcases() ?? []
+        let fetchedBookcases = manager.fetchBookcases(contextType: .background) ?? []
         bookcases = fetchedBookcases.map { bookcase in
             BookcaseDisplayItem(
                 id: bookcase.objectID,
@@ -73,7 +73,7 @@ class BookcaseFeedViewModel: ObservableObject {
     func deleteBookcaseIndex(offsets: IndexSet) {
         let bookcasessToDelete = offsets.map { self.bookcases[$0] }
         for bookcaseDisplayItem in bookcasessToDelete {
-            manager.deleteBookcase(bookcase: bookcaseDisplayItem.bookcase)
+            manager.deleteBookcase(bookcase: bookcaseDisplayItem.bookcase, contextType: .main)
             if let index = allBookcases.firstIndex(of: bookcaseDisplayItem) {
                 allBookcases.remove(at: index)
             }
@@ -85,7 +85,7 @@ class BookcaseFeedViewModel: ObservableObject {
     }
 
     func deleteBookcase(item: BookcaseDisplayItem) {
-        manager.deleteBookcase(bookcase: item.bookcase)
+        manager.deleteBookcase(bookcase: item.bookcase, contextType: .background)
         if let index = allBookcases.firstIndex(of: item) {
             allBookcases.remove(at: index)
         }
@@ -102,12 +102,9 @@ class BookcaseFeedViewModel: ObservableObject {
         learningLang: Language,
         meaningLang: Language
     ) {
-        let bookcase = item.bookcase
-        bookcase.name = newName
-        bookcase.learningLanguage = learningLang.id
-        bookcase.meaningLanguage = meaningLang.id
-        manager.save()
-        fetchBookcases()
-        self.editingBookcaseItem = nil
+        manager.updateBookcase(item: item, newName: newName, learningLang: learningLang, meaningLang: meaningLang, onComplete: {
+            fetchBookcases()
+            self.editingBookcaseItem = nil
+        }, contextType: .main)
     }
 }

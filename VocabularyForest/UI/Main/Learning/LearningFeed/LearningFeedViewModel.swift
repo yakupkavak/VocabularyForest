@@ -52,7 +52,7 @@ class LearningFeedViewModel: ObservableObject{
     // MARK: - PRIVATE HELPERS
     
     private func fetchNewWordFromCoreData() {
-        guard let bookcases = dataManager.fetchBookcases(), !bookcases.isEmpty else {
+        guard let bookcases = dataManager.fetchBookcases(contextType: .main), !bookcases.isEmpty else {
             alert = .emptyBookcase
             clearDailyWord()
             return
