@@ -212,9 +212,8 @@ extension QuestType {
             "special"
         }
     }
+    
     static func convertFromCoreData(string: String?) -> QuestType {
-        guard let string else { return QuestType.daily }
-        
         return switch string {
             case "daily":
                 .daily
@@ -271,7 +270,7 @@ extension QuestModel {
             currentProgressCount: Int(quest.currentProgressCount),
             questionType: .convertFromCoreData(type: quest.questType),
             battleEnemyModel: .convertFromCoreData(string: quest.battleEnemyModel),
-            gameLevel: .convertFromCoreData(string: quest.gameLevel),
+            gameLevel: .convertFromCoreData(value: quest.gameLevel),
         )
         return model
     }

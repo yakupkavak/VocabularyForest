@@ -150,8 +150,6 @@ class NotificationManager: ObservableObject {
             content = askExample(learningWord: learningWord, meaningWord: meaningWord, example: example)
         }else if example.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty {
             content = askDescription(learningWord: learningWord, meaningWord: meaningWord, description: description)
-        }else {
-            print("Yeni notification yaratılamadı")
         }
         
         if let content {

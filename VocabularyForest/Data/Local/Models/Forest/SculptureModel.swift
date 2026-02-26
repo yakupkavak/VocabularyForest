@@ -11,13 +11,13 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var id: UUID
     var type: ComponentType = .sculpture
     let assetName: String
-    var characterName: String = ""
+    var characterName: String
     let createdDate: Date
     var xPosition: CGFloat
     var yPosition: CGFloat
 }
 
 let baseSculptureList = [
-    SculptureModel(id: UUID(), assetName: "water_statue", createdDate: Date(), xPosition: 0.15, yPosition: 0.4),
-    SculptureModel(id: UUID(), assetName: "grass_statue", createdDate: Date(), xPosition: 0.03, yPosition: 0.23)
+    SculptureModel(id: UUID(), assetName: "water_statue", characterName: String(localized: "Peace"), createdDate: Date(), xPosition: 0.15, yPosition: 0.4),
+    SculptureModel(id: UUID(), assetName: "grass_statue", characterName: String(localized: "happiness"), createdDate: Date(), xPosition: 0.03, yPosition: 0.23)
 ]

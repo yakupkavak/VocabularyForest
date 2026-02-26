@@ -121,7 +121,9 @@ private extension BookcaseFeedUI {
                 })
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    bookcaseRouter.navigate(to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.unwrappedName, learning: bookcaseDisplayItem.bookcase.unwrappedLearningLanguage,meaning: bookcaseDisplayItem.bookcase.unwrappedmeaningLanguage))
+                    bookcaseRouter.navigate(
+                        to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.bookcaseName, learning: bookcaseDisplayItem.bookcase.learningLanguage,meaning: bookcaseDisplayItem.bookcase.meaningLanguage)
+                    )
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)

@@ -97,7 +97,8 @@ enum GameLevel: Hashable, Codable {
         }
     }
 }
-extension GameLevel {
+
+extension GameLevel: MatchCoreData {
     var title: String {
         switch self {
         case .easy:
@@ -122,11 +123,11 @@ extension GameLevel {
             "insane"
         }
     }
-    static func convertFromCoreData(string: String?) -> GameLevel {
-        guard let string else {
+    static func convertFromCoreData(value: String?) -> GameLevel {
+        guard let value else {
             return .medium
         }
-        return switch string {
+        return switch value {
             case "easy":
                 .easy
             case "medium":

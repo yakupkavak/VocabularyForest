@@ -33,6 +33,7 @@ struct BaseTabViewUI: View {
         .background(.backgroundSystem)
     }
 }
+
 extension BaseTabViewUI {
     var createBookTab: some View {
         NavigationStack(path: $createBookRouter.navPath) {
@@ -90,8 +91,6 @@ extension BaseTabViewUI {
         NavigationStack(path: $learningRouter.navPath) {
             LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
                 switch destination {
-                    case .flashCard:
-                    FlashCardUI(tabBar: $selectedTab)
                     case .forest:
                     ForestUI(tabBar: $selectedTab, bookcaseRouter: bookcaseRouter)
                         .ignoresSafeArea()

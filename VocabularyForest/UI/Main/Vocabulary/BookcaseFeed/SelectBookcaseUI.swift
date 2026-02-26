@@ -12,17 +12,17 @@ struct SelectBookcaseUI: View {
     
     // MARK: - PROPERTIES
     
-    var allBookcases: [Bookcase]
+    var allBookcases: [BookcaseModel]
     @Binding var selectedBookcase: BookcaseModel?
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
-    
-    var filteredBookcases: [Bookcase] {
+
+    var filteredBookcases: [BookcaseModel]  {
         if searchText.isEmpty {
             return allBookcases
         } else {
             return allBookcases.filter {
-                $0.unwrappedName.localizedCaseInsensitiveContains(searchText)
+                $0.bookcaseName.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -35,16 +35,21 @@ struct SelectBookcaseUI: View {
                 Button(
                     action: {
                         selectedBookcase = BookcaseModel(
-                            bookcaseName: bookcase.unwrappedName,
-                            createdDate: bookcase.createdDate ?? Date(),
-                            learningLanguage: bookcase.unwrappedLearningLanguage,
-                            meaningLanguage: bookcase.unwrappedmeaningLanguage,
-                            books: []
+                            id: bookcase.id,
+                            bookcaseName: bookcase.bookcaseName,
+                            createdDate: bookcase.createdDate,
+                            learningLanguage: bookcase.learningLanguage,
+                            meaningLanguage: bookcase.meaningLanguage,
                         )
                         setBookcaseDefault(bookcase: bookcase)
                     dismiss()
                 }) {
-                    BookcaseRow(bookcase: bookcase, animalModel: getRandomAnimalModel(), onEdit: {}, onDelete: {})
+                    BookcaseRow(
+                        bookcase: bookcase,
+                        animalModel: getRandomAnimalModel(),
+                        onEdit: {
+                        },
+                        onDelete: {})
                         .foregroundStyle(.primary)
                 }.listRowSeparator(.hidden).listRowInsets(.init())
             }.background(.backgroundSystem)

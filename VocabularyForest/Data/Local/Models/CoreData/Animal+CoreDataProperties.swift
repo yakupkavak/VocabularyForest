@@ -20,7 +20,6 @@ extension Animal {
     
     @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
-    @NSManaged public var name: String?
     @NSManaged public var assetName: String?
     @NSManaged public var isAlive: Bool
     @NSManaged public var healtValue: Int16
@@ -29,6 +28,26 @@ extension Animal {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
 
+}
+
+extension Animal: ConvertSafeModel {
+    typealias SafeModel = AnimalModel
+    
+    func safeObject() throws -> AnimalModel {
+        if let id, let createdDate, let assetName, let characterName {
+            return AnimalModel(
+                id: id,
+                characterName: characterName,
+                assetName: assetName,
+                createdDate: createdDate,
+                healthValue: Int(healtValue),
+                isAlive: isAlive,
+                xPosition: xPosition,
+                yPosition: yPosition
+            )
+        }
+        throw SafeModelError.emptyValue
+    }
 }
 
 extension Animal : Identifiable {

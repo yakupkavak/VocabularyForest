@@ -193,12 +193,12 @@ private extension CreateBookUI {
                 Button {
                     selectBookcase()
                 } label: {
-                    Text(viewModel.currentBookcase?.unwrappedName ?? String(localized: "Kitaplık seçilmedi"))
+                    Text(viewModel.currentBookcase?.bookcaseName ?? String(localized: "Kitaplık seçilmedi"))
                         .font(.system(size: 20, weight: .bold))
                 }
                 .frame(maxWidth: 200)
                 Text(
-                    "\(viewModel.currentBookcase?.unwrappedLearningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.unwrappedmeaningLanguage.toLanguageDisplayName() ?? "")"
+                    "\(viewModel.currentBookcase?.learningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.meaningLanguage.toLanguageDisplayName() ?? "")"
                 ) .font(.system(size: 14, weight: .medium))
             }
             Spacer()

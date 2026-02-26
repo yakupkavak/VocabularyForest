@@ -19,7 +19,6 @@ extension Tree {
     }
     
     @NSManaged public var id: UUID?
-    @NSManaged public var name: String?
     @NSManaged public var assetName: String?
     @NSManaged public var createdDate: Date?
     @NSManaged public var healthValue: Int16
@@ -29,6 +28,25 @@ extension Tree {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
 
+}
+
+extension Tree: ConvertSafeModel {
+    typealias SafeModel = TreeModel
+    
+    func safeObject() throws -> TreeModel {
+        if let id, let assetName, let createdDate, let characterName {
+            return TreeModel(
+                id: id,
+                assetName: assetName,
+                characterName: characterName, isAlive: self.isAlive,
+                createdDate: createdDate,
+                treeHealthValue: Int(self.healthValue),
+                xPosition: self.xPosition,
+                yPosition: self.yPosition
+            )
+        }
+        throw SafeModelError.emptyValue
+    }
 }
 
 extension Tree : Identifiable {

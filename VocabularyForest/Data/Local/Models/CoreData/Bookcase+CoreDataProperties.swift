@@ -17,7 +17,8 @@ extension Bookcase {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Bookcase> {
         return NSFetchRequest<Bookcase>(entityName: "Bookcase")
     }
-
+    
+    @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
     @NSManaged public var learningLanguage: String?
     @NSManaged public var meaningLanguage: String?
@@ -74,6 +75,23 @@ extension Bookcase {
     public var shortMemoryBooks: [Book] {
         let booksSet = books as? Set<Book> ?? []
         return Array(booksSet)
+    }
+}
+
+extension Bookcase: ConvertSafeModel {
+    typealias SafeModel = BookcaseModel
+    
+    func safeObject() throws -> BookcaseModel {
+        if let id, let name, let createdDate, let learningLanguage, let meaningLanguage {
+            return BookcaseModel(
+                id: id,
+                bookcaseName: name,
+                createdDate: createdDate,
+                learningLanguage: learningLanguage,
+                meaningLanguage: meaningLanguage
+            )
+        }
+        throw SafeModelError.emptyValue
     }
 }
 

@@ -48,15 +48,15 @@ class BookcaseFeedViewModel: ObservableObject {
         }
         let lowercasedText = searchText.lowercased()
         self.bookcases = self.allBookcases.filter { (bookcase: BookcaseDisplayItem) -> Bool in
-            return bookcase.bookcase.unwrappedName.lowercased().contains(lowercasedText)
+            return bookcase.bookcase.bookcaseName.lowercased().contains(lowercasedText)
         }
     }
     
     func fetchBookcases(){
-        let fetchedBookcases = manager.fetchBookcases(contextType: .background) ?? []
+        let fetchedBookcases = manager.fetchSafeBookcases(contextType: .main) ?? []
         bookcases = fetchedBookcases.map { bookcase in
             BookcaseDisplayItem(
-                id: bookcase.objectID,
+                id: bookcase.id,
                 bookcase: bookcase,
                 animalModel: getRandomAnimalModel()
             )

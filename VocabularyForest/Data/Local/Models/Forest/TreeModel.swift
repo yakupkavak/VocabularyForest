@@ -11,7 +11,7 @@ struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
     var id: UUID
     var type: ComponentType = .plant
     let assetName: String
-    var characterName: String = ""
+    var characterName: String
     let isAlive: Bool
     let createdDate: Date
     let treeHealthValue: Int

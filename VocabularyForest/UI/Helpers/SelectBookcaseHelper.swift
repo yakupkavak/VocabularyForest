@@ -7,14 +7,14 @@
 
 import Foundation
 
-func setBookcaseDefault(bookcase: Bookcase) {
+func setBookcaseDefault(bookcase: BookcaseModel) {
     let userInfo: [String: Any] = [
-            BookcaseNotificationConstants.createdBookcaseName: bookcase.unwrappedName,
-            BookcaseNotificationConstants.createdBookcaseLearning: bookcase.unwrappedLearningLanguage,
-            BookcaseNotificationConstants.createdBookcaseMeaning: bookcase.unwrappedmeaningLanguage
+            BookcaseNotificationConstants.createdBookcaseName: bookcase.bookcaseName,
+            BookcaseNotificationConstants.createdBookcaseLearning: bookcase.learningLanguage,
+            BookcaseNotificationConstants.createdBookcaseMeaning: bookcase.meaningLanguage
         ]
-    UserDefaults.standard.setValue(bookcase.unwrappedName, forKey: BookcaseConstants.bookcase)
-    UserDefaults.standard.setValue(bookcase.unwrappedLearningLanguage, forKey: BookcaseConstants.learningLanguage)
-    UserDefaults.standard.setValue(bookcase.unwrappedmeaningLanguage, forKey: BookcaseConstants.meaningLanguage)
+    UserDefaults.standard.setValue(bookcase.bookcaseName, forKey: BookcaseConstants.bookcase)
+    UserDefaults.standard.setValue(bookcase.learningLanguage, forKey: BookcaseConstants.learningLanguage)
+    UserDefaults.standard.setValue(bookcase.meaningLanguage, forKey: BookcaseConstants.meaningLanguage)
     NotificationCenter.default.post(name: .didCreateBookcase, object: nil, userInfo: userInfo)
 }

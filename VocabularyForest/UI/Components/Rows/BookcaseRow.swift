@@ -12,7 +12,7 @@ struct BookcaseRow: View {
     
     // MARK: - PROPERTIES
     
-    var bookcase: Bookcase
+    var bookcase: BookcaseModel
     var animalModel: AnimalBodyModel
     var onEdit: () -> Void
     var onDelete: () -> Void
@@ -25,8 +25,8 @@ struct BookcaseRow: View {
             languageLine
             bottomLine
         }.padding().borderRadius(borderColor: .gray).padding().overlay(alignment: .bottomTrailing) {
-            if bookcase.longMemoryBooksCount > 0 {
-                MemoryProgressBar(percentage: Int(Double(bookcase.longMemoryBooksCount) / Double(bookcase.totalBooksCount) * 100), width: 45).offset(x: -32, y: -32)
+            if let longCount = bookcase.longMemoryBooksCount, let totalCount = bookcase.totalBooksCount, longCount > 0 {
+                MemoryProgressBar(percentage: Int(Double(longCount) / Double(totalCount) * 100), width: 45).offset(x: -32, y: -32)
             }else {
                 MemoryProgressBar(percentage: 0, width: 45).offset(x: -32, y: -32)
             }
@@ -45,7 +45,7 @@ struct BookcaseRow: View {
 private extension BookcaseRow {
     var topLine: some View {
         HStack{
-            tvSubtitle(text: bookcase.unwrappedName)
+            tvSubtitle(text: bookcase.bookcaseName)
             Spacer()
             Menu {
                 Button(action: onEdit) {
@@ -65,21 +65,24 @@ private extension BookcaseRow {
     }
     var languageLine: some View {
         HStack{
-            tvGrayHint(text: "\(bookcase.unwrappedLearningLanguage.toLanguageDisplayName()) / \(bookcase.unwrappedmeaningLanguage.toLanguageDisplayName())")
+            tvGrayHint(text: "\(bookcase.learningLanguage.toLanguageDisplayName()) / \(bookcase.meaningLanguage.toLanguageDisplayName())")
             Spacer()
         }
     }
     var bottomLine: some View {
         HStack(alignment: .center){
-            tvDefault(text: "\(bookcase.longMemoryBooksCount)")
-            Image("longMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26).padding(.trailing)
-            tvDefault(text: "\(bookcase.shortMemoryBooksCount)")
-            Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
+            if let longMemoryCount = bookcase.longMemoryBooksCount, let shortMemoryCount = bookcase.shortMemoryBooksCount {
+                tvDefault(text: "\(longMemoryCount)")
+                Image("longMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26).padding(.trailing)
+                tvDefault(text: "\(shortMemoryCount)")
+                Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
+            }
             Spacer()
         }.padding(.top, -8)
     }
 }
 
+/*
 #Preview {
     let context = CoreDataManager.preview.viewContext
     let sampleBookcase = Bookcase(context: context)
@@ -96,8 +99,7 @@ private extension BookcaseRow {
         sampleBook.shortMemory = i % 2 == 0 ? false : true
         sampleBook.bookcase = sampleBookcase
     }
-    
     return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel(), onEdit: { print("edit") } , onDelete: {print("delete")}
     )
 }
-
+*/

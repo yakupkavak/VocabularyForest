@@ -19,27 +19,27 @@ struct BookRow: View{
     
     // MARK: - PROPERTIES
     
-    var book: Book
+    var book: BookModel
     var showMeaning: Binding<Bool>
     var bookNumber: Int
     var onEdit: () -> Void
-    var onDelete: (Book) -> Void
+    var onDelete: (BookModel) -> Void
     
     // MARK: - VIEW
     
     var body: some View {
         VStack(alignment: .leading){
             HStack(alignment: .top){
-                Text("\(book.bookcase?.unwrappedLearningLanguage.toLanguageDisplayName() ?? "Learning")").frame(width: Constant.frameWidth, alignment: .leading)
+                Text("\(book.learningLanguageCode?.toLanguageDisplayName() ?? "Learning")").frame(width: Constant.frameWidth, alignment: .leading)
                 Text(":")
-                tvDefault(text: book.unwrappedLearningWord)
+                tvDefault(text: book.learningWord)
                 Spacer()
             }
             if showMeaning.wrappedValue{
                 HStack(alignment: .top){
-                    Text("\(book.bookcase?.unwrappedmeaningLanguage.toLanguageDisplayName() ?? "Meaning")").frame(width: Constant.frameWidth, alignment: .leading)
+                    Text("\(book.meaningLanguageCode?.toLanguageDisplayName() ?? "Meaning")").frame(width: Constant.frameWidth, alignment: .leading)
                     Text(":")
-                    tvDefault(text: book.unwrappedMeaningWord)
+                    tvDefault(text: book.meaningWord)
                     Spacer()
                 }
             }

@@ -904,6 +904,9 @@
         }
       }
     },
+    "Ay" : {
+
+    },
     "Ayarlar" : {
       "localizations" : {
         "en" : {
@@ -1210,6 +1213,9 @@
         }
       }
     },
+    "Bilge" : {
+
+    },
     "Bilinmiyor" : {
       "localizations" : {
         "en" : {
@@ -1245,6 +1251,7 @@
       }
     },
     "Biliyorum" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3797,6 +3804,9 @@
         }
       }
     },
+    "Güneş" : {
+
+    },
     "Günlük Görevler" : {
       "localizations" : {
         "en" : {
@@ -4000,6 +4010,9 @@
           }
         }
       }
+    },
+    "happiness" : {
+
     },
     "Hatırlama" : {
       "localizations" : {
@@ -4206,6 +4219,7 @@
       }
     },
     "Henüz hiç kelime eklememişsin." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4442,6 +4456,9 @@
           }
         }
       }
+    },
+    "Huzur" : {
+
     },
     "I’m ready" : {
       "extractionState" : "manual",
@@ -5363,6 +5380,7 @@
       }
     },
     "Kelime Ekle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6554,6 +6572,9 @@
         }
       }
     },
+    "Mutlu" : {
+
+    },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
       "localizations" : {
         "en" : {
@@ -7744,6 +7765,9 @@
           }
         }
       }
+    },
+    "Peace" : {
+
     },
     "Portekizce (Brezilya)" : {
       "localizations" : {
@@ -9448,6 +9472,9 @@
         }
       }
     },
+    "umut" : {
+
+    },
     "unexpectedError" : {
       "localizations" : {
         "tr" : {
@@ -9493,6 +9520,7 @@
       }
     },
     "Unuttum" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9661,6 +9689,9 @@
           }
         }
       }
+    },
+    "Venüs" : {
+
     },
     "White Shadow ☁️" : {
       "localizations" : {
@@ -9934,6 +9965,9 @@
           }
         }
       }
+    },
+    "Zafer" : {
+
     },
     "Zamir" : {
       "localizations" : {

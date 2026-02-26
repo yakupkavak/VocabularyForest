@@ -12,13 +12,13 @@ final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
-    @Published var books: [Book] = []
+    @Published var books: [BookModel] = []
     @Published var searchText = ""
     @Published var createdAnyBook = false
-    @Published var editingBook: Book? = nil
-    private var bookcase: Bookcase? = nil
+    @Published var editingBook: BookModel? = nil
+    private var bookcase: BookcaseModel? = nil
     private var dataManager = CoreDataManager.shared
-    private var allBooks: [Book] = []
+    private var allBooks: [BookModel] = []
     private var cancellables = Set<AnyCancellable>()
     var bookcaseName: String
     var learningLanguage: String
@@ -49,19 +49,21 @@ final class BookcaseDetailViewModel: ObservableObject {
         }
         .store(in: &cancellables)
     }
+    
     private func filterBooks(searchText: String) {
         if searchText.isEmpty {
             self.books = self.allBooks
             return
         }
         let lowercasedText = searchText.lowercased()
-        self.books = self.allBooks.filter { (book: Book) -> Bool in
-            return book.unwrappedLearningWord.lowercased().contains(lowercasedText) ||
-                   book.unwrappedMeaningWord.lowercased().contains(lowercasedText) ||
+        self.books = self.allBooks.filter { (book: BookModel) -> Bool in
+            return book.learningWord.lowercased().contains(lowercasedText) ||
+                   book.meaningWord.lowercased().contains(lowercasedText) ||
                    (book.descriptionWord ?? "").lowercased().contains(lowercasedText) ||
                    (book.exampleSentence ?? "").lowercased().contains(lowercasedText)
         }
     }
+    
     private func fetchBookcase(bookcaseName: String, learningLanguage: String, meaningLanguage: String){
         bookcase = dataManager.fetchBookcase(
             name: bookcaseName,
@@ -86,26 +88,39 @@ final class BookcaseDetailViewModel: ObservableObject {
         }
         filterBooks(searchText: self.searchText)
     }
-    func deleteBookModel(at book: Book) {
+    func deleteBookModel(at book: BookModel) {
         dataManager.deleteBook(book: book, contextType: .main)
         if let index = allBooks.firstIndex(of: book) {
             allBooks.remove(at: index)
         }
         filterBooks(searchText: self.searchText)
     }
-    func fetchBooks(bookcase: Bookcase){
-        books = dataManager.fetchBooks(bookcase: bookcase, contextType: .background) ?? []
-        allBooks = books
-        if !books.isEmpty{
-            createdAnyBook = true
-            setListener()
+    
+    func fetchBooks(bookcase: BookcaseModel){
+        Task {
+            let fetchedBooks = await Task.detached(priority: .userInitiated) { [weak self] in
+                guard let self else { return [] }
+                return await dataManager.fetchSafeBooks(model: bookcase, contextType: .background) ?? ([] as [BookModel])
+            }.value as [BookModel]?
+            
+            await MainActor.run { [weak self] in
+                guard let self else { return }
+                guard let fetchedBooks else { return }
+                books = fetchedBooks
+                allBooks = fetchedBooks
+                if !books.isEmpty{
+                    createdAnyBook = true
+                    setListener()
+                }
+            }
         }
     }
-    func prepareForEdit(book: Book) {
+    
+    func prepareForEdit(book: BookModel) {
         self.editingBook = book
     }
     func updateBook(
-        bookToUpdate: Book,
+        bookToUpdate: BookModel,
         learningWord: String,
         meaningWord: String,
         descriptionWord: String?,

@@ -12,7 +12,7 @@ class CreateBookViewModel: ObservableObject {
     
     // MARK: - PROPERTIES
     
-    @Published var currentBookcase: Bookcase? = nil
+    @Published var currentBookcase: BookcaseModel? = nil
     @Published var learningLanguage: Language? = nil
     @Published var meaningLanguage: Language? = nil
     @Published var bookLearningWord = ""
@@ -23,7 +23,7 @@ class CreateBookViewModel: ObservableObject {
     @Published var emptyBookLearningWord = false
     @Published var emptyBookMeaningWord = false
     @Published var toastMessageModel: CreateBookToastType = .none
-    @Published var bookcasesList: [Bookcase] = []
+    @Published var bookcasesList: [BookcaseModel] = []
     private var coreDataManager = CoreDataManager.shared
     
     // MARK: - INITALIZE
@@ -92,28 +92,28 @@ class CreateBookViewModel: ObservableObject {
         updateCurrentBookcase(bookcase: newBookcase)
         toastMessageModel = .none
         toastMessageModel = .firstBookcaseCreated
-        if let newBookcases = coreDataManager.fetchBookcases(contextType: .background) {
+        if let newBookcases = coreDataManager.fetchSafeBookcases(contextType: .background) {
             if(bookcasesList.isEmpty){
                 UserDefaults.standard.set(
-                    newBookcases.first?.unwrappedName,forKey: BookcaseConstants.bookcase
+                    newBookcases.first?.bookcaseName,forKey: BookcaseConstants.bookcase
                 )
             }
             bookcasesList = newBookcases
         }
     }
     
-    private func updateCurrentBookcase(bookcase: Bookcase){
+    private func updateCurrentBookcase(bookcase: BookcaseModel){
         currentBookcase = bookcase
         learningLanguage = LanguageData.allLanguages.first(where: {(language: Language) in
-            return language.id == bookcase.unwrappedLearningLanguage
+            return language.id == bookcase.learningLanguage
         })
         meaningLanguage = LanguageData.allLanguages.first(where: {(language: Language) in
-            return language.id == bookcase.unwrappedmeaningLanguage
+            return language.id == bookcase.meaningLanguage
         })
     }
     
     func fetchBookcases(){
-        bookcasesList = coreDataManager.fetchBookcases(contextType: .background) ?? []
+        bookcasesList = coreDataManager.fetchSafeBookcases(contextType: .background) ?? []
     }
     
     func selectTag(model: PartOfSpeech) {
@@ -143,15 +143,19 @@ class CreateBookViewModel: ObservableObject {
         guard let currentBookcase else {
             return
         }
-        let book = coreDataManager.createBook(
+        if let book = coreDataManager.createSafeBook(
             learningWord: bookLearningWord,
             meaningWord: bookMeaningWord,
             exampleSentence: bookExampleSentence,
             descriptionWord: bookDescription,
             partOfSpeech: partOfSpeech.rawValue,
-            in: currentBookcase,
+            safeBookcase: currentBookcase,
             contextType: .main
-        )
+        ) {
+            // Todo: Show success
+        }else {
+            // TODO: Show error
+        }
         bookLearningWord = ""
         bookMeaningWord = ""
         bookExampleSentence = ""

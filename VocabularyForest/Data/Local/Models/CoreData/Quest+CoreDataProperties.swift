@@ -34,6 +34,31 @@ extension Quest {
 
 }
 
+// MARK: - EXTENSION SAFE MODEL
+
+extension Quest: ConvertSafeModel {
+    typealias SafeModel = QuestModel
+
+    func safeObject() throws -> QuestModel {
+        if let questId = self.id, let questTitle = self.title, let questDescription = self.description_quest {
+            return QuestModel(
+                id: questId,
+                type: QuestType.convertFromCoreData(string: self.questType),
+                title: questTitle,
+                description: questDescription,
+                reward: QuestRewardModel.convertFromCoreData(type: self.rewardType, value: self.rewardValue),
+                status: QuestStatus.convertFromCoreData(string: self.status),
+                targetCount: Int(self.targetCount),
+                currentProgressCount: Int(self.currentProgressCount),
+                questionType: BattleQuestionType.convertFromCoreData(type: self.questType),
+                battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: self.battleEnemyModel),
+                gameLevel: GameLevel.convertFromCoreData(value: self.gameLevel)
+            )
+        }
+        throw SafeModelError.emptyValue
+    }
+}
+
 extension Quest : Identifiable {
 
 }

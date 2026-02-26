@@ -268,7 +268,7 @@ private extension BattleUI {
                         Text("Review  wrong words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
                         List {
                             ForEach(viewModel.gameStatus.wrongWords) { book in
-                                Text(book.unwrappedLearningWord).foregroundStyle(.white).listRowBackground(Color.clear)
+                                Text(book.learningWord).foregroundStyle(.white).listRowBackground(Color.clear)
                                     .listRowSeparator(.hidden)
                             }
                         }.padding(.horizontal).listRowInsets(.none).listRowSeparator(.hidden, edges: .all)

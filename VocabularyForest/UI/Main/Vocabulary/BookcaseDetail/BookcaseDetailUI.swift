@@ -155,10 +155,10 @@ private extension BookcaseDetailUI {
     func onClickBookcaseIcon() {
         
     }
-    func bookRowEdit(book: Book){
+    func bookRowEdit(book: BookModel){
         viewModel.prepareForEdit(book: book)
     }
-    func bookRowDelete(book: Book){
+    func bookRowDelete(book: BookModel){
         viewModel.deleteBookModel(at: book)
     }
 }

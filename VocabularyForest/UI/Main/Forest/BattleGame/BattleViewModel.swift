@@ -52,7 +52,7 @@ class BattleViewModel: ObservableObject {
     private let forestDataManager: ForestDataManager
     private let audioService: AudioServiceProtocol
     private var questionList: [QuestionModel] = []
-    private var answerBooks: [Book] = []
+    private var answerBooks: [BookModel] = []
     private var currentQuestionId = 0
     private var timer: Timer? = nil
     private var secondsElapsed = 0
@@ -146,24 +146,27 @@ private extension BattleViewModel {
     }
     
     //Learning modunu seçerken kitapların example ya da descriptionu olan halini veriyoruz.
-    func setShortBooks(books: [Book], bookCount: Int) {
-        let shortBooks = books.filter { (book: Book) -> Bool in
+    func setShortBooks(books: [BookModel], bookCount: Int) {
+        let shortBooks = books.filter { (book: BookModel) -> Bool in
             return book.shortMemory == true
         }
         var questionNumber = 1
         for book in shortBooks.shuffled().prefix(bookCount){
-            let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
-                return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage && indexBook.meaningWord != book.meaningWord
+            let answer = book.learningWord
+            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .main)
+            let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
+                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .main)
+                return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
-            let finalQuestionText = String(format: formatString, book.unwrappedLearningWord.firstUppercased)
+            let finalQuestionText = String(format: formatString, book.learningWord.firstUppercased)
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
-                    AnswerModel(book: book,answer: book.unwrappedMeaningWord, isTrue: true),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 0]?.unwrappedMeaningWord ?? "Agile", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 1]?.unwrappedMeaningWord ?? "Player", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 2]?.unwrappedMeaningWord ?? "Who", isTrue: false),
+                    AnswerModel(book: book, answer: book.meaningWord, isTrue: true),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
                 ].shuffled(),
                 questionNumber: questionNumber,
                 description: book.learningWord,
@@ -175,34 +178,35 @@ private extension BattleViewModel {
         }
     }
     
-    func setLongBooks(books: [Book], bookCount: Int) {
-        let longBooks = books.filter { (book: Book) -> Bool in
+    func setLongBooks(books: [BookModel], bookCount: Int) {
+        let longBooks = books.filter { (book: BookModel) -> Bool in
             return book.longMemory == true
         }
         var questionNumber = 1
         for book in longBooks.shuffled().prefix(bookCount){
-            if let answer = book.learningWord {
-                let randomBooks = Array(books.filter { (indexBook: Book) -> Bool in
-                    return indexBook != book && indexBook.bookcase?.unwrappedLearningLanguage == book.bookcase?.unwrappedLearningLanguage && indexBook.meaningWord != book.meaningWord
-                }).shuffled().prefix(3)
-                let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
-                let finalQuestionText = String(format: formatString, answer)
-                let model = QuestionModel(
-                    questionTitle: finalQuestionText,
-                    answers: [
-                        AnswerModel(book: book,answer: book.unwrappedMeaningWord, isTrue: true),
-                        AnswerModel(book: nil,answer: randomBooks[safe: 0]?.unwrappedMeaningWord ?? "Agile", isTrue: false),
-                        AnswerModel(book: nil,answer: randomBooks[safe: 1]?.unwrappedMeaningWord ?? "Player", isTrue: false),
-                        AnswerModel(book: nil,answer: randomBooks[safe: 2]?.unwrappedMeaningWord ?? "Who", isTrue: false),
-                    ].shuffled(),
-                    questionNumber: questionNumber,
-                    description: nil,
-                    example: nil,
-                )
-                questionList.append(model)
-                answerBooks.append(book)
-                questionNumber += 1
-            }
+            let answer = book.learningWord
+            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .main)
+            let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
+                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .main)
+                return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
+            }).shuffled().prefix(3)
+            let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
+            let finalQuestionText = String(format: formatString, answer)
+            let model = QuestionModel(
+                questionTitle: finalQuestionText,
+                answers: [
+                    AnswerModel(book: book,answer: book.meaningWord, isTrue: true),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
+                    AnswerModel(book: nil,answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
+                ].shuffled(),
+                questionNumber: questionNumber,
+                description: nil,
+                example: nil,
+            )
+            questionList.append(model)
+            answerBooks.append(book)
+            questionNumber += 1
         }
     }
     
@@ -229,7 +233,7 @@ extension BattleViewModel: BattleViewModelProtocol {
         battleMode: BattleEnemyModel,
         gameLevel: GameLevel,
     ) {
-        var books: [Book] = []
+        var books: [BookModel] = []
         
         if questionType == .learning {
             if let bookcaseModel {
@@ -242,7 +246,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     errorModel = .emptyBookcase
                     return
                 }
-                guard let spesificBooks = coreData.fetchBooksExampleDescription(bookcase: bookcase, contextType: .background) else {
+                guard let spesificBooks = coreData.fetchSafeBooksExampleDescription(model: bookcase, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -266,7 +270,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     return
                 }
                 guard let spesificBooks = coreData.fetchBooks(
-                    bookcase: bookcase,
+                    model: bookcase,
                     contextType: .background
                 ) else {
                     errorModel = .emptyBookcase
@@ -274,7 +278,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooks(contextType: .background) else {
+                guard let allBooks = coreData.fetchAllSafeBooks(contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -329,21 +333,10 @@ extension BattleViewModel: BattleViewModelProtocol {
                 if answer.isTrue {
                     playerAnger?.currentLevel += 1
                     gameStatus.trueCount += 1
-                    if let questionType {
-                        if questionType == .competitive {
-                            if let answerBook = answer.book {
-                                answerBook.shortMemory = false
-                                answerBook.longMemory = true
-                                answerBook.learningDate = Date()
-                            }
-                        }else if questionType == .remainder {
-                            if let answerBook = answer.book {
-                                answerBook.learningDate = Date()
-                            }
-                        }
-                        
+                    if let questionType, let answerBook = answer.book {
+                        coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .main)
                         // TODO: SHOW SAVE ERROR
-                        let saveResult = forestDataManager.correctAnswer(questionType: questionType )
+                        let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .main)
                     }
                     output?.correctAnswer()
                 }else {
@@ -412,7 +405,12 @@ extension BattleViewModel: BattleSceneProtocol {
     }
     func playerWon() {
         if let gameLevel, let questionType, let battleMode {
-            let result = forestDataManager.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, gameType: questionType)
+            let result = forestDataManager.winGame(
+                gameLevel: gameLevel,
+                battleEnemyMode: battleMode,
+                gameType: questionType,
+                contextType: .main
+            )
             switch result.status {
             case .success:
                 print("player won saved")

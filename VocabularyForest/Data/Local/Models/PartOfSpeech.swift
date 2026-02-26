@@ -10,7 +10,7 @@ import SwiftUI
 
 let partOfSpeechList: [PartOfSpeech] = [.noun, .verb, .adjective, .adverb, .pronoun, .preposition, .conjunction, .interjection, .determiner]
 
-enum PartOfSpeech: String, CaseIterable, Identifiable {
+enum PartOfSpeech: String, CaseIterable, Identifiable, Codable {
     case noun
     case verb
     case adjective
@@ -36,6 +36,7 @@ enum PartOfSpeech: String, CaseIterable, Identifiable {
         case .determiner: return String(localized: "Belirteç")
         }
     }
+    
     private var backgroundColor: Color {
         switch self {
         case .noun: return .blue
@@ -51,5 +52,37 @@ enum PartOfSpeech: String, CaseIterable, Identifiable {
     }
     var pasterColor: Color {
         backgroundColor.opacity(0.8)
+    }
+}
+
+extension PartOfSpeech: MatchCoreData {
+    var valueForCoreData: String {
+        rawValue
+    }
+    
+    static func convertFromCoreData(value: String?) -> PartOfSpeech {
+        guard let value = value?.lowercased() else { return .noun }
+        switch value {
+        case "noun":
+            return .noun
+        case "verb":
+            return .verb
+        case "adjective":
+            return .adjective
+        case "adverb":
+            return .adverb
+        case "pronoun":
+            return .pronoun
+        case "preposition":
+            return .preposition
+        case "conjunction":
+            return .conjunction
+        case "interjection":
+            return .interjection
+        case "determiner":
+            return .determiner
+        default:
+            return .noun
+        }
     }
 }

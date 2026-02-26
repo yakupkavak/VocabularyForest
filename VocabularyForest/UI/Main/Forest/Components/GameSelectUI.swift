@@ -30,7 +30,7 @@ struct GameSelectUI: View {
     
     var initialQuest: QuestModel?
     @Binding var showGameSelect: Bool
-    var bookcaseList: [Bookcase]
+    var bookcaseList: [BookcaseModel]
     @State private var selectedMode: BattleEnemyModel = .classic
     @State private var selectedLevel: GameLevel = .easy
     @State private var selectedType: BattleQuestionType = .learning

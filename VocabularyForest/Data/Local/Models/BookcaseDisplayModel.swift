@@ -11,8 +11,8 @@ struct BookcaseDisplayItem: Identifiable, Hashable {
     
     // MARK: - PROPERTIES
     
-    let id: NSManagedObjectID
-    let bookcase: Bookcase
+    let id: UUID
+    let bookcase: BookcaseModel
     let animalModel: AnimalBodyModel
     
     // MARK: - EQUATABLE HELPERS

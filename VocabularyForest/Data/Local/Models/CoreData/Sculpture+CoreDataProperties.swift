@@ -20,12 +20,30 @@ extension Sculpture {
     
     @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
-    @NSManaged public var name: String?
+    @NSManaged public var assetName: String?
     @NSManaged public var xPosition: Double
     @NSManaged public var yPosition: Double
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
 
+}
+
+extension Sculpture: ConvertSafeModel {
+    typealias SafeModel = SculptureModel
+    
+    func safeObject() throws -> SculptureModel {
+        if let id, let createdDate, let assetName, let characterName {
+            return SculptureModel(
+                id: id,
+                assetName: assetName,
+                characterName: characterName,
+                createdDate: createdDate,
+                xPosition: self.xPosition,
+                yPosition: self.yPosition
+            )
+        }
+        throw SafeModelError.emptyValue
+    }
 }
 
 extension Sculpture : Identifiable {
