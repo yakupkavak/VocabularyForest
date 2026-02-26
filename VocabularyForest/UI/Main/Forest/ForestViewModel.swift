@@ -145,12 +145,15 @@ extension ForestViewModel {
     func fetchForest() {
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
 
-        Task {
-
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            
             if !forestInitalized {
                 let result = coreDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
-                if result.status == .success {
-                    UserDefaults.standard.set(true, forKey: "forestInitalized")
+                await MainActor.run {
+                    if result.status == .success {
+                        UserDefaults.standard.set(true, forKey: "forestInitalized")
+                    }
                 }
             }
             
@@ -160,21 +163,21 @@ extension ForestViewModel {
             let fetchedBookcases = CoreDataManager.shared.fetchSafeBookcases(contextType: .background)
             let statusResult = coreDataManager.fetchForestStatus(contextType: .background)
             let questResult = coreDataManager.fetchQuests(contextType: .background)
-
-            let newAnimals = fetchedAnimals.filter { newItem in
-                !self.animalList.contains(where: { $0 == newItem })
-            }
-            
-            let newSculptures = fetchedSculptures.filter { newItem in
-                !self.sculptureList.contains(where: { $0 == newItem })
-            }
-            
-            let newTrees = fetchedTrees.filter { newItem in
-                !self.treeList.contains(where: { $0 == newItem })
-            }
             
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
+                
+                let newAnimals = fetchedAnimals.filter { newItem in
+                    !self.animalList.contains(where: { $0 == newItem })
+                }
+                
+                let newSculptures = fetchedSculptures.filter { newItem in
+                    !self.sculptureList.contains(where: { $0 == newItem })
+                }
+                
+                let newTrees = fetchedTrees.filter { newItem in
+                    !self.treeList.contains(where: { $0 == newItem })
+                }
                 
                 if let cases = fetchedBookcases {
                     self.bookcaseList = cases

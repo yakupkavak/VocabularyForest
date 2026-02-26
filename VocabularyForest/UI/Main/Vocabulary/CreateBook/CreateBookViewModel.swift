@@ -113,7 +113,7 @@ class CreateBookViewModel: ObservableObject {
     }
     
     func fetchBookcases(){
-        bookcasesList = coreDataManager.fetchSafeBookcases(contextType: .background) ?? []
+        bookcasesList = coreDataManager.fetchSafeBookcases(contextType: .main) ?? []
     }
     
     func selectTag(model: PartOfSpeech) {
