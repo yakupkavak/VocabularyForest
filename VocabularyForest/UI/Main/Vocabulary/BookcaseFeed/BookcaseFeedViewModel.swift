@@ -85,7 +85,7 @@ class BookcaseFeedViewModel: ObservableObject {
     }
 
     func deleteBookcase(item: BookcaseDisplayItem) {
-        manager.deleteBookcase(bookcase: item.bookcase, contextType: .background)
+        manager.deleteBookcase(bookcase: item.bookcase, contextType: .main)
         if let index = allBookcases.firstIndex(of: item) {
             allBookcases.remove(at: index)
         }

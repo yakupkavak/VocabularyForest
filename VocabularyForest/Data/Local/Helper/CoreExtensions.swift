@@ -11,7 +11,8 @@ extension NSManagedObjectContext {
     func fetch<Entity, Result>(request: NSFetchRequest<Entity>) async -> [Result]? where Entity: NSManagedObject, Entity: ConvertSafeModel, Result == Entity.SafeModel {
         do {
             return try await self.perform { [weak self] in
-                try self?.fetch(request).compactMap { try $0.safeObject() } ?? []
+                guard let self else { return [] }
+                return try self.fetch(request).compactMap { try $0.safeObject(context: self) }
             }
         }catch {
             print(error.localizedDescription)
@@ -27,7 +28,7 @@ protocol MatchCoreData {
 
 protocol ConvertSafeModel {
     associatedtype SafeModel
-    func safeObject() throws -> SafeModel
+    func safeObject(context: NSManagedObjectContext) throws -> SafeModel
 }
 
 enum SafeModelError: Error {

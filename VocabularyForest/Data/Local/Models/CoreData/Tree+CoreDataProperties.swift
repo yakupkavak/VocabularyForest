@@ -33,19 +33,21 @@ extension Tree {
 extension Tree: ConvertSafeModel {
     typealias SafeModel = TreeModel
     
-    func safeObject() throws -> TreeModel {
-        if let id, let assetName, let createdDate, let characterName {
-            return TreeModel(
-                id: id,
-                assetName: assetName,
-                characterName: characterName, isAlive: self.isAlive,
-                createdDate: createdDate,
-                treeHealthValue: Int(self.healthValue),
-                xPosition: self.xPosition,
-                yPosition: self.yPosition
-            )
+    func safeObject(context: NSManagedObjectContext) throws -> TreeModel {
+        try context.performAndWait {
+            if let id, let assetName, let createdDate, let characterName {
+                return TreeModel(
+                    id: id,
+                    assetName: assetName,
+                    characterName: characterName, isAlive: self.isAlive,
+                    createdDate: createdDate,
+                    treeHealthValue: Int(self.healthValue),
+                    xPosition: self.xPosition,
+                    yPosition: self.yPosition
+                )
+            }
+            throw SafeModelError.emptyValue
         }
-        throw SafeModelError.emptyValue
     }
 }
 

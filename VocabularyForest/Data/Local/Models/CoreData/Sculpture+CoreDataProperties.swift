@@ -31,18 +31,20 @@ extension Sculpture {
 extension Sculpture: ConvertSafeModel {
     typealias SafeModel = SculptureModel
     
-    func safeObject() throws -> SculptureModel {
-        if let id, let createdDate, let assetName, let characterName {
-            return SculptureModel(
-                id: id,
-                assetName: assetName,
-                characterName: characterName,
-                createdDate: createdDate,
-                xPosition: self.xPosition,
-                yPosition: self.yPosition
-            )
+    func safeObject(context: NSManagedObjectContext) throws -> SculptureModel {
+        try context.performAndWait {
+            if let id, let createdDate, let assetName, let characterName {
+                return SculptureModel(
+                    id: id,
+                    assetName: assetName,
+                    characterName: characterName,
+                    createdDate: createdDate,
+                    xPosition: self.xPosition,
+                    yPosition: self.yPosition
+                )
+            }
+            throw SafeModelError.emptyValue
         }
-        throw SafeModelError.emptyValue
     }
 }
 

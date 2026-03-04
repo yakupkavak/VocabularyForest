@@ -47,22 +47,24 @@ extension Book {
 extension Book: ConvertSafeModel {
     typealias SafeModel = BookModel
     
-    func safeObject() throws -> BookModel {
-        if let id, let bookcaseID = bookcase?.id,let createdDate, let learningWord, let meaningWord {
-        return BookModel(
-            id: id,
-            bookcaseId: bookcaseID,
-            createdDate: createdDate,
-            learningWord: learningWord,
-            meaningWord: meaningWord,
-            exampleSentence: exampleSentence,
-            descriptionWord: descriptionWord,
-            longMemory: longMemory,
-            shortMemory: shortMemory,
-            partOfSpeech: PartOfSpeech.convertFromCoreData(value: self.partOfSpeech)
-            )
+    func safeObject(context: NSManagedObjectContext) throws -> BookModel {
+        try context.performAndWait {
+            if let id, let bookcaseID = bookcase?.id,let createdDate, let learningWord, let meaningWord {
+                return BookModel(
+                    id: id,
+                    bookcaseId: bookcaseID,
+                    createdDate: createdDate,
+                    learningWord: learningWord,
+                    meaningWord: meaningWord,
+                    exampleSentence: exampleSentence,
+                    descriptionWord: descriptionWord,
+                    longMemory: longMemory,
+                    shortMemory: shortMemory,
+                    partOfSpeech: PartOfSpeech.convertFromCoreData(value: self.partOfSpeech)
+                )
+            }
+            throw SafeModelError.emptyValue
         }
-        throw SafeModelError.emptyValue
     }
 }
 

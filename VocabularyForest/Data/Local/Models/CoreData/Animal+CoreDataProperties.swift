@@ -33,20 +33,22 @@ extension Animal {
 extension Animal: ConvertSafeModel {
     typealias SafeModel = AnimalModel
     
-    func safeObject() throws -> AnimalModel {
-        if let id, let createdDate, let assetName, let characterName {
-            return AnimalModel(
-                id: id,
-                characterName: characterName,
-                assetName: assetName,
-                createdDate: createdDate,
-                healthValue: Int(healtValue),
-                isAlive: isAlive,
-                xPosition: xPosition,
-                yPosition: yPosition
-            )
+    func safeObject(context: NSManagedObjectContext) throws -> AnimalModel {
+        try context.performAndWait {
+            if let id, let createdDate, let assetName, let characterName {
+                return AnimalModel(
+                    id: id,
+                    characterName: characterName,
+                    assetName: assetName,
+                    createdDate: createdDate,
+                    healthValue: Int(healtValue),
+                    isAlive: isAlive,
+                    xPosition: xPosition,
+                    yPosition: yPosition
+                )
+            }
+            throw SafeModelError.emptyValue
         }
-        throw SafeModelError.emptyValue
     }
 }
 

@@ -283,7 +283,7 @@ extension CoreDataManager {
             var results: [BookModel]?
             context.performAndWait {
                 do {
-                    results = try context.fetch(request).map( { try $0.safeObject() })
+                    results = try context.fetch(request).map( { try $0.safeObject(context: context) })
                 }
                 catch {
                     results = nil
@@ -315,7 +315,7 @@ extension CoreDataManager {
                     request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
                     do {
                         let bookList = try context.fetch(request)
-                        let bookModelList = try bookList.map({ try $0.safeObject() })
+                        let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
                         print("Books couldn't fetched -> \(error)")
@@ -335,7 +335,7 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
+        return contextType.context.performAndWait { () -> [BookModel]? in
             let context = contextType.context
             let request = NSFetchRequest<Book>(entityName: "Book")
             request.sortDescriptors = sortDescriptors ?? [
@@ -345,7 +345,7 @@ extension CoreDataManager {
             request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
             do {
                 let bookList = try context.fetch(request)
-                let bookModelList = try bookList.map({ try $0.safeObject() })
+                let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
                 print("Books couldn't fetched -> \(error)")
@@ -368,7 +368,7 @@ extension CoreDataManager {
             request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
             do {
                 let bookList = try context.fetch(request)
-                let bookModelList = try bookList.map({ try $0.safeObject() })
+                let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
                 print("Books couldn't fetched -> \(error)")
@@ -390,7 +390,7 @@ extension CoreDataManager {
             request.predicate = NSPredicate(format: "(exampleSentence != nil OR descriptionWord != nil)")
             do {
                 let bookList = try context.fetch(request)
-                let bookModelList = try bookList.map({ try $0.safeObject() })
+                let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
                 return nil
@@ -419,7 +419,7 @@ extension CoreDataManager {
                     request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
                     do {
                         let bookList = try context.fetch(request)
-                        let bookModelList = try bookList.map({ try $0.safeObject() })
+                        let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
                         print("Books couldn't fetched -> \(error)")
@@ -449,7 +449,7 @@ extension CoreDataManager {
             request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
             do {
                 let bookList = try context.fetch(request)
-                let bookModelList = try bookList.map({ try $0.safeObject() })
+                let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
                 print("Books couldn't fetched -> \(error)")
@@ -492,7 +492,8 @@ extension CoreDataManager {
     ) -> BookcaseModel? {
         contextType.context.performAndWait {
             let context = contextType.context
-            let bookcase = Bookcase(context: viewContext)
+            let bookcase = Bookcase(context: context)
+            bookcase.id = UUID()
             bookcase.name = name
             bookcase.learningLanguage = learningLanguage
             bookcase.meaningLanguage = meaningLanguage
@@ -563,7 +564,7 @@ extension CoreDataManager {
             if let bookcase {
                 if let books = bookcase.books as? Set<Book> {
                     for book in books {
-                        if let bookModel = try? book.safeObject() {
+                        if let bookModel = try? book.safeObject(context: context) {
                             deleteBook(book: bookModel, contextType: contextType)
                         }
                     }
@@ -579,7 +580,7 @@ extension CoreDataManager {
             let context = contextType.context
             if let books = bookcase.books as? Set<Book> {
                 for book in books {
-                    if let bookModel = try? book.safeObject() {
+                    if let bookModel = try? book.safeObject(context: context) {
                         deleteBook(book: bookModel, contextType: contextType)
                     }
                 }
@@ -598,16 +599,16 @@ extension CoreDataManager {
                 do {
                     let status = BookcaseStatus(
                         bookList: try bookcase.booksArray.map({ book in
-                            try book.safeObject()
+                            try book.safeObject(context: contextType.context)
                         }),
                         longMemoryCount: bookcase.longMemoryBooksCount,
                         shortMemoryCount: bookcase.shortMemoryBooksCount,
                         totalBooksCount: bookcase.totalBooksCount,
                         longMemoryBooks: try bookcase.longMemoryBooks.map({ book in
-                            try book.safeObject()
+                            try book.safeObject(context: contextType.context)
                         }),
                         shortMemoryBooks: try bookcase.shortMemoryBooks.map({ book in
-                            try book.safeObject()
+                            try book.safeObject(context: contextType.context)
                         })
                     )
                     return status
@@ -624,15 +625,19 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookcaseModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = contextType.context
+        return context.performAndWait {
             let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Bookcase.createdDate, ascending: false)
             ]
             do {
-                let list = try context.performAndWait { try context.fetch(request) }
-                let bookcases = try list.map( { try $0.safeObject() })
+                let list = try context.performAndWait {
+                    try context.fetch(request)
+                }
+                print(list.first?.managedObjectContext ?? "")
+                print("bizim context -> \(context)")
+                let bookcases = try list.map( { try $0.safeObject(context: context) })
                 return bookcases
             } catch {
                 print("Bookcases couldn't fetched -> \(error)")
@@ -653,7 +658,7 @@ extension CoreDataManager {
             request.fetchLimit = 1
             do {
                 let bookcases = try context.fetch(request)
-                return try? bookcases.first?.safeObject()
+                return try? bookcases.first?.safeObject(context: context)
             } catch {
                 print("Bookcase coduln't fetched \(error)")
                 return nil

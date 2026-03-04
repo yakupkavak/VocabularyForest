@@ -334,6 +334,7 @@ extension ForestDataManager {
             sculpture.id = model.id
             sculpture.assetName = model.assetName
             sculpture.createdDate = model.createdDate
+            sculpture.characterName = model.characterName
             sculpture.xPosition = model.xPosition
             sculpture.yPosition = model.yPosition
             forest.addToSculptures(sculpture)
@@ -395,14 +396,14 @@ extension ForestDataManager {
     }
     
     func fetchPlant(id: UUID, contextType: ContextType) -> TreeModel? {
-        contextType.context.performAndWait {
+        return contextType.context.performAndWait { () -> TreeModel? in
             guard let forest = getCurrentForest(context: contextType.context) else {
                 return nil
             }
             if let plants = forest.trees?.allObjects as? [Tree],
                let plant = plants.first(where: { $0.id == id }) {
                 do {
-                    return try plant.safeObject()
+                    return try plant.safeObject(context: contextType.context)
                 } catch {
                     print(SafeModelError.invalidMapping.localizedDescription)
                     return nil
@@ -446,7 +447,7 @@ extension ForestDataManager {
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest] {
                 for quest in quests {
                     do {
-                        let questModel = try quest.safeObject()
+                        let questModel = try quest.safeObject(context: contextType.context)
                         questList.append(questModel)
                     } catch {
                         print(SafeModelError.invalidMapping.localizedDescription)
@@ -471,7 +472,7 @@ extension ForestDataManager {
             if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
                 for animal in animals {
                     do {
-                        let animalModel = try animal.safeObject()
+                        let animalModel = try animal.safeObject(context: contextType.context)
                         animalList.append(animalModel)
                     } catch {
                         print(SafeModelError.invalidMapping.localizedDescription)
@@ -493,7 +494,7 @@ extension ForestDataManager {
             if let treeSet = forest.trees, let trees = treeSet.allObjects as? [Tree]  {
                 for tree in trees {
                     do {
-                        let treeModel = try tree.safeObject()
+                        let treeModel = try tree.safeObject(context: contextType.context)
                         treeList.append(treeModel)
                     } catch {
                         print(SafeModelError.invalidMapping.localizedDescription)
@@ -515,7 +516,7 @@ extension ForestDataManager {
             if let sculptureSet = forest.sculptures, let sculptures = sculptureSet.allObjects as? [Sculpture]  {
                 for sculpture in sculptures {
                     do {
-                        let sculptureModel = try sculpture.safeObject()
+                        let sculptureModel = try sculpture.safeObject(context: contextType.context)
                         sculptureList.append(sculptureModel)
                     } catch {
                         print(SafeModelError.invalidMapping.localizedDescription)
