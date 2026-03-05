@@ -1,0 +1,12 @@
+//
+//  CoreDataConstant.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 31.01.2026.
+//
+
+enum CoreDataConstant {
+    static let bookEntityName = "Book"
+    static let bookcaseEntityName = "Bookcase"
+    static let entities = ["Book","Bookcase"]
+}

@@ -9,13 +9,26 @@ import SpriteKit
 import SwiftUI
 import AVFoundation
 
+protocol ShowClickable: AnyObject {
+    func showButton()
+}
+
+protocol TalkProtocol: AnyObject {
+    var node: SKSpriteNode { get }
+    func talk(text: String)
+    func removeBubble()
+}
+
+protocol UpdatePositionProtocol: AnyObject {
+    var node: SKSpriteNode { get }
+    func startPositionChange()
+    func positionChange(direction: Directions)
+    func removeChange(x: CGFloat, y: CGFloat)
+    func confirmeChange()
+}
+
 protocol ForectSceneProtocol: AnyObject {
-    func getTrees() -> Resource<[TreeModel]>
-    func getSculptures() -> Resource<[SculptureModel]>
-    func getQuests() -> Resource <[QuestModel]>
-    func treeOnClick(id: UUID)
-    func getForestStatus() -> Resource<ForestStatusModel>
-    func updateForestStatus(model: ForestStatusModel)
+    func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount])
 }
 
 class ForestScene: SKScene, SKPhysicsContactDelegate {
@@ -28,7 +41,11 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var helper: ForectSceneProtocol?
     var animalManagers: [AnimalManagerProtocol] = []
     var plantManagers: [PlantManagerProtocol] = []
+    var sculptureManagers: [SculptureManagerProtocol] = []
     private var isTouching = false
+    private var previewDirectionList: [DirectionWithCount] = []
+    private var selectedManager: UpdatePositionProtocol? = nil
+    private var selectedModel: ComponentModelProtocol? = nil
     var timer: Timer?
     
     // MARK: - LIFECYCLE
@@ -94,7 +111,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         }
         
         for animal in animalManagers {
-            let animalNode = animal.animalNode
+            let animalNode = animal.node
             let floor = environmentManager.floorNode
             let animalX = animalNode.position.x
             let halfAnimalWidth = animalNode.size.width / 2
@@ -121,23 +138,12 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
-        if nodesAtPoint.contains(where: { $0.name == "menu_button" }) {
-            forestHelper?.showOptions()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "quest_button" }) {
-            forestHelper?.showQuests()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "play_button" }) {
-            forestHelper?.showGameSelection()
-            return
-        }
-        if nodesAtPoint.contains(where: { $0.name == "forest_button" }) {
-            forestHelper?.showForestInfo()
-            return
-        }
-        let direction: GameDirection = (location.x > self.size.width / 2) ? .right : .left
+        
+        if handleMenuTaps(nodes: nodesAtPoint) { return }
+        if handleBubbleButtonTaps(nodes: nodesAtPoint) { return }
+        if handleEntityTaps(nodes: nodesAtPoint) { return }
+        if handleArrowTaps(nodes: nodesAtPoint) { return }
+        let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
         playerManager.startWalking(direction: direction)
     }
     
@@ -145,6 +151,142 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         isTouching = false
         playerManager.stopWalking()
         environmentManager.stopBackground()
+    }
+}
+
+// MARK: - PRIVATE HELPER
+
+private extension ForestScene {
+    func handleMenuTaps(nodes: [SKNode]) -> Bool {
+        if nodes.contains(where: { $0.name == "menu_button" }) {
+            forestHelper?.showOptions()
+            return true
+        }
+        if nodes.contains(where: { $0.name == "quest_button" }) {
+            forestHelper?.showQuests()
+            return true
+        }
+        if nodes.contains(where: { $0.name == "play_button" }) {
+            forestHelper?.showGameSelection()
+            return true
+        }
+        if nodes.contains(where: { $0.name == "forest_button" }) {
+            forestHelper?.showForestInfo()
+            return true
+        }
+        return false
+    }
+    
+    func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {
+        guard let btnNode = nodes.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }),
+              let bubble = btnNode.parent,
+              let targetNode = bubble.parent as? SKSpriteNode,
+              let buttonName = btnNode.name else {
+            return false
+        }
+        
+        if let manager = plantManagers.first(where: { $0.node === targetNode }) {
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: manager ,nameModel: model, generalModel: model, buttonName: buttonName, type: .plant)
+            return true
+        }
+        
+        if let manager = animalManagers.first(where: { $0.node === targetNode }) {
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: nil, nameModel: model, generalModel: model, buttonName: buttonName, type: .animal)
+            return true
+        }
+        
+        if let manager = sculptureManagers.first(where: { $0.sculptureNode === targetNode }) {
+            guard let model = manager.model else { return false }
+            handleBubbleAction(manager: manager ,nameModel: model, generalModel: model, buttonName: buttonName, type: .sculpture)
+            return true
+        }
+        return false
+    }
+    
+    func handleBubbleAction(manager: UpdatePositionProtocol?, nameModel: ComponentNameable,generalModel: ComponentModelProtocol ,buttonName: String, type: ComponentType) {
+        switch buttonName {
+        case "btn_update_name":
+            forestHelper?.updateComponentName(model: nameModel, type: type)
+        case "btn_update_pos":
+            if let manager {
+                selectedManager = manager
+                selectedModel = generalModel
+                environmentManager.showPositionArrows()
+                manager.startPositionChange()
+            }
+        default:
+            break
+        }
+    }
+
+    func handleEntityTaps(nodes: [SKNode]) -> Bool {
+        guard let clickedNode = nodes.first(where: { ["plant", "Animal", "sculpture"].contains($0.name) }) as? SKSpriteNode else {
+            return false
+        }
+        
+        if let manager = plantManagers.first(where: { $0.node === clickedNode }) {
+            manager.tapComponent()
+            return true
+        }
+        if let manager = animalManagers.first(where: { $0.node === clickedNode }) {
+            manager.tapComponent()
+            return true
+        }
+        if let manager = sculptureManagers.first(where: { $0.sculptureNode === clickedNode }) {
+            manager.tapComponent()
+            return true
+        }
+        
+        return false
+    }
+    
+    func handleArrowTaps(nodes: [SKNode]) -> Bool {
+        guard let btnNode = nodes.first(where: { ForestConstant.allButtons.contains($0.name ?? "") })
+        else {
+            return false
+        }
+        guard let selectedModel else { return false }
+        
+        if btnNode.name == ForestConstant.confirmIconName {
+            helper?.updatePosition(model: selectedModel, directionList: previewDirectionList)
+            selectedManager?.confirmeChange()
+            clearSelection()
+        }else if btnNode.name == ForestConstant.refuseIconName {
+            selectedManager?.removeChange(
+                x: selectedModel.xPosition,
+                y: selectedModel.yPosition
+            )
+            clearSelection()
+        }else if btnNode.name == ForestConstant.rightIconName {
+            updateDirectionList(.right)
+        }else if btnNode.name == ForestConstant.leftIconName {
+            updateDirectionList(.left)
+        }else if btnNode.name == ForestConstant.upIconName {
+            updateDirectionList(.up)
+        }else if btnNode.name == ForestConstant.downIconName {
+            updateDirectionList(.down)
+        }else {
+            return false
+        }
+        return true
+    }
+    
+    func updateDirectionList(_ direction: Directions) {
+        if let index = previewDirectionList.firstIndex(where: { $0.direction == direction}) {
+            previewDirectionList[index].count += 1
+        }else {
+            previewDirectionList.append(DirectionWithCount(direction: direction, count: 1))
+        }
+        selectedManager?.positionChange(direction: direction)
+    }
+    
+    func clearSelection() {
+        selectedModel = nil
+        selectedModel = nil
+        previewDirectionList = []
+        environmentManager?.closePositionArrows()
     }
 }
 
@@ -178,20 +320,39 @@ extension ForestScene: ForestViewModelOutputProcotol {
     }
     
     func setupSculpture(sculpture: SculptureModel) {
+        for sculptureManager in self.sculptureManagers {
+            if let model = sculptureManager.model, model.id == sculpture.id {
+                sculptureManager.updateName(name: sculpture.characterName)
+                return
+            }
+        }
         let manager = SculptureManager(scene: self)
         manager.setupSculpture(model: sculpture)
+        sculptureManagers.append(manager)
     }
     
     func setupPlant(plant: TreeModel) {
+        for plantManager in self.plantManagers {
+            if let model = plantManager.model, model.id == plant.id {
+                plantManager.updateName(name: plant.characterName)
+                return
+            }
+        }
         let manager = PlantManager(scene: self)
         manager.setupPlant(model: plant)
         plantManagers.append(manager)
     }
     
-    func setupAnimals(animals: AnimalModel?){
-        guard let animals else { return }
+    func setupAnimal(animal: AnimalModel?){
+        guard let animal else { return }
+        for animalManager in self.animalManagers {
+            if let model = animalManager.model, model.id == animal.id {
+                animalManager.updateName(name: animal.characterName)
+                return
+            }
+        }
         let animalManager = AnimalManager(scene: self)
-        animalManager.setupAnimalManager(model: animals)
+        animalManager.setupAnimalManager(model: animal)
         animalManagers.append(animalManager)
     }
     

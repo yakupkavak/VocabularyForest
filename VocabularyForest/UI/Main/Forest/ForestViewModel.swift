@@ -13,7 +13,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func startDrought()
     func startRain()
     func stopRain()
-    func setupAnimals(animals: AnimalModel?)
+    func setupAnimal(animal: AnimalModel?)
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
 }
@@ -33,6 +33,8 @@ protocol ForestViewModelProtocol: AnyObject {
                         gameLevel: GameLevel,
                         bookcaseSelection: GameBookcaseSelection) -> Bool
     func closeBookError()
+    func updateComponentName(name: String)
+    func setComponent(uuid: UUID, for componentType: ComponentType)
 }
 
 class ForestViewModel: BaseViewModel {
@@ -43,13 +45,16 @@ class ForestViewModel: BaseViewModel {
     @Published var weeklyQuestList: [QuestModel] = []
     @Published var monthlyQuestList: [QuestModel] = []
     @Published var specialQuestList: [QuestModel] = []
-    @Published var bookcaseList: [Bookcase] = []
+    @Published var bookcaseList: [BookcaseModel] = []
     @Published var forestStatus: ForestStatusModel? = nil
     @Published var showRainButton = false
     @Published var showBookThreshold = false
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
     private var treeList: [TreeModel] = []
+    private var componentUUID: UUID? = nil
+    private var selectedModel: ComponentType? = nil
+    private var directionList: [DirectionWithCount] = []
     let coreDataManager = ForestDataManager.shared
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
@@ -57,37 +62,39 @@ class ForestViewModel: BaseViewModel {
     init(audioService: AudioServiceProtocol = ForestAudioService.shared) {
         self.audioService = audioService
         super.init()
-        if let bookcases = CoreDataManager.shared.fetchBookcases() {
-            bookcaseList = bookcases
-        }
     }
 }
 
-// MARK:  - HELPERS
+// MARK:  - BOOK HELPERS
 
-extension ForestViewModel: ForestViewModelProtocol {
+extension ForestViewModel {
     
     func closeBookError() {
         showBookThreshold = false
     }
     
-    func checkBookCount(type: BattleQuestionType, battleMode: BattleEnemyModel, gameLevel: GameLevel, bookcaseSelection: GameBookcaseSelection) -> Bool {
+    func checkBookCount(
+        type: BattleQuestionType,
+        battleMode: BattleEnemyModel,
+        gameLevel: GameLevel,
+        bookcaseSelection: GameBookcaseSelection
+    ) -> Bool {
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         if type == .learning {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription() else {
+                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription(contextType: .background) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
+                if books.filter({ $0.shortMemory == true }).count < minBook {
                     showBookThreshold = true
                     return false
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooksExampleDescription(model: bookcase) else {
+                guard let books = CoreDataManager.shared.fetchSafeBooksExampleDescription(model: bookcase, contextType: .background) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
+                if books.filter({ $0.shortMemory == true }).count < minBook {
                     showBookThreshold = true
                     return false
                 }
@@ -96,149 +103,147 @@ extension ForestViewModel: ForestViewModelProtocol {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooks() else {
+                guard let books = CoreDataManager.shared.fetchAllSafeBooks(contextType: .background) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
-                    showBookThreshold = true
-                    return false
+                if type == .competitive {
+                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
+                }else { // remainder
+                    if books.filter({ $0.longMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase) else {
+                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase, contextType: .background) else {
                     showBookThreshold = true
                     return false }
-                if books.count < minBook {
-                    showBookThreshold = true
-                    return false
+                if type == .competitive {
+                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
+                }else {
+                    if books.filter({ $0.longMemory == true }).count < minBook {
+                        showBookThreshold = true
+                        return false
+                    }
                 }
             }
         }
         return true
     }
+}
+
+// MARK:  - FOREST HELPERS
+
+extension ForestViewModel {
+    
+    func fetchForest() {
+        let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
+
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            
+            if !forestInitalized {
+                let result = coreDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
+                await MainActor.run {
+                    if result.status == .success {
+                        UserDefaults.standard.set(true, forKey: "forestInitalized")
+                    }
+                }
+            }
+            
+            let fetchedAnimals = coreDataManager.fetchAnimals(contextType: .background).data ?? []
+            let fetchedSculptures = coreDataManager.fetchSculptures(contextType: .background).data ?? []
+            let fetchedTrees = coreDataManager.fetchTrees(contextType: .background).data ?? []
+            let fetchedBookcases = CoreDataManager.shared.fetchSafeBookcases(contextType: .background)
+            let statusResult = coreDataManager.fetchForestStatus(contextType: .background)
+            let questResult = coreDataManager.fetchQuests(contextType: .background)
+            
+            await MainActor.run { [weak self] in
+                guard let self = self else { return }
+                
+                let newAnimals = fetchedAnimals.filter { newItem in
+                    !self.animalList.contains(where: { $0 == newItem })
+                }
+                
+                let newSculptures = fetchedSculptures.filter { newItem in
+                    !self.sculptureList.contains(where: { $0 == newItem })
+                }
+                
+                let newTrees = fetchedTrees.filter { newItem in
+                    !self.treeList.contains(where: { $0 == newItem })
+                }
+                
+                if let cases = fetchedBookcases {
+                    self.bookcaseList = cases
+                }
+
+                if !newAnimals.isEmpty { self.animalList.append(contentsOf: newAnimals) }
+                if !newSculptures.isEmpty { self.sculptureList.append(contentsOf: newSculptures) }
+                if !newTrees.isEmpty { self.treeList.append(contentsOf: newTrees) }
+
+                for animal in newAnimals {
+                    self.output?.setupAnimal(animal: animal)
+                }
+                
+                for sculpture in newSculptures {
+                    self.output?.setupSculpture(sculpture: sculpture)
+                }
+                
+                for tree in newTrees {
+                    self.output?.setupPlant(plant: tree)
+                }
+                
+                if let quests = questResult.data {
+                    self.processQuests(quests: quests)
+                }
+                
+                if let forestData = statusResult.data {
+                    self.forestStatus = ForestStatusModel(
+                        rainValue: forestData.rainValue,
+                        landHealthPercentage: forestData.landHealthPercentage,
+                        landStatus: forestData.landStatus,
+                        gold: forestData.gold
+                    )
+                    
+                    if forestData.rainValue >= 50 { self.showRainButton = true }
+                    
+                    if let landHealthPercentage = self.forestStatus?.landHealthPercentage {
+                        if landHealthPercentage == 0 {
+                            self.output?.startDrought()
+                        } else if landHealthPercentage <= 50 {
+                            self.output?.startFade()
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func startRain() {
         showRainButton = false
         output?.startRain()
-        coreDataManager.updateRainValue(rain: -50)
+        coreDataManager.startRain(contextType: .main)
         var time = 0
-        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
             time += 1
             if time == 40 {
                 output?.stopRain()
             }
         }
+        
     }
-    
-    func claimReward(quest: QuestModel) {
-        let result = coreDataManager.claimReward(quest: quest)
-        if result.status == .success {
-            fetchForest()
-        }
-    }
-    
-    func fetchForest() {
-        let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
+}
 
-        Task { @MainActor in
-            
-            if !forestInitalized {
-                let result = coreDataManager.createForestGame(helper: ForestGameHelper())
-                if result.status == .success {
-                    UserDefaults.standard.set(true, forKey: "forestInitalized")
-                }
-            }
-            
-            // MARK: - FETCH ANIMAL
-            
-            let resultAnimal = coreDataManager.fetchAnimals()
-            if resultAnimal.status == .success {
-                guard let animals = resultAnimal.data else { return }
-                for animal in animals {
-                    if !animalList.contains(where: { $0 == animal}) {
-                        animalList.append(animal)
-                        output?.setupAnimals(animals: animal)
-                    }
-                }
-            }
-            
-            // MARK: - FETCH SCULPTURE
-            
-            let sculptureResult = coreDataManager.fetchSculptures()
-            if sculptureResult.status == .success {
-                guard let sculptures = sculptureResult.data else { return }
-                for sculpture in sculptures {
-                    if !sculptureList.contains(where: { $0 == sculpture}) {
-                        sculptureList.append(sculpture)
-                        output?.setupSculpture(sculpture: sculpture)
-                    }
-                }
-            }
-            
-            // MARK: - FETCH TREE
-            
-            let resultTree = coreDataManager.fetchTrees()
-            if resultTree.status == .success {
-                guard let trees = resultTree.data else { return }
-                for tree in trees {
-                    if !treeList.contains(where: { $0 == tree}) {
-                        treeList.append(tree)
-                        output?.setupPlant(plant: tree)
-                    }
-                }
-            }
-            
-            // MARK: - FETCH STATUS
-            
-            let result = coreDataManager.fetchForestStatus()
-            switch result.status {
-            case .success:
-                if let forestData = result.data {
-                    forestStatus = ForestStatusModel(rainValue: forestData.rainValue, landHealthPercentage: forestData.landHealthPercentage, landStatus: forestData.landStatus, gold: forestData.gold)
-                    if(forestData.rainValue >= 50) {
-                        showRainButton = true
-                    }
-                    if let landHealthPercentage = forestStatus?.landHealthPercentage {
-                        if landHealthPercentage == 0 {
-                            output?.startDrought()
-                        }else if landHealthPercentage <= 50 {
-                            output?.startFade()
-                        }
-                    }
-                }
-            case .loading:
-                print("loading")
-            case .error:
-                print("fetch forest error")
-            }
-            
-            fetchQuests()
-            
-        }
-    }
-    
-    private func fetchQuests() {
-        dailyQuestList = []
-        weeklyQuestList = []
-        monthlyQuestList = []
-        specialQuestList = []
-        let questResult = coreDataManager.fetchQuests()
-        if questResult.status == .success, let questList = questResult.data {
-            for quest in questList {
-                switch quest.type {
-                case .daily:
-                    dailyQuestList.append(quest)
-                case .weekly:
-                    weeklyQuestList.append(quest)
-                case .monthly:
-                    monthlyQuestList.append(quest)
-                case .special:
-                    specialQuestList.append(quest)
-                }
-            }
-        }
-    }
-    
+// MARK: - SOUND HELPERS
+
+extension ForestViewModel {
     func startGameMusic() {
         audioService.playBackgroundMusic()
     }
@@ -264,32 +269,102 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
 }
 
-// MARK: GAME SCENE PROTOCOL
+// MARK:  - FOREST VIEW MODEL PROTOCOL
 
-extension ForestViewModel: ForectSceneProtocol {
+extension ForestViewModel: ForestViewModelProtocol {
     
-    func getTrees() -> Resource<[TreeModel]> {
-        coreDataManager.fetchTrees()
+    func setComponent(uuid: UUID, for componentType: ComponentType) {
+        componentUUID = uuid
+        selectedModel = componentType
     }
     
-    func getSculptures() -> Resource<[SculptureModel]> {
-        coreDataManager.fetchSculptures()
+    func updateComponentName(name: String) {
+        guard let selectedModel else { return }
+        guard let componentUUID else { return }
+        let result = ForestDataManager.shared.updateComponentName(
+            id: componentUUID,
+            type: selectedModel,
+            newName: name,
+            contextType: .main
+        )
+        if result.status == .success {
+            switch selectedModel {
+            case .animal:
+                if let model = coreDataManager.fetchAnimal(id: componentUUID, contextType: .main) {
+                    self.output?.setupAnimal(animal: model)
+                }
+            case .plant:
+                if let model = coreDataManager.fetchPlant(id: componentUUID, contextType: .main) {
+                    self.output?.setupPlant(plant: model)
+                }
+            case .sculpture:
+                if let model = coreDataManager.fetchSculpture(id: componentUUID, contextType: .main) {
+                    self.output?.setupSculpture(sculpture: model)
+                }
+            }
+        }
+        self.selectedModel = nil
+        self.componentUUID = nil
     }
     
-    func getQuests() -> Resource<[QuestModel]> {
-        coreDataManager.fetchQuests()
-    }
-    
-    func treeOnClick(id: UUID) {
-        print("")
-    }
-    
-    func getForestStatus() -> Resource<ForestStatusModel> {
-        coreDataManager.fetchForestStatus()
-    }
-    
-    func updateForestStatus(model: ForestStatusModel) {
-        coreDataManager.updateForestStatus(model: model)
+    func claimReward(quest: QuestModel) {
+        let result = coreDataManager.claimReward(quest: quest, contextType: .main)
+        if result.status == .success {
+            fetchForest()
+        }
     }
 }
 
+// MARK: FOREST SCENE PROTOCOL
+
+extension ForestViewModel: ForectSceneProtocol {
+    func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount]) {
+        var xValue = model.xPosition
+        var yValue = model.yPosition
+        print("current -> \(yValue)")
+        for direction in directionList {
+            switch direction.direction {
+            case .up:
+                yValue += CGFloat(direction.count) * ForestConstant.perVerticalMove
+            case .down:
+                yValue -= CGFloat(direction.count) * ForestConstant.perVerticalMove
+            case .right:
+                xValue += CGFloat(direction.count) * ForestConstant.perHorizontalMove
+            case .left:
+                xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
+            }
+        }
+        print("new -> \(yValue)")
+        coreDataManager.updateComponentPosition(
+            model: model,
+            xValue: xValue,
+            yValue: yValue,
+            contextType: .main
+        )
+    }
+}
+
+// MARK: - PRIVATE HELPERS
+
+private extension ForestViewModel {
+    func processQuests(quests: [QuestModel]) {
+        var daily: [QuestModel] = []
+        var weekly: [QuestModel] = []
+        var monthly: [QuestModel] = []
+        var special: [QuestModel] = []
+        
+        for quest in quests {
+            switch quest.type {
+            case .daily: daily.append(quest)
+            case .weekly: weekly.append(quest)
+            case .monthly: monthly.append(quest)
+            case .special: special.append(quest)
+            }
+        }
+        
+        self.dailyQuestList = daily
+        self.weeklyQuestList = weekly
+        self.monthlyQuestList = monthly
+        self.specialQuestList = special
+    }
+}

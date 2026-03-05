@@ -59,9 +59,9 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
             case .waiting:
                 print("Waiting")
             case .downloading:
-                presentToast(ToastValue(message: "Yükleniyor"))
+                presentToast(ToastValue(message: String(localized: "Yükleniyor")))
             case .success:
-                presentToast(ToastValue(message: "Kütüphanen yüklendi!"))
+                presentToast(ToastValue(message: String(localized: "Kütüphanen yüklendi!")))
             case .error(let errorText):
                 presentToast(ToastValue(message: errorText))
             }
@@ -126,7 +126,7 @@ extension BookcasePacketsUI {
                 
                 VStack(spacing: 0) {
                     let filteredBySource = libraries.filter { $0.sourceLanguage == selected }
-                    let groupedLibraries = Dictionary(grouping: filteredBySource) { $0.targetLanguage ?? "Bilinmiyor" }
+                    let groupedLibraries = Dictionary(grouping: filteredBySource) { $0.targetLanguage ?? String(localized: "Bilinmiyor") }
                     let sortedKeys = groupedLibraries.keys.sorted()
                     if sortedKeys.isEmpty {
                         Text("Bu dil için kütüphane bulunamadı.")
@@ -150,7 +150,7 @@ extension BookcasePacketsUI {
     }
     
     var emptyView: some View {
-        CustomEmptyView(emptyText: "Hiçbir kitaplık bulunamadı")
+        CustomEmptyView(emptyText: String(localized: "Hiçbir kitaplık bulunamadı"))
     }
 }
 

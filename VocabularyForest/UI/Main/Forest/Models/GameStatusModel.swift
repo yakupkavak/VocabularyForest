@@ -8,6 +8,6 @@
 struct GameStatusModel {
     var trueCount: Int
     var wrongCount: Int
-    var wrongWords: [Book]
+    var wrongWords: [BookModel]
     var userWon: Bool?
 }

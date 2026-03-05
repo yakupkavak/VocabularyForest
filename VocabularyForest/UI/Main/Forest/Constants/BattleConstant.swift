@@ -28,13 +28,13 @@ enum BattleConstant {
     static let easyBossEnemyLevel = 10
     static let mediumPlayerLevel = 3
     static let mediumEnemyLevel = 10
-    static let mediumBossEnemyLevel = 20
+    static let mediumBossEnemyLevel = 25
     static let hardPlayerLevel = 3
     static let hardEnemyLevel = 15
-    static let hardBossEnemyLevel = 30
+    static let hardBossEnemyLevel = 50
     static let insanePlayerLevel = 3
-    static let insaneEnemyLevel = 20
-    static let insaneBossEnemyLevel = 50
+    static let insaneEnemyLevel = 25
+    static let insaneBossEnemyLevel = 100
 }
 
 struct PhysicsCategory {
@@ -97,17 +97,18 @@ enum GameLevel: Hashable, Codable {
         }
     }
 }
-extension GameLevel {
+
+extension GameLevel: MatchCoreData {
     var title: String {
         switch self {
         case .easy:
-            "Kolay"
+            String(localized:"Kolay")
         case .medium:
-            "Orta"
+            String(localized: "Orta")
         case .hard:
-            "Zor"
+            String(localized: "Zor")
         case .insane:
-            "İmkansız"
+            String(localized: "İmkansız")
         }
     }
     var valueForCoreData: String {
@@ -122,11 +123,11 @@ extension GameLevel {
             "insane"
         }
     }
-    static func convertFromCoreData(string: String?) -> GameLevel {
-        guard let string else {
+    static func convertFromCoreData(value: String?) -> GameLevel {
+        guard let value else {
             return .medium
         }
-        return switch string {
+        return switch value {
             case "easy":
                 .easy
             case "medium":
@@ -182,27 +183,27 @@ enum MagicType: Hashable {
         case .fire:
             MagicSpeelModel(
                 image: "fire_magic_icon",
-                name: "Fire"
+                name: String(localized:"Fire")
             )
         case .darkMagic:
             MagicSpeelModel(
                 image: "dark_magic_icon",
-                name: "Dark\nMagic"
+                name: String(localized:"Dark\nMagic")
             )
         case .ice:
             MagicSpeelModel(
                 image: "ice_magic_icon",
-                name: "Ice"
+                name: String(localized:"Ice")
             )
         case .death:
             MagicSpeelModel(
                 image: "death_magic_icon",
-                name: "Death"
+                name: String(localized:"Death")
             )
         case .psychic:
             MagicSpeelModel(
                 image: "psychic_magic_icon",
-                name: "Psychic"
+                name: String(localized:"Psychic")
             )
         }
     }

@@ -99,14 +99,14 @@ private extension BookcaseDetailUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $viewModel.searchText, placeholder: "Kelime ara").focused($searchBarIsFocused)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kelime ara")).focused($searchBarIsFocused)
         }.padding(.horizontal,32)
     }
     var emptyBooks: some View {
         VStack(spacing: 24){
             Spacer()
             if showEmptyText {
-                tvDefault(text: "Hiçbir kitap bulamadık", color: .brown300).padding(24)
+                tvDefault(text: String(localized: "Hiçbir kitap bulamadık"), color: .brown300).padding(24)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .strokeBorder(.title, lineWidth: 4)
@@ -155,10 +155,10 @@ private extension BookcaseDetailUI {
     func onClickBookcaseIcon() {
         
     }
-    func bookRowEdit(book: Book){
+    func bookRowEdit(book: BookModel){
         viewModel.prepareForEdit(book: book)
     }
-    func bookRowDelete(book: Book){
+    func bookRowDelete(book: BookModel){
         viewModel.deleteBookModel(at: book)
     }
 }

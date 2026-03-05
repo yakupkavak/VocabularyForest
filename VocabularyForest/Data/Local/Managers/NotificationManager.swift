@@ -150,8 +150,6 @@ class NotificationManager: ObservableObject {
             content = askExample(learningWord: learningWord, meaningWord: meaningWord, example: example)
         }else if example.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty {
             content = askDescription(learningWord: learningWord, meaningWord: meaningWord, description: description)
-        }else {
-            print("Yeni notification yaratılamadı")
         }
         
         if let content {
@@ -179,18 +177,18 @@ class NotificationManager: ObservableObject {
     
     private func askDescription(learningWord: String, meaningWord: String, description: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
-        content.title = "Kelimemiz  : \(learningWord) 📚"
-        content.subtitle = "Anlamı     : \(meaningWord) 🥰"
-        content.body = "Açıklaması : \(description)"
+        content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
+        content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
+        content.body = String(localized:"Description: \(description)")
         
         return content
     }
     
     private func askExample(learningWord: String, meaningWord: String, example: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
-        content.title = "Kelimemiz  : \(learningWord) 📚"
-        content.subtitle = "Anlamı     : \(meaningWord) 🥰"
-        content.body = "Örneği     : \(example)"
+        content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
+        content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
+        content.body = String(localized:"Example: \(example)")
         
         return content
     }
@@ -198,14 +196,14 @@ class NotificationManager: ObservableObject {
     private func askWordAndMeaning(learningWord: String, meaningWord: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = getRandomWordTitle()
-        content.subtitle = "\(learningWord)"
-        content.body = "Anlamı: \(meaningWord)"
+        content.subtitle = String(localized:"\(learningWord)")
+        content.body = String(localized:"Meaning: \(meaningWord)")
         
         return content
     }
     
     private func getRandomWordTitle() -> String {
-        let titleList = ["Hatırlama Vakti 📚", "Öğrenme Zamanı 🥰", "Bunu hatırlıyor musun 👀"]
-        return titleList.randomElement() ?? "Hatırlama Vakti 📚"
+        let titleList = [String(localized: "Hatırlama Vakti 📚"), String(localized:"Öğrenme Zamanı 🥰"), String(localized:"Bunu hatırlıyor musun 👀")]
+        return titleList.randomElement() ?? String(localized:"Hatırlama Vakti 📚")
     }
 }

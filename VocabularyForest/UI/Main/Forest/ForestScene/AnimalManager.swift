@@ -7,9 +7,10 @@
 
 import SpriteKit
 
-protocol AnimalManagerProtocol: AnyObject {
-    var animalNode: SKSpriteNode { get }
-    var animalDirection: GameDirection { get }
+protocol AnimalManagerProtocol: AnyObject, TapComponentProtocol {
+    var animalDirection: HorizontalDirection { get }
+    var node: SKSpriteNode { get }
+    var model: AnimalModel? { get }
     func startMoving()
     func stopMoving()
     func changeDirection()
@@ -21,15 +22,16 @@ class AnimalManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
-    let currentAnimalNode = SKSpriteNode()
     private var idleTextures: [SKTexture] = []
     private var walkingTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
     private var animalModel: AnimalModel? = nil
-    var direction: GameDirection = .right
     private var timer: Timer? = nil
     private var isJumping: Bool = false
-    
+    private var isMenuOpen = false
+    let currentAnimalNode = SKSpriteNode()
+    var direction: HorizontalDirection = .right
+
     // MARK: - INIT
     
     init(scene: SKScene) {
@@ -119,6 +121,7 @@ private extension AnimalManager {
         idleAnimation()
         randomActions()
         currentAnimalNode.name = "Animal"
+        animalModel = animal
     }
     
     func setupAnimalFrames(model: AnimalModel) {
@@ -131,6 +134,12 @@ private extension AnimalManager {
             y: GameConstant.floorHeightSize * 0.65 + model.yPosition)
         currentAnimalNode.xScale = -1.0
         currentAnimalNode.zPosition = 3.0 - (model.yPosition / 50)
+        let originalSize = firstFrame.size()
+        if originalSize.height > 0 {
+            let aspectRatio = originalSize.width / originalSize.height
+            let targetWidth = ComponentSizeConstant.animalHeight * aspectRatio
+            currentAnimalNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.animalHeight)
+        }
         scene.addChild(currentAnimalNode)
     }
     
@@ -173,9 +182,109 @@ private extension AnimalManager {
             withKey: GameConstant.jumpAnimation
         )
     }
+    
+    //MARK: - TAP GESTURE
+    
+    func createInteractionBubble() {
+        if let existingBubble = node.childNode(withName: "menu_bubble") {
+            existingBubble.removeFromParent()
+            isMenuOpen = false
+            return
+        }
+        
+        isMenuOpen = true
+        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.characterName : animalModel?.assetName
+        let bubbleWidth: CGFloat = 120
+        let bubbleHeight: CGFloat = 80
+        let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
+        bubble.name = "menu_bubble"
+        bubble.fillColor = .brown500.withAlphaComponent(0.95)
+        bubble.strokeColor = .black
+        bubble.lineWidth = 2
+        bubble.zPosition = 100
+        bubble.position = CGPoint(x: 0, y: node.size.height + 40)
+        
+        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        titleLabel.text = displayName ?? String(localized: "Animal")
+        titleLabel.fontSize = 16
+        titleLabel.fontColor = .white
+        titleLabel.position = CGPoint(x: 0, y: 15)
+        bubble.addChild(titleLabel)
+        
+        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
+        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
+        headerSeparator.strokeColor = .clear
+        headerSeparator.position = CGPoint(x: 0, y: 5)
+        bubble.addChild(headerSeparator)
+        
+        let buttonSize = CGSize(width: 100, height: 30)
+        let buttonHitBox = SKShapeNode(rectOf: buttonSize, cornerRadius: 5)
+        buttonHitBox.fillColor = .white.withAlphaComponent(0.01)
+        buttonHitBox.strokeColor = .clear
+        buttonHitBox.name = "btn_update_name"
+        buttonHitBox.position = CGPoint(x: 0, y: -15)
+        buttonHitBox.zPosition = 5
+        
+        let btnLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        btnLabel.text = String(localized: "İsim Değiştir")
+        btnLabel.fontSize = 14
+        btnLabel.fontColor = .black
+        btnLabel.verticalAlignmentMode = .center
+        btnLabel.horizontalAlignmentMode = .center
+        btnLabel.zPosition = 1
+        
+        buttonHitBox.addChild(btnLabel)
+        bubble.addChild(buttonHitBox)
+        
+        bubble.setScale(0)
+        node.addChild(bubble)
+        
+        let targetXScale: CGFloat = node.xScale < 0 ? -1.0 : 1.0
+        let scaleAction = SKAction.scaleX(to: targetXScale, y: 1.0, duration: 0.2)
+        bubble.run(scaleAction)
+        
+        let waitAction = SKAction.wait(forDuration: 3.0)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let remove = SKAction.removeFromParent()
+        let updateState = SKAction.run { [weak self] in
+            self?.isMenuOpen = false
+        }
+        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
+        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
+    }
+    
+    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = 14
+        label.fontColor = .black
+        label.name = name
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        if let width = maxWidth {
+            label.numberOfLines = 0
+            label.preferredMaxLayoutWidth = width
+            label.lineBreakMode = .byWordWrapping
+        }
+        return label
+    }
 }
 
+// MARK: - ANIMAL MANAGER PROTOCOL
+
 extension AnimalManager: AnimalManagerProtocol {
+    
+    var model: AnimalModel? {
+        animalModel
+    }
+    
+    func updateName(name: String) {
+        animalModel?.characterName = name
+    }
+    
+    func tapComponent() {
+        createInteractionBubble()
+    }
     
     func startMoving() {
         moveAnimal()
@@ -189,7 +298,11 @@ extension AnimalManager: AnimalManagerProtocol {
     
     func changeDirection() {
         direction = direction == .left ? .right : .left
-        currentAnimalNode.xScale = direction == .left ? -1 : 1
+        let newScale: CGFloat = direction == .left ? -1 : 1
+        currentAnimalNode.xScale = newScale
+        if let bubble = currentAnimalNode.childNode(withName: "menu_bubble") {
+            bubble.xScale = newScale
+        }
         moveAnimal()
     }
     
@@ -197,11 +310,28 @@ extension AnimalManager: AnimalManagerProtocol {
         setupAnimal(animal: model)
     }
     
-    var animalNode: SKSpriteNode {
+    var node: SKSpriteNode {
         currentAnimalNode
     }
     
-    var animalDirection: GameDirection {
+    var animalDirection: HorizontalDirection {
         direction
+    }
+}
+
+extension AnimalManager: TalkProtocol {
+    
+    func talk(text: String) {
+        print("")
+    }
+    
+    func removeBubble() {
+        if let bubble = node.childNode(withName: "menu_bubble") {
+            bubble.run(.sequence([
+                .scale(to: 0, duration: 0.1),
+                .removeFromParent()
+            ]))
+            isMenuOpen = false
+        }
     }
 }

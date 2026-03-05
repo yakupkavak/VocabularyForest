@@ -17,11 +17,11 @@ struct BookEditSheet: View {
     @State private var exampleSentence: String
     @Environment(\.dismiss) var dismiss
     
-    init(book: Book, onSave: @escaping (String, String, String?, String?) -> Void) {
+    init(book: BookModel, onSave: @escaping (String, String, String?, String?) -> Void) {
         self.onSave = onSave
         
-        _learningWord = State(initialValue: book.unwrappedLearningWord)
-        _meaningWord = State(initialValue: book.unwrappedMeaningWord)
+        _learningWord = State(initialValue: book.learningWord)
+        _meaningWord = State(initialValue: book.meaningWord)
         _descriptionWord = State(initialValue: book.descriptionWord ?? "")
         _exampleSentence = State(initialValue: book.exampleSentence ?? "")
     }

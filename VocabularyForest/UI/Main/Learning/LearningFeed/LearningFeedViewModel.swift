@@ -52,7 +52,7 @@ class LearningFeedViewModel: ObservableObject{
     // MARK: - PRIVATE HELPERS
     
     private func fetchNewWordFromCoreData() {
-        guard let bookcases = dataManager.fetchBookcases(), !bookcases.isEmpty else {
+        guard let bookcases = dataManager.fetchSafeBookcases(contextType: .main), !bookcases.isEmpty else {
             alert = .emptyBookcase
             clearDailyWord()
             return
@@ -64,9 +64,11 @@ class LearningFeedViewModel: ObservableObject{
             return
         }
         
-        if let randomBook = randomBookcase.booksArray.randomElement() {
-            todaysLearningWord = randomBook.unwrappedLearningWord
-            todaysMeaning = randomBook.unwrappedMeaningWord
+        guard let books = dataManager.fetchSafeBooks(model: randomBookcase, contextType: .main) else { return }
+        
+        if let randomBook = books.randomElement() {
+            todaysLearningWord = randomBook.learningWord
+            todaysMeaning = randomBook.meaningWord
             todaysExample = randomBook.exampleSentence ?? ""
             todaysDescription = randomBook.descriptionWord ?? ""
             alert = .none

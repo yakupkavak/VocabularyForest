@@ -41,11 +41,12 @@ class SettingsViewModel: ObservableObject {
     func handleNotificationToggleChange() {
         let currentStatus = notificationManager.notificationsEnabled
         Task {
-            if !currentStatus {
+            if currentStatus {
                 await notificationManager.requestEnable()
             } else {
-                openAppSettings()
+                await notificationManager.requestDisable()
             }
+            await notificationManager.checkNotificationStatus()
         }
     }
     
@@ -201,6 +202,6 @@ class SettingsViewModel: ObservableObject {
     }
     
     func deleteAllData() {
-        manager.deleteEverything()
+        manager.deleteEverything(contextType: .background)
     }
 }

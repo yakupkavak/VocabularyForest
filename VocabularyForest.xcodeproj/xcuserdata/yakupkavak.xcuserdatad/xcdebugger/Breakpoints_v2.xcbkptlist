@@ -7,97 +7,455 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B434A0AA-DF11-4DAE-8780-50644C6BCDDD"
+            uuid = "308AEC1F-25D3-4C18-A9A1-250AC8F353D7"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
+            filePath = "VocabularyForest/UI/Main/Forest/ForestScene/ForestScene.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
+            landmarkName = "setupPlant(plant:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1FA2085B-4071-45B2-A0AB-B74E87AC74D6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/UI/Main/Forest/ForestScene/PlantManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "updateName(name:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "98044BAC-D284-4DB2-8B7C-85D1FD7E4687"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/UI/Base/MainView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3"
+            endingLineNumber = "3"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "450C7B28-786A-415F-A338-448BD577072E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/UI/Main/Vocabulary/CreateBookcase/CreateBookcaseViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "createBookcase(bookcaseName:learningLanguage:meaningLanguage:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "30EA84AF-6787-45E3-89AB-21B116FC8947"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/CoreDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "save(in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "69E1EFE0-4BCD-46AC-8495-EBDC0CE7B9B6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/CoreDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "save(in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C86C81F0-CCB6-4FAA-AEF7-EDBF1AF32D82"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/UI/Main/Vocabulary/CreateBookcase/CreateBookcaseViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "checkAndCreateBookcase()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E7643772-EA3B-480C-855F-B4247A8C9C29"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/CoreDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "664"
+            endingLineNumber = "664"
+            landmarkName = "fetchSafeBookcase(book:contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7CC0B211-DB06-4A11-9C9F-2D6253D0DD4B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/CoreDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "661"
+            endingLineNumber = "661"
+            landmarkName = "fetchSafeBookcase(book:contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9851BABF-C6C7-4E0D-92D9-0D0AEDE12E7C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/CoreDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "657"
+            endingLineNumber = "657"
+            landmarkName = "fetchSafeBookcase(book:contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AF433371-3E7A-4498-AC2E-5CE89DD2968E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "359"
+            endingLineNumber = "359"
+            landmarkName = "fetchSculpture(id:contextType:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AF433371-3E7A-4498-AC2E-5CE89DD2968E - e532abf4c0453aa9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; Swift.Optional&lt;VocabularyForest.SculptureModel&gt; in VocabularyForest.ForestDataManager.fetchSculpture(id: Foundation.UUID, contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; Swift.Optional&lt;VocabularyForest.SculptureModel&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "360"
+                  endingLineNumber = "360">
+               </Location>
+               <Location
+                  uuid = "AF433371-3E7A-4498-AC2E-5CE89DD2968E - e532abf4c0453a8a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; Swift.Optional&lt;VocabularyForest.SculptureModel&gt; in VocabularyForest.ForestDataManager.fetchSculpture(id: Foundation.UUID, contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; Swift.Optional&lt;VocabularyForest.SculptureModel&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "359"
+                  endingLineNumber = "359">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "78D7B4FD-2248-4CF9-820F-7EB6A0489418"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "372"
+            endingLineNumber = "372"
+            landmarkName = "fetchSculpture(id:contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BFA8B2D1-0F72-4F03-A471-D53597B9CD96"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
+            landmarkName = "fetchSculpture(id:contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1F2DB547-BA72-4401-967F-51F1D8C3804F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/UI/Main/Forest/ForestViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
+            landmarkName = "updateComponentName(name:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "302BA4F6-EA14-4934-8B69-6E76009A481A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "528"
+            endingLineNumber = "528"
+            landmarkName = "fetchSculptures(contextType:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "209A2E4F-B6C8-4531-87EA-E4DCF68C836A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
+            landmarkName = "fetchSculptures(contextType:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "209A2E4F-B6C8-4531-87EA-E4DCF68C836A - 20581b20e866780f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "527"
+                  endingLineNumber = "527">
+               </Location>
+               <Location
+                  uuid = "209A2E4F-B6C8-4531-87EA-E4DCF68C836A - 20581b20e866786e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "526"
+                  endingLineNumber = "526">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "344EE758-ECE7-4A1E-9F6E-A6B3011F7A77"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "523"
+            endingLineNumber = "523"
+            landmarkName = "fetchSculptures(contextType:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "344EE758-ECE7-4A1E-9F6E-A6B3011F7A77 - 20581b20e8667890"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "524"
+                  endingLineNumber = "524">
+               </Location>
+               <Location
+                  uuid = "344EE758-ECE7-4A1E-9F6E-A6B3011F7A77 - 20581b20e86678f3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "523"
+                  endingLineNumber = "523">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B2310D2A-2AAC-42AB-9435-A49ECC047F6A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "513"
+            endingLineNumber = "513"
+            landmarkName = "fetchSculptures(contextType:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B2310D2A-2AAC-42AB-9435-A49ECC047F6A - 20581b20e86679da"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "514"
+                  endingLineNumber = "514">
+               </Location>
+               <Location
+                  uuid = "B2310D2A-2AAC-42AB-9435-A49ECC047F6A - 20581b20e8667a3d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt; in VocabularyForest.ForestDataManager.fetchSculptures(contextType: VocabularyForest.ForestDataManager.ContextType) -&gt; VocabularyForest.Resource&lt;Swift.Array&lt;VocabularyForest.SculptureModel&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "513"
+                  endingLineNumber = "513">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "964A4B17-8407-4B79-951F-9ACE5ECB81DB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Models/CoreData/Sculpture+CoreDataProperties.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
             endingLineNumber = "46"
-            landmarkName = "request(endpoint:type:completion:)"
+            landmarkName = "safeObject(context:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EB189368-B1DF-456E-AE69-AA7B385B7BA4"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "request(endpoint:type:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "998F05B4-88FD-4313-8D7B-4E992E2C13A8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "request(endpoint:type:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6B9D666D-3B4D-4383-8BB5-2CCD8668384E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "request(endpoint:type:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4B61CDAE-744D-4E52-9307-9CC366516446"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "request(endpoint:type:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "276F9BA0-5607-4505-872A-4535B2C6383C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/CoreAPI/NetworkManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "request(endpoint:type:completion:)"
-            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "964A4B17-8407-4B79-951F-9ACE5ECB81DB - 5c900f7b71b06bd7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () throws -&gt; VocabularyForest.SculptureModel in VocabularyForest.Sculpture.safeObject(context: __C.NSManagedObjectContext) throws -&gt; VocabularyForest.SculptureModel"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Models/CoreData/Sculpture+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46">
+               </Location>
+               <Location
+                  uuid = "964A4B17-8407-4B79-951F-9ACE5ECB81DB - 5c900f7b71b06bd7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Sendable () throws -&gt; VocabularyForest.SculptureModel in VocabularyForest.Sculpture.safeObject(context: __C.NSManagedObjectContext) throws -&gt; VocabularyForest.SculptureModel"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Models/CoreData/Sculpture+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

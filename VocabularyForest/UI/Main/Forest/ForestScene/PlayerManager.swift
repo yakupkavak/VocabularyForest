@@ -9,10 +9,10 @@ import SpriteKit
 
 protocol PlayerManagerProtocol: AnyObject {
     var playerNode: SKSpriteNode { get }
-    var direction: GameDirection { get }
+    var direction: HorizontalDirection { get }
     var isMoving: Bool { get }
     func setupPlayer()
-    func startWalking(direction: GameDirection)
+    func startWalking(direction: HorizontalDirection)
     func startWaiting()
     func stopWalking()
     func stopPhysicalMovement()
@@ -26,7 +26,7 @@ class PlayerManager: PlayerManagerProtocol {
     let playerNode = SKSpriteNode()
     private var walkTextures: [SKTexture] = []
     private var idleTextures: [SKTexture] = []
-    var direction: GameDirection = .right
+    var direction: HorizontalDirection = .right
     var isMoving: Bool = false
     
     // MARK: - INIT
@@ -63,7 +63,7 @@ class PlayerManager: PlayerManagerProtocol {
             x: scene.size.width / 2,
             y: GameConstant.floorHeightSize * 0.83
         )
-        playerNode.zPosition = 3
+        playerNode.zPosition = 2
         
         startWaiting()
         scene.addChild(playerNode)
@@ -86,7 +86,7 @@ class PlayerManager: PlayerManagerProtocol {
         playerNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
     }
     
-    func startWalking(direction: GameDirection) {
+    func startWalking(direction: HorizontalDirection) {
         stopWaiting()
         self.direction = direction
         self.isMoving = true
@@ -98,7 +98,7 @@ class PlayerManager: PlayerManagerProtocol {
         movePlayerNode(direction: direction)
     }
     
-    private func movePlayerNode(direction: GameDirection) {
+    private func movePlayerNode(direction: HorizontalDirection) {
         let moveAmount: CGFloat = (direction == .right) ? 100 : -100
         let moveAction = SKAction.moveBy(x: moveAmount, y: 0, duration: 1.0)
         let repeatAction = SKAction.repeatForever(moveAction)

@@ -7,14 +7,15 @@
 
 import Foundation
 
-struct AnimalModel: Equatable {
-    let id: UUID
-    let name: String
+struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
+    var id: UUID
+    var type: ComponentType = .animal
+    var characterName: String
     let assetName: String
     let createdDate: Date
     let healthValue: Int
     let isAlive: Bool
-    let xPosition: CGFloat
-    let yPosition: CGFloat
+    var xPosition: CGFloat
+    var yPosition: CGFloat
 }
 

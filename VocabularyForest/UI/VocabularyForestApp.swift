@@ -23,8 +23,10 @@ struct VocabularyForestApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { _ in
-                CoreDataManager.shared.save()
+            SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
+                if phase == .background {
+                    CoreDataManager.shared.save(type: .main)
+                }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .installToast(position: .bottom)
         }

@@ -30,7 +30,7 @@ struct GameSelectUI: View {
     
     var initialQuest: QuestModel?
     @Binding var showGameSelect: Bool
-    var bookcaseList: [Bookcase]
+    var bookcaseList: [BookcaseModel]
     @State private var selectedMode: BattleEnemyModel = .classic
     @State private var selectedLevel: GameLevel = .easy
     @State private var selectedType: BattleQuestionType = .learning
@@ -100,7 +100,7 @@ struct GameSelectUI: View {
                         ))
                     }
                 }
-                Text("\(selectedType.description)").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
+                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.leading)
                 
                 Text("Kitaplık").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.vertical, 4)
@@ -112,11 +112,13 @@ struct GameSelectUI: View {
                     Button {
                         showSelectBookcase = true
                     } label: {
-                        Text("\(selectedBookcase?.bookcaseName ?? "Kitaplık seçiniz")")
-                            .fixedSize()
+                        Text(LocalizedStringKey("\(selectedBookcase?.bookcaseName ?? String(localized: "Kitaplık seçiniz"))"))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
                             .padding(.vertical, 6)
                             .padding(.horizontal, 12)
                             .foregroundColor(.white)
+                            .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
 
                     }
                     .background(Image("title_header")
@@ -235,7 +237,7 @@ struct TagView: View {
                 isSelected.toggle()
             }
         } label: {
-            Text(tag)
+            Text(LocalizedStringKey(tag))
                 .fixedSize()
                 .padding(.vertical, 4)
                 .padding(.horizontal, 8)

@@ -28,7 +28,7 @@ struct BookcaseEditSheet: View {
     init(item: BookcaseDisplayItem, onSave: @escaping (String, Language, Language) -> Void) {
         self.item = item
         self.onSave = onSave
-        _name = State(initialValue: item.bookcase.unwrappedName)
+        _name = State(initialValue: item.bookcase.bookcaseName)
         _learningLanguage = State(initialValue: LanguageData.allLanguages.first(where: {
             $0.id == item.bookcase.learningLanguage
         }))
@@ -111,13 +111,14 @@ struct BookcaseEditSheet: View {
 
 #Preview {
     let manager = CoreDataManager.preview
-    let sampleBookcase = manager.fetchBookcases()!.first!
-    let sampleItem = BookcaseDisplayItem(
-        id: sampleBookcase.objectID,
-        bookcase: sampleBookcase,
-        animalModel: AnimalBodyModel(head: "fox", foot: "fox")
-    )
-    BookcaseEditSheet(item: sampleItem, onSave: { (newName, newLang, newMean) in
-        print("\(newName)")
-    })
+    let sampleBookcase = manager.fetchSafeBookcases(contextType: .main)!.first!
+        let sampleItem = BookcaseDisplayItem(
+            id: sampleBookcase.id,
+            bookcase: sampleBookcase,
+            animalModel: AnimalBodyModel(head: "fox", foot: "fox")
+        )
+        BookcaseEditSheet(item: sampleItem, onSave: { (newName, newLang, newMean) in
+            print("\(newName)")
+        })
+    
 }

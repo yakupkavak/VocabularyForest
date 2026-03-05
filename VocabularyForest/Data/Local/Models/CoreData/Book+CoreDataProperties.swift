@@ -17,7 +17,8 @@ extension Book {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Book> {
         return NSFetchRequest<Book>(entityName: "Book")
     }
-
+    
+    @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
     @NSManaged public var learningDate: Date?
     @NSManaged public var descriptionWord: String?
@@ -40,6 +41,30 @@ extension Book {
     }
     public var unwrappedPartOfSpeech: String {
         partOfSpeech ?? ""
+    }
+}
+
+extension Book: ConvertSafeModel {
+    typealias SafeModel = BookModel
+    
+    func safeObject(context: NSManagedObjectContext) throws -> BookModel {
+        try context.performAndWait {
+            if let id, let bookcaseID = bookcase?.id,let createdDate, let learningWord, let meaningWord {
+                return BookModel(
+                    id: id,
+                    bookcaseId: bookcaseID,
+                    createdDate: createdDate,
+                    learningWord: learningWord,
+                    meaningWord: meaningWord,
+                    exampleSentence: exampleSentence,
+                    descriptionWord: descriptionWord,
+                    longMemory: longMemory,
+                    shortMemory: shortMemory,
+                    partOfSpeech: PartOfSpeech.convertFromCoreData(value: self.partOfSpeech)
+                )
+            }
+            throw SafeModelError.emptyValue
+        }
     }
 }
 

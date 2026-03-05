@@ -38,7 +38,7 @@ struct QuestProgressBar: View {
                     .font(.caption).bold()
                     .foregroundStyle(.white.opacity(0.8))
                 Spacer()
-                Text("\(current)/\(target)")
+                Text(LocalizedStringKey("\(current)/\(target)"))
                     .font(.caption).bold()
                     .foregroundStyle(.white)
             }
@@ -65,6 +65,16 @@ struct QuestProgressBar: View {
     }
 }
 
+func getWaterDropSize(count: Int) -> CGFloat {
+    let minCount: CGFloat = 3
+    let maxCount: CGFloat = 25
+    let minSize: CGFloat = 18
+    let maxSize: CGFloat = 36
+    let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
+    let percentage = (safeCount - minCount) / (maxCount - minCount)
+    return minSize + ((maxSize - minSize) * percentage)
+}
+
 struct QuestRewardView: View {
     
     let reward: QuestRewardModel
@@ -88,10 +98,15 @@ struct QuestRewardView: View {
                     Image(name).resizable().scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
-                case .water:
+                    
+                case .water(let count):
+                    let dynamicSize = getWaterDropSize(count: count)
+                    
                     Image(systemName: "drop.fill").resizable().scaledToFit()
-                        .frame(width: smallIconSize, height: smallIconSize)
+                        .frame(width: dynamicSize, height: dynamicSize)
                         .foregroundStyle(.blue)
+                        .animation(.spring(), value: count)
+                    
                 case .gold:
                     Image(systemName: "circle.circle.fill").resizable().scaledToFit()
                         .frame(width: smallIconSize, height: smallIconSize)
@@ -107,9 +122,9 @@ struct QuestRewardView: View {
                 
                 switch reward {
                 case .animal, .plant, .sculpture:
-                    Text(reward.rewardName)
+                    Text(LocalizedStringKey(reward.rewardName))
                         .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.brown)
+                        .foregroundStyle(.white)
                         .minimumScaleFactor(0.8)
                         .lineLimit(1)
                 case .water(let count):
@@ -138,6 +153,19 @@ struct QuestRow: View {
     
     @ScaledMetric var iconBoxSize: CGFloat = 60
     
+    func getWaterDropSize(count: Int) -> CGFloat {
+        let minCount: CGFloat = 3
+        let maxCount: CGFloat = 25
+        
+        let minSize: CGFloat = iconBoxSize * 0.3
+        let maxSize: CGFloat = iconBoxSize * 0.6
+        
+        let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
+        let percentage = (safeCount - minCount) / (maxCount - minCount)
+        
+        return minSize + ((maxSize - minSize) * percentage)
+    }
+    
     var statusColor: Color {
         switch quest.status {
         case .locked: return .gray
@@ -149,10 +177,10 @@ struct QuestRow: View {
     
     var statusText: String {
         switch quest.status {
-        case .locked: return "Locked"
-        case .active: return "In Progress"
-        case .completed: return "Completed!"
-        case .claimed: return "Claimed"
+        case .locked: return String(localized: "Locked")
+        case .active: return String(localized: "In Progress")
+        case .completed: return String(localized: "Completed!")
+        case .claimed: return String(localized: "Claimed")
         }
     }
     
@@ -176,10 +204,14 @@ struct QuestRow: View {
                             Image(name).resizable().scaledToFit()
                                 .frame(maxWidth: iconBoxSize * 0.85, maxHeight: iconBoxSize * 0.85)
                                 .shadow(radius: 2)
-                        case .water:
+                            
+                        case .water(let count):
+                            let dynamicSize = getWaterDropSize(count: count)
+                            
                             Image(systemName: "drop.fill").resizable().scaledToFit()
-                                .frame(maxWidth: iconBoxSize * 0.4)
+                                .frame(width: dynamicSize, height: dynamicSize)
                                 .foregroundStyle(.blue)
+                            
                         case .gold:
                             Image(systemName: "circle.circle.fill").resizable().scaledToFit()
                                 .frame(maxWidth: iconBoxSize * 0.7)
@@ -194,13 +226,13 @@ struct QuestRow: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(quest.title)
-                            .font(.system(size: 14, weight: .heavy, design: .rounded))
+                        Text(LocalizedStringKey(quest.title))
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white)
                             .lineLimit(2)
                             .multilineTextAlignment(.leading)
                         
-                        Text(statusText)
+                        Text(LocalizedStringKey(statusText))
                             .font(.caption)
                             .fontWeight(.bold)
                             .foregroundStyle(statusColor)
@@ -217,7 +249,7 @@ struct QuestRow: View {
                             .rotationEffect(.degrees(showDetail ? 180 : 0))
                     }
                 }
-                .padding()
+                .padding(8)
                 .frame(maxWidth: .infinity)
                 .contentShape(Rectangle())
                 .opacity(quest.status == .locked ? 0.6 : 1.0)
@@ -231,7 +263,7 @@ struct QuestRow: View {
                     
                     HStack(alignment: .top) {
                         Image(systemName: "scroll.fill").foregroundStyle(statusColor)
-                        Text(quest.description)
+                        Text(LocalizedStringKey(quest.description))
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.9))
                             .fixedSize(horizontal: false, vertical: true)
@@ -241,11 +273,11 @@ struct QuestRow: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             infoBadge(icon: "burst", title: String(localized: "Enemy:"), value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
-                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.valueForCoreData.capitalized)
+                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.title.firstCapitalized)
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
-                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.valueForCoreData.capitalized)
+                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.title.firstCapitalized)
                             Spacer()
                         }
                     }
@@ -289,8 +321,8 @@ struct QuestRow: View {
     func infoBadge(icon: String, title: String, value: String) -> some View {
         HStack(alignment: .top, spacing: 4) {
             Image(systemName: icon).font(.caption).foregroundStyle(statusColor)
-            Text(title).font(.caption).foregroundStyle(.white.opacity(0.7))
-            Text(value).font(.caption).bold().foregroundStyle(statusColor)
+            Text(LocalizedStringKey(title)).font(.caption).foregroundStyle(.white.opacity(0.7))
+            Text(LocalizedStringKey(value)).font(.caption).bold().foregroundStyle(statusColor)
         }
     }
     
@@ -356,19 +388,19 @@ struct ForestQuestUI: View {
                 ZStack {
                     
                     if showDailyQuest {
-                        questListView(title: "Günlük Görevler", quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Günlük Görevler"), quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showWeeklyQuest {
-                        questListView(title: "Haftalık Görevler", quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized: "Haftalık Görevler"), quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showMonthlyQuest {
-                        questListView(title: "Aylık Görevler", quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Aylık Görevler"), quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else if showSpecialQuest {
-                        questListView(title: "Özel Görevler", quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
+                        questListView(title: String(localized:"Özel Görevler"), quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
                             .transition(.move(edge: .trailing))
                             .zIndex(1)
                     } else {
@@ -422,7 +454,7 @@ struct ForestQuestUI: View {
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .foregroundStyle(.white)
                     .font(.system(size: 20, weight: .bold))
                     .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
@@ -509,7 +541,7 @@ struct ForestQuestUI: View {
                                         .shadow(radius: 2)
                                 }
                                 
-                                Text(model.localizedTitle)
+                                Text(LocalizedStringKey(model.localizedTitle))
                                     .font(.title3.bold())
                                     .foregroundStyle(.white)
                                 
@@ -551,6 +583,7 @@ struct ForestQuestUI: View {
         return list?.contains(where: { $0.status == .completed }) ?? false
     }
 }
+
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -559,6 +592,7 @@ struct ScaleButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.9 : 1.0)
     }
 }
+
 #Preview {
     @State var show = true
     

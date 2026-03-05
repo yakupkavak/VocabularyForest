@@ -34,6 +34,57 @@ extension Forest {
 
 }
 
+extension Forest: ConvertSafeModel {
+    typealias SafeModel = SafeForestModel
+    func safeObject(context: NSManagedObjectContext) throws -> SafeForestModel {
+        try context.performAndWait {
+            let safeQuests: [QuestModel]
+            if let questSet = self.quests as? Set<Quest> {
+                safeQuests = try questSet.map { try $0.safeObject(context: context) }
+            } else {
+                safeQuests = []
+            }
+            
+            let safeSculptures: [SculptureModel]
+            if let sculptureSet = self.sculptures as? Set<Sculpture> {
+                safeSculptures = try sculptureSet.map { try $0.safeObject(context: context) }
+            } else {
+                safeSculptures = []
+            }
+            
+            let safeTrees: [TreeModel]
+            if let treeSet = self.trees as? Set<Tree> {
+                safeTrees = try treeSet.map { try $0.safeObject(context: context) }
+            } else {
+                safeTrees = []
+            }
+            
+            let safeAnimals: [AnimalModel]
+            if let animalSet = self.animals as? Set<Animal> {
+                safeAnimals = try animalSet.map { try $0.safeObject(context: context) }
+            } else {
+                safeAnimals = []
+            }
+            
+            return SafeForestModel(
+                rainValue: Int(self.rainValue),
+                moneyValue: Int(self.moneyValue),
+                landHealthPercent: Int(self.landHealthPercent),
+                landStatus: self.landStatus,
+                isRaining: self.isRaining,
+                lastRainUpdateDate: self.lastRainUpdateDate,
+                lastDailyResetDate: self.lastDailyResetDate,
+                lastWeeklyResetDate: self.lastWeeklyResetDate,
+                lastMonthlyResetDate: self.lastMonthlyResetDate,
+                quests: safeQuests,
+                sculptures: safeSculptures,
+                trees: safeTrees,
+                animals: safeAnimals
+            )
+        }
+    }
+}
+
 // MARK: Generated accessors for quests
 extension Forest {
 

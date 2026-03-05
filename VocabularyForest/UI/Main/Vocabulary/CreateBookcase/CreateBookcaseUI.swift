@@ -41,33 +41,33 @@ struct CreateBookcaseUI: View {
 private extension CreateBookcaseUI {
     var initalizeUser: some View {
         VStack(alignment: .leading ,spacing: 16) {
-            tvDefault(text: "Kitaplık adı")
+            tvDefault(text: String(localized: "Kitaplık adı"))
             VocabularyTextField(
                 userInput: $viewModel.bookcaseName,
                 isSelected: .constant(focusedField == .bookcaseName),
                 isEmpty: $viewModel.emptyInitialBookcaseName,
-                placeholder: "Günlük kelimeler, hobiler vs.",
+                placeholder: String(localized: "Günlük kelimeler, hobiler vs."),
                 imageHead: "elephanthead",
                 imageFoot: "elephantfoot"
             ).focused($focusedField, equals: .bookcaseName).frame(minHeight: 80)
-            tvDefault(text: "Öğrendiğin dil")
+            tvDefault(text: String(localized: "Öğrendiğin dil"))
             Button(action: {
                 activeSheet = .learning
             }) {
                 LanguageRowUI(
                     isEmpty: $viewModel.emptyInitialVocabularyLanguage,
                     language: viewModel.learningLanguage,
-                    placeholder: "Öğrendiğin dili seç"
+                    placeholder: String(localized: "Öğrendiğin dili seç")
                 )
             }.buttonStyle(.plain)
-            tvDefault(text: "Anlamının dili")
+            tvDefault(text: String(localized: "Anlamının dili"))
             Button(action: {
                 activeSheet = .meaning
             }) {
                 LanguageRowUI(
                     isEmpty: $viewModel.emptyInitialMeaningLanguage,
                     language: viewModel.meaningLanguage,
-                    placeholder: "Anlam dilini seçin"
+                    placeholder: String(localized: "Anlam dilini seçin")
                 )
             }.buttonStyle(.plain)
             HStack{

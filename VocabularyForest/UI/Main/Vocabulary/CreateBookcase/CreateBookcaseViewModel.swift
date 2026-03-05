@@ -29,12 +29,14 @@ class CreateBookcaseViewModel: ObservableObject {
     // MARK: - HELPERS
     
     func createBookcase(bookcaseName: String, learningLanguage: String, meaningLanguage: String){
-        let bookcase = coreDataManager.createBookcase(
+        if let bookcase = coreDataManager.createBookcase(
             name: bookcaseName,
             learningLanguage: learningLanguage,
-            meaningLanguage: meaningLanguage
-        )
-        setBookcaseDefault(bookcase: bookcase)
+            meaningLanguage: meaningLanguage,
+            contextType: .main
+        ) {
+            setBookcaseDefault(bookcase: bookcase)
+        }
     }
     
     func checkAndCreateBookcase() -> Bool{

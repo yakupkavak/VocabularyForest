@@ -26,9 +26,12 @@ struct SettingsUI: View {
                     .padding(.top)
 
                 VStack(alignment: .leading) {
-                    Toggle("Kelime Bildirimleri", isOn: $viewModel.notificationsEnabled).onTapGesture {
-                        viewModel.handleNotificationToggleChange()
-                    }
+                    Toggle("Kelime Bildirimleri", isOn: Binding(
+                        get: { viewModel.notificationsEnabled },
+                        set: { newValue in
+                            viewModel.handleNotificationToggleChange()
+                        }
+                    ))
                     Button("Bildirim Ayarlarını Aç") {
                         viewModel.openAppSettings()
                     }.tint(.logoGreen)

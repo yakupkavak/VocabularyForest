@@ -10,13 +10,15 @@ import SpriteKit
 protocol EnvironmentManagerProtocol: AnyObject {
     var floorNode: SKSpriteNode { get }
     func setupEnvironment()
-    func moveBackground(direction: GameDirection)
+    func moveBackground(direction: HorizontalDirection)
     func stopBackground()
     func update()
     func startRain()
     func stopRain()
     func startDrought()
     func finishDrought()
+    func showPositionArrows()
+    func closePositionArrows()
 }
 
 private extension EnvironmentManager {
@@ -38,35 +40,50 @@ class EnvironmentManager {
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
     private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
+    private let rightIcon = SKSpriteNode(imageNamed: "right_icon")
+    private let leftIcon = SKSpriteNode(imageNamed: "left_icon")
+    private let downIcon = SKSpriteNode(imageNamed: "down_icon")
+    private let upIcon = SKSpriteNode(imageNamed: "up_icon")
+    private let confirmIcon = SKSpriteNode(imageNamed: "accept_button")
+    private let refuseIcon = SKSpriteNode(imageNamed: "close_button")
+    private var icons: [SKSpriteNode] = []
+
     private var isRaining = false
     
     // MARK: - INIT
     
     init(scene: SKScene) {
         self.scene = scene
+        icons = [rightIcon, leftIcon, upIcon, downIcon, confirmIcon, refuseIcon]
     }
-    
-    private func setupBackgroundDecor() {
-        guard let scene else { return }
-        for i in 0..<2 {
-            let backDecor = SKSpriteNode(imageNamed: "back_decor")
-            let middleDecor = SKSpriteNode(imageNamed: "middle_decor")
-            
-            backDecor.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.gameHeightSize)
-            backDecor.position = CGPoint(x: scene.size.width / 2 + (CGFloat(i) * GameConstant.gameWidthSize), y: scene.size.height * 0.75)
+}
 
-            backDecor.zPosition = -3
-            backDecor.name = "clouds"
-            scene.addChild(backDecor)
-            
-            middleDecor.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.gameHeightSize)
-            middleDecor.position = CGPoint(x: scene.size.width / 2 + (CGFloat(i) * GameConstant.gameWidthSize), y: scene.size.height / 2)
-            middleDecor.zPosition = -2
-            middleDecor.name = "clouds"
-            scene.addChild(middleDecor)
-        }
-    }
-    private func setupRainDecor() {
+// MARK: - PRIVATE HELPERS
+
+private extension EnvironmentManager {
+    
+    func setupBackgroundDecor() {
+       guard let scene else { return }
+       for i in 0..<2 {
+           let backDecor = SKSpriteNode(imageNamed: "back_decor")
+           let middleDecor = SKSpriteNode(imageNamed: "middle_decor")
+           
+           backDecor.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.gameHeightSize)
+           backDecor.position = CGPoint(x: scene.size.width / 2 + (CGFloat(i) * GameConstant.gameWidthSize), y: scene.size.height * 0.75)
+
+           backDecor.zPosition = -3
+           backDecor.name = "clouds"
+           scene.addChild(backDecor)
+           
+           middleDecor.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.gameHeightSize)
+           middleDecor.position = CGPoint(x: scene.size.width / 2 + (CGFloat(i) * GameConstant.gameWidthSize), y: scene.size.height / 2)
+           middleDecor.zPosition = -2
+           middleDecor.name = "clouds"
+           scene.addChild(middleDecor)
+       }
+   }
+    
+    func setupRainDecor() {
         guard let scene else { return }
         for i in 0...3 {
             let rain = SKSpriteNode(imageNamed: "rain_0")
@@ -79,7 +96,8 @@ class EnvironmentManager {
             scene.addChild(rain)
         }
     }
-    private func startRainAnimation() {
+    
+    func startRainAnimation() {
         guard let scene else { return }
         scene.enumerateChildNodes(withName: "rain") { node, _ in
             let sky = node as! SKSpriteNode
@@ -89,16 +107,17 @@ class EnvironmentManager {
         }
     }
     
-    private func setupFloor() {
+    func setupFloor() {
         guard let scene else { return }
         floorNode.position = CGPoint(x: scene.size.width / 2, y: 0)
         floorNode.size = CGSize(width: GameConstant.gameWidthSize, height: GameConstant.floorHeightSize)
         floorNode.zPosition = 1
+        floorNode.name = ForestConstant.floorName
         floorNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         scene.addChild(floorNode)
     }
     
-    private func moveSky(){
+    func moveSky(){
         guard let scene else { return }
         scene.enumerateChildNodes(withName: "clouds") { node, _ in
             let sky = node as! SKSpriteNode
@@ -108,7 +127,7 @@ class EnvironmentManager {
         }
     }
     
-    private func checkRain() {
+    func checkRain() {
         guard let scene else { return }
         scene.enumerateChildNodes(withName: "rain") { node, _ in
             let rain = node as! SKSpriteNode
@@ -118,7 +137,7 @@ class EnvironmentManager {
         }
     }
 
-    private func checkInfinitySky() {
+    func checkInfinitySky() {
         guard let scene else { return }
         scene.enumerateChildNodes(withName: "clouds") { node, _ in
             let sky = node as! SKSpriteNode
@@ -167,6 +186,12 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         forestButton.zPosition = 4
         forestButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
         forestButton.name = "forest_button"
+        rightIcon.name = ForestConstant.rightIconName
+        leftIcon.name = ForestConstant.leftIconName
+        downIcon.name = ForestConstant.downIconName
+        upIcon.name = ForestConstant.upIconName
+        confirmIcon.name = ForestConstant.confirmIconName
+        refuseIcon.name = ForestConstant.refuseIconName
         scene.addChild(forestButton)
         scene.addChild(playButton)
         scene.addChild(questButton)
@@ -185,7 +210,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     
     // MARK: - MOVEMENT LOGIC
     
-    func moveBackground(direction: GameDirection) {
+    func moveBackground(direction: HorizontalDirection) {
         guard let scene = scene else { return }
         
         for node in scene.children {
@@ -208,7 +233,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     }
     
     func update() {
-        guard let scene else { return }
         checkInfinitySky()
         if isRaining {
             checkRain()
@@ -241,5 +265,33 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
 
     func finishDrought() {
         floorNode.colorBlendFactor = 0.0
+    }
+    
+    // MARK: - POSITION UPDATE
+    
+    func showPositionArrows() {
+        guard let scene else { return }
+        if rightIcon.parent != nil || icons.isEmpty {
+            return
+        }
+        rightIcon.position = CGPoint(x: scene.size.width * 0.65, y: scene.size.height * 0.6)
+        leftIcon.position = CGPoint(x: scene.size.width * 0.35, y: scene.size.height * 0.6)
+        upIcon.position = CGPoint(x: scene.size.width * 0.5, y: scene.size.height * 0.67)
+        downIcon.position = CGPoint(x: scene.size.width * 0.5, y: scene.size.height * 0.53)
+        confirmIcon.position = CGPoint(x: scene.size.width * 0.75, y: scene.size.height * 0.48)
+        refuseIcon.position = CGPoint(x: scene.size.width * 0.25, y: scene.size.height * 0.48)
+        for icon in icons {
+            let iconSize = scene.size.width * 0.15
+            icon.size = CGSize(width: iconSize, height: iconSize)
+            icon.zPosition = 10.0
+            icon.anchorPoint = CGPoint(x: 0.5, y: 0)
+            scene.addChild(icon)
+        }
+    }
+    
+    func closePositionArrows() {
+        for icon in icons {
+            icon.removeFromParent()
+        }
     }
 }

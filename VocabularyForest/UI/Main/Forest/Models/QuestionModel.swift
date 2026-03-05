@@ -17,7 +17,7 @@ struct QuestionModel: Hashable {
 }
 
 struct AnswerModel: Hashable {
-    let book: Book?
+    let book: BookModel?
     let answer: String
     var isTrue: Bool
 }
