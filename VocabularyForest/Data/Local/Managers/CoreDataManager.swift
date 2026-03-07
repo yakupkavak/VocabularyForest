@@ -198,6 +198,7 @@ extension CoreDataManager {
         contextType.context.performAndWait {
             let context = contextType.context
             let book = Book(context: context)
+            book.id = UUID()
             book.learningWord = learningWord
             book.meaningWord = meaningWord
             book.exampleSentence = exampleSentence
@@ -529,6 +530,7 @@ extension CoreDataManager {
                     return
                 } else {
                     bookcase = Bookcase(context: context)
+                    bookcase.id = UUID()
                     bookcase.name = bookcaseName
                     bookcase.createdDate = Date()
                 }
