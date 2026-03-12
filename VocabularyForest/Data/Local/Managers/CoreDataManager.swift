@@ -308,12 +308,12 @@ extension CoreDataManager {
                 meaningLanguageCode: model.meaningLanguage,
                 contextType: contextType
             ) {
-                let request = NSFetchRequest<Book>(entityName: "Book")
+                let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
                 request.sortDescriptors = sortDescriptors ?? [
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -338,12 +338,12 @@ extension CoreDataManager {
     ) -> [BookModel]? {
         return contextType.context.performAndWait { () -> [BookModel]? in
             let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
             guard let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) else { return nil }
-            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase) ,bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -362,11 +362,11 @@ extension CoreDataManager {
     ) -> [BookModel]? {
         contextType.context.performAndWait {
             let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -384,7 +384,7 @@ extension CoreDataManager {
     ) -> [BookModel]? {
         contextType.context.performAndWait {
             let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
@@ -412,12 +412,12 @@ extension CoreDataManager {
                 meaningLanguageCode: model.meaningLanguage,
                 contextType: contextType
             ){
-                let request = NSFetchRequest<Book>(entityName: "Book")
+                let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
                 request.sortDescriptors = sortDescriptors ?? [
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -447,7 +447,7 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -500,7 +500,7 @@ extension CoreDataManager {
             bookcase.meaningLanguage = meaningLanguage
             bookcase.createdDate = Date()
             save(in: context)
-            return try? bookcase.safeObject()
+            return try? bookcase.safeObject(context: contextType.context)
         }
     }
     
@@ -629,7 +629,7 @@ extension CoreDataManager {
     ) -> [BookcaseModel]? {
         let context = contextType.context
         return context.performAndWait {
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Bookcase.createdDate, ascending: false)
             ]
@@ -637,12 +637,9 @@ extension CoreDataManager {
                 let list = try context.performAndWait {
                     try context.fetch(request)
                 }
-                print(list.first?.managedObjectContext ?? "")
-                print("bizim context -> \(context)")
                 let bookcases = try list.map( { try $0.safeObject(context: context) })
                 return bookcases
             } catch {
-                print("Bookcases couldn't fetched -> \(error)")
                 return nil
             }
         }
@@ -654,13 +651,16 @@ extension CoreDataManager {
     ) -> BookcaseModel? {
         contextType.context.performAndWait {
             let context = contextType.context
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             let bookcaseId = book.bookcaseId
             request.predicate = NSPredicate(format: "id == %@", bookcaseId as CVarArg)
             request.fetchLimit = 1
             do {
-                let bookcases = try context.fetch(request)
-                return try? bookcases.first?.safeObject(context: context)
+                let singleBookcase = try context.performAndWait {
+                    try context.fetch(request)
+                }
+                let safeBookcase = try singleBookcase.first?.safeObject(context: context)
+                return safeBookcase
             } catch {
                 print("Bookcase coduln't fetched \(error)")
                 return nil
@@ -674,21 +674,22 @@ extension CoreDataManager {
         meaningLanguageCode: String,
         contextType: ContextType
     ) -> BookcaseModel? {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+        let context = contextType.context
+        return context.performAndWait {
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             request.predicate = NSPredicate(format: "name == %@ AND learningLanguage == %@ AND meaningLanguage == %@", name, learningLanguageCode, meaningLanguageCode)
             request.fetchLimit = 1
             do {
                 let bookcases = try context.fetch(request)
-                return try? bookcases.first?.safeObject()
+                let firtBookcase = bookcases.first
+                let bookcase = try firtBookcase?.safeObject(context: context)
+                return bookcase
             } catch {
-                print("Bookcase coduln't fetched \(error)")
+                print(error.localizedDescription)
                 return nil
             }
         }
     }
-    
 }
 
 // MARK: - PRIVATE CORE DATA WORKS
