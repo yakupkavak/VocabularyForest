@@ -5008,6 +5008,7 @@
       }
     },
     "İsim Değiştir" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9020,6 +9021,7 @@
       }
     },
     "Taşı" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
