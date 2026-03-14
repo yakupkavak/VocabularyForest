@@ -293,6 +293,26 @@ private extension ForestScene {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
+    
+    func talkComponent(type model: ComponentType, id: UUID, message: String) {
+        switch model {
+        case .animal:
+            if let animal = animalManagers.first(where: { $0.model?.id == id }) {
+                animal.talk(text: message)
+            }
+            
+        case .plant:
+            if let plant = plantManagers.first(where: { $0.model?.id == id }) {
+                plant.talk(text: message)
+            }
+            
+        case .sculpture:
+            if let sculpture = sculptureManagers.first(where: { $0.model?.id == id }){
+                sculpture.talk(text: message)
+            }
+        }
+    }
+    
     func startFade() {
         for plantManager in self.plantManagers {
             plantManager.fadePlant()

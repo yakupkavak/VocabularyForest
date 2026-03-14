@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+// MARK: - PROTOCOLS
+
 protocol ForestViewModelOutputProcotol: AnyObject {
     func startFade()
     func startDrought()
@@ -16,6 +18,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func setupAnimal(animal: AnimalModel?)
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
+    func talkComponent(type model: ComponentType, id: UUID, message: String)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -36,6 +39,8 @@ protocol ForestViewModelProtocol: AnyObject {
     func updateComponentName(name: String)
     func setComponent(uuid: UUID, for componentType: ComponentType)
 }
+
+// MARK: - VIEW MODEL
 
 class ForestViewModel: BaseViewModel {
     
@@ -59,13 +64,17 @@ class ForestViewModel: BaseViewModel {
     private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
     
+    private var talkCancellable: AnyCancellable?
+    
+    // MARK: - INIT
+    
     init(audioService: AudioServiceProtocol = ForestAudioService.shared) {
         self.audioService = audioService
         super.init()
     }
 }
 
-// MARK:  - BOOK HELPERS
+// MARK: - BOOK HELPERS
 
 extension ForestViewModel {
     
@@ -138,7 +147,7 @@ extension ForestViewModel {
     }
 }
 
-// MARK:  - FOREST HELPERS
+// MARK: - FOREST HELPERS
 
 extension ForestViewModel {
     
@@ -221,6 +230,8 @@ extension ForestViewModel {
                         }
                     }
                 }
+                
+                self.startRandomTalking()
             }
         }
     }
@@ -237,7 +248,6 @@ extension ForestViewModel {
                 output?.stopRain()
             }
         }
-        
     }
 }
 
@@ -269,7 +279,7 @@ extension ForestViewModel {
     }
 }
 
-// MARK:  - FOREST VIEW MODEL PROTOCOL
+// MARK: - FOREST VIEW MODEL PROTOCOL
 
 extension ForestViewModel: ForestViewModelProtocol {
     
@@ -315,13 +325,12 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
 }
 
-// MARK: FOREST SCENE PROTOCOL
+// MARK: - FOREST SCENE PROTOCOL
 
 extension ForestViewModel: ForectSceneProtocol {
     func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount]) {
         var xValue = model.xPosition
         var yValue = model.yPosition
-        print("current -> \(yValue)")
         for direction in directionList {
             switch direction.direction {
             case .up:
@@ -334,7 +343,6 @@ extension ForestViewModel: ForectSceneProtocol {
                 xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
             }
         }
-        print("new -> \(yValue)")
         coreDataManager.updateComponentPosition(
             model: model,
             xValue: xValue,
@@ -342,6 +350,68 @@ extension ForestViewModel: ForectSceneProtocol {
             contextType: .background
         )
     }
+}
+
+// MARK: - RANDOM TALK HELPERS
+
+private extension ForestViewModel {
+    
+    func startRandomTalking() {
+        stopRandomTalking()
+        
+        talkCancellable = Timer.publish(every: 8.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.triggerRandomTalk()
+            }
+    }
+    
+    func stopRandomTalking() {
+        talkCancellable?.cancel()
+        talkCancellable = nil
+    }
+    
+    func triggerRandomTalk() {
+            guard let status = forestStatus else { return }
+            let isDrought = status.landHealthPercentage == 0
+            
+            var availableTypes: [ComponentType] = []
+            if !animalList.isEmpty { availableTypes.append(.animal) }
+            if !treeList.isEmpty { availableTypes.append(.plant) }
+            if !sculptureList.isEmpty { availableTypes.append(.sculpture) }
+            
+            guard let selectedType = availableTypes.randomElement() else { return }
+            
+            var targetID: UUID?
+            var message: String = ""
+            
+            switch selectedType {
+            case .animal:
+                guard let randomAnimal = animalList.randomElement() else { return }
+                targetID = randomAnimal.id
+                message = isDrought ?
+                    TalkConstant.Animal.drought.randomElement()! :
+                    TalkConstant.Animal.normal.randomElement()!
+                
+            case .plant:
+                guard let randomTree = treeList.randomElement() else { return }
+                targetID = randomTree.id
+                message = isDrought ?
+                    TalkConstant.Plant.drought.randomElement()! :
+                    TalkConstant.Plant.normal.randomElement()!
+                
+            case .sculpture:
+                guard let randomSculpture = sculptureList.randomElement() else { return }
+                targetID = randomSculpture.id
+                message = isDrought ?
+                    TalkConstant.Sculpture.drought.randomElement()! :
+                    TalkConstant.Sculpture.normal.randomElement()!
+            }
+            
+            if let id = targetID {
+                output?.talkComponent(type: selectedType, id: id, message: message)
+            }
+        }
 }
 
 // MARK: - PRIVATE HELPERS
