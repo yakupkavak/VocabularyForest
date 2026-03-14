@@ -228,7 +228,7 @@ extension ForestViewModel {
     func startRain() {
         showRainButton = false
         output?.startRain()
-        coreDataManager.startRain(contextType: .main)
+        coreDataManager.startRain(contextType: .background)
         var time = 0
         let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
@@ -285,20 +285,20 @@ extension ForestViewModel: ForestViewModelProtocol {
             id: componentUUID,
             type: selectedModel,
             newName: name,
-            contextType: .main
+            contextType: .background
         )
         if result.status == .success {
             switch selectedModel {
             case .animal:
-                if let model = coreDataManager.fetchAnimal(id: componentUUID, contextType: .main) {
+                if let model = coreDataManager.fetchAnimal(id: componentUUID, contextType: .background) {
                     self.output?.setupAnimal(animal: model)
                 }
             case .plant:
-                if let model = coreDataManager.fetchPlant(id: componentUUID, contextType: .main) {
+                if let model = coreDataManager.fetchPlant(id: componentUUID, contextType: .background) {
                     self.output?.setupPlant(plant: model)
                 }
             case .sculpture:
-                if let model = coreDataManager.fetchSculpture(id: componentUUID, contextType: .main) {
+                if let model = coreDataManager.fetchSculpture(id: componentUUID, contextType: .background) {
                     self.output?.setupSculpture(sculpture: model)
                 }
             }
@@ -308,7 +308,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
-        let result = coreDataManager.claimReward(quest: quest, contextType: .main)
+        let result = coreDataManager.claimReward(quest: quest, contextType: .background)
         if result.status == .success {
             fetchForest()
         }
@@ -339,7 +339,7 @@ extension ForestViewModel: ForectSceneProtocol {
             model: model,
             xValue: xValue,
             yValue: yValue,
-            contextType: .main
+            contextType: .background
         )
     }
 }

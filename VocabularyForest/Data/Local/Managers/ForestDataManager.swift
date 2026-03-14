@@ -285,6 +285,7 @@ extension ForestDataManager {
             let tree = Tree(context: context)
             tree.id = model.id
             tree.createdDate = Date()
+            tree.characterName = generateRandomName(type: .plant)
             tree.healthValue = Int16(model.treeHealthValue)
             tree.isAlive = model.isAlive
             tree.assetName = model.assetName
@@ -308,6 +309,7 @@ extension ForestDataManager {
             }
             let animal = Animal(context: context)
             animal.id = model.id
+            animal.characterName = generateRandomName(type: .animal)
             animal.createdDate = Date()
             animal.assetName = model.assetName
             animal.healtValue = Int16(model.healthValue)
@@ -334,7 +336,7 @@ extension ForestDataManager {
             sculpture.id = model.id
             sculpture.assetName = model.assetName
             sculpture.createdDate = model.createdDate
-            sculpture.characterName = model.characterName
+            sculpture.characterName = generateRandomName(type: .sculpture)
             sculpture.xPosition = model.xPosition
             sculpture.yPosition = model.yPosition
             forest.addToSculptures(sculpture)
@@ -541,59 +543,52 @@ extension ForestDataManager {
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == quest.id }) {
                 coreDataQuest.status = QuestStatus.claimed.valueForCoreData
-                do {
-                    try save(context: context)
-                    return Resource.success(nil)
-                } catch {
-                    return Resource.error(error: ForestError.saveError)
-                }
             } else {
                 return .error(error: ForestError.emptyForest)
             }
-            
             switch quest.reward {
-            case .animal(let name):
-                let animalModel = AnimalModel(
-                    id: UUID(),
-                    characterName: generateRandomName(type: .animal),
-                    assetName: name,
-                    createdDate: Date(),
-                    healthValue: 10,
-                    isAlive: true,
-                    xPosition: CGFloat.random(in: -50...50),
-                    yPosition: CGFloat.random(in: -50...50)
-                )
-                createAnimal(animal: animalModel, contextType: contextType)
-                
-            case .plant(let name):
-                let pos = generateValidPosition(for: .tree, contextType: contextType)
-                let plantModel = TreeModel(
-                    id: UUID(),
-                    assetName: name,
-                    characterName: generateRandomName(type: .plant), isAlive: true,
-                    createdDate: Date(),
-                    treeHealthValue: 5,
-                    xPosition: pos.x,
-                    yPosition: pos.y
-                )
-                createTree(tree: plantModel, contextType: contextType)
-                
-            case .gold(let count):
-                updateMoneyValue(money: count, contextType: contextType)
-                
-            case .water(let count):
-                updateRainValue(rain: count, contextType: contextType)
-                
-            case .sculpture(let name):
-                let pos = generateValidPosition(for: .sculpture, contextType: contextType)
-                let sculptureModel = SculptureModel(
-                    id: UUID(),
-                    assetName: name,
-                    characterName: generateRandomName(type: .sculpture), createdDate: Date(),
-                    xPosition: pos.x,
-                    yPosition: pos.y
-                )
-                createSculpture(sculpture: sculptureModel, contextType: contextType)
+                case .animal(let name):
+                    let animalModel = AnimalModel(
+                        id: UUID(),
+                        characterName: generateRandomName(type: .animal),
+                        assetName: name,
+                        createdDate: Date(),
+                        healthValue: 10,
+                        isAlive: true,
+                        xPosition: CGFloat.random(in: -50...50),
+                        yPosition: CGFloat.random(in: -50...50)
+                    )
+                    createAnimal(animal: animalModel, contextType: contextType)
+                    
+                case .plant(let name):
+                    let pos = generateValidPosition(for: .tree, contextType: contextType)
+                    let plantModel = TreeModel(
+                        id: UUID(),
+                        assetName: name,
+                        characterName: generateRandomName(type: .plant), isAlive: true,
+                        createdDate: Date(),
+                        treeHealthValue: 5,
+                        xPosition: pos.x,
+                        yPosition: pos.y
+                    )
+                    createTree(tree: plantModel, contextType: contextType)
+                    
+                case .gold(let count):
+                    updateMoneyValue(money: count, contextType: contextType)
+                    
+                case .water(let count):
+                    updateRainValue(rain: count, contextType: contextType)
+                    
+                case .sculpture(let name):
+                    let pos = generateValidPosition(for: .sculpture, contextType: contextType)
+                    let sculptureModel = SculptureModel(
+                        id: UUID(),
+                        assetName: name,
+                        characterName: generateRandomName(type: .sculpture), createdDate: Date(),
+                        xPosition: pos.x,
+                        yPosition: pos.y
+                    )
+                    createSculpture(sculpture: sculptureModel, contextType: contextType)
             }
             do {
                 try save(context: context)

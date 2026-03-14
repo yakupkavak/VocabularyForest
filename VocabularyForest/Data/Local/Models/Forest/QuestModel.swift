@@ -249,8 +249,9 @@ struct QuestModel: Identifiable, Hashable {
 
     // MARK: - COMPUTED PROPERTIES
 
-    var currentRatio: Int {
-        Int(Double(currentProgressCount) / Double(targetCount))
+    var currentRatio: Double {
+        guard targetCount > 0 else { return 0 }
+        return Double(currentProgressCount) / Double(targetCount)
     }
     var isFinished: Bool {
         return currentProgressCount >= targetCount

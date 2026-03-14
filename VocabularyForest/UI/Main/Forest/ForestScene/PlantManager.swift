@@ -190,7 +190,7 @@ extension PlantManager: UpdatePositionProtocol {
         }
         plant.position = CGPoint(
             x: (GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0)) + scrollOffset,
-            y: GameConstant.sculptureHeightSize * (self.treeModel?.yPosition ?? 0)
+            y: GameConstant.materialHeightSize * (self.treeModel?.yPosition ?? 0)
         )
     }
     
@@ -203,7 +203,7 @@ extension PlantManager: UpdatePositionProtocol {
         let scrollOffset = getScrollOffset()
         plant.position = CGPoint(
             x: (GameConstant.gameWidthSize * x) + scrollOffset,
-            y: GameConstant.sculptureHeightSize * y
+            y: GameConstant.materialHeightSize * y
         )
         self.treeModel?.xPosition = x
         self.treeModel?.yPosition = y
