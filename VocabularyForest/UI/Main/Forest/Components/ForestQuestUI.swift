@@ -2,11 +2,10 @@
 //  ForestQuestUI.swift
 //  VocabularyForest
 //
-//  Created by Yakup Kavak on 4.12.2025.
-//  Refactored for Responsiveness
-//
 
 import SwiftUI
+
+// MARK: - Constants
 
 private extension ForestQuestUI {
     enum Constant {
@@ -14,50 +13,101 @@ private extension ForestQuestUI {
     }
 }
 
-private struct LayoutConfig {
+private enum LayoutConfig {
     static let cornerRadius: CGFloat = 16
     static let padding: CGFloat = 16
     static let popupWidthRatio: CGFloat = 0.85
     static let popupHeightRatio: CGFloat = 0.70
 }
 
-struct QuestProgressBar: View {
-    var current: Int
-    var target: Int
-    var color: Color = .green
-    
-    var progress: Double {
-        guard target > 0 else { return 0 }
-        return Double(current) / Double(target)
+private enum ForestQuestSection: Hashable {
+    case daily
+    case weekly
+    case monthly
+    case special
+
+    var title: LocalizedStringKey {
+        switch self {
+        case .daily: "Günlük Görevler"
+        case .weekly: "Haftalık Görevler"
+        case .monthly: "Aylık Görevler"
+        case .special: "Özel Görevler"
+        }
     }
-    
+
+    var questType: QuestType {
+        switch self {
+        case .daily: .daily
+        case .weekly: .weekly
+        case .monthly: .monthly
+        case .special: .special
+        }
+    }
+
+    init?(questType: QuestType) {
+        switch questType {
+        case .daily: self = .daily
+        case .weekly: self = .weekly
+        case .monthly: self = .monthly
+        case .special: self = .special
+        }
+    }
+}
+
+// MARK: - Helpers
+
+private enum QuestRewardSizing {
+    static func waterDropSize(count: Int, minCount: CGFloat = 3, maxCount: CGFloat = 25, minSize: CGFloat, maxSize: CGFloat) -> CGFloat {
+        let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
+        let percentage = (safeCount - minCount) / (maxCount - minCount)
+        return minSize + ((maxSize - minSize) * percentage)
+    }
+}
+
+// MARK: - Progress Bar
+
+struct QuestProgressBar: View {
+    let current: Int
+    let target: Int
+    var color: Color = .green
+
+    private var progress: Double {
+        guard target > 0 else { return 0 }
+        return min(Double(current) / Double(target), 1.0)
+    }
+
     var body: some View {
         VStack(spacing: 4) {
             HStack {
                 Text("Progress")
-                    .font(.caption).bold()
+                    .font(.caption.bold())
                     .foregroundStyle(.white.opacity(0.8))
+
                 Spacer()
-                Text(LocalizedStringKey("\(current)/\(target)"))
-                    .font(.caption).bold()
+
+                Text("\(current)/\(target)")
+                    .font(.caption.bold())
                     .foregroundStyle(.white)
             }
-            
+
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.black.opacity(0.2))
-                    
+
                     RoundedRectangle(cornerRadius: 8)
                         .fill(
-                            LinearGradient(colors: [color.opacity(0.7), color], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(
+                                colors: [color.opacity(0.7), color],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-                        .frame(width: geo.size.width * min(progress, 1.0))
+                        .frame(width: geo.size.width * progress)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
                         )
-                        .animation(.smooth, value: current)
                 }
             }
             .frame(height: 12)
@@ -65,61 +115,71 @@ struct QuestProgressBar: View {
     }
 }
 
-func getWaterDropSize(count: Int) -> CGFloat {
-    let minCount: CGFloat = 3
-    let maxCount: CGFloat = 25
-    let minSize: CGFloat = 18
-    let maxSize: CGFloat = 36
-    let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
-    let percentage = (safeCount - minCount) / (maxCount - minCount)
-    return minSize + ((maxSize - minSize) * percentage)
-}
+// MARK: - Reward View
 
 struct QuestRewardView: View {
-    
     let reward: QuestRewardModel
-    
-    @ScaledMetric var iconSize: CGFloat = 35
-    @ScaledMetric var backgroundSize: CGFloat = 50
-    @ScaledMetric var smallIconSize: CGFloat = 24
-    
+
+    @ScaledMetric private var iconSize: CGFloat = 35
+    @ScaledMetric private var backgroundSize: CGFloat = 50
+    @ScaledMetric private var smallIconSize: CGFloat = 24
+
     var body: some View {
         HStack {
             ZStack {
                 Circle()
                     .fill(
-                        RadialGradient(colors: [.yellow.opacity(0.6), .orange], center: .center, startRadius: 2, endRadius: 30)
+                        RadialGradient(
+                            colors: [.yellow.opacity(0.6), .orange],
+                            center: .center,
+                            startRadius: 2,
+                            endRadius: 30
+                        )
                     )
                     .frame(width: backgroundSize, height: backgroundSize)
                     .shadow(radius: 2)
-                
+
                 switch reward {
                 case .animal(let name), .plant(let name), .sculpture(let name):
-                    Image(name).resizable().scaledToFit()
+                    Image(name)
+                        .resizable()
+                        .scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
-                    
+
                 case .water(let count):
-                    let dynamicSize = getWaterDropSize(count: count)
-                    
-                    Image(systemName: "drop.fill").resizable().scaledToFit()
-                        .frame(width: dynamicSize, height: dynamicSize)
+                    Image(systemName: "drop.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(
+                            width: QuestRewardSizing.waterDropSize(
+                                count: count,
+                                minSize: 18,
+                                maxSize: 36
+                            ),
+                            height: QuestRewardSizing.waterDropSize(
+                                count: count,
+                                minSize: 18,
+                                maxSize: 36
+                            )
+                        )
                         .foregroundStyle(.blue)
-                        .animation(.spring(), value: count)
-                    
+
                 case .gold:
-                    Image(systemName: "circle.circle.fill").resizable().scaledToFit()
+                    Image(systemName: "circle.circle.fill")
+                        .resizable()
+                        .scaledToFit()
                         .frame(width: smallIconSize, height: smallIconSize)
                         .foregroundStyle(.yellow)
                 }
             }
-            
+
             VStack(alignment: .leading) {
                 Text("Reward")
                     .font(.caption2)
                     .fontWeight(.black)
                     .foregroundStyle(.white.opacity(0.8))
-                
+
                 switch reward {
                 case .animal, .plant, .sculpture:
                     Text(LocalizedStringKey(reward.rewardName))
@@ -127,10 +187,12 @@ struct QuestRewardView: View {
                         .foregroundStyle(.white)
                         .minimumScaleFactor(0.8)
                         .lineLimit(1)
+
                 case .water(let count):
                     Text("\(count) Water Drops")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.blue)
+
                 case .gold(let count):
                     Text("\(count) Gold")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -144,109 +206,143 @@ struct QuestRewardView: View {
     }
 }
 
+// MARK: - Info Badge
+
+private struct QuestInfoBadge: View {
+    let icon: String
+    let title: String
+    let value: String
+    let color: Color
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 4) {
+            Image(systemName: icon)
+                .font(.caption)
+                .foregroundStyle(color)
+
+            Text(LocalizedStringKey(title))
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.7))
+
+            Text(LocalizedStringKey(value))
+                .font(.caption)
+                .bold()
+                .foregroundStyle(color)
+        }
+    }
+}
+
+// MARK: - Quest Row Action View
+
+private struct QuestRowActionView: View {
+    let quest: QuestModel
+    let onQuestSelect: (QuestModel) -> Void
+    let onRewardClaim: (QuestModel) -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            QuestRewardView(reward: quest.reward)
+
+            Button {
+                onQuestSelect(quest)
+            } label: {
+                Text("Göreve git")
+                    .foregroundStyle(Color.clickableText)
+            }
+
+            switch quest.status {
+            case .completed:
+                Button {
+                    onRewardClaim(quest)
+                } label: {
+                    Text("Claim reward")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green.opacity(0.8))
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+                }
+
+            case .claimed, .active:
+                Text(quest.status == .claimed ? "Reward claimed" : "In progress")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white.opacity(0.6))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(quest.status == .claimed ? Color.gray.opacity(0.4) : Color.yellow.opacity(0.2))
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+
+            case .locked:
+                EmptyView()
+            }
+        }
+    }
+}
+
+// MARK: - Quest Row
+
 struct QuestRow: View {
-    
-    @State private var showDetail = false
-    var onQuestSelect: (QuestModel) -> Void
-    var onRewardClaim: (QuestModel) -> Void
-    var quest: QuestModel
-    
-    @ScaledMetric var iconBoxSize: CGFloat = 60
-    
-    func getWaterDropSize(count: Int) -> CGFloat {
-        let minCount: CGFloat = 3
-        let maxCount: CGFloat = 25
-        
-        let minSize: CGFloat = iconBoxSize * 0.3
-        let maxSize: CGFloat = iconBoxSize * 0.6
-        
-        let safeCount = CGFloat(min(max(count, Int(minCount)), Int(maxCount)))
-        let percentage = (safeCount - minCount) / (maxCount - minCount)
-        
-        return minSize + ((maxSize - minSize) * percentage)
-    }
-    
-    var statusColor: Color {
+    let quest: QuestModel
+    let isExpanded: Bool
+    let onToggleExpansion: (UUID) -> Void
+    let onQuestSelect: (QuestModel) -> Void
+    let onRewardClaim: (QuestModel) -> Void
+
+    @ScaledMetric private var iconBoxSize: CGFloat = 60
+
+    private var statusColor: Color {
         switch quest.status {
-        case .locked: return .gray
-        case .active: return .yellow
-        case .completed: return .green
-        case .claimed: return .claimedText
+        case .locked: .gray
+        case .active: .yellow
+        case .completed: .green
+        case .claimed: .claimedText
         }
     }
-    
-    var statusText: String {
+
+    private var statusText: String {
         switch quest.status {
-        case .locked: return String(localized: "Locked")
-        case .active: return String(localized: "In Progress")
-        case .completed: return String(localized: "Completed!")
-        case .claimed: return String(localized: "Claimed")
+        case .locked: String(localized: "Locked")
+        case .active: String(localized: "In Progress")
+        case .completed: String(localized: "Completed!")
+        case .claimed: String(localized: "Claimed")
         }
     }
-    
+
+    private var waterDropSize: CGFloat {
+        QuestRewardSizing.waterDropSize(
+            count: {
+                if case let .water(count) = quest.reward { return count }
+                return 3
+            }(),
+            minSize: iconBoxSize * 0.3,
+            maxSize: iconBoxSize * 0.6
+        )
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             Button {
-                if quest.status != .locked {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                        showDetail.toggle()
-                    }
+                guard quest.status != .locked else { return }
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    onToggleExpansion(quest.id)
                 }
             } label: {
                 HStack(spacing: 14) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(Color.white.opacity(0.2))
-                            .frame(width: iconBoxSize, height: iconBoxSize)
-                        
-                        switch quest.reward {
-                        case .animal(let name), .plant(let name), .sculpture(let name):
-                            Image(name).resizable().scaledToFit()
-                                .frame(maxWidth: iconBoxSize * 0.85, maxHeight: iconBoxSize * 0.85)
-                                .shadow(radius: 2)
-                            
-                        case .water(let count):
-                            let dynamicSize = getWaterDropSize(count: count)
-                            
-                            Image(systemName: "drop.fill").resizable().scaledToFit()
-                                .frame(width: dynamicSize, height: dynamicSize)
-                                .foregroundStyle(.blue)
-                            
-                        case .gold:
-                            Image(systemName: "circle.circle.fill").resizable().scaledToFit()
-                                .frame(maxWidth: iconBoxSize * 0.7)
-                                .foregroundStyle(.yellow)
-                        }
-                        
-                        if quest.status == .locked {
-                            Image(systemName: "lock.fill")
-                                .font(.title3)
-                                .foregroundStyle(.white.opacity(0.8))
-                        }
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(LocalizedStringKey(quest.title))
-                            .font(.system(size: 13, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                        
-                        Text(LocalizedStringKey(statusText))
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundStyle(statusColor)
-                            .padding(.vertical, 2)
-                            .cornerRadius(4)
-                    }
-                    
+                    iconView
+                    contentView
                     Spacer()
-                    
+
                     if quest.status != .locked {
                         Image(systemName: "chevron.down")
                             .font(.title3.bold())
                             .foregroundStyle(.white.opacity(0.6))
-                            .rotationEffect(.degrees(showDetail ? 180 : 0))
+                            .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     }
                 }
                 .padding(8)
@@ -256,153 +352,269 @@ struct QuestRow: View {
             }
             .buttonStyle(.plain)
             .disabled(quest.status == .locked)
-            
-            if showDetail {
-                VStack(alignment: .leading, spacing: 16) {
-                    Divider().background(Color.white.opacity(0.2))
-                    
-                    HStack(alignment: .top) {
-                        Image(systemName: "scroll.fill").foregroundStyle(statusColor)
-                        Text(LocalizedStringKey(quest.description))
-                            .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.9))
-                            .fixedSize(horizontal: false, vertical: true)
-                        Spacer()
-                    }
-                    
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading) {
-                            infoBadge(icon: "burst", title: String(localized: "Enemy:"), value: quest.battleEnemyModel.title.capitalized).padding(.bottom, 1)
-                            infoBadge(icon: "brain.head.profile", title: String(localized: "Mode:"), value: quest.questionType.title.firstCapitalized)
-                        }
-                        Spacer()
-                        VStack(alignment: .trailing) {
-                            infoBadge(icon: "flag.fill", title: String(localized: "Level:"), value: quest.gameLevel.title.firstCapitalized)
-                            Spacer()
-                        }
-                    }
-                    
-                    QuestProgressBar(
-                        current: quest.currentProgressCount,
-                        target: quest.targetCount,
-                        color: statusColor
-                    )
-                    
-                    HStack {
-                        Spacer()
-                        VStack {
-                            QuestRewardView(reward: quest.reward)
-                            Button {
-                                onQuestSelect(quest)
-                            } label: {
-                                Text("Göreve git").foregroundStyle(Color.clickableText)
-                            }
-                        }
-                        Spacer()
-                    }
-                    
-                    actionButton
-                }
-                .padding()
-                .background(Color.black.opacity(0.1))
-                .transition(.opacity)
+
+            if isExpanded {
+                detailView
+                    .padding()
+                    .background(Color.black.opacity(0.1))
+                    .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.brown.opacity(0.9))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16).stroke(.white.opacity(0.2), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.white.opacity(0.2), lineWidth: 1)
                 )
         )
     }
-    
-    @ViewBuilder
-    func infoBadge(icon: String, title: String, value: String) -> some View {
-        HStack(alignment: .top, spacing: 4) {
-            Image(systemName: icon).font(.caption).foregroundStyle(statusColor)
-            Text(LocalizedStringKey(title)).font(.caption).foregroundStyle(.white.opacity(0.7))
-            Text(LocalizedStringKey(value)).font(.caption).bold().foregroundStyle(statusColor)
+
+    private var iconView: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.white.opacity(0.2))
+                .frame(width: iconBoxSize, height: iconBoxSize)
+
+            switch quest.reward {
+            case .animal(let name), .plant(let name), .sculpture(let name):
+                Image(name)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: iconBoxSize * 0.85, maxHeight: iconBoxSize * 0.85)
+                    .shadow(radius: 2)
+
+            case .water:
+                Image(systemName: "drop.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: waterDropSize, height: waterDropSize)
+                    .foregroundStyle(.blue)
+
+            case .gold:
+                Image(systemName: "circle.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: iconBoxSize * 0.7)
+                    .foregroundStyle(.yellow)
+            }
+
+            if quest.status == .locked {
+                Image(systemName: "lock.fill")
+                    .font(.title3)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
         }
     }
-    
-    @ViewBuilder
-    var actionButton: some View {
-        if quest.status == .completed {
-            Button {
-                onRewardClaim(quest)
-            } label: {
-                Text("Claim reward")
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green.opacity(0.8))
-                    .cornerRadius(12)
-                    .shadow(radius: 2)
+
+    private var contentView: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(LocalizedStringKey(quest.title))
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+
+            Text(LocalizedStringKey(statusText))
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundStyle(statusColor)
+                .padding(.vertical, 2)
+        }
+    }
+
+    private var detailView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Divider()
+                .background(Color.white.opacity(0.2))
+
+            HStack(alignment: .top) {
+                Image(systemName: "scroll.fill")
+                    .foregroundStyle(statusColor)
+
+                Text(LocalizedStringKey(quest.description))
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.9))
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Spacer()
             }
-        } else if quest.status == .claimed || quest.status == .active {
-            Text(quest.status == .claimed ? "Reward claimed" : "In progress")
-                .font(.headline.bold())
-                .foregroundStyle(.white.opacity(0.6))
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(quest.status == .claimed ? Color.gray.opacity(0.4) : Color.yellow.opacity(0.2))
-                .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+
+            HStack(alignment: .top) {
+                VStack(alignment: .leading) {
+                    QuestInfoBadge(
+                        icon: "burst",
+                        title: String(localized: "Enemy:"),
+                        value: quest.battleEnemyModel.title.capitalized,
+                        color: statusColor
+                    )
+                    .padding(.bottom, 1)
+
+                    QuestInfoBadge(
+                        icon: "brain.head.profile",
+                        title: String(localized: "Mode:"),
+                        value: quest.questionType.title.firstCapitalized,
+                        color: statusColor
+                    )
+                }
+
+                Spacer()
+
+                VStack(alignment: .trailing) {
+                    QuestInfoBadge(
+                        icon: "flag.fill",
+                        title: String(localized: "Level:"),
+                        value: quest.gameLevel.title.firstCapitalized,
+                        color: statusColor
+                    )
+
+                    Spacer()
+                }
+            }
+
+            QuestProgressBar(
+                current: quest.currentProgressCount,
+                target: quest.targetCount,
+                color: statusColor
+            )
+
+            HStack {
+                Spacer()
+
+                QuestRowActionView(
+                    quest: quest,
+                    onQuestSelect: onQuestSelect,
+                    onRewardClaim: onRewardClaim
                 )
+
+                Spacer()
+            }
         }
     }
 }
 
-struct ForestQuestUI: View {
-    
-    @State private var showDailyQuest = false
-    @State private var showWeeklyQuest = false
-    @State private var showMonthlyQuest = false
-    @State private var showSpecialQuest = false
-    @Binding var showQuest: Bool
-    var selectQuest: (QuestModel) -> Void
-    
-    var dailyQuests: [QuestModel]?
-    var weeklyQuests: [QuestModel]?
-    var monthlyQuests: [QuestModel]?
-    var specialQuests: [QuestModel]?
-    var claimReward: (QuestModel) -> Void
-    
-    var isAnySubMenuOpen: Bool {
-        showDailyQuest || showWeeklyQuest || showMonthlyQuest || showSpecialQuest
+// MARK: - Section Header
+
+private struct ForestQuestSectionHeader: View {
+    let title: LocalizedStringKey
+
+    var body: some View {
+        ZStack {
+            Image("title_header")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 50)
+
+            Text(title)
+                .foregroundStyle(.white)
+                .font(.system(size: 20, weight: .bold))
+                .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
+        }
+        .padding(.bottom)
     }
-    
+}
+
+// MARK: - Empty State
+
+private struct ForestQuestEmptyStateView: View {
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "clipboard")
+                .font(.system(size: 50))
+                .foregroundStyle(.white.opacity(0.4))
+
+            Text("No quests available.")
+                .foregroundStyle(.white.opacity(0.7))
+                .font(.headline)
+        }
+    }
+}
+
+// MARK: - Main Menu Row
+
+private struct ForestQuestMenuRow: View {
+    let model: QuestType
+    let hasReward: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(hasReward ? Color.green.opacity(0.2) : Color.white.opacity(0.2))
+                        .frame(width: 50, height: 50)
+
+                    Image(model.imageIconName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 35, height: 35)
+                        .shadow(radius: 2)
+                }
+
+                Text(LocalizedStringKey(model.localizedTitle))
+                    .font(.title3.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.headline)
+                    .foregroundStyle(.white.opacity(0.6))
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(model.backgroundColor.opacity(0.9))
+                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(.white.opacity(0.3), lineWidth: 1)
+            )
+        }
+        .buttonStyle(ScaleButtonStyle())
+    }
+}
+
+// MARK: - Content
+
+struct ForestQuestUI: View {
+    @Binding var showQuest: Bool
+
+    let selectQuest: (QuestModel) -> Void
+    let dailyQuests: [QuestModel]?
+    let weeklyQuests: [QuestModel]?
+    let monthlyQuests: [QuestModel]?
+    let specialQuests: [QuestModel]?
+    let claimReward: (QuestModel) -> Void
+
+    @State private var selectedSection: ForestQuestSection?
+    @State private var expandedQuestIDs: Set<UUID> = []
+
+    private var isShowingSubMenu: Bool {
+        selectedSection != nil
+    }
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.black.opacity(0.4)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation { showQuest = false }
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            showQuest = false
+                        }
                     }
-                
+
                 ZStack {
-                    
-                    if showDailyQuest {
-                        questListView(title: String(localized:"Günlük Görevler"), quests: dailyQuests, closeAction: { withAnimation { showDailyQuest = false } }, geo: geometry)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(1)
-                    } else if showWeeklyQuest {
-                        questListView(title: String(localized: "Haftalık Görevler"), quests: weeklyQuests, closeAction: { withAnimation { showWeeklyQuest = false } }, geo: geometry)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(1)
-                    } else if showMonthlyQuest {
-                        questListView(title: String(localized:"Aylık Görevler"), quests: monthlyQuests, closeAction: { withAnimation { showMonthlyQuest = false } }, geo: geometry)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(1)
-                    } else if showSpecialQuest {
-                        questListView(title: String(localized:"Özel Görevler"), quests: specialQuests, closeAction: { withAnimation { showSpecialQuest = false } }, geo: geometry)
-                            .transition(.move(edge: .trailing))
-                            .zIndex(1)
+                    if let selectedSection {
+                        questListView(
+                            section: selectedSection,
+                            quests: quests(for: selectedSection)
+                        )
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                        .zIndex(1)
                     } else {
                         mainMenu
                             .transition(.move(edge: .leading).combined(with: .opacity))
@@ -427,15 +639,12 @@ struct ForestQuestUI: View {
             }
         }
     }
-    
-    var closeButton: some View {
+
+    private var closeButton: some View {
         Button {
-            withAnimation {
-                if isAnySubMenuOpen {
-                    showDailyQuest = false
-                    showWeeklyQuest = false
-                    showMonthlyQuest = false
-                    showSpecialQuest = false
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if isShowingSubMenu {
+                    selectedSection = nil
                 } else {
                     showQuest = false
                 }
@@ -448,44 +657,76 @@ struct ForestQuestUI: View {
                 .offset(x: 12, y: -12)
         }
     }
-    
-    @ViewBuilder
-    func questListView(title: String, quests: [QuestModel]?, closeAction: @escaping () -> Void, geo: GeometryProxy) -> some View {
-        VStack {
+
+    private var mainMenu: some View {
+        VStack(spacing: 20) {
             ZStack {
-                Image("title_header").resizable().scaledToFit().frame(height: 50)
-                Text(LocalizedStringKey(title))
+                if UIImage(named: "title_header") != nil {
+                    Image("title_header")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 60)
+                }
+
+                Text("Quests")
                     .foregroundStyle(.white)
-                    .font(.system(size: 20, weight: .bold))
-                    .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
+                    .font(.system(size: 28, weight: .heavy, design: .rounded))
+                    .shadow(color: .black.opacity(0.6), radius: 2, x: 0, y: 2)
             }
-            .padding(.bottom)
-            
-            if let list = quests, !list.isEmpty {
+            .padding(.bottom, 10)
+
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    ForEach(Constant.questTypeList, id: \.self) { model in
+                        ForestQuestMenuRow(
+                            model: model,
+                            hasReward: hasClaimableReward(for: model)
+                        ) {
+                            guard let section = ForestQuestSection(questType: model) else { return }
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.9)) {
+                                selectedSection = section
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal, 4)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func questListView(section: ForestQuestSection, quests: [QuestModel]) -> some View {
+        VStack {
+            ForestQuestSectionHeader(title: section.title)
+
+            if quests.isEmpty {
+                Spacer()
+                ForestQuestEmptyStateView()
+                Spacer()
+            } else {
                 ScrollView {
                     LazyVStack(spacing: 20) {
-                        ForEach(list, id: \.self) { quest in
-                            QuestRow(onQuestSelect: { model in selectQuest(model)}, onRewardClaim: { model in
-                                claimReward(model)
-                            }, quest: quest)
+                        ForEach(quests, id: \.id) { quest in
+                            QuestRow(
+                                quest: quest,
+                                isExpanded: expandedQuestIDs.contains(quest.id),
+                                onToggleExpansion: toggleExpansion,
+                                onQuestSelect: selectQuest,
+                                onRewardClaim: claimReward
+                            )
+                            .id(quest.id)
                         }
                     }
                     .padding(.horizontal, 4)
                 }
-            } else {
-                Spacer()
-                VStack(spacing: 12) {
-                    Image(systemName: "clipboard")
-                        .font(.system(size: 50))
-                        .foregroundStyle(.white.opacity(0.4))
-                    Text("No quests available.")
-                        .foregroundStyle(.white.opacity(0.7))
-                        .font(.headline)
-                }
-                Spacer()
+                .scrollIndicators(.hidden)
             }
-            
-            Button(action: closeAction) {
+
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    selectedSection = nil
+                }
+            } label: {
                 HStack {
                     Image(systemName: "arrow.uturn.backward")
                     Text("Return back")
@@ -496,93 +737,55 @@ struct ForestQuestUI: View {
                 .frame(maxWidth: .infinity)
                 .background(Color.brown.opacity(0.8))
                 .cornerRadius(16)
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(.white.opacity(0.3), lineWidth: 1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.white.opacity(0.3), lineWidth: 1)
+                )
             }
             .padding(.top)
         }
     }
-    
-    var mainMenu: some View {
-        VStack(spacing: 20) {
-            ZStack {
-                if let _ = UIImage(named: "title_header") {
-                    Image("title_header").resizable().scaledToFit().frame(height: 60)
-                }
-                Text("Quests")
-                    .foregroundStyle(.white)
-                    .font(.system(size: 28, weight: .heavy, design: .rounded))
-                    .shadow(color: .black.opacity(0.6), radius: 2, x: 0, y: 2)
-            }
-            .padding(.bottom, 10)
-            
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 16) {
-                    ForEach(Constant.questTypeList, id: \.self) { model in
-                        let hasReward = hasClaimableReward(for: model)
-                        Button {
-                            withAnimation(.spring()) {
-                                switch model {
-                                case .daily: showDailyQuest = true
-                                case .weekly: showWeeklyQuest = true
-                                case .monthly: showMonthlyQuest = true
-                                case .special: showSpecialQuest = true
-                                }
-                            }
-                        } label: {
-                            HStack(spacing: 16) {
-                                ZStack {
-                                    Circle()
-                                        .fill(hasReward ? Color.green.opacity(0.2) : Color.white.opacity(0.2))
-                                        .frame(width: 50, height: 50)
-                                    Image(model.imageIconName)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 35, height: 35)
-                                        .shadow(radius: 2)
-                                }
-                                
-                                Text(LocalizedStringKey(model.localizedTitle))
-                                    .font(.title3.bold())
-                                    .foregroundStyle(.white)
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .font(.headline)
-                                    .foregroundStyle(.white.opacity(0.6))
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(model.backgroundColor.opacity(0.9))
-                                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 4)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.white.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                        .buttonStyle(ScaleButtonStyle())
-                    }
-                }
-                .padding(.horizontal, 4)
-            }
+
+    private func toggleExpansion(for questID: UUID) {
+        if expandedQuestIDs.contains(questID) {
+            expandedQuestIDs.remove(questID)
+        } else {
+            expandedQuestIDs.insert(questID)
         }
     }
-    
-    private func hasClaimableReward(for type: QuestType) -> Bool {
-        let list: [QuestModel]?
-        
-        switch type {
-        case .daily: list = dailyQuests
-        case .weekly: list = weeklyQuests
-        case .monthly: list = monthlyQuests
-        case .special: list = specialQuests
+
+    private func quests(for section: ForestQuestSection) -> [QuestModel] {
+        switch section {
+        case .daily:
+            dailyQuests ?? []
+        case .weekly:
+            weeklyQuests ?? []
+        case .monthly:
+            monthlyQuests ?? []
+        case .special:
+            specialQuests ?? []
         }
-        
-        return list?.contains(where: { $0.status == .completed }) ?? false
+    }
+
+    private func hasClaimableReward(for type: QuestType) -> Bool {
+        let list: [QuestModel]
+
+        switch type {
+        case .daily:
+            list = dailyQuests ?? []
+        case .weekly:
+            list = weeklyQuests ?? []
+        case .monthly:
+            list = monthlyQuests ?? []
+        case .special:
+            list = specialQuests ?? []
+        }
+
+        return list.contains(where: { $0.status == .completed })
     }
 }
+
+// MARK: - Button Style
 
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -593,9 +796,11 @@ struct ScaleButtonStyle: ButtonStyle {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     @State var show = true
-    
+
     let dummyQuest = QuestModel(
         id: UUID(),
         type: .daily,
@@ -609,10 +814,11 @@ struct ScaleButtonStyle: ButtonStyle {
         battleEnemyModel: .fireElemental,
         gameLevel: .easy
     )
-    
+
     ForestQuestUI(
-        showQuest: $show, selectQuest: { model in },
-        dailyQuests: [dummyQuest, dummyQuest],
+        showQuest: $show,
+        selectQuest: { _ in },
+        dailyQuests: [dummyQuest],
         weeklyQuests: [],
         monthlyQuests: [],
         specialQuests: [],
