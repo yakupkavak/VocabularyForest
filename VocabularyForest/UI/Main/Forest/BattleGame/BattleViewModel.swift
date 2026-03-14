@@ -153,9 +153,9 @@ private extension BattleViewModel {
         var questionNumber = 1
         for book in shortBooks.shuffled().prefix(bookCount){
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .main)
+            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .main)
+                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
                 return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
@@ -185,9 +185,9 @@ private extension BattleViewModel {
         var questionNumber = 1
         for book in longBooks.shuffled().prefix(bookCount){
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .main)
+            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .main)
+                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
                 return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
             }).shuffled().prefix(3)
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
@@ -241,7 +241,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     name: bookcaseModel.bookcaseName,
                     learningLanguageCode: bookcaseModel.learningLanguage,
                     meaningLanguageCode: bookcaseModel.meaningLanguage,
-                    contextType: .main
+                    contextType: .background
                 ) else {
                     errorModel = .emptyBookcase
                     return
@@ -334,9 +334,9 @@ extension BattleViewModel: BattleViewModelProtocol {
                     playerAnger?.currentLevel += 1
                     gameStatus.trueCount += 1
                     if let questionType, let answerBook = answer.book {
-                        coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .main)
+                        coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .background)
                         // TODO: SHOW SAVE ERROR
-                        let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .main)
+                        let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .background)
                     }
                     output?.correctAnswer()
                 }else {
@@ -409,7 +409,7 @@ extension BattleViewModel: BattleSceneProtocol {
                 gameLevel: gameLevel,
                 battleEnemyMode: battleMode,
                 gameType: questionType,
-                contextType: .main
+                contextType: .background
             )
             switch result.status {
             case .success:

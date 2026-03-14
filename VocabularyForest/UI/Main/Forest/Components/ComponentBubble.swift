@@ -9,6 +9,8 @@ import SpriteKit
 
 struct ComponentBubble {
     
+    // MARK: - CONSTANTS
+    
     enum Constants {
         static let zero: CGFloat = 0.0
         
@@ -30,6 +32,7 @@ struct ComponentBubble {
         static let talkDotXShiftMultiplier: CGFloat = 8.0
         static let talkDotLineWidth: CGFloat = 2.0
         static let talkDotZPosition: CGFloat = -1.0
+        static let talkDotsTotalHeight: CGFloat = 38.0
         
         static let defaultCornerRadius: CGFloat = 10
         static let defaultAlpha: CGFloat = 0.95
@@ -73,15 +76,15 @@ struct ComponentBubble {
         static let halfDivider: CGFloat = 2.0
     }
     
+    // MARK: - SHARED COMPONENTS
+    
     static func createBaseBubble(width: CGFloat, height: CGFloat, parentSize: CGSize, strokeColor: UIColor = .black, lineWidth: CGFloat = Constants.defaultLineWidth) -> SKShapeNode {
         let bubble = SKShapeNode(rectOf: CGSize(width: width, height: height), cornerRadius: Constants.defaultCornerRadius)
         bubble.fillColor = .brown500.withAlphaComponent(Constants.defaultAlpha)
         bubble.strokeColor = strokeColor
         bubble.lineWidth = lineWidth
         bubble.zPosition = Constants.defaultZPosition
-        
         bubble.position = CGPoint(x: Constants.zero, y: parentSize.height + Constants.defaultYOffset)
-        
         return bubble
     }
     
@@ -109,6 +112,8 @@ struct ComponentBubble {
         }
         return label
     }
+    
+    // MARK: - SPECIFIC BUBBLES
     
     static func createAnimalMenuBubble(parentSize: CGSize, displayName: String?) -> SKShapeNode {
         let bubble = createBaseBubble(width: Constants.defaultBubbleWidth, height: Constants.defaultBubbleHeight, parentSize: parentSize)
@@ -194,6 +199,11 @@ struct ComponentBubble {
             isFlipped = true
         }
         
+        bubble.position = CGPoint(
+            x: Constants.zero,
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.talkDotsTotalHeight
+        )
+        
         label.position = CGPoint(x: Constants.zero, y: Constants.zero)
         bubble.addChild(label)
         
@@ -225,6 +235,8 @@ struct ComponentBubble {
         
         return bubble
     }
+    
+    // MARK: - ANIMATION HELPERS
     
     static func applyAutoCloseAnimation(to bubble: SKNode, onComplete: @escaping () -> Void) {
         let waitAction = SKAction.wait(forDuration: Constants.waitDuration)

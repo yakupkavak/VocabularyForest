@@ -359,7 +359,7 @@ private extension ForestViewModel {
     func startRandomTalking() {
         stopRandomTalking()
         
-        talkCancellable = Timer.publish(every: 8.0, on: .main, in: .common)
+        talkCancellable = Timer.publish(every: 20.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 self?.triggerRandomTalk()
