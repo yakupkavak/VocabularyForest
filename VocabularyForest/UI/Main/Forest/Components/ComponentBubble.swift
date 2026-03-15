@@ -216,17 +216,14 @@ struct ComponentBubble {
         
         let dynamicHeight = max(60, label.frame.height + Constants.talkVerticalPadding)
         bubble.size = CGSize(width: width, height: dynamicHeight)
-        
-        // DÜZELTİLEN KISIM
-        // Eğer parent (hayvan) ters döndüyse, balonu ters çevirerek nötrlüyoruz.
-        // Label'a dokunmuyoruz, o balonla birlikte otomatik düzeliyor.
+
         if parentXScale < Constants.zero {
             bubble.xScale = Constants.flippedScaleX
         }
         
         bubble.position = CGPoint(
             x: Constants.zero,
-            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + 10
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + 2
         )
         label.position = CGPoint(x: Constants.zero, y: 5)
         bubble.addChild(label)
