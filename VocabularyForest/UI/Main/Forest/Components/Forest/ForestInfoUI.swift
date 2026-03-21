@@ -21,8 +21,8 @@ struct ForestInfoUI: View {
             VStack(spacing: 24) {
                 if let forestModel {
                     HStack {
-                        Image(systemName: "drop").resizable().scaledToFit().frame(width: 32).foregroundStyle(.brown300).overlay{
-                            Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.brown300).mask {
+                        Image(systemName: "drop").resizable().scaledToFit().frame(width: 32).foregroundStyle(.blue).overlay{
+                            Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.blue).mask {
                                 GeometryReader { geo in
                                     Rectangle().frame(height: geo.size.height * CGFloat(forestModel.rainValue) / CGFloat(50)
                                 )}
@@ -35,7 +35,7 @@ struct ForestInfoUI: View {
                         Spacer()
                     }
                     HStack {
-                        Image(systemName: "circle.circle.fill").resizable().scaledToFit().frame(width: 32).foregroundStyle(.yellow)
+                        Image( "gold_icon").resizable().scaledToFit().frame(width: 32).foregroundStyle(.yellow)
                         VStack(alignment: .leading) {
                             Text("Altın: \(forestModel.gold)").foregroundStyle(.white).font(.system(size: 16))
                             Text("Gelecek güncelleme ile mağazada kullanabileceksin.").foregroundStyle(.white).font(.system(size: 12))

@@ -66,6 +66,9 @@
         }
       }
     },
+    "%lld Diamond" : {
+
+    },
     "%lld Gold" : {
       "localizations" : {
         "en" : {
@@ -699,6 +702,9 @@
           }
         }
       }
+    },
+    "antique_chest" : {
+
     },
     "Arapça" : {
       "localizations" : {
@@ -2138,6 +2144,9 @@
         }
       }
     },
+    "Daily Reward" : {
+
+    },
     "Dance with Fire 🔥" : {
       "localizations" : {
         "en" : {
@@ -2205,6 +2214,9 @@
           }
         }
       }
+    },
+    "Day %lld" : {
+
     },
     "Death" : {
       "localizations" : {
@@ -2648,6 +2660,9 @@
           }
         }
       }
+    },
+    "diamond_chest" : {
+
     },
     "Diğer" : {
       "localizations" : {
@@ -3741,6 +3756,9 @@
           }
         }
       }
+    },
+    "gold_chest" : {
+
     },
     "Göreve git" : {
       "localizations" : {
@@ -6692,6 +6710,9 @@
         }
       }
     },
+    "nature_chest" : {
+
+    },
     "New Discoveries 🗺️" : {
       "localizations" : {
         "en" : {
@@ -7816,6 +7837,9 @@
       }
     },
     "Peace" : {
+
+    },
+    "Play everyday and get additional bonuses" : {
 
     },
     "Portekizce (Brezilya)" : {
@@ -9887,6 +9911,9 @@
           }
         }
       }
+    },
+    "x%lld" : {
+
     },
     "Yağmur Hakkında" : {
       "localizations" : {

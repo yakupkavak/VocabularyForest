@@ -33,6 +33,7 @@
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="bookcase" inverseEntity="Book"/>
     </entity>
     <entity name="Forest" representedClassName="Forest" syncable="YES">
+        <attribute name="diamondValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isRaining" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="landHealthPercent" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>

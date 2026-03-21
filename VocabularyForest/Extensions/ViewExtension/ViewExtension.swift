@@ -18,6 +18,9 @@ extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+    func borderShape(radius: CGFloat) -> some View {
+        self.clipShape(RoundedRectangle(cornerRadius: radius))
+    }
 }
 
 

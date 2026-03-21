@@ -225,7 +225,7 @@ private extension ForestDataManager {
                 quest.title = model.title
                 quest.description_quest = model.description
                 quest.rewardType = model.reward.typeName
-                quest.rewardValue = model.reward.valueString
+                quest.rewardValue = model.reward.coreDataValueString
                 quest.status = model.status.valueForCoreData
                 quest.targetCount = Int16(model.targetCount)
                 quest.currentProgressCount = 0
@@ -589,6 +589,8 @@ extension ForestDataManager {
                         yPosition: pos.y
                     )
                     createSculpture(sculpture: sculptureModel, contextType: contextType)
+                case .diamond(let count):
+                    updateDiamondValue(diamond: count, contextType: contextType)
             }
             do {
                 try save(context: context)
@@ -815,6 +817,23 @@ extension ForestDataManager {
                 return Resource.error(error: ForestError.saveError)
             }
             forest.moneyValue += Int16(money)
+            do {
+                try save(context: context)
+            }
+            catch {
+                return Resource.error(error: error)
+            }
+            return Resource.success(true)
+        }
+    }
+    
+    func updateDiamondValue(diamond: Int, contextType: ContextType)  -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.saveError)
+            }
+            forest.diamondValue += Int16(diamond)
             do {
                 try save(context: context)
             }

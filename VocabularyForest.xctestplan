@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "99471C32-6CCE-4422-86D0-997FC00A33BE",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1"
+      }
+    ],
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:VocabularyForest.xcodeproj",
+      "identifier" : "37267D1F2E90E9D90019D139",
+      "name" : "VocabularyForest"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/DependencyContainer",
+        "identifier" : "DependencyContainerTests",
+        "name" : "DependencyContainerTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:VocabularyForest.xcodeproj",
+        "identifier" : "37BFA0562F6D24C0007C20E7",
+        "name" : "VocabularyForestTests"
+      }
+    }
+  ],
+  "version" : 1
+}

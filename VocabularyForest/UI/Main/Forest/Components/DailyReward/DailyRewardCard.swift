@@ -1,0 +1,113 @@
+//
+//  DailyRewardCard.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 18.03.2026.
+//
+
+import SwiftUI
+
+struct DailyCardModel {
+    var day: Int
+    var bounty: DailyBountyModel
+    var status: BountyStatus
+}
+
+struct DailyCard: View {
+    
+    // MARK: - PROPERTIES
+    
+    var model: DailyCardModel
+    var verticalPadding: CGFloat = 8
+    var onClick: () -> Void
+    private let uiScreen = UIScreen.main.bounds.size
+    
+    // MARK: - UI
+    
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Image(model.bounty.rewardImage).resizable().scaledToFit().frame(width: uiScreen.width * 0.12)
+            if let rewardCount = model.bounty.rewardCount {
+                Text("x\(rewardCount)").outlinedLargeTitle().offset(x: 15, y: 5)
+            }
+        }
+        .compositingGroup()
+        .opacity(model.status == .passed || model.status == .claimed  ? 0.5 : 1.0)
+        .padding(8)
+        .padding(verticalPadding)
+        .padding(.top, 10)
+        .padding(.vertical, 6)
+        .background(
+            RadialGradient(colors: model.status == .ready ? [.backgroundSystem, .brown500, .claimedText] : [.backgroundSystem, .brown700, .claimedText], center: .center, startRadius: 30, endRadius: 150)
+        )
+        .borderShape(radius: 24)
+        .outlinedLine(radius: model.status == .ready ? 2 : 0.2, color: model.status == .ready ? .darkGren.opacity(0.6) : .orange.opacity(0.5))
+        .shadow(color: Color.orange.opacity( model.status == .ready ? 0: 1), radius: 1, x: 0, y: 0)
+        .overlay(alignment: .top) {
+            DailyHeader(text: String(localized: "Day \(model.day)"), isReady: (model.status == .ready)).alignmentGuide(.top) { dimensions in
+                dimensions.height / 2
+            }
+            .padding(.horizontal, 4)
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if model.status == .claimed {
+                Image("tick")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: uiScreen.width * 0.12)
+                    .offset(x: uiScreen.width * 0.04, y: uiScreen.width * 0.03)
+                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 0)
+                    
+            } else if model.status == .locked {
+                Image("locked")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: uiScreen.width * 0.1)
+                    .offset(x: uiScreen.width * 0.05, y: uiScreen.width * 0.05)
+                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 0)
+                    .rotationEffect(.degrees(15))
+            }
+        }
+        .onTapGesture {
+            onClick()
+        }
+    }
+}
+
+struct DailyHeader: View {
+    
+    var text: String
+    var isReady: Bool
+    
+    var body: some View {
+        Image(isReady ? "success_day_header": "dark_day_header").resizable().scaledToFit()
+            .shadow(color: .white, radius: 0.7)
+            .frame(width: 80)
+            .overlay(alignment: .center) {
+                Text(text).font(.title3).foregroundStyle(goldGradient).fontWeight(.bold)
+                .outlinedLine(radius: 0.2, color: .black.opacity(0.1))
+                .offset(y: -2)
+            }.offset(y: 8)
+    }
+}
+
+#Preview {
+    let goldModel = DailyCardModel(day: 1, bounty: .chest(model: .gold), status: .ready)
+    let waterModel = DailyCardModel(day: 1, bounty: .standart(model: .gold(count: 200)), status: .passed)
+    HStack {
+        Spacer()
+        VStack {
+            Spacer()
+            DailyCard(model: waterModel) {
+                print("yakup")
+            }
+            Spacer()
+        }
+        Spacer()
+        DailyCard(model: goldModel) {
+            print("yakup")
+        }
+        Spacer()
+    }
+    .background(.blue)
+}

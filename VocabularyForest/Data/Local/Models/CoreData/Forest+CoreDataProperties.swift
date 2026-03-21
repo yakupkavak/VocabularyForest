@@ -20,6 +20,7 @@ extension Forest {
 
     @NSManaged public var rainValue: Int16
     @NSManaged public var moneyValue: Int16
+    @NSManaged public var diamondValue: Int16
     @NSManaged public var landHealthPercent: Int16
     @NSManaged public var landStatus: Bool
     @NSManaged public var isRaining: Bool
@@ -69,6 +70,7 @@ extension Forest: ConvertSafeModel {
             return SafeForestModel(
                 rainValue: Int(self.rainValue),
                 moneyValue: Int(self.moneyValue),
+                diamondValue: Int(self.diamondValue),
                 landHealthPercent: Int(self.landHealthPercent),
                 landStatus: self.landStatus,
                 isRaining: self.isRaining,

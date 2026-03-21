@@ -148,7 +148,7 @@ struct QuestRewardView: View {
                         .shadow(radius: 2)
 
                 case .water(let count):
-                    Image(systemName: "drop.fill")
+                    Image("water_icon")
                         .resizable()
                         .scaledToFit()
                         .frame(
@@ -166,11 +166,16 @@ struct QuestRewardView: View {
                         .foregroundStyle(.blue)
 
                 case .gold:
-                    Image(systemName: "circle.circle.fill")
+                    Image("gold_icon")
                         .resizable()
                         .scaledToFit()
                         .frame(width: smallIconSize, height: smallIconSize)
                         .foregroundStyle(.yellow)
+                case .diamond(count: let count):
+                    Image("diamond_icon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: smallIconSize, height: smallIconSize)
                 }
             }
 
@@ -197,6 +202,10 @@ struct QuestRewardView: View {
                     Text("\(count) Gold")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
+                case .diamond(count: let count):
+                    Text("\(count) Diamond")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(.blue)
                 }
             }
         }
@@ -385,18 +394,24 @@ struct QuestRow: View {
                     .shadow(radius: 2)
 
             case .water:
-                Image(systemName: "drop.fill")
+                Image("water_icon")
                     .resizable()
                     .scaledToFit()
                     .frame(width: waterDropSize, height: waterDropSize)
                     .foregroundStyle(.blue)
 
             case .gold:
-                Image(systemName: "circle.circle.fill")
+                Image("gold_icon")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: iconBoxSize * 0.7)
                     .foregroundStyle(.yellow)
+            case .diamond(count: let count):
+                Image("diamond_icon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: iconBoxSize * 0.7)
+                    .foregroundStyle(.blue)
             }
 
             if quest.status == .locked {
@@ -814,11 +829,36 @@ struct ScaleButtonStyle: ButtonStyle {
         battleEnemyModel: .fireElemental,
         gameLevel: .easy
     )
-
+    let dummyQuest1 = QuestModel(
+        id: UUID(),
+        type: .daily,
+        title: "Test Quest",
+        description: "Deneme açıklaması",
+        reward: .gold(count: 100),
+        status: .claimed,
+        targetCount: 5,
+        currentProgressCount: 2,
+        questionType: .competitive,
+        battleEnemyModel: .fireElemental,
+        gameLevel: .easy
+    )
+    let dummyQuest2 = QuestModel(
+        id: UUID(),
+        type: .daily,
+        title: "Test Quest",
+        description: "Deneme açıklaması",
+        reward: .diamond(count: 100),
+        status: .claimed,
+        targetCount: 5,
+        currentProgressCount: 2,
+        questionType: .competitive,
+        battleEnemyModel: .fireElemental,
+        gameLevel: .easy
+    )
     ForestQuestUI(
         showQuest: $show,
         selectQuest: { _ in },
-        dailyQuests: [dummyQuest],
+        dailyQuests: [dummyQuest, dummyQuest1, dummyQuest2],
         weeklyQuests: [],
         monthlyQuests: [],
         specialQuests: [],
