@@ -16,6 +16,7 @@ struct BaseTabViewUI: View {
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @EnvironmentObject private var learningRouter: LearningRouter
     @EnvironmentObject private var tabBarController: TabBarController
+    @EnvironmentObject private var coordinator: VocabularyForestCoordinator
     @StateObject private var viewModel = BaseTabViewModel()
     @State private var isAddLibraryPresented = false
     
@@ -37,16 +38,16 @@ struct BaseTabViewUI: View {
 extension BaseTabViewUI {
     var createBookTab: some View {
         NavigationStack(path: $createBookRouter.navPath) {
-            CreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
+            coordinator.startCreateBookUI().navigationDestination(for: CreateBookRouter.Destination.self) { destination in
                 switch destination {
                 case .bookcaseList:
-                    BookcaseFeedUI().onAppear {
+                    coordinator .startBookcaseFeedUI().onAppear {
                         withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.hideTabbar()
+                            tabBarController.hideTabbar()
                         }
                     }.onDisappear {
                         withAnimation(.easeInOut(duration: 1.2)) {
-                            tabbarController.showTabbar()
+                            tabBarController.showTabbar()
                         }
                     }
                 }
@@ -57,31 +58,30 @@ extension BaseTabViewUI {
     }
     var bookcaseFeedTab: some View {
         NavigationStack(path: $bookcaseRouter.navPath) {
-            BookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
+            coordinator.startBookcaseFeedUI().navigationDestination(for: BookcaseRouter.Destination.self) { destination in
                 switch destination {
                 case .bookcaseDetail(let bookcaseName, let learningCode, let meaningCode):
-                    BookcaseDetailUI(bookcaseName: bookcaseName, bookcaseLearningCode: learningCode, bookcaseMeaningCode: meaningCode)
+                    coordinator.startBookcaseDetailUI(bookcaseName: bookcaseName, learningLanguage: learningCode, meaningLanguage: meaningCode)
                         .toolbar(.hidden, for: .tabBar)
                 case .bookcaseList:
-                    BookcaseFeedUI()
+                    coordinator.startBookcaseFeedUI()
                 case .createBookcase:
-                    CreateBookcaseUI()
+                    coordinator.startCreateBookcaseUI()
                 case .bookcasePacket :
-                    let viewModel = BookcasePacketsViewModel(networkService: APIService(), dataManager: CoreDataManager.shared)
-                    BookcasePacketsUI(viewModel: viewModel)
+                    coordinator.startBookcasePacketsUI()
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)
                         .onAppear {
                             withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.hideTabbar()
+                                tabBarController.hideTabbar()
                             }
                         }.onDisappear {
                             withAnimation(.easeInOut(duration: 1.2)) {
-                                tabbarController.showTabbar()
+                                tabBarController.showTabbar()
                             }
                         }
                 }
-            }.tabbarVisibility(visibility: tabbarController.isVisible)
+            }.tabbarVisibility(visibility: tabBarController.isVisible)
         }
         .tabItem {
                 Label("Kitaplık", systemImage: "books.vertical")
@@ -89,15 +89,15 @@ extension BaseTabViewUI {
     }
     var learningFeedTab: some View {
         NavigationStack(path: $learningRouter.navPath) {
-            LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
+            coordinator.startLearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
                 switch destination {
                     case .forest:
-                    ForestCoordinator(resolver: DC.shared).start()
+                    coordinator.startForestUI()
                         .ignoresSafeArea()
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)
                 case .game(let option, let mode, let level, let bookcase):
-                    BattleUI(viewModel: BattleViewModel(), gameType: option, battleMode: mode, gameLevel: level, selectedBookcase: bookcase)
+                    coordinator.startBattleUI(gameType: option, battleMode: mode, gameLevel: level, selectedBookcase: bookcase)
                     .ignoresSafeArea()
                     .navigationBarBackButtonHidden()
                     .toolbar(.hidden, for: .tabBar)
@@ -108,7 +108,8 @@ extension BaseTabViewUI {
         }.tag(BaseTabTypes.quiz)
     }
     var settingsTab: some View {
-        SettingsUI().tabItem {
+        coordinator.startSettingsUI()
+            .tabItem {
             Label("Ayarlar", systemImage: "gearshape")
         }.tag(BaseTabTypes.settings)
     }

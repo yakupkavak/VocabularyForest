@@ -20,7 +20,13 @@ struct VocabularyForestApp: App {
     @StateObject private var routerBookcase = BookcaseRouter()
     @StateObject private var routerCreateBookcase = CreateBookRouter()
     @StateObject private var tabbarController = TabBarController()
+    @StateObject private var coordinator: VocabularyForestCoordinator
     private let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+    
+    init() {
+        let resolver = DC.shared
+        _coordinator = StateObject(wrappedValue: VocabularyForestCoordinator(resolver: resolver))
+    }
     
     // MARK: - VIEWS
     
@@ -31,7 +37,7 @@ struct VocabularyForestApp: App {
                     coreDataManager.save(type: .main)
                 }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
-                .environmentObject(tabbarController)
+                .environmentObject(tabbarController).environmentObject(coordinator)
                 .installToast(position: .bottom)
         }
     }

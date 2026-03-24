@@ -43,10 +43,11 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     @Published var uiState: UIState = .loading
     @Published var downloadState: DownloadState = .waiting
     let networkService: APIServiceProtocol
-    let coreDataService: CoreDataManager
+    let coreDataService: CoreDataManagerProtocol
+    
     // MARK: - INIT
     
-    init(networkService: APIServiceProtocol, dataManager: CoreDataManager) {
+    init(networkService: APIServiceProtocol, dataManager: CoreDataManagerProtocol) {
         self.networkService = networkService
         self.coreDataService = dataManager
         refreshData()

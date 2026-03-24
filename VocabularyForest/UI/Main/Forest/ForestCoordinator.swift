@@ -7,13 +7,21 @@
 
 import DependencyContainer
 import SwiftUI
+import Combine
 
-protocol ForestCoordinatorProtocol {
+protocol VocabularyForestCoordinatorProtocol {
     func startForestUI() -> AnyView
     func startBattleUI(gameType: BattleQuestionType, battleMode: BattleEnemyModel, gameLevel: GameLevel, selectedBookcase: BookcaseModel?) -> AnyView
+    func startLearningFeedUI() -> AnyView
+    func startSettingsUI() -> AnyView
+    func startBookcaseDetailUI(bookcaseName: String, learningLanguage: String, meaningLanguage: String) -> AnyView
+    func startBookcaseFeedUI() -> AnyView
+    func startBookcasePacketsUI() -> AnyView
+    func startCreateBookUI() -> AnyView
+    func startCreateBookcaseUI() -> AnyView
 }
 
-final class ForestCoordinator: ForestCoordinatorProtocol {
+final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, ObservableObject{    
     @EnvironmentObject var tabbarController: TabBarController
     private let resolver: DCResolve
     
@@ -92,9 +100,26 @@ final class ForestCoordinator: ForestCoordinatorProtocol {
         )
     }
     func startBookcasePacketsUI() -> AnyView {
-        let viewModel = BookcasePacketsViewModel(networkService: <#T##any APIServiceProtocol#>, dataManager: <#T##CoreDataManager#>)
+        let networkService = resolver.resolve(type: .singleInstance, for: APIServiceProtocol.self)
+        let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData)
         return AnyView(
-            BookcasePacketsUI(viewModel: <#T##BookcasePacketsViewModelProtocol#>)
+            BookcasePacketsUI(viewModel: viewModel)
         )
     }
+    func startCreateBookUI() -> AnyView {
+        let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let viewModel = CreateBookViewModel(coreDataManager: coreData)
+        return AnyView(
+            CreateBookUI(viewModel: viewModel)
+        )
+    }
+    func startCreateBookcaseUI() -> AnyView {
+        let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let viewModel = CreateBookcaseViewModel(coreDataManager: coreData)
+        return AnyView(
+            CreateBookcaseUI(viewModel: viewModel)
+        )
+    }
+    
 }
