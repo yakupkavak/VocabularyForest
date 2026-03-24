@@ -1,3 +1,5 @@
+// MARK: - PlantManager.swift
+
 //
 //  PlantManager.swift
 //  VocabularyForest
@@ -7,7 +9,7 @@
 
 import SpriteKit
 
-protocol PlantManagerProtocol: UpdatePositionProtocol, TapComponentProtocol {
+protocol PlantManagerProtocol: UpdatePositionProtocol, TapComponentProtocol, TalkProtocol {
     var model: TreeModel? { get }
     func setupPlant(model: TreeModel)
     func growPlant()
@@ -15,6 +17,35 @@ protocol PlantManagerProtocol: UpdatePositionProtocol, TapComponentProtocol {
     func fadePlant()
     func perishPlant()
     func recoverPlant()
+}
+
+// MARK: - CONSTANTS
+
+extension PlantManager {
+    enum Constants {
+        static let zero: CGFloat = 0.0
+        static let firstFrameIndex: Int = 0
+        static let secondFrameIndex: Int = 1
+        
+        static let anchorPointX: CGFloat = 0.5
+        static let anchorPointY: CGFloat = 0.0
+        static let fallbackMultiplier: CGFloat = 0.0
+        static let screenWidthDivider: CGFloat = 2.0
+        
+        static let baseZPosition: Double = 10.0
+        static let zPositionMultiplier: Double = 20.0
+        
+        static let defaultColorBlendFactor: CGFloat = 0.0
+        static let selectedColorBlendFactor: CGFloat = 0.9
+        static let fadedColorBlendFactor: CGFloat = 0.4
+        static let perishedColorBlendFactor: CGFloat = 0.8
+        
+        static let bubbleScaleTarget: CGFloat = 1.0
+        static let bubbleScaleInitial: CGFloat = 0.0
+        static let bubbleScaleDuration: TimeInterval = 0.2
+        static let bubbleRemoveScaleTarget: CGFloat = 0.0
+        static let bubbleRemoveDuration: TimeInterval = 0.1
+    }
 }
 
 class PlantManager {
@@ -27,6 +58,7 @@ class PlantManager {
     private weak var scene: SKScene?
     private var textures: [SKTexture] = []
     private var isPerished = false
+    
     // MARK: - INIT
     
     init(scene: SKScene? = nil) {
@@ -40,7 +72,7 @@ private extension PlantManager {
     
     func loadTextures(for model: TreeModel) {
         let atlas = SKTextureAtlas(named: model.assetName)
-        for i in 0..<atlas.textureNames.count {
+        for i in Constants.firstFrameIndex..<atlas.textureNames.count {
             textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
         }
         setPlant(model: model)
@@ -50,24 +82,24 @@ private extension PlantManager {
     func setPlant(model: TreeModel) {
         // FUTURE: - GROW PLANT
         plant.removeFromParent()
-        guard let firstFrame = textures[safe: 1], let scene else {
+        guard let firstFrame = textures[safe: Constants.secondFrameIndex], let scene else {
             return
         }
         plant.texture = firstFrame
         // TODO: - SIZE
         let originalSize = firstFrame.size()
-        if originalSize.height > 0 {
+        if originalSize.height > Constants.zero {
             let aspectRatio = originalSize.width / originalSize.height
             let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
             plant.size = CGSize(width: targetWidth, height: ComponentSizeConstant.plantHeight)
         }
-        plant.anchorPoint = CGPoint(x: 0.5, y: 0)
+        plant.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         plant.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
             y: GameConstant.materialHeightSize * model.yPosition
         )
         plant.name = "plant"
-        plant.zPosition = 10 - model.yPosition * 20.0
+        plant.zPosition = Constants.baseZPosition - model.yPosition * Constants.zPositionMultiplier
         treeModel = model
         scene.addChild(plant)
     }
@@ -81,95 +113,37 @@ private extension PlantManager {
         
         isMenuOpen = true
         let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.characterName : treeModel?.assetName
+        let finalName = displayName ?? String(localized: "Bitki")
         
-        let bubbleWidth: CGFloat = 140
-        let bubbleHeight: CGFloat = 90
+        let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: plant.size, displayName: finalName)
         
-        let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
-        bubble.name = "menu_bubble"
-        bubble.fillColor = .brown500.withAlphaComponent(0.95)
-        bubble.strokeColor = .black
-        bubble.lineWidth = 2
-        bubble.zPosition = 100
-        bubble.position = CGPoint(x: 0, y: plant.size.height + 40)
-        
-        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
-        titleLabel.text = displayName ?? String(localized: "Bitki")
-        titleLabel.fontSize = 16
-        titleLabel.fontColor = .white
-        titleLabel.position = CGPoint(x: 0, y: 15)
-        bubble.addChild(titleLabel)
-
-        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
-        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
-        headerSeparator.strokeColor = .clear
-        headerSeparator.position = CGPoint(x: 0, y: 5)
-        bubble.addChild(headerSeparator)
-
-        let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
-        nameBtn.position = CGPoint(x: -32, y: -15)
-        nameBtn.fontColor = .black
-        bubble.addChild(nameBtn)
-        
-        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 25))
-        separator.fillColor = .logoGreen
-        separator.strokeColor = .logoGreen
-        separator.position = CGPoint(x: 0, y: -15)
-        bubble.addChild(separator)
-        
-        let posBtn = createButtonLabel(text: String(localized: "Taşı"), name: "btn_update_pos", maxWidth: 60)
-        posBtn.position = CGPoint(x: 32, y: -15)
-        posBtn.fontColor = .black
-        bubble.addChild(posBtn)
-        
-        bubble.setScale(0)
+        bubble.setScale(Constants.bubbleScaleInitial)
         plant.addChild(bubble)
-        bubble.run(.scale(to: 1.0, duration: 0.2))
+        bubble.run(.scale(to: Constants.bubbleScaleTarget, duration: Constants.bubbleScaleDuration))
         
-        let waitAction = SKAction.wait(forDuration: 3.0)
-        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
-        let remove = SKAction.removeFromParent()
-        let updateState = SKAction.run { [weak self] in
+        ComponentBubble.applyAutoCloseAnimation(to: bubble) { [weak self] in
             self?.isMenuOpen = false
         }
-        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
-        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
-    }
-    
-    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
-        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
-        label.text = text
-        label.fontSize = 14
-        label.fontColor = .black
-        label.name = name
-        label.verticalAlignmentMode = .center
-        label.horizontalAlignmentMode = .center
-        if let width = maxWidth {
-            label.numberOfLines = 0
-            label.preferredMaxLayoutWidth = width
-            label.lineBreakMode = .byWordWrapping
-        }
-        return label
     }
 
     func getScrollOffset() -> CGFloat {
         guard let scene = scene,
-              let floor = scene.childNode(withName: ForestConstant.floorName) else { return 0 }
-        let initialX = scene.size.width / 2
+              let floor = scene.childNode(withName: ForestConstant.floorName) else { return Constants.zero }
+        let initialX = scene.size.width / Constants.screenWidthDivider
         return floor.position.x - initialX
     }
 }
 
-// MARK: - UPDATE PlantManager PROTOCOL
+// MARK: - UPDATE POSITION PROTOCOL
 
 extension PlantManager: UpdatePositionProtocol {
     
     func confirmeChange() {
         if isPerished {
             perishPlant()
-        }else {
+        } else {
             plant.color = .white
-            plant.colorBlendFactor = 0.0
+            plant.colorBlendFactor = Constants.defaultColorBlendFactor
         }
     }
     
@@ -189,27 +163,27 @@ extension PlantManager: UpdatePositionProtocol {
              plant.zPosition = getZIndex(yPosition: yPosition)
         }
         plant.position = CGPoint(
-            x: (GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? 0)) + scrollOffset,
-            y: GameConstant.sculptureHeightSize * (self.treeModel?.yPosition ?? 0)
+            x: (GameConstant.gameWidthSize * (self.treeModel?.xPosition ?? Constants.fallbackMultiplier)) + scrollOffset,
+            y: GameConstant.materialHeightSize * (self.treeModel?.yPosition ?? Constants.fallbackMultiplier)
         )
     }
     
     func startPositionChange() {
         plant.color = .clickableText
-        plant.colorBlendFactor = 0.9
+        plant.colorBlendFactor = Constants.selectedColorBlendFactor
     }
 
     func removeChange(x: CGFloat, y: CGFloat) {
         let scrollOffset = getScrollOffset()
         plant.position = CGPoint(
             x: (GameConstant.gameWidthSize * x) + scrollOffset,
-            y: GameConstant.sculptureHeightSize * y
+            y: GameConstant.materialHeightSize * y
         )
         self.treeModel?.xPosition = x
         self.treeModel?.yPosition = y
         plant.zPosition = getZIndex(yPosition: y)
         plant.color = .white
-        plant.colorBlendFactor = 0.0
+        plant.colorBlendFactor = Constants.defaultColorBlendFactor
     }
 }
 
@@ -238,7 +212,7 @@ extension PlantManager: PlantManagerProtocol {
     }
     
     func growPlant() {
-        guard let secondFrame = textures[safe: 1] else {
+        guard let secondFrame = textures[safe: Constants.secondFrameIndex] else {
             return
         }
         plant.texture = secondFrame
@@ -253,35 +227,48 @@ extension PlantManager: PlantManagerProtocol {
     
     func fadePlant() {
         plant.color = .brown
-        plant.colorBlendFactor = 0.4
+        plant.colorBlendFactor = Constants.fadedColorBlendFactor
     }
     
     func perishPlant() {
         plant.color = .brown
-        plant.colorBlendFactor = 0.8
+        plant.colorBlendFactor = Constants.perishedColorBlendFactor
         isPerished = true
     }
     
     func recoverPlant() {
         isPerished = false
         plant.color = .white
-        plant.colorBlendFactor = 0.0
+        plant.colorBlendFactor = Constants.defaultColorBlendFactor
     }
 }
+
+// MARK: - TALK PROTOCOL
 
 extension PlantManager: TalkProtocol {
     
     func talk(text: String) {
-        print("")
+        if let existingBubble = plant.childNode(withName: "talk_bubble") {
+            existingBubble.removeFromParent()
+        }
+        let bubble = ComponentBubble.createTalkBubble(parentSize: plant.size, parentXScale: plant.xScale, text: text)
+        plant.addChild(bubble)
     }
     
     func removeBubble() {
-        if let bubble = plant.childNode(withName: "menu_bubble") {
-            bubble.run(.sequence([
-                .scale(to: 0, duration: 0.1),
+        if let menuBubble = plant.childNode(withName: "menu_bubble") {
+            menuBubble.run(.sequence([
+                .scale(to: Constants.bubbleRemoveScaleTarget, duration: Constants.bubbleRemoveDuration),
                 .removeFromParent()
             ]))
             isMenuOpen = false
+        }
+        
+        if let talkBubble = plant.childNode(withName: "talk_bubble") {
+            talkBubble.run(.sequence([
+                .scale(to: Constants.bubbleRemoveScaleTarget, duration: Constants.bubbleRemoveDuration),
+                .removeFromParent()
+            ]))
         }
     }
 }

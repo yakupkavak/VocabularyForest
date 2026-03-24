@@ -7,6 +7,8 @@
 
 import Foundation
 import CoreData
+import DependencyContainer
+import DTO
 
 // MARK: - CORE DATA MANAGER ENUMS
 
@@ -14,15 +16,6 @@ extension CoreDataManager {
     enum ContextType {
         case main
         case background
-        
-        var context: NSManagedObjectContext {
-            switch self {
-            case .main:
-                CoreDataManager.shared.viewContext
-            case .background:
-                CoreDataManager.shared.backgroundContext
-            }
-        }
     }
     enum ImportBookcaseError: Error {
         case alreadyExist
@@ -30,11 +23,54 @@ extension CoreDataManager {
     }
 }
 
-class CoreDataManager {
+// MARK: - CORE DATA PROTOCOL
+
+protocol CoreDataManagerProtocol: AnyObject {
+    
+    // MARK: Properties
+    
+    var viewContext: NSManagedObjectContext { get }
+    var backgroundContext: NSManagedObjectContext { get set }
+    
+    // MARK: Core Data Operations
+    
+    func save(in context: NSManagedObjectContext)
+    func save(type contextType: CoreDataManager.ContextType)
+    func deleteEverything(contextType: CoreDataManager.ContextType)
+    
+    // MARK: Book Operations
+    
+    func updateBookAnswer(book: BookModel, type: BattleQuestionType, contextType: CoreDataManager.ContextType) -> Resource<Bool>
+    func createSafeBook(learningWord: String, meaningWord: String, exampleSentence: String?, descriptionWord: String?, partOfSpeech: String?, safeBookcase bookcase: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookModel?
+    func createBook(learningWord: String, meaningWord: String, exampleSentence: String?, descriptionWord: String?, partOfSpeech: String?, in bookcase: Bookcase, contextType: CoreDataManager.ContextType) -> Book
+    func updateBook(bookToUpdate: BookModel, learningWord: String, meaningWord: String, descriptionWord: String?, exampleSentence: String?, onComplete: () -> (), contextType: CoreDataManager.ContextType)
+    func deleteBook(book: BookModel, contextType: CoreDataManager.ContextType)
+    func fetchBookHelperProperties(book model: BookModel, contextType: CoreDataManager.ContextType) -> BookHelperModel?
+    func fetchAllSafeBooks(contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    // MARK: Bookcase Operations
+    
+    func updateBookcase(item: BookcaseDisplayItem, newName: String, learningLang: Language, meaningLang: Language, onComplete: () -> (), contextType: CoreDataManager.ContextType)
+    func createBookcase(name: String, learningLanguage: String, meaningLanguage: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+    func importBookcase(_ request: BookcaseRequest, overwrite: Bool, contextType: CoreDataManager.ContextType, completion: @escaping (Result<Bookcase, CoreDataManager.ImportBookcaseError>) -> Void)
+    func deleteBookcase(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType)
+    func deleteBookcase(bookcase: Bookcase, contextType: CoreDataManager.ContextType)
+    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookcaseStatus?
+    func fetchSafeBookcases(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookcaseModel]?
+    func fetchSafeBookcase(book: BookModel, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+    func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+}
+
+class CoreDataManager: CoreDataManagerProtocol {
     
     // MARK: - PROPERTIES
     
-    static let shared = CoreDataManager()
+    weak var notificationManager: (any NotificationManagerProtocol)?
     let container: NSPersistentContainer
     var viewContext: NSManagedObjectContext {
         return container.viewContext
@@ -45,9 +81,10 @@ class CoreDataManager {
         return context
     }()
     
+    
     // MARK: - INIT
     
-    private init(inMemory: Bool = false) {
+    init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "VocabularyForest")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -66,9 +103,18 @@ class CoreDataManager {
     
     // MARK: - HELPERS
     
+    func getContext(for type: ContextType) -> NSManagedObjectContext {
+        switch type {
+        case .main:
+            return viewContext
+        case .background:
+            return backgroundContext
+        }
+    }
+    
     private func checkGame(contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        context.performAndWait {
             if let allBooks = fetchAllBooks(contextType: contextType) {
                 for book in allBooks {
                     if book.longMemory == true {
@@ -82,7 +128,6 @@ class CoreDataManager {
                 }
                 save(in: context)
             }
-            ForestDataManager.shared.checkGame(contextType: contextType == .background ? .background : .main)
         }
     }
     
@@ -98,7 +143,7 @@ class CoreDataManager {
     }
     
     func save(type contextType: ContextType) {
-        let context = contextType.context
+        let context = getContext(for: contextType)
         context.performAndWait {
             guard context.hasChanges else { return }
             do {
@@ -110,9 +155,9 @@ class CoreDataManager {
     }
     
     func deleteEverything(contextType: ContextType) {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        context.performAndWait {
             let entities = CoreDataConstant.entities
-            let context = contextType.context
             for entity in entities {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -134,7 +179,8 @@ extension CoreDataManager {
     // MARK: - HELPER
     
     func updateBookAnswer(book: BookModel, type: BattleQuestionType, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let answerBook = fetchSingleBook(book: book, contextType: contextType) else {
                 print("updateBookAnswer Error")
                 return .error(error: nil)
@@ -161,8 +207,8 @@ extension CoreDataManager {
                     partOfSpeech: String?,
                     safeBookcase bookcase: BookcaseModel,
                     contextType: ContextType) -> BookModel? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait { () -> BookModel? in
             let book = Book(context: context)
             guard let bookcase = fetchSingleBookcase(bookcase: bookcase, contextType: contextType) else { return nil }
             book.learningWord = learningWord
@@ -175,13 +221,15 @@ extension CoreDataManager {
             book.shortMemory = true
             save(in: context)
             let persistentBookID = book.objectID.uriRepresentation().absoluteString
-            NotificationManager.shared.createNotification(
-                bookId: persistentBookID,
-                learningWord: learningWord,
-                meaningWord: meaningWord,
-                description: descriptionWord ?? "",
-                example: exampleSentence ?? ""
-            )
+            Task { @MainActor [weak self]in
+                self?.notificationManager?.createNotification(
+                    bookId: persistentBookID,
+                    learningWord: learningWord,
+                    meaningWord: meaningWord,
+                    description: descriptionWord ?? "",
+                    example: exampleSentence ?? ""
+                )
+            }
             guard let bookId = book.id, let bookcaseId = bookcase.id else { return nil }
             let safeBook = BookModel(id: bookId, bookcaseId: bookcaseId, createdDate: Date(), learningWord: learningWord, meaningWord: meaningWord, longMemory: false, shortMemory: true, partOfSpeech: PartOfSpeech.convertFromCoreData(value: partOfSpeech))
             return safeBook
@@ -195,9 +243,10 @@ extension CoreDataManager {
                     partOfSpeech: String?,
                     in bookcase: Bookcase,
                     contextType: ContextType) -> Book {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let book = Book(context: context)
+            book.id = UUID()
             book.learningWord = learningWord
             book.meaningWord = meaningWord
             book.exampleSentence = exampleSentence
@@ -208,13 +257,15 @@ extension CoreDataManager {
             book.shortMemory = true
             save(in: context)
             let persistentBookID = book.objectID.uriRepresentation().absoluteString
-            NotificationManager.shared.createNotification(
-                bookId: persistentBookID,
-                learningWord: learningWord,
-                meaningWord: meaningWord,
-                description: descriptionWord ?? "",
-                example: exampleSentence ?? ""
-            )
+            Task { @MainActor [weak self] in
+                self?.notificationManager?.createNotification(
+                    bookId: persistentBookID,
+                    learningWord: learningWord,
+                    meaningWord: meaningWord,
+                    description: descriptionWord ?? "",
+                    example: exampleSentence ?? ""
+                )
+            }
             return book
         }
     }
@@ -230,25 +281,28 @@ extension CoreDataManager {
         onComplete: () -> (),
         contextType: ContextType
     ) {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        context.performAndWait {
             guard let book = fetchSingleBook(book: bookToUpdate, contextType: contextType) else { return }
             book.learningWord = learningWord
             book.meaningWord = meaningWord
             book.descriptionWord = (descriptionWord?.isEmpty == false) ? descriptionWord : nil
             book.exampleSentence = (exampleSentence?.isEmpty == false) ? exampleSentence : nil
-            save(in: contextType.context)
+            save(in: context)
         }
     }
     
     // MARK: - DELETE HELPER
     
     func deleteBook(book: BookModel, contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        context.performAndWait {
             if let bookModel = fetchSingleBook(book: book, contextType: contextType) {
                 context.delete(bookModel)
                 let persistentBookID = bookModel.objectID.uriRepresentation().absoluteString
-                NotificationManager.shared.deleteNotification(bookId: persistentBookID)
+                Task { @MainActor [weak self] in
+                    self?.notificationManager?.deleteNotification(bookId: persistentBookID)
+                }
                 save(in: context)
             }
         }
@@ -257,7 +311,8 @@ extension CoreDataManager {
     // MARK: - FETCH HELPER
     
     func fetchBookHelperProperties(book model: BookModel, contextType: ContextType) -> BookHelperModel? {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let book = fetchSingleBook(book: model, contextType: contextType)
             if let book, let learningCode = book.bookcase?.learningLanguage, let meaningCode = book.bookcase?.meaningLanguage, let bookcaseName = book.bookcase?.name {
                 return BookHelperModel(
@@ -274,8 +329,8 @@ extension CoreDataManager {
     func fetchAllSafeBooks(
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
@@ -299,20 +354,20 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             if let bookcase = fetchBookcase(
                 name: model.bookcaseName,
                 learningLanguageCode: model.learningLanguage,
                 meaningLanguageCode: model.meaningLanguage,
                 contextType: contextType
             ) {
-                let request = NSFetchRequest<Book>(entityName: "Book")
+                let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
                 request.sortDescriptors = sortDescriptors ?? [
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -335,14 +390,14 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        return contextType.context.performAndWait { () -> [BookModel]? in
-            let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+        let context = getContext(for: contextType)
+        return context.performAndWait { () -> [BookModel]? in
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
             guard let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) else { return nil }
-            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase) ,bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -359,13 +414,13 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "bookcase == %@", bookcase)
+            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -381,9 +436,9 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            let request = NSFetchRequest<Book>(entityName: "Book")
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
@@ -403,20 +458,20 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             if let bookcase = fetchBookcase(
                 name: model.bookcaseName,
                 learningLanguageCode: model.learningLanguage,
                 meaningLanguageCode: model.meaningLanguage,
                 contextType: contextType
             ){
-                let request = NSFetchRequest<Book>(entityName: "Book")
+                let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
                 request.sortDescriptors = sortDescriptors ?? [
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -440,13 +495,13 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
-            let context = contextType.context
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "bookcase == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -473,12 +528,13 @@ extension CoreDataManager {
         onComplete: () -> (),
         contextType: ContextType
     ) {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        context.performAndWait {
             guard let bookcase = fetchSingleBookcase(bookcase: item.bookcase, contextType: contextType) else { return }
             bookcase.name = newName
             bookcase.learningLanguage = learningLang.id
             bookcase.meaningLanguage = meaningLang.id
-            save(in: contextType.context)
+            save(in: context)
         }
     }
     
@@ -490,8 +546,8 @@ extension CoreDataManager {
         meaningLanguage: String,
         contextType: ContextType
     ) -> BookcaseModel? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let bookcase = Bookcase(context: context)
             bookcase.id = UUID()
             bookcase.name = name
@@ -499,7 +555,7 @@ extension CoreDataManager {
             bookcase.meaningLanguage = meaningLanguage
             bookcase.createdDate = Date()
             save(in: context)
-            return try? bookcase.safeObject()
+            return try? bookcase.safeObject(context: context)
         }
     }
     
@@ -507,7 +563,7 @@ extension CoreDataManager {
                         overwrite: Bool = true,
                         contextType: ContextType,
                         completion: @escaping (Result<Bookcase, ImportBookcaseError>) -> Void) {
-        let context = contextType.context
+        let context = getContext(for: contextType)
         context.performAndWait {
             do {
                 guard
@@ -529,6 +585,7 @@ extension CoreDataManager {
                     return
                 } else {
                     bookcase = Bookcase(context: context)
+                    bookcase.id = UUID()
                     bookcase.name = bookcaseName
                     bookcase.createdDate = Date()
                 }
@@ -558,8 +615,8 @@ extension CoreDataManager {
     // MARK: - DELETE HELPER
     
     func deleteBookcase(bookcase model: BookcaseModel, contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        context.performAndWait {
             let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType)
             if let bookcase {
                 if let books = bookcase.books as? Set<Book> {
@@ -576,8 +633,8 @@ extension CoreDataManager {
     }
     
     func deleteBookcase(bookcase: Bookcase, contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        context.performAndWait {
             if let books = bookcase.books as? Set<Book> {
                 for book in books {
                     if let bookModel = try? book.safeObject(context: context) {
@@ -593,22 +650,23 @@ extension CoreDataManager {
     // MARK: - FETCH HELPERS
     
     func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: ContextType) -> BookcaseStatus? {
-        contextType.context.performAndWait {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType)
             if let bookcase {
                 do {
                     let status = BookcaseStatus(
                         bookList: try bookcase.booksArray.map({ book in
-                            try book.safeObject(context: contextType.context)
+                            try book.safeObject(context: context)
                         }),
                         longMemoryCount: bookcase.longMemoryBooksCount,
                         shortMemoryCount: bookcase.shortMemoryBooksCount,
                         totalBooksCount: bookcase.totalBooksCount,
                         longMemoryBooks: try bookcase.longMemoryBooks.map({ book in
-                            try book.safeObject(context: contextType.context)
+                            try book.safeObject(context: context)
                         }),
                         shortMemoryBooks: try bookcase.shortMemoryBooks.map({ book in
-                            try book.safeObject(context: contextType.context)
+                            try book.safeObject(context: context)
                         })
                     )
                     return status
@@ -625,9 +683,9 @@ extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookcaseModel]? {
-        let context = contextType.context
+        let context = getContext(for: contextType)
         return context.performAndWait {
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Bookcase.createdDate, ascending: false)
             ]
@@ -635,12 +693,9 @@ extension CoreDataManager {
                 let list = try context.performAndWait {
                     try context.fetch(request)
                 }
-                print(list.first?.managedObjectContext ?? "")
-                print("bizim context -> \(context)")
                 let bookcases = try list.map( { try $0.safeObject(context: context) })
                 return bookcases
             } catch {
-                print("Bookcases couldn't fetched -> \(error)")
                 return nil
             }
         }
@@ -650,15 +705,18 @@ extension CoreDataManager {
         book: BookModel,
         contextType: ContextType
     ) -> BookcaseModel? {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             let bookcaseId = book.bookcaseId
             request.predicate = NSPredicate(format: "id == %@", bookcaseId as CVarArg)
             request.fetchLimit = 1
             do {
-                let bookcases = try context.fetch(request)
-                return try? bookcases.first?.safeObject(context: context)
+                let singleBookcase = try context.performAndWait {
+                    try context.fetch(request)
+                }
+                let safeBookcase = try singleBookcase.first?.safeObject(context: context)
+                return safeBookcase
             } catch {
                 print("Bookcase coduln't fetched \(error)")
                 return nil
@@ -672,29 +730,30 @@ extension CoreDataManager {
         meaningLanguageCode: String,
         contextType: ContextType
     ) -> BookcaseModel? {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            let request = NSFetchRequest<Bookcase>(entityName: "Bookcase")
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             request.predicate = NSPredicate(format: "name == %@ AND learningLanguage == %@ AND meaningLanguage == %@", name, learningLanguageCode, meaningLanguageCode)
             request.fetchLimit = 1
             do {
                 let bookcases = try context.fetch(request)
-                return try? bookcases.first?.safeObject()
+                let firtBookcase = bookcases.first
+                let bookcase = try firtBookcase?.safeObject(context: context)
+                return bookcase
             } catch {
-                print("Bookcase coduln't fetched \(error)")
+                print(error.localizedDescription)
                 return nil
             }
         }
     }
-    
 }
 
 // MARK: - PRIVATE CORE DATA WORKS
 
 private extension CoreDataManager {
     func fetchSingleBook(book: BookModel, contextType: ContextType) -> Book? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.predicate = NSPredicate(format: "id == %@", book.id as CVarArg)
             request.fetchLimit = 1
@@ -709,8 +768,8 @@ private extension CoreDataManager {
     }
     
     func fetchSingleBookcase(bookcase: BookcaseModel, contextType: ContextType) -> Bookcase? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let request = NSFetchRequest<Bookcase>(entityName: CoreDataConstant.bookcaseEntityName)
             request.predicate = NSPredicate(format: "id == %@", bookcase.id as CVarArg)
             request.fetchLimit = 1
@@ -728,8 +787,8 @@ private extension CoreDataManager {
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [Book]? {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)

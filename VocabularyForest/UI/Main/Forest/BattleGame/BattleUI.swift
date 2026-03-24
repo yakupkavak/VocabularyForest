@@ -401,25 +401,26 @@ private extension BattleUI {
         showExistAlert = true
     }
 }
-
+/*
 #Preview {
-    let previewManager = CoreDataManager.preview
-    let context = previewManager.viewContext
-    let sampleBookcase = Bookcase(context: context)
-    sampleBookcase.name = "Test Kitaplık"
-    sampleBookcase.learningLanguage = "en"
-    sampleBookcase.meaningLanguage = "tr"
-    sampleBookcase.createdDate = Date()
-    for i in 1...100 {
-        let sampleBook = Book(context: context)
-        sampleBook.learningWord = "Word \(i)"
-        sampleBook.meaningWord = "Anlam AnlamAnlamAnlamAnlamAnlamAnlam\(i)"
-        sampleBook.createdDate = Date()
-        sampleBook.shortMemory = i % 2 == 0
-        sampleBook.longMemory = i % 2 != 0
-        sampleBook.bookcase = sampleBookcase
-    }
-    try? context.save()
-    let viewModel = BattleViewModel(coreDataManager: previewManager)
-    return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy, selectedBookcase: nil)
-}
+     let previewManager = CoreDataManager.preview
+     let context = previewManager.viewContext
+     let sampleBookcase = Bookcase(context: context)
+     sampleBookcase.name = "Test Kitaplık"
+     sampleBookcase.learningLanguage = "en"
+     sampleBookcase.meaningLanguage = "tr"
+     sampleBookcase.createdDate = Date()
+     for i in 1...100 {
+     let sampleBook = Book(context: context)
+     sampleBook.learningWord = "Word \(i)"
+     sampleBook.meaningWord = "Anlam AnlamAnlamAnlamAnlamAnlamAnlam\(i)"
+     sampleBook.createdDate = Date()
+     sampleBook.shortMemory = i % 2 == 0
+     sampleBook.longMemory = i % 2 != 0
+     sampleBook.bookcase = sampleBookcase
+     }
+     try? context.save()
+     let viewModel = BattleViewModel(coreDataManager: previewManager)
+     return BattleUI(viewModel: viewModel, gameType: .competitive, battleMode: .natureElemental, gameLevel: .easy, selectedBookcase: nil)
+ }
+ */

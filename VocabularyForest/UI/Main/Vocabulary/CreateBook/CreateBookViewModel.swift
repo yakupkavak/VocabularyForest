@@ -10,6 +10,10 @@ import Combine
 
 class CreateBookViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    
+    private let coreDataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var currentBookcase: BookcaseModel? = nil
@@ -24,11 +28,11 @@ class CreateBookViewModel: ObservableObject {
     @Published var emptyBookMeaningWord = false
     @Published var toastMessageModel: CreateBookToastType = .none
     @Published var bookcasesList: [BookcaseModel] = []
-    private var coreDataManager = CoreDataManager.shared
     
     // MARK: - INITALIZE
 
-    init(){
+    init(coreDataManager: CoreDataManagerProtocol){
+        self.coreDataManager = coreDataManager
         fetchUserPreferences()
         fetchBookcases()
         NotificationCenter.default.addObserver(
@@ -92,7 +96,10 @@ class CreateBookViewModel: ObservableObject {
         updateCurrentBookcase(bookcase: newBookcase)
         toastMessageModel = .none
         toastMessageModel = .firstBookcaseCreated
-        if let newBookcases = coreDataManager.fetchSafeBookcases(contextType: .background) {
+        if let newBookcases = coreDataManager.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .background
+        ) {
             if(bookcasesList.isEmpty){
                 UserDefaults.standard.set(
                     newBookcases.first?.bookcaseName,forKey: BookcaseConstants.bookcase
@@ -113,7 +120,10 @@ class CreateBookViewModel: ObservableObject {
     }
     
     func fetchBookcases(){
-        bookcasesList = coreDataManager.fetchSafeBookcases(contextType: .main) ?? []
+        bookcasesList = coreDataManager.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ) ?? []
     }
     
     func selectTag(model: PartOfSpeech) {

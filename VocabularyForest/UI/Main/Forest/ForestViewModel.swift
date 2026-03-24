@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+// MARK: - PROTOCOLS
+
 protocol ForestViewModelOutputProcotol: AnyObject {
     func startFade()
     func startDrought()
@@ -16,6 +18,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func setupAnimal(animal: AnimalModel?)
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
+    func talkComponent(type model: ComponentType, id: UUID, message: String)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -37,7 +40,15 @@ protocol ForestViewModelProtocol: AnyObject {
     func setComponent(uuid: UUID, for componentType: ComponentType)
 }
 
+// MARK: - VIEW MODEL
+
 class ForestViewModel: BaseViewModel {
+    
+    // MARK: - DEPENDENCIES
+    
+    private let coreDataManager: CoreDataManagerProtocol
+    private let audioService: AudioServiceProtocol
+    private let forestDataManager: ForestDataManagerProtocol
     
     // MARK: - PROPERTIES
     
@@ -55,17 +66,25 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    let coreDataManager = ForestDataManager.shared
-    private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
     
-    init(audioService: AudioServiceProtocol = ForestAudioService.shared) {
+    private var talkCancellable: AnyCancellable?
+    
+    // MARK: - INIT
+    
+    init(
+        audioService: AudioServiceProtocol,
+        coreDataManager: CoreDataManagerProtocol,
+        forestDataManager: ForestDataManagerProtocol
+    ) {
         self.audioService = audioService
+        self.coreDataManager = coreDataManager
+        self.forestDataManager = forestDataManager
         super.init()
     }
 }
 
-// MARK:  - BOOK HELPERS
+// MARK: - BOOK HELPERS
 
 extension ForestViewModel {
     
@@ -83,7 +102,10 @@ extension ForestViewModel {
         if type == .learning {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription(contextType: .background) else {
+                guard let books = coreDataManager.fetchAllBooksWithExampleDescription(
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -91,7 +113,11 @@ extension ForestViewModel {
                     return false
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchSafeBooksExampleDescription(model: bookcase, contextType: .background) else {
+                guard let books = coreDataManager.fetchSafeBooksExampleDescription(
+                    model: bookcase,
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -103,7 +129,7 @@ extension ForestViewModel {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllSafeBooks(contextType: .background) else {
+                guard let books = coreDataManager.fetchAllSafeBooks(contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -118,7 +144,11 @@ extension ForestViewModel {
                     }
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase, contextType: .background) else {
+                guard let books = coreDataManager.fetchBooks(
+                    model: bookcase,
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -138,7 +168,7 @@ extension ForestViewModel {
     }
 }
 
-// MARK:  - FOREST HELPERS
+// MARK: - FOREST HELPERS
 
 extension ForestViewModel {
     
@@ -149,7 +179,7 @@ extension ForestViewModel {
             guard let self else { return }
             
             if !forestInitalized {
-                let result = coreDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
+                let result = forestDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
                 await MainActor.run {
                     if result.status == .success {
                         UserDefaults.standard.set(true, forKey: "forestInitalized")
@@ -157,12 +187,15 @@ extension ForestViewModel {
                 }
             }
             
-            let fetchedAnimals = coreDataManager.fetchAnimals(contextType: .background).data ?? []
-            let fetchedSculptures = coreDataManager.fetchSculptures(contextType: .background).data ?? []
-            let fetchedTrees = coreDataManager.fetchTrees(contextType: .background).data ?? []
-            let fetchedBookcases = CoreDataManager.shared.fetchSafeBookcases(contextType: .background)
-            let statusResult = coreDataManager.fetchForestStatus(contextType: .background)
-            let questResult = coreDataManager.fetchQuests(contextType: .background)
+            let fetchedAnimals = forestDataManager.fetchAnimals(contextType: .background).data ?? []
+            let fetchedSculptures = forestDataManager.fetchSculptures(contextType: .background).data ?? []
+            let fetchedTrees = forestDataManager.fetchTrees(contextType: .background).data ?? []
+            let fetchedBookcases = coreDataManager.fetchSafeBookcases(
+                sortDescriptors: nil,
+                contextType: .background
+            )
+            let statusResult = forestDataManager.fetchForestStatus(contextType: .background)
+            let questResult = forestDataManager.fetchQuests(contextType: .background)
             
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
@@ -221,6 +254,8 @@ extension ForestViewModel {
                         }
                     }
                 }
+                
+                self.startRandomTalking()
             }
         }
     }
@@ -228,7 +263,7 @@ extension ForestViewModel {
     func startRain() {
         showRainButton = false
         output?.startRain()
-        coreDataManager.startRain(contextType: .main)
+        forestDataManager.startRain(contextType: .background)
         var time = 0
         let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
@@ -237,7 +272,6 @@ extension ForestViewModel {
                 output?.stopRain()
             }
         }
-        
     }
 }
 
@@ -269,7 +303,7 @@ extension ForestViewModel {
     }
 }
 
-// MARK:  - FOREST VIEW MODEL PROTOCOL
+// MARK: - FOREST VIEW MODEL PROTOCOL
 
 extension ForestViewModel: ForestViewModelProtocol {
     
@@ -281,24 +315,24 @@ extension ForestViewModel: ForestViewModelProtocol {
     func updateComponentName(name: String) {
         guard let selectedModel else { return }
         guard let componentUUID else { return }
-        let result = ForestDataManager.shared.updateComponentName(
+        let result = forestDataManager.updateComponentName(
             id: componentUUID,
             type: selectedModel,
             newName: name,
-            contextType: .main
+            contextType: .background
         )
         if result.status == .success {
             switch selectedModel {
             case .animal:
-                if let model = coreDataManager.fetchAnimal(id: componentUUID, contextType: .main) {
+                if let model = forestDataManager.fetchAnimal(id: componentUUID, contextType: .background) {
                     self.output?.setupAnimal(animal: model)
                 }
             case .plant:
-                if let model = coreDataManager.fetchPlant(id: componentUUID, contextType: .main) {
+                if let model = forestDataManager.fetchPlant(id: componentUUID, contextType: .background) {
                     self.output?.setupPlant(plant: model)
                 }
             case .sculpture:
-                if let model = coreDataManager.fetchSculpture(id: componentUUID, contextType: .main) {
+                if let model = forestDataManager.fetchSculpture(id: componentUUID, contextType: .background) {
                     self.output?.setupSculpture(sculpture: model)
                 }
             }
@@ -308,20 +342,19 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
-        let result = coreDataManager.claimReward(quest: quest, contextType: .main)
+        let result = forestDataManager.claimReward(quest: quest, contextType: .background)
         if result.status == .success {
             fetchForest()
         }
     }
 }
 
-// MARK: FOREST SCENE PROTOCOL
+// MARK: - FOREST SCENE PROTOCOL
 
 extension ForestViewModel: ForectSceneProtocol {
     func updatePosition(model: ComponentModelProtocol, directionList: [DirectionWithCount]) {
         var xValue = model.xPosition
         var yValue = model.yPosition
-        print("current -> \(yValue)")
         for direction in directionList {
             switch direction.direction {
             case .up:
@@ -334,14 +367,75 @@ extension ForestViewModel: ForectSceneProtocol {
                 xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
             }
         }
-        print("new -> \(yValue)")
-        coreDataManager.updateComponentPosition(
+        forestDataManager.updateComponentPosition(
             model: model,
             xValue: xValue,
             yValue: yValue,
-            contextType: .main
+            contextType: .background
         )
     }
+}
+
+// MARK: - RANDOM TALK HELPERS
+
+private extension ForestViewModel {
+    
+    func startRandomTalking() {
+        stopRandomTalking()
+        
+        talkCancellable = Timer.publish(every: 20.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.triggerRandomTalk()
+            }
+    }
+    
+    func stopRandomTalking() {
+        talkCancellable?.cancel()
+        talkCancellable = nil
+    }
+    
+    func triggerRandomTalk() {
+            guard let status = forestStatus else { return }
+            let isDrought = status.landHealthPercentage == 0
+            
+            var availableTypes: [ComponentType] = []
+            if !animalList.isEmpty { availableTypes.append(.animal) }
+            if !treeList.isEmpty { availableTypes.append(.plant) }
+            if !sculptureList.isEmpty { availableTypes.append(.sculpture) }
+            
+            guard let selectedType = availableTypes.randomElement() else { return }
+            
+            var targetID: UUID?
+            var message: String = ""
+            
+            switch selectedType {
+            case .animal:
+                guard let randomAnimal = animalList.randomElement() else { return }
+                targetID = randomAnimal.id
+                message = isDrought ?
+                    TalkConstant.Animal.drought.randomElement()! :
+                    TalkConstant.Animal.normal.randomElement()!
+                
+            case .plant:
+                guard let randomTree = treeList.randomElement() else { return }
+                targetID = randomTree.id
+                message = isDrought ?
+                    TalkConstant.Plant.drought.randomElement()! :
+                    TalkConstant.Plant.normal.randomElement()!
+                
+            case .sculpture:
+                guard let randomSculpture = sculptureList.randomElement() else { return }
+                targetID = randomSculpture.id
+                message = isDrought ?
+                    TalkConstant.Sculpture.drought.randomElement()! :
+                    TalkConstant.Sculpture.normal.randomElement()!
+            }
+            
+            if let id = targetID {
+                output?.talkComponent(type: selectedType, id: id, message: message)
+            }
+        }
 }
 
 // MARK: - PRIVATE HELPERS

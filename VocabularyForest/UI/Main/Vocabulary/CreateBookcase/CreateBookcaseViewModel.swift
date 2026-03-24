@@ -10,6 +10,10 @@ import Combine
 
 class CreateBookcaseViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    
+    private let coreDataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var emptyInitialBookcaseName = false
@@ -18,12 +22,11 @@ class CreateBookcaseViewModel: ObservableObject {
     @Published var bookcaseName = ""
     @Published var learningLanguage: Language? = nil
     @Published var meaningLanguage: Language? = nil
-    private var coreDataManager = CoreDataManager.shared
 
     // MARK: - INIT
 
-    init(){
-        
+    init(coreDataManager: CoreDataManagerProtocol){
+        self.coreDataManager = coreDataManager
     }
     
     // MARK: - HELPERS

@@ -53,6 +53,13 @@ struct CharacterAnger {
     var imageFileName: String
 }
 
+func testYazısı(yakup: String,kavak: String,yaş: String) {
+    print("yakup")
+}
+func testYazısı(yakup: String,kavak: String,yaş: String,memleket: String) {
+    print("yakup")
+}
+
 enum GameLevel: Hashable, Codable {
     case easy
     case medium

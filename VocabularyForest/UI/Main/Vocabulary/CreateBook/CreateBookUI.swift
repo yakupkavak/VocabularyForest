@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DTO
 
 // MARK: - CREATE BOOK TYPE ENUM
 
@@ -26,9 +27,10 @@ struct CreateBookUI: View {
     // MARK: - PROPERTIES
 
     @EnvironmentObject private var createBookRouter: CreateBookRouter
+    @EnvironmentObject private var coordinator: VocabularyForestCoordinator
     @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
-    @StateObject private var viewModel = CreateBookViewModel()
+    @ObservedObject var viewModel: CreateBookViewModel
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
 
@@ -39,7 +41,7 @@ struct CreateBookUI: View {
             Color.backgroundSystem.ignoresSafeArea()
             VStack {
                 if viewModel.bookcasesList.isEmpty {
-                    CreateBookcaseUI()
+                    coordinator.startCreateBookcaseUI()
                 } else {
                     defaultHeader
                     ScrollView(.vertical, showsIndicators: false) {
@@ -243,5 +245,5 @@ private extension CreateBookUI {
 }
 
 #Preview {
-    CreateBookUI()
+    CreateBookUI(viewModel: CreateBookViewModel(coreDataManager: CoreDataManager()))
 }

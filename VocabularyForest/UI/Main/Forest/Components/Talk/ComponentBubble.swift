@@ -1,0 +1,256 @@
+//
+//  ComponentBubble.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 14.03.2026.
+//
+
+import SpriteKit
+
+struct ComponentBubble {
+    
+    // MARK: - CONSTANTS
+    
+    enum Constants {
+        static let zero: CGFloat = 0.0
+        
+        static let defaultBubbleWidth: CGFloat = 120
+        static let defaultBubbleHeight: CGFloat = 80
+        
+        static let interactionBubbleWidth: CGFloat = 160
+        static let interactionBubbleHeight: CGFloat = 120
+        
+        static let talkBubbleWidth: CGFloat = 180
+        static let talkLabelPadding: CGFloat = 25
+        static let talkVerticalPadding: CGFloat = 20
+        static let talkFontSize: CGFloat = 12
+        
+        static let talkDotCount: Int = 3
+        static let talkDotInitialSize: CGFloat = 15.0
+        static let talkDotSizeDecrement: CGFloat = 5.0
+        static let talkDotInitialYOffset: CGFloat = 12.0
+        static let talkDotVerticalSpacing: CGFloat = 4.0
+        static let talkDotXShiftMultiplier: CGFloat = 8.0
+        static let talkDotLineWidth: CGFloat = 2.0
+        static let talkDotZPosition: CGFloat = -1.0
+        static let talkDotsTotalHeight: CGFloat = 38.0
+        
+        static let defaultCornerRadius: CGFloat = 10
+        static let defaultAlpha: CGFloat = 0.95
+        static let defaultLineWidth: CGFloat = 2
+        static let talkLineWidth: CGFloat = 3
+        static let defaultZPosition: CGFloat = 100
+        static let defaultYOffset: CGFloat = 40
+        
+        static let titleFontSize: CGFloat = 16
+        static let titleYOffset: CGFloat = 15
+        static let interactionTitleYOffset: CGFloat = 25
+        
+        static let separatorWidthReduction: CGFloat = 20
+        static let separatorHeight: CGFloat = 1
+        static let separatorAlpha: CGFloat = 0.3
+        static let separatorYOffset: CGFloat = 5
+        static let verticalSeparatorWidth: CGFloat = 1
+        static let verticalSeparatorHeight: CGFloat = 25
+        static let verticalSeparatorYOffset: CGFloat = -15
+        
+        static let buttonWidth: CGFloat = 100
+        static let buttonHeight: CGFloat = 30
+        static let buttonCornerRadius: CGFloat = 5
+        static let buttonAlpha: CGFloat = 0.01
+        static let buttonYOffset: CGFloat = -15
+        static let buttonZPosition: CGFloat = 5
+        static let buttonLabelFontSize: CGFloat = 14
+        static let buttonLabelZPosition: CGFloat = 1
+        static let defaultButtonMaxWidth: CGFloat = 60
+        static let buttonPosXOffset: CGFloat = 32
+        static let buttonNegXOffset: CGFloat = -32
+        
+        static let hitboxWidth: CGFloat = 70
+        static let hitboxHeight: CGFloat = 50
+        static let hitboxYOffset: CGFloat = -20
+        static let hitboxNameXOffset: CGFloat = -35
+        static let hitboxMoveXOffset: CGFloat = 35
+        
+        static let animalHitboxWidth: CGFloat = 140
+        static let animalHitboxHeight: CGFloat = 50
+        static let animalHitboxYOffset: CGFloat = -20
+        
+        static let initialScale: CGFloat = 0.0
+        static let scaleDuration: TimeInterval = 0.2
+        static let waitDuration: TimeInterval = 3.0
+        static let talkWaitDuration: TimeInterval = 6.0
+        static let fadeOutDuration: TimeInterval = 0.5
+        static let targetScale: CGFloat = 1.0
+        static let removeScaleTarget: CGFloat = 0.0
+        static let removeDuration: TimeInterval = 0.1
+        static let flippedScaleX: CGFloat = -1.0
+        static let halfDivider: CGFloat = 2.0
+    }
+    
+    // MARK: - SHARED COMPONENTS
+    
+    static func createBaseBubble(width: CGFloat, height: CGFloat, parentSize: CGSize, strokeColor: UIColor = .black, lineWidth: CGFloat = Constants.defaultLineWidth) -> SKShapeNode {
+        let bubble = SKShapeNode(rectOf: CGSize(width: width, height: height), cornerRadius: Constants.defaultCornerRadius)
+        bubble.fillColor = .brown500.withAlphaComponent(Constants.defaultAlpha)
+        bubble.strokeColor = strokeColor
+        bubble.lineWidth = lineWidth
+        bubble.zPosition = Constants.defaultZPosition
+        bubble.position = CGPoint(x: Constants.zero, y: parentSize.height + Constants.defaultYOffset)
+        return bubble
+    }
+    
+    static func createTitleLabel(text: String, fontColor: UIColor = .white, yOffset: CGFloat = Constants.titleYOffset) -> SKLabelNode {
+        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
+        titleLabel.text = text
+        titleLabel.fontSize = Constants.titleFontSize
+        titleLabel.fontColor = fontColor
+        titleLabel.position = CGPoint(x: Constants.zero, y: yOffset)
+        return titleLabel
+    }
+    
+    static func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = Constants.buttonLabelFontSize
+        label.fontColor = .black
+        label.name = name
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        if let width = maxWidth {
+            label.numberOfLines = Int(Constants.zero)
+            label.preferredMaxLayoutWidth = width
+            label.lineBreakMode = .byWordWrapping
+        }
+        return label
+    }
+    
+    static func createInvisibleHitbox(name: String, width: CGFloat, height: CGFloat, position: CGPoint) -> SKShapeNode {
+        let hitbox = SKShapeNode(rectOf: CGSize(width: width, height: height))
+        hitbox.name = name
+        hitbox.position = position
+        hitbox.fillColor = .clear
+        hitbox.strokeColor = .clear
+        hitbox.zPosition = Constants.buttonZPosition
+        return hitbox
+    }
+    
+    // MARK: - SPECIFIC BUBBLES
+    
+    static func createAnimalMenuBubble(parentSize: CGSize, displayName: String?) -> SKNode {
+        let texture = SKTexture(imageNamed: "animal_tap_ballon")
+        let bubble = SKSpriteNode(texture: texture)
+        bubble.name = "menu_bubble"
+        bubble.size = CGSize(width: Constants.interactionBubbleWidth, height: Constants.interactionBubbleHeight)
+        bubble.zPosition = Constants.defaultZPosition
+        bubble.position = CGPoint(x: Constants.zero, y: parentSize.height + (Constants.interactionBubbleHeight / 2) + 10)
+        
+        let titleLabel = createTitleLabel(
+            text: displayName ?? String(localized: "Animal"),
+            fontColor: .darkGray,
+            yOffset: Constants.interactionTitleYOffset
+        )
+        bubble.addChild(titleLabel)
+        
+        let nameHitbox = createInvisibleHitbox(
+            name: "btn_update_name",
+            width: Constants.animalHitboxWidth,
+            height: Constants.animalHitboxHeight,
+            position: CGPoint(x: Constants.zero, y: Constants.animalHitboxYOffset)
+        )
+        bubble.addChild(nameHitbox)
+        
+        return bubble
+    }
+    
+    static func createSculptureMenuBubble(parentSize: CGSize, displayName: String?) -> SKNode {
+        let texture = SKTexture(imageNamed: "interaction_bubble")
+        let bubble = SKSpriteNode(texture: texture)
+        bubble.name = "menu_bubble"
+        bubble.size = CGSize(width: Constants.interactionBubbleWidth, height: Constants.interactionBubbleHeight)
+        bubble.zPosition = Constants.defaultZPosition
+        bubble.position = CGPoint(x: Constants.zero, y: parentSize.height + (Constants.interactionBubbleHeight / 2) + 10)
+        
+        let titleLabel = createTitleLabel(
+            text: displayName ?? String(localized: "Heykel"),
+            fontColor: .darkGray,
+            yOffset: Constants.interactionTitleYOffset
+        )
+        bubble.addChild(titleLabel)
+        
+        let nameHitbox = createInvisibleHitbox(
+            name: "btn_update_name",
+            width: Constants.hitboxWidth,
+            height: Constants.hitboxHeight,
+            position: CGPoint(x: Constants.hitboxNameXOffset, y: Constants.hitboxYOffset)
+        )
+        bubble.addChild(nameHitbox)
+        
+        let moveHitbox = createInvisibleHitbox(
+            name: "btn_update_pos",
+            width: Constants.hitboxWidth,
+            height: Constants.hitboxHeight,
+            position: CGPoint(x: Constants.hitboxMoveXOffset, y: Constants.hitboxYOffset)
+        )
+        bubble.addChild(moveHitbox)
+        
+        return bubble
+    }
+    
+    static func createTalkBubble(parentSize: CGSize, parentXScale: CGFloat, text: String, width: CGFloat = Constants.talkBubbleWidth) -> SKNode {
+        let texture = SKTexture(imageNamed: "speak_ballon")
+        let bubble = SKSpriteNode(texture: texture)
+        bubble.name = "talk_bubble"
+        bubble.zPosition = Constants.defaultZPosition
+        
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = Constants.talkFontSize
+        label.fontColor = .darkGray
+        label.numberOfLines = Int(Constants.zero)
+        label.preferredMaxLayoutWidth = width - Constants.talkLabelPadding
+        label.lineBreakMode = .byWordWrapping
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.zPosition = 1
+        
+        let dynamicHeight = max(60, label.frame.height + Constants.talkVerticalPadding)
+        bubble.size = CGSize(width: width, height: dynamicHeight)
+
+        if parentXScale < Constants.zero {
+            bubble.xScale = Constants.flippedScaleX
+        }
+        
+        bubble.position = CGPoint(
+            x: Constants.zero,
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + 2
+        )
+        label.position = CGPoint(x: Constants.zero, y: 5)
+        bubble.addChild(label)
+        
+        applyTalkAutoCloseAnimation(to: bubble)
+        
+        return bubble
+    }
+    
+    // MARK: - ANIMATION HELPERS
+    
+    static func applyAutoCloseAnimation(to bubble: SKNode, onComplete: @escaping () -> Void) {
+        let waitAction = SKAction.wait(forDuration: Constants.waitDuration)
+        let fadeOut = SKAction.fadeOut(withDuration: Constants.fadeOutDuration)
+        let remove = SKAction.removeFromParent()
+        let updateState = SKAction.run {
+            onComplete()
+        }
+        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
+        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
+    }
+    
+    static func applyTalkAutoCloseAnimation(to bubble: SKNode) {
+        let waitAction = SKAction.wait(forDuration: Constants.talkWaitDuration)
+        let fadeOut = SKAction.fadeOut(withDuration: Constants.fadeOutDuration)
+        let remove = SKAction.removeFromParent()
+        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove])
+        bubble.run(autoCloseSequence, withKey: "autoTalkCloseTimer")
+    }
+}

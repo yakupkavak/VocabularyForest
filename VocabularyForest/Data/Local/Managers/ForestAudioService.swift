@@ -15,7 +15,7 @@ protocol AudioServiceProtocol {
     func playSFX(filename: String)
 }
 
-class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate {
+class ForestAudioService: NSObject, AudioServiceProtocol {
     
     // MARK: - PROPERTIES
     
@@ -30,19 +30,15 @@ class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate 
     ]
     private var playlist: [String] = []
     private var currentTrackIndex = 0
-    static let shared = ForestAudioService()
     
-    private override init() {
+    // MARK: - INIT
+    
+    override init() {
         super.init()
         shufflePlaylist()
     }
     
-    // MARK: - PLAYLIST LOGIC
-    
-    private func shufflePlaylist() {
-        playlist = allTracks.shuffled()
-        currentTrackIndex = 0
-    }
+    // MARK: - PUBLIC CONTROLS
     
     func startGameMusic() {
         
@@ -53,51 +49,6 @@ class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate 
         if let player = musicPlayer, player.isPlaying { return }
         playCurrentTrack()
     }
-    
-    private func playCurrentTrack() {
-        if currentTrackIndex >= playlist.count {
-            shufflePlaylist()
-        }
-        
-        let trackName = playlist[currentTrackIndex]
-        playMusicFile(filename: trackName)
-    }
-    
-    private func playNextTrack() {
-        currentTrackIndex += 1
-        playCurrentTrack()
-    }
-    
-    // MARK: - CORE AUDIO PLAYER
-    
-    private func playMusicFile(filename: String) {
-        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else {
-            playNextTrack()
-            return
-        }
-        
-        do {
-            musicPlayer = try AVAudioPlayer(contentsOf: url)
-            musicPlayer?.delegate = self
-            musicPlayer?.volume = isMuted ? 0 : currentMusicVolume
-            musicPlayer?.numberOfLoops = 0
-            musicPlayer?.prepareToPlay()
-            musicPlayer?.play()
-            
-        } catch {
-            playNextTrack()
-        }
-    }
-    
-    // MARK: - DELEGATE
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag {
-            playNextTrack()
-        }
-    }
-    
-    // MARK: - CONTROLS
     
     func stopMusic() {
         musicPlayer?.stop()
@@ -128,6 +79,60 @@ class ForestAudioService: NSObject, AudioServiceProtocol, AVAudioPlayerDelegate 
             sfxPlayer?.play()
         } catch {
             print("SFX Error: \(error)")
+        }
+    }
+}
+
+// MARK: - PRIVATE HELPERS
+
+private extension ForestAudioService {
+    
+    func shufflePlaylist() {
+        playlist = allTracks.shuffled()
+        currentTrackIndex = 0
+    }
+    
+    func playCurrentTrack() {
+        if currentTrackIndex >= playlist.count {
+            shufflePlaylist()
+        }
+        
+        let trackName = playlist[currentTrackIndex]
+        playMusicFile(filename: trackName)
+    }
+    
+    func playNextTrack() {
+        currentTrackIndex += 1
+        playCurrentTrack()
+    }
+    
+    func playMusicFile(filename: String) {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else {
+            playNextTrack()
+            return
+        }
+        
+        do {
+            musicPlayer = try AVAudioPlayer(contentsOf: url)
+            musicPlayer?.delegate = self
+            musicPlayer?.volume = isMuted ? 0 : currentMusicVolume
+            musicPlayer?.numberOfLoops = 0
+            musicPlayer?.prepareToPlay()
+            musicPlayer?.play()
+            
+        } catch {
+            playNextTrack()
+        }
+    }
+}
+
+// MARK: - DELEGATE
+
+extension ForestAudioService: AVAudioPlayerDelegate {
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag {
+            playNextTrack()
         }
     }
 }

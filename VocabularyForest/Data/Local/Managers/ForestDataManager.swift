@@ -7,6 +7,7 @@
 
 import CoreData
 import UserNotifications
+import DependencyContainer
 
 enum ForestError: Error {
     case emptyList
@@ -24,25 +25,68 @@ extension ForestDataManager {
         case background
         
         var context: NSManagedObjectContext {
-            switch self {
+            let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+            return switch self {
             case .main:
-                CoreDataManager.shared.viewContext
+                coreDataManager.viewContext
             case .background:
-                CoreDataManager.shared.backgroundContext
+                coreDataManager.backgroundContext
             }
         }
     }
 }
 
-class ForestDataManager {
+// MARK: - FOREST DATA PROTOCOL
+
+protocol ForestDataManagerProtocol: AnyObject {
+    
+    // MARK: Update Quests & Game State
+    
+    func checkAndResetTimeBasedQuests(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func checkGame(contextType: ForestDataManager.ContextType)
+    func checkAndUpdateRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    
+    // MARK: Create Helpers
+    
+    func createForestGame(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createTree(tree model: TreeModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createAnimal(animal model: AnimalModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createSculpture(sculpture model: SculptureModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    
+    // MARK: Fetch Helpers
+    
+    func fetchSculpture(id: UUID, contextType: ForestDataManager.ContextType) -> SculptureModel?
+    func fetchAnimal(id: UUID, contextType: ForestDataManager.ContextType) -> AnimalModel?
+    func fetchPlant(id: UUID, contextType: ForestDataManager.ContextType) -> TreeModel?
+    func getCurrentForest(context: NSManagedObjectContext) -> Forest?
+    func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
+    func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestModel]>
+    func fetchAnimals(contextType: ForestDataManager.ContextType) -> Resource<[AnimalModel]>
+    func fetchTrees(contextType: ForestDataManager.ContextType) -> Resource<[TreeModel]>
+    func fetchSculptures(contextType: ForestDataManager.ContextType) -> Resource<[SculptureModel]>
+    
+    // MARK: Update Helpers
+    
+    func claimReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func winGame(gameLevel: GameLevel, battleEnemyMode: BattleEnemyModel, gameType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func correctAnswer(questionType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateComponentPosition(model: ComponentModelProtocol, xValue: CGFloat, yValue: CGFloat, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateComponentName(id: UUID, type: ComponentType, newName: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func startRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+}
+
+class ForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - PROPERTIES
     
-    static let shared = ForestDataManager()
+    weak var notificationManager: (any NotificationManagerProtocol)?
     
     // MARK: - INIT
     
-    private init() {}
+    init() { }
     
     // MARK: - UPDATE QUESTS
         
@@ -183,7 +227,9 @@ private extension ForestDataManager {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else { return }
             
-            NotificationManager.shared.cancelHealthNotifications()
+            Task { @MainActor [weak self] in
+                self?.notificationManager?.cancelHealthNotifications()
+            }
             
             let currentHealth = Int(forest.landHealthPercent)
             let decayPerHour: Double = 4.0
@@ -194,11 +240,12 @@ private extension ForestDataManager {
                     let diff = currentHealth - target
                     let hoursUntilDrop = Double(diff) / decayPerHour
                     let secondsUntilDrop = hoursUntilDrop * 3600
-                    
-                    NotificationManager.shared.scheduleHealthNotification(
-                        targetValue: target,
-                        timeInterval: secondsUntilDrop
-                    )
+                    Task { @MainActor in
+                        notificationManager?.scheduleHealthNotification(
+                            targetValue: target,
+                            timeInterval: secondsUntilDrop
+                        )
+                    }
                 }
             }
         }
@@ -225,7 +272,7 @@ private extension ForestDataManager {
                 quest.title = model.title
                 quest.description_quest = model.description
                 quest.rewardType = model.reward.typeName
-                quest.rewardValue = model.reward.valueString
+                quest.rewardValue = model.reward.coreDataValueString
                 quest.status = model.status.valueForCoreData
                 quest.targetCount = Int16(model.targetCount)
                 quest.currentProgressCount = 0
@@ -285,6 +332,7 @@ extension ForestDataManager {
             let tree = Tree(context: context)
             tree.id = model.id
             tree.createdDate = Date()
+            tree.characterName = generateRandomName(type: .plant)
             tree.healthValue = Int16(model.treeHealthValue)
             tree.isAlive = model.isAlive
             tree.assetName = model.assetName
@@ -308,6 +356,7 @@ extension ForestDataManager {
             }
             let animal = Animal(context: context)
             animal.id = model.id
+            animal.characterName = generateRandomName(type: .animal)
             animal.createdDate = Date()
             animal.assetName = model.assetName
             animal.healtValue = Int16(model.healthValue)
@@ -334,7 +383,7 @@ extension ForestDataManager {
             sculpture.id = model.id
             sculpture.assetName = model.assetName
             sculpture.createdDate = model.createdDate
-            sculpture.characterName = model.characterName
+            sculpture.characterName = generateRandomName(type: .sculpture)
             sculpture.xPosition = model.xPosition
             sculpture.yPosition = model.yPosition
             forest.addToSculptures(sculpture)
@@ -541,59 +590,54 @@ extension ForestDataManager {
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == quest.id }) {
                 coreDataQuest.status = QuestStatus.claimed.valueForCoreData
-                do {
-                    try save(context: context)
-                    return Resource.success(nil)
-                } catch {
-                    return Resource.error(error: ForestError.saveError)
-                }
             } else {
                 return .error(error: ForestError.emptyForest)
             }
-            
             switch quest.reward {
-            case .animal(let name):
-                let animalModel = AnimalModel(
-                    id: UUID(),
-                    characterName: generateRandomName(type: .animal),
-                    assetName: name,
-                    createdDate: Date(),
-                    healthValue: 10,
-                    isAlive: true,
-                    xPosition: CGFloat.random(in: -50...50),
-                    yPosition: CGFloat.random(in: -50...50)
-                )
-                createAnimal(animal: animalModel, contextType: contextType)
-                
-            case .plant(let name):
-                let pos = generateValidPosition(for: .tree, contextType: contextType)
-                let plantModel = TreeModel(
-                    id: UUID(),
-                    assetName: name,
-                    characterName: generateRandomName(type: .plant), isAlive: true,
-                    createdDate: Date(),
-                    treeHealthValue: 5,
-                    xPosition: pos.x,
-                    yPosition: pos.y
-                )
-                createTree(tree: plantModel, contextType: contextType)
-                
-            case .gold(let count):
-                updateMoneyValue(money: count, contextType: contextType)
-                
-            case .water(let count):
-                updateRainValue(rain: count, contextType: contextType)
-                
-            case .sculpture(let name):
-                let pos = generateValidPosition(for: .sculpture, contextType: contextType)
-                let sculptureModel = SculptureModel(
-                    id: UUID(),
-                    assetName: name,
-                    characterName: generateRandomName(type: .sculpture), createdDate: Date(),
-                    xPosition: pos.x,
-                    yPosition: pos.y
-                )
-                createSculpture(sculpture: sculptureModel, contextType: contextType)
+                case .animal(let name):
+                    let animalModel = AnimalModel(
+                        id: UUID(),
+                        characterName: generateRandomName(type: .animal),
+                        assetName: name,
+                        createdDate: Date(),
+                        healthValue: 10,
+                        isAlive: true,
+                        xPosition: CGFloat.random(in: -50...50),
+                        yPosition: CGFloat.random(in: -50...50)
+                    )
+                    createAnimal(animal: animalModel, contextType: contextType)
+                    
+                case .plant(let name):
+                    let pos = generateValidPosition(for: .tree, contextType: contextType)
+                    let plantModel = TreeModel(
+                        id: UUID(),
+                        assetName: name,
+                        characterName: generateRandomName(type: .plant), isAlive: true,
+                        createdDate: Date(),
+                        treeHealthValue: 5,
+                        xPosition: pos.x,
+                        yPosition: pos.y
+                    )
+                    createTree(tree: plantModel, contextType: contextType)
+                    
+                case .gold(let count):
+                    updateMoneyValue(money: count, contextType: contextType)
+                    
+                case .water(let count):
+                    updateRainValue(rain: count, contextType: contextType)
+                    
+                case .sculpture(let name):
+                    let pos = generateValidPosition(for: .sculpture, contextType: contextType)
+                    let sculptureModel = SculptureModel(
+                        id: UUID(),
+                        assetName: name,
+                        characterName: generateRandomName(type: .sculpture), createdDate: Date(),
+                        xPosition: pos.x,
+                        yPosition: pos.y
+                    )
+                    createSculpture(sculpture: sculptureModel, contextType: contextType)
+                case .diamond(let count):
+                    updateDiamondValue(diamond: count, contextType: contextType)
             }
             do {
                 try save(context: context)
@@ -820,6 +864,23 @@ extension ForestDataManager {
                 return Resource.error(error: ForestError.saveError)
             }
             forest.moneyValue += Int16(money)
+            do {
+                try save(context: context)
+            }
+            catch {
+                return Resource.error(error: error)
+            }
+            return Resource.success(true)
+        }
+    }
+    
+    func updateDiamondValue(diamond: Int, contextType: ContextType)  -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.saveError)
+            }
+            forest.diamondValue += Int16(diamond)
             do {
                 try save(context: context)
             }

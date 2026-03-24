@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import DTO
 
 class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     var downloadState: DownloadState
@@ -14,7 +15,6 @@ class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     func downloadLibrary(model: Library) {
         print("model")
     }
-    
     
     // MARK: - PROPERTIES
     

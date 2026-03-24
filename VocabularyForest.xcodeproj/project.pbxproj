@@ -8,19 +8,42 @@
 
 /* Begin PBXBuildFile section */
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
+		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
+		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
+		375FE1A92F7005F200765018 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1A82F7005F200765018 /* CoreAPI */; };
+		375FE1B82F704F7200765018 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1B72F704F7200765018 /* Router */; };
+		3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */ = {isa = PBXBuildFile; productRef = 3791D1A42F6EE10F002D219E /* DependencyContainer */; };
 		37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B5F2EA8C43A0063F4D8 /* Lottie */; };
 		37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 37D8A7982EF928A700E59CA9 /* Alamofire */; };
+		37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */ = {isa = PBXBuildFile; productRef = 37E8617B2F72C94300DD54C6 /* DomainMocks */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		37BFA05B2F6D24C0007C20E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37267D182E90E9D90019D139 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37267D1F2E90E9D90019D139;
+			remoteInfo = VocabularyForest;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3739F3382F71C38C00D3013D /* YakoSwift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YakoSwift; sourceTree = "<group>"; };
+		375FE02D2F7005E700765018 /* CoreAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreAPI; sourceTree = "<group>"; };
+		375FE02E2F7005E700765018 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
+		375FE1AA2F70071100765018 /* Router */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Router; sourceTree = "<group>"; };
+		3791D1A12F6EBC0A002D219E /* DependencyContainer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DependencyContainer; sourceTree = "<group>"; };
+		3791D1A22F6EBDE5002D219E /* VocabularyForest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = VocabularyForest.xctestplan; sourceTree = "<group>"; };
+		37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabularyForestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Data/Source/Info.plist,
 			);
 			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
 		};
@@ -49,6 +72,11 @@
 			path = VocabularyForest;
 			sourceTree = "<group>";
 		};
+		37BFA0582F6D24C0007C20E7 /* VocabularyForestTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VocabularyForestTests;
+			sourceTree = "<group>";
+		};
 		37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -72,9 +100,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				375FE1B82F704F7200765018 /* Router in Frameworks */,
+				375FE1A92F7005F200765018 /* CoreAPI in Frameworks */,
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
+				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
+				37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
+				373232812F7239AC004F3DF9 /* Domain in Frameworks */,
+				3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37BFA0542F6D24C0007C20E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,8 +125,12 @@
 		37267D172E90E9D90019D139 = {
 			isa = PBXGroup;
 			children = (
+				3791D1A22F6EBDE5002D219E /* VocabularyForest.xctestplan */,
 				37D8A8AF2EF959E500E59CA9 /* Preview Content */,
+				37BFA0632F6E6778007C20E7 /* Packages */,
 				37267D222E90E9D90019D139 /* VocabularyForest */,
+				37BFA0582F6D24C0007C20E7 /* VocabularyForestTests */,
+				3791D1A32F6EE10F002D219E /* Frameworks */,
 				37267D212E90E9D90019D139 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,8 +139,28 @@
 			isa = PBXGroup;
 			children = (
 				37267D202E90E9D90019D139 /* VocabularyForest.app */,
+				37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3791D1A32F6EE10F002D219E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		37BFA0632F6E6778007C20E7 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				3739F3382F71C38C00D3013D /* YakoSwift */,
+				375FE1AA2F70071100765018 /* Router */,
+				3791D1A12F6EBC0A002D219E /* DependencyContainer */,
+				375FE02D2F7005E700765018 /* CoreAPI */,
+				375FE02E2F7005E700765018 /* Domain */,
+			);
+			path = Packages;
 			sourceTree = "<group>";
 		};
 		37D8A8AF2EF959E500E59CA9 /* Preview Content */ = {
@@ -130,10 +195,39 @@
 				37267F0D2E927B8E0019D139 /* Kingfisher */,
 				37D84B5F2EA8C43A0063F4D8 /* Lottie */,
 				37D8A7982EF928A700E59CA9 /* Alamofire */,
+				3791D1A42F6EE10F002D219E /* DependencyContainer */,
+				375FE1A82F7005F200765018 /* CoreAPI */,
+				375FE1B72F704F7200765018 /* Router */,
+				3732327E2F723975004F3DF9 /* YakoSwift */,
+				373232802F7239AC004F3DF9 /* Domain */,
+				37E8617B2F72C94300DD54C6 /* DomainMocks */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
 			productType = "com.apple.product-type.application";
+		};
+		37BFA0562F6D24C0007C20E7 /* VocabularyForestTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37BFA05D2F6D24C0007C20E7 /* Build configuration list for PBXNativeTarget "VocabularyForestTests" */;
+			buildPhases = (
+				37BFA0532F6D24C0007C20E7 /* Sources */,
+				37BFA0542F6D24C0007C20E7 /* Frameworks */,
+				37BFA0552F6D24C0007C20E7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37BFA05C2F6D24C0007C20E7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				37BFA0582F6D24C0007C20E7 /* VocabularyForestTests */,
+			);
+			name = VocabularyForestTests;
+			packageProductDependencies = (
+			);
+			productName = VocabularyForestTests;
+			productReference = 37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -147,6 +241,10 @@
 				TargetAttributes = {
 					37267D1F2E90E9D90019D139 = {
 						CreatedOnToolsVersion = 26.0.1;
+					};
+					37BFA0562F6D24C0007C20E7 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 37267D1F2E90E9D90019D139;
 					};
 				};
 			};
@@ -174,12 +272,20 @@
 			projectRoot = "";
 			targets = (
 				37267D1F2E90E9D90019D139 /* VocabularyForest */,
+				37BFA0562F6D24C0007C20E7 /* VocabularyForestTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		37267D1E2E90E9D90019D139 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37BFA0552F6D24C0007C20E7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -196,7 +302,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37BFA0532F6D24C0007C20E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		37BFA05C2F6D24C0007C20E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+			targetProxy = 37BFA05B2F6D24C0007C20E7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		37267D2E2E90E9DB0019D139 /* Debug */ = {
@@ -337,10 +458,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
-				DEVELOPMENT_TEAM = 4QK62PW2A7;
+				DEVELOPMENT_TEAM = FNF48X95J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VocabularyForest/Info.plist;
+				INFOPLIST_FILE = VocabularyForest/Data/Source/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -383,7 +504,7 @@
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VocabularyForest/Info.plist;
+				INFOPLIST_FILE = VocabularyForest/Data/Source/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -412,6 +533,50 @@
 			};
 			name = Release;
 		};
+		37BFA05E2F6D24C0007C20E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FNF48X95J5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VocabularyForest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VocabularyForest";
+			};
+			name = Debug;
+		};
+		37BFA05F2F6D24C0007C20E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FNF48X95J5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VocabularyForest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VocabularyForest";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -429,6 +594,15 @@
 			buildConfigurations = (
 				37267D312E90E9DB0019D139 /* Debug */,
 				37267D322E90E9DB0019D139 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37BFA05D2F6D24C0007C20E7 /* Build configuration list for PBXNativeTarget "VocabularyForestTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37BFA05E2F6D24C0007C20E7 /* Debug */,
+				37BFA05F2F6D24C0007C20E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -468,6 +642,26 @@
 			package = 37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
+		3732327E2F723975004F3DF9 /* YakoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YakoSwift;
+		};
+		373232802F7239AC004F3DF9 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		375FE1A82F7005F200765018 /* CoreAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreAPI;
+		};
+		375FE1B72F704F7200765018 /* Router */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Router;
+		};
+		3791D1A42F6EE10F002D219E /* DependencyContainer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DependencyContainer;
+		};
 		37D84B5F2EA8C43A0063F4D8 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 37D84B5E2EA8C43A0063F4D8 /* XCRemoteSwiftPackageReference "lottie-ios" */;
@@ -477,6 +671,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		37E8617B2F72C94300DD54C6 /* DomainMocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DomainMocks;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

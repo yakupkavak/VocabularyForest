@@ -35,10 +35,10 @@ struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
-    @Binding var tabBar: BaseTabTypes
-    @ObservedObject var bookcaseRouter: BookcaseRouter
+    @EnvironmentObject var tabbarController: TabBarController
     @EnvironmentObject var router: LearningRouter
-    @StateObject private var viewModel = ForestViewModel()
+    @EnvironmentObject var bookcaseRouter: BookcaseRouter
+    @ObservedObject var viewModel: ForestViewModel
     @State private var forestScene = ForestScene()
     @State private var showOption = false
     @State private var showSetting = false
@@ -141,7 +141,7 @@ struct ForestUI: View {
             }
             if viewModel.showBookThreshold {
                 ForestPopUp(titleText: String(localized: "Eksik soru"), descriptionText: String(localized: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin"), onConfirm: {
-                    tabBar = .bookcases
+                    tabbarController.navigateTo(tab: .bookcases)
                     bookcaseRouter.navigate(to: .bookcasePacket)
                     exitForest()
                 }, onDenied: {viewModel.closeBookError()}, confirmText: String(localized: "Kütüphane"), deniedText: String(localized: "Orman"), showForestPopUp: $viewModel.showBookThreshold)
@@ -327,8 +327,14 @@ extension ForestUI: ForestUIProtocol {
     }
 }
 
-#Preview {
+/*
+ #Preview {
     @State var tabbar = BaseTabTypes.bookcases
-    var router = BookcaseRouter()
-    ForestUI(tabBar: $tabbar, bookcaseRouter: router)
-}
+    let bookcaseRouter = BookcaseRouter()
+    let mockCoreData = CoreDataManager.preview
+    let mockAudio = ForestAudioService()
+    let mockForestData = ForestDataManager()
+    let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData)
+    return ForestUI(tabBar: $tabbar, bookcaseRouter: bookcaseRouter, viewModel: viewModel).environmentObject(LearningRouter())
+ }
+ */

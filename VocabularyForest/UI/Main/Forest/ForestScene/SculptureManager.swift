@@ -1,3 +1,5 @@
+// MARK: - SculptureManager.swift
+
 //
 //  SculptureManager.swift
 //  VocabularyForest
@@ -12,11 +14,31 @@ protocol TapComponentProtocol {
     func updateName(name: String)
 }
 
-protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol, TapComponentProtocol {
+protocol SculptureManagerProtocol: AnyObject, UpdatePositionProtocol, TapComponentProtocol, TalkProtocol {
     var sculptureNode: SKSpriteNode { get }
     var model: SculptureModel? { get }
     func setupSculpture(model: SculptureModel)
     func setZIndex(index: Double)
+}
+
+// MARK: - CONSTANTS
+
+extension SculptureManager {
+    enum Constants {
+        static let zero: CGFloat = 0.0
+        static let anchorPointX: CGFloat = 0.5
+        static let anchorPointY: CGFloat = 0.0
+        static let fallbackMultiplier: CGFloat = 0.0
+        static let selectedColorBlendFactor: CGFloat = 0.9
+        static let defaultColorBlendFactor: CGFloat = 0.0
+        static let screenWidthDivider: CGFloat = 2.0
+        
+        static let bubbleScaleTarget: CGFloat = 1.0
+        static let bubbleScaleInitial: CGFloat = 0.0
+        static let bubbleScaleDuration: TimeInterval = 0.2
+        static let bubbleRemoveScaleTarget: CGFloat = 0.0
+        static let bubbleRemoveDuration: TimeInterval = 0.1
+    }
 }
 
 class SculptureManager {
@@ -41,13 +63,13 @@ private extension SculptureManager {
     
     func setModel(model: SculptureModel) {
         currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
-        currentSculptureNode.anchorPoint = CGPoint(x: 0.5, y: 0)
+        currentSculptureNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
             y: GameConstant.sculptureHeightSize * model.yPosition
         )
         let originalSize = currentSculptureNode.size
-        if originalSize.height > 0 {
+        if originalSize.height > Constants.zero {
             let aspectRatio = originalSize.width / originalSize.height
             let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
             currentSculptureNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.sculptureHeight)
@@ -68,81 +90,21 @@ private extension SculptureManager {
         isMenuOpen = true
         let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.assetName
         
-        let bubbleWidth: CGFloat = 140
-        let bubbleHeight: CGFloat = 90
+        let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: currentSculptureNode.size, displayName: displayName)
         
-        let bubble = SKShapeNode(rectOf: CGSize(width: bubbleWidth, height: bubbleHeight), cornerRadius: 10)
-        bubble.name = "menu_bubble"
-        bubble.fillColor = .brown500.withAlphaComponent(0.95)
-        bubble.strokeColor = .black
-        bubble.lineWidth = 2
-        bubble.zPosition = 100
-        bubble.position = CGPoint(x: 0, y: currentSculptureNode.size.height + 40)
-        
-        let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
-        titleLabel.text = displayName ?? String(localized: "Heykel")
-        titleLabel.fontSize = 16
-        titleLabel.fontColor = .white
-        titleLabel.position = CGPoint(x: 0, y: 15)
-        bubble.addChild(titleLabel)
-
-        let headerSeparator = SKShapeNode(rectOf: CGSize(width: bubbleWidth - 20, height: 1))
-        headerSeparator.fillColor = .black.withAlphaComponent(0.3)
-        headerSeparator.strokeColor = .clear
-        headerSeparator.position = CGPoint(x: 0, y: 5)
-        bubble.addChild(headerSeparator)
-        
-
-        let nameBtn = createButtonLabel(text: String(localized: "İsim Değiştir"), name: "btn_update_name", maxWidth: 60)
-        nameBtn.position = CGPoint(x: -32, y: -15)
-        nameBtn.fontColor = .black
-        bubble.addChild(nameBtn)
-        
-        let separator = SKShapeNode(rectOf: CGSize(width: 1, height: 25))
-        separator.fillColor = .logoGreen
-        separator.strokeColor = .logoGreen
-        separator.position = CGPoint(x: 0, y: -15)
-        bubble.addChild(separator)
-        
-        let posBtn = createButtonLabel(text: String(localized: "Taşı"), name: "btn_update_pos", maxWidth: 60)
-        posBtn.position = CGPoint(x: 32, y: -15)
-        posBtn.fontColor = .black
-        bubble.addChild(posBtn)
-        
-        bubble.setScale(0)
+        bubble.setScale(Constants.bubbleScaleInitial)
         currentSculptureNode.addChild(bubble)
-        bubble.run(.scale(to: 1.0, duration: 0.2))
+        bubble.run(.scale(to: Constants.bubbleScaleTarget, duration: Constants.bubbleScaleDuration))
         
-        let waitAction = SKAction.wait(forDuration: 3.0)
-        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
-        let remove = SKAction.removeFromParent()
-        let updateState = SKAction.run { [weak self] in
+        ComponentBubble.applyAutoCloseAnimation(to: bubble) { [weak self] in
             self?.isMenuOpen = false
         }
-        let autoCloseSequence = SKAction.sequence([waitAction, fadeOut, remove, updateState])
-        bubble.run(autoCloseSequence, withKey: "autoCloseTimer")
-    }
-    
-    func createButtonLabel(text: String, name: String, maxWidth: CGFloat? = nil) -> SKLabelNode {
-        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
-        label.text = text
-        label.fontSize = 14
-        label.fontColor = .black
-        label.name = name
-        label.verticalAlignmentMode = .center
-        label.horizontalAlignmentMode = .center
-        if let width = maxWidth {
-            label.numberOfLines = 0
-            label.preferredMaxLayoutWidth = width
-            label.lineBreakMode = .byWordWrapping
-        }
-        return label
     }
     
     func getScrollOffset() -> CGFloat {
         guard let scene = scene,
-              let floor = scene.childNode(withName: ForestConstant.floorName) else { return 0 }
-        let initialX = scene.size.width / 2
+              let floor = scene.childNode(withName: ForestConstant.floorName) else { return Constants.zero }
+        let initialX = scene.size.width / Constants.screenWidthDivider
         return floor.position.x - initialX
     }
 }
@@ -170,6 +132,7 @@ extension SculptureManager: SculptureManagerProtocol {
     var sculptureNode: SKSpriteNode {
         currentSculptureNode
     }
+    
     func setZIndex(index: Double) {
         currentSculptureNode.zPosition = index
     }
@@ -181,7 +144,7 @@ extension SculptureManager: UpdatePositionProtocol {
     
     func confirmeChange() {
         currentSculptureNode.color = .white
-        currentSculptureNode.colorBlendFactor = 0.0
+        currentSculptureNode.colorBlendFactor = Constants.defaultColorBlendFactor
     }
     
     func positionChange(direction: Directions) {
@@ -196,12 +159,12 @@ extension SculptureManager: UpdatePositionProtocol {
             self.sculptureModel?.xPosition -= ForestConstant.perHorizontalMove
         }
         let scrollOffset = getScrollOffset()
-        if let yPosisiton = self.sculptureModel?.yPosition {
-             currentSculptureNode.zPosition = getZIndex(yPosition: yPosisiton)
+        if let yPosition = self.sculptureModel?.yPosition {
+             currentSculptureNode.zPosition = getZIndex(yPosition: yPosition)
         }
         currentSculptureNode.position = CGPoint(
-            x: (GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? 0)) + scrollOffset,
-            y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? 0)
+            x: (GameConstant.gameWidthSize * (self.sculptureModel?.xPosition ?? Constants.fallbackMultiplier)) + scrollOffset,
+            y: GameConstant.sculptureHeightSize * (self.sculptureModel?.yPosition ?? Constants.fallbackMultiplier)
         )
     }
     
@@ -211,7 +174,7 @@ extension SculptureManager: UpdatePositionProtocol {
     
     func startPositionChange() {
         currentSculptureNode.color = .clickableText
-        currentSculptureNode.colorBlendFactor = 0.9
+        currentSculptureNode.colorBlendFactor = Constants.selectedColorBlendFactor
     }
 
     func removeChange(x: CGFloat, y: CGFloat) {
@@ -224,7 +187,7 @@ extension SculptureManager: UpdatePositionProtocol {
         self.sculptureModel?.yPosition = y
         currentSculptureNode.zPosition = getZIndex(yPosition: y)
         currentSculptureNode.color = .white
-        currentSculptureNode.colorBlendFactor = 0.0
+        currentSculptureNode.colorBlendFactor = Constants.defaultColorBlendFactor
     }
 }
 
@@ -233,13 +196,17 @@ extension SculptureManager: UpdatePositionProtocol {
 extension SculptureManager: TalkProtocol {
     
     func talk(text: String) {
-        print("text")
+        if let existingBubble = currentSculptureNode.childNode(withName: "talk_bubble") {
+            existingBubble.removeFromParent()
+        }
+        let bubble = ComponentBubble.createTalkBubble(parentSize: currentSculptureNode.size, parentXScale: currentSculptureNode.xScale, text: text)
+        currentSculptureNode.addChild(bubble)
     }
     
     func removeBubble() {
         if let bubble = currentSculptureNode.childNode(withName: "menu_bubble") {
             bubble.run(.sequence([
-                .scale(to: 0, duration: 0.1),
+                .scale(to: Constants.bubbleRemoveScaleTarget, duration: Constants.bubbleRemoveDuration),
                 .removeFromParent()
             ]))
             isMenuOpen = false

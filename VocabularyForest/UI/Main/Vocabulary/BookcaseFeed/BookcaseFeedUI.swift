@@ -13,14 +13,11 @@ struct BookcaseFeedUI: View {
     
     // MARK: - PROPERTIES
     
-    @StateObject private var viewModel: BookcaseFeedViewModel
+    @ObservedObject var viewModel: BookcaseFeedViewModel
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @State private var showEmptyText = false
     @FocusState private var searchBarIsFocused: Bool
     
-    init(viewModel: BookcaseFeedViewModel = BookcaseFeedViewModel()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
     // MARK: - VIEWS
     
     var body: some View {
@@ -145,19 +142,23 @@ private extension BookcaseFeedUI {
 }
 
 #Preview {
-    let previewManager = CoreDataManager.preview
-    let context = previewManager.viewContext
+    let mockViewModel: BookcaseFeedViewModel = {
+        let previewManager = CoreDataManager.preview
+        let context = previewManager.viewContext
+        
+        let sampleBookcase = Bookcase(context: context)
+        sampleBookcase.name = "Japonca A1 Kelimeler"
+        sampleBookcase.learningLanguage = "ja"
+        sampleBookcase.meaningLanguage = "tr"
+        sampleBookcase.createdDate = Date()
+        
+        try? context.save()
+        
+        return BookcaseFeedViewModel(coreDataManager: previewManager)
+    }()
     
-    let sampleBookcase = Bookcase(context: context)
-    sampleBookcase.name = "Japonca A1 Kelimeler"
-    sampleBookcase.learningLanguage = "ja"
-    sampleBookcase.meaningLanguage = "tr"
-    sampleBookcase.createdDate = Date()
-    
-    try? context.save()
-    
-    let mockViewModel = BookcaseFeedViewModel(manager: previewManager)
-    
-    return BookcaseFeedUI(viewModel: mockViewModel)
-        .environmentObject(BookcaseRouter())
+    NavigationStack {
+        BookcaseFeedUI(viewModel: mockViewModel)
+            .environmentObject(BookcaseRouter())
+    }
 }

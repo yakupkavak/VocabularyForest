@@ -7,6 +7,8 @@
 
 import Combine
 import Foundation
+import CoreAPI
+import DTO
 
 enum UIState {
     case success
@@ -41,10 +43,11 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     @Published var uiState: UIState = .loading
     @Published var downloadState: DownloadState = .waiting
     let networkService: APIServiceProtocol
-    let coreDataService: CoreDataManager
+    let coreDataService: CoreDataManagerProtocol
+    
     // MARK: - INIT
     
-    init(networkService: APIServiceProtocol, dataManager: CoreDataManager) {
+    init(networkService: APIServiceProtocol, dataManager: CoreDataManagerProtocol) {
         self.networkService = networkService
         self.coreDataService = dataManager
         refreshData()
@@ -86,7 +89,7 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
             guard let self else { return }
             switch result {
             case .success(let requestResult):
-                self.coreDataService.importBookcase(requestResult, contextType: .background) { result in
+                coreDataService.importBookcase(requestResult, overwrite: true, contextType: .background) { result in
                     switch result {
                     case .success(let success):
                         self.downloadState = .success

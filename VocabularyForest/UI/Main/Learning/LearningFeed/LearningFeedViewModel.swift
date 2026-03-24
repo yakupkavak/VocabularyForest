@@ -10,6 +10,9 @@ import Foundation
 
 class LearningFeedViewModel: ObservableObject{
     
+    // MARK: - DEPENDENCIES
+    private let dataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var todaysLearningWord = ""
@@ -17,11 +20,11 @@ class LearningFeedViewModel: ObservableObject{
     @Published var todaysExample = ""
     @Published var todaysDescription = ""
     @Published var alert = LearningFeedAlertType.none
-    private var dataManager = CoreDataManager.shared
     
     // MARK: - INIT
     
-    init() {
+    init(coreDataManager: CoreDataManagerProtocol) {
+        self.dataManager = coreDataManager
         fetchDailyWord()
     }
     
@@ -52,7 +55,10 @@ class LearningFeedViewModel: ObservableObject{
     // MARK: - PRIVATE HELPERS
     
     private func fetchNewWordFromCoreData() {
-        guard let bookcases = dataManager.fetchSafeBookcases(contextType: .main), !bookcases.isEmpty else {
+        guard let bookcases = dataManager.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ), !bookcases.isEmpty else {
             alert = .emptyBookcase
             clearDailyWord()
             return
@@ -64,7 +70,11 @@ class LearningFeedViewModel: ObservableObject{
             return
         }
         
-        guard let books = dataManager.fetchSafeBooks(model: randomBookcase, contextType: .main) else { return }
+        guard let books = dataManager.fetchSafeBooks(
+            model: randomBookcase,
+            sortDescriptors: nil,
+            contextType: .main
+        ) else { return }
         
         if let randomBook = books.randomElement() {
             todaysLearningWord = randomBook.learningWord

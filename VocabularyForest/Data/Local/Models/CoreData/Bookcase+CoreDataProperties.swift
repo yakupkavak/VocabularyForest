@@ -79,24 +79,24 @@ extension Bookcase {
 }
 
 extension Bookcase: ConvertSafeModel {
-    func safeObject() throws -> BookcaseModel {
-        throw SafeModelError.emptyValue
-    }
-    
     typealias SafeModel = BookcaseModel
     
     func safeObject(context: NSManagedObjectContext) throws -> BookcaseModel {
         try context.performAndWait {
             if let id, let name, let createdDate, let learningLanguage, let meaningLanguage {
-                return BookcaseModel(
-                    id: id,
-                    bookcaseName: name,
-                    createdDate: createdDate,
-                    learningLanguage: learningLanguage,
-                    meaningLanguage: meaningLanguage
-                )
+                let bookcaseModel = context.performAndWait {
+                    BookcaseModel(
+                        id: id,
+                        bookcaseName: name,
+                        createdDate: createdDate,
+                        learningLanguage: learningLanguage,
+                        meaningLanguage: meaningLanguage
+                    )
+                }
+                return bookcaseModel
+            }else {
+                throw SafeModelError.emptyValue
             }
-            throw SafeModelError.emptyValue
         }
     }
 }

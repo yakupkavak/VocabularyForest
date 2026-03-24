@@ -69,7 +69,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 targetCount: 5,
                 currentProgressCount: 0,
                 questionType: .learning,
-                battleEnemyModel: .fireElemental,
+                battleEnemyModel: .classic,
                 gameLevel: .easy
             ),
             QuestModel(
@@ -82,7 +82,7 @@ struct ForestGameHelper: ForestGameHelperProtocol {
                 targetCount: 10,
                 currentProgressCount: 0,
                 questionType: .learning,
-                battleEnemyModel: .sandDragon,
+                battleEnemyModel: .classic,
                 gameLevel: .easy
             ),
             QuestModel(

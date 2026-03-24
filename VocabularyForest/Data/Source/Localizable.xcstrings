@@ -66,6 +66,9 @@
         }
       }
     },
+    "%lld Diamond" : {
+
+    },
     "%lld Gold" : {
       "localizations" : {
         "en" : {
@@ -700,6 +703,9 @@
         }
       }
     },
+    "antique_chest" : {
+
+    },
     "Arapça" : {
       "localizations" : {
         "en" : {
@@ -1010,6 +1016,7 @@
       }
     },
     "Bağlantı hatası" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2138,6 +2145,9 @@
         }
       }
     },
+    "Daily Reward" : {
+
+    },
     "Dance with Fire 🔥" : {
       "localizations" : {
         "en" : {
@@ -2206,6 +2216,9 @@
         }
       }
     },
+    "Day %lld" : {
+
+    },
     "Death" : {
       "localizations" : {
         "en" : {
@@ -2241,6 +2254,7 @@
       }
     },
     "Decode Hatası Oluştu: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2648,6 +2662,9 @@
           }
         }
       }
+    },
+    "diamond_chest" : {
+
     },
     "Diğer" : {
       "localizations" : {
@@ -3362,6 +3379,12 @@
         }
       }
     },
+    "Even stone feels the pain of this drought." : {
+
+    },
+    "Everything is so dry around here..." : {
+
+    },
     "Example" : {
       "localizations" : {
         "en" : {
@@ -3735,6 +3758,9 @@
           }
         }
       }
+    },
+    "gold_chest" : {
+
     },
     "Göreve git" : {
       "localizations" : {
@@ -4460,6 +4486,33 @@
     "Huzur" : {
 
     },
+    "I am the silent guardian of this forest." : {
+
+    },
+    "I can't grow without a drop of water..." : {
+
+    },
+    "I feel like I'm growing taller every day!" : {
+
+    },
+    "I have been standing here for years." : {
+
+    },
+    "I have no energy left to move, need some water..." : {
+
+    },
+    "I love hanging out in this forest." : {
+
+    },
+    "I might crack from this unbearable heat..." : {
+
+    },
+    "I need a drink to keep going..." : {
+
+    },
+    "I need water to revive..." : {
+
+    },
     "I’m ready" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4494,6 +4547,9 @@
           }
         }
       }
+    },
+    "I'm so thirsty..." : {
+
     },
     "Ice" : {
       "localizations" : {
@@ -4768,6 +4824,7 @@
       }
     },
     "İngilizce (Amerikan)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4836,6 +4893,7 @@
       }
     },
     "İngilizce (Birleşik Krallık) " : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4972,6 +5030,7 @@
       }
     },
     "İsim Değiştir" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5108,6 +5167,7 @@
       }
     },
     "İstek zaman aşımına uğradı" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6265,6 +6325,9 @@
         }
       }
     },
+    "Let's run around!" : {
+
+    },
     "Level:" : {
       "localizations" : {
         "en" : {
@@ -6609,6 +6672,15 @@
         }
       }
     },
+    "My belly is full, life is good." : {
+
+    },
+    "My leaves are drying up, please give me water..." : {
+
+    },
+    "My roots feel incredibly strong today." : {
+
+    },
     "Name" : {
       "localizations" : {
         "en" : {
@@ -6642,6 +6714,9 @@
           }
         }
       }
+    },
+    "nature_chest" : {
+
     },
     "New Discoveries 🗺️" : {
       "localizations" : {
@@ -7769,6 +7844,9 @@
     "Peace" : {
 
     },
+    "Play everyday and get additional bonuses" : {
+
+    },
     "Portekizce (Brezilya)" : {
       "localizations" : {
         "en" : {
@@ -8825,6 +8903,12 @@
         }
       }
     },
+    "So much beautiful green around us!" : {
+
+    },
+    "So thirsty... I can't breathe." : {
+
+    },
     "Sorular Hakkında" : {
       "localizations" : {
         "en" : {
@@ -8927,6 +9011,9 @@
         }
       }
     },
+    "Such peaceful and ancient vibes." : {
+
+    },
     "sun_flower_name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8963,6 +9050,7 @@
       }
     },
     "Taşı" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9132,6 +9220,9 @@
         }
       }
     },
+    "The forest is beautiful today!" : {
+
+    },
     "The forest is expanding! Meet 5 new words and learn their meanings." : {
       "localizations" : {
         "en" : {
@@ -9165,6 +9256,12 @@
           }
         }
       }
+    },
+    "The fresh air is simply wonderful." : {
+
+    },
+    "The ground is bone dry..." : {
+
     },
     "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat." : {
       "localizations" : {
@@ -9233,6 +9330,18 @@
           }
         }
       }
+    },
+    "The silence of the forest is beautiful." : {
+
+    },
+    "The soil is turning into dust..." : {
+
+    },
+    "The sun feels amazing!" : {
+
+    },
+    "The sun is completely unforgiving today." : {
+
     },
     "Toprak sağlığı: %%%lld" : {
       "localizations" : {
@@ -9693,6 +9802,18 @@
     "Venüs" : {
 
     },
+    "Watching over the trees is my duty." : {
+
+    },
+    "We desperately need some rain..." : {
+
+    },
+    "What a lovely day to play!" : {
+
+    },
+    "Where did all the water go?" : {
+
+    },
     "White Shadow ☁️" : {
       "localizations" : {
         "en" : {
@@ -9795,6 +9916,9 @@
           }
         }
       }
+    },
+    "x%lld" : {
+
     },
     "Yağmur Hakkında" : {
       "localizations" : {

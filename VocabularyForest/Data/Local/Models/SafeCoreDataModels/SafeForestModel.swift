@@ -10,6 +10,7 @@ import Foundation
 struct SafeForestModel: Sendable {
     let rainValue: Int
     let moneyValue: Int
+    let diamondValue: Int
     let landHealthPercent: Int
     let landStatus: Bool
     let isRaining: Bool

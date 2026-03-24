@@ -41,19 +41,19 @@ extension Quest: ConvertSafeModel {
 
     func safeObject(context: NSManagedObjectContext) throws -> QuestModel {
         try context.performAndWait {
-            if let questId = self.id, let questTitle = self.title, let questDescription = self.description_quest {
+            if let questId = self.id, let questType, let questTitle = self.title, let questDescription = self.description_quest, let rewardType, let status, let gameLevel, let battleEnemyModel, let type {
                 return QuestModel(
                     id: questId,
-                    type: QuestType.convertFromCoreData(string: self.questType),
+                    type: QuestType.convertFromCoreData(string: type),
                     title: questTitle,
                     description: questDescription,
-                    reward: QuestRewardModel.convertFromCoreData(type: self.rewardType, value: self.rewardValue),
-                    status: QuestStatus.convertFromCoreData(string: self.status),
-                    targetCount: Int(self.targetCount),
-                    currentProgressCount: Int(self.currentProgressCount),
-                    questionType: BattleQuestionType.convertFromCoreData(type: self.questType),
-                    battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: self.battleEnemyModel),
-                    gameLevel: GameLevel.convertFromCoreData(value: self.gameLevel)
+                    reward: QuestRewardModel.convertFromCoreData(type: rewardType, value: rewardValue),
+                    status: QuestStatus.convertFromCoreData(string: status),
+                    targetCount: Int(targetCount),
+                    currentProgressCount: Int(currentProgressCount),
+                    questionType: BattleQuestionType.convertFromCoreData(type: questType),
+                    battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: battleEnemyModel),
+                    gameLevel: GameLevel.convertFromCoreData(value: gameLevel)
                 )
             }
             throw SafeModelError.emptyValue

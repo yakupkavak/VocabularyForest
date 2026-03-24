@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import DTO
 
 // MARK: - Mock Libraries List
 
-extension Libraries {
+public extension Libraries {
     static let mock: Libraries = Libraries(
         version: 1,
         updatedAt: "2025-12-22T12:00:00.000Z",

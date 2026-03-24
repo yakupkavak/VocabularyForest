@@ -6,10 +6,7 @@
 //
 
 import SwiftUI
-internal import CoreData
 import Lottie
-
-// TODO: - DELEGATE AND PROTOCOL ILE HABERLEŞME
 
 struct BookcaseDetailUI: View {
     
@@ -17,19 +14,15 @@ struct BookcaseDetailUI: View {
     
     @State private var showMeaning = false
     @State private var showEmptyText = false
-    @StateObject private var viewModel: BookcaseDetailViewModel
     @FocusState private var searchBarIsFocused: Bool
-    var bookcaseName: String
-    var bookcaseLearningCode: String
-    var bookcaseMeaningCode: String
+    
+    @ObservedObject var viewModel: BookcaseDetailViewModel
 
     // MARK: - INIT
     
-    init(bookcaseName: String, bookcaseLearningCode: String, bookcaseMeaningCode: String){
-        self.bookcaseName = bookcaseName
-        self.bookcaseLearningCode = bookcaseLearningCode
-        self.bookcaseMeaningCode = bookcaseMeaningCode
-        _viewModel = StateObject(wrappedValue: BookcaseDetailViewModel(bookcaseName: bookcaseName, learningLanguage: bookcaseLearningCode, meaningLanguage: bookcaseMeaningCode))
+    init(viewModel: BookcaseDetailViewModel) {
+        self.viewModel = viewModel
+        
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.title]
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.title]
     }
@@ -51,7 +44,8 @@ struct BookcaseDetailUI: View {
                 bookArray
                     .transition(.opacity)
             }
-        }.padding(.top, 8)
+        }
+        .padding(.top, 8)
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBook)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.books.isEmpty)
         .navigationTitle(viewModel.bookcaseName)
@@ -60,7 +54,11 @@ struct BookcaseDetailUI: View {
                 Button {
                     showMeaning.toggle()
                 } label: {
-                    Image(showMeaning ? "showEye" : "hideEye").resizable().scaledToFit().frame(maxWidth: 32).foregroundStyle(.brown300)
+                    Image(showMeaning ? "showEye" : "hideEye")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 32)
+                        .foregroundStyle(.brown300)
                 }
             }
         }
@@ -86,10 +84,7 @@ struct BookcaseDetailUI: View {
     }
 }
 
-// MARK: - VIEW BUILDER FUNCTIONS
-
-
-// MARK: VIEW COMPONENTS
+// MARK: - VIEW COMPONENTS
 
 private extension BookcaseDetailUI {
     var header: some View {
@@ -99,14 +94,18 @@ private extension BookcaseDetailUI {
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
             }
-            CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kelime ara")).focused($searchBarIsFocused)
-        }.padding(.horizontal,32)
+            CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kelime ara"))
+                .focused($searchBarIsFocused)
+        }
+        .padding(.horizontal,32)
     }
+    
     var emptyBooks: some View {
         VStack(spacing: 24){
             Spacer()
             if showEmptyText {
-                tvDefault(text: String(localized: "Hiçbir kitap bulamadık"), color: .brown300).padding(24)
+                tvDefault(text: String(localized: "Hiçbir kitap bulamadık"), color: .brown300)
+                    .padding(24)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .strokeBorder(.title, lineWidth: 4)
@@ -120,33 +119,36 @@ private extension BookcaseDetailUI {
                 Spacer()
             }
             Spacer()
-        }.onAppear {
-            withAnimation(Animation.spring(duration: 1.0).delay(1.2)) {
-                     self.showEmptyText = true
-                }
-        }.padding(.bottom, 32)
-    }
-    var bookArray: some View {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(Array(viewModel.books.enumerated()), id: \.element) { index, book in
-                        BookRow(
-                            book: book,
-                            showMeaning: $showMeaning,
-                            bookNumber: index + 1,
-                            onEdit: {
-                                bookRowEdit(book: book)
-                            },
-                            onDelete: { book in bookRowDelete(book: book) }
-                        )
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                    }
-                }
-                .padding(.bottom, 20)
-            }
-            .scrollIndicators(.hidden)
         }
+        .onAppear {
+            withAnimation(Animation.spring(duration: 1.0).delay(1.2)) {
+                self.showEmptyText = true
+            }
+        }
+        .padding(.bottom, 32)
+    }
+    
+    var bookArray: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(Array(viewModel.books.enumerated()), id: \.element) { index, book in
+                    BookRow(
+                        book: book,
+                        showMeaning: $showMeaning,
+                        bookNumber: index + 1,
+                        onEdit: {
+                            bookRowEdit(book: book)
+                        },
+                        onDelete: { book in bookRowDelete(book: book) }
+                    )
+                    .padding(.horizontal)
+                    .padding(.vertical, 4)
+                }
+            }
+            .padding(.bottom, 20)
+        }
+        .scrollIndicators(.hidden)
+    }
 }
 
 // MARK: - HELPERS
@@ -158,24 +160,16 @@ private extension BookcaseDetailUI {
     func bookRowEdit(book: BookModel){
         viewModel.prepareForEdit(book: book)
     }
+    
     func bookRowDelete(book: BookModel){
         viewModel.deleteBookModel(at: book)
     }
 }
 
+// MARK: - PREVIEW
+
 #Preview {
-    let context = CoreDataManager.preview.viewContext
-    let sampleBookcase = Bookcase(context: context)
-    sampleBookcase.name = "Örnek Kitaplık (Preview)"
-    sampleBookcase.createdDate = Date()
-    sampleBookcase.learningLanguage = "ja"
-    sampleBookcase.meaningLanguage = "tr"
-    let sampleBook = Book(context: context)
-    sampleBook.meaningWord = "meaning"
-    sampleBook.learningWord = "learning"
-    sampleBook.descriptionWord = "descr"
-    sampleBook.exampleSentence = "sentence"
-    sampleBook.bookcase = sampleBookcase
-    
-    return BookcaseDetailUI(bookcaseName: "sample", bookcaseLearningCode: "ja", bookcaseMeaningCode: "tr")
+    let mockCoreData = CoreDataManager.preview
+    let vm = BookcaseDetailViewModel(bookcaseName: "Japonca Kelimeler", learningLanguage: "ja", meaningLanguage: "tr", dataManager: mockCoreData)
+    NavigationStack { BookcaseDetailUI(viewModel: vm) }
 }
