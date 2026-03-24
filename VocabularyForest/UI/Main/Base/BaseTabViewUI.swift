@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DependencyContainer
 
 struct BaseTabViewUI: View {
     
@@ -14,15 +15,14 @@ struct BaseTabViewUI: View {
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @EnvironmentObject private var learningRouter: LearningRouter
+    @EnvironmentObject private var tabBarController: TabBarController
     @StateObject private var viewModel = BaseTabViewModel()
-    @StateObject var tabbarController = TabBarController()
-    @State private var selectedTab: BaseTabTypes = .quiz
     @State private var isAddLibraryPresented = false
     
     // MARK: - VIEW
 
     var body: some View {
-        TabView(selection: $selectedTab, content: {
+        TabView(selection: $tabBarController.selectedTab, content: {
             learningFeedTab
             createBookTab
             bookcaseFeedTab
@@ -92,7 +92,7 @@ extension BaseTabViewUI {
             LearningFeedUI().navigationDestination(for: LearningRouter.Destination.self) { destination in
                 switch destination {
                     case .forest:
-                    ForestUI(tabBar: $selectedTab, bookcaseRouter: bookcaseRouter)
+                    ForestCoordinator(resolver: DC.shared).start()
                         .ignoresSafeArea()
                         .navigationBarBackButtonHidden()
                         .toolbar(.hidden, for: .tabBar)

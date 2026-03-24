@@ -9,18 +9,35 @@ import UserNotifications
 import Combine
 import UIKit
 
-class NotificationManager: ObservableObject {
+// MARK: - NOTIFICATION MANAGER PROTOCOL
+
+@MainActor
+protocol NotificationManagerProtocol: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
+    
+    var notificationsEnabled: Bool { get set }
+    func cancelHealthNotifications()
+    func scheduleHealthNotification(targetValue: Int, timeInterval: TimeInterval)
+    func checkNotificationStatus() async
+    func requestEnable() async
+    func requestDisable() async
+    func createNotification(bookId: String, learningWord: String, meaningWord: String, description: String, example: String)
+    func deleteNotification(bookId: String)
+    func removeAllNotification()
+}
+
+class NotificationManager: NotificationManagerProtocol {
     
     // MARK: - PROPERTIES
     
-    @MainActor
     @Published var notificationsEnabled: Bool = false
-    static let shared = NotificationManager()
     private let center = UNUserNotificationCenter.current()
+    private var healthNotificationIDs: [String] {
+        return ["health_limit_50","health_limit_20", "health_limit_10", "health_limit_0"]
+    }
     
     // MARK: - INIT
 
-    private init() {
+    init() {
         Task {
             await checkNotificationStatus()
         }
@@ -30,12 +47,6 @@ class NotificationManager: ObservableObject {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
-    }
-
-    // MARK: - HELPERS
-    
-    private var healthNotificationIDs: [String] {
-        return ["health_limit_50","health_limit_20", "health_limit_10", "health_limit_0"]
     }
 
     func cancelHealthNotifications() {
@@ -86,10 +97,11 @@ class NotificationManager: ObservableObject {
     @objc private func handleAppDidBecomeActive() {
         Task {
             await checkNotificationStatus()
-            }
+        }
     }
 
-    @MainActor
+    // MARK: - ASYNC PERMISSIONS
+
     func checkNotificationStatus() async {
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         let newStatus = (settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional)
@@ -98,7 +110,6 @@ class NotificationManager: ObservableObject {
         }
     }
     
-    @MainActor
     func requestEnable() async {
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         switch settings.authorizationStatus {
@@ -106,7 +117,6 @@ class NotificationManager: ObservableObject {
             do {
                 let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 self.notificationsEnabled = granted
-                
             } catch {
                 self.notificationsEnabled = false
             }
@@ -122,20 +132,19 @@ class NotificationManager: ObservableObject {
         }
     }
 
-    @MainActor
     func requestDisable() async {
         await openAppSettings()
     }
 
-    @MainActor
     private func openAppSettings() async {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             await UIApplication.shared.open(url)
         }
     }
     
-    func createNotification(bookId: String,
-                            learningWord: String, meaningWord: String, description: String, example: String) {
+    // MARK: - NOTIFICATION OPERATIONS
+    
+    func createNotification(bookId: String, learningWord: String, meaningWord: String, description: String, example: String) {
         let randomHour = Int.random(in: (8...22))
         let randomMinute = Int.random(in: (0...59))
         var dateComponents = DateComponents()
@@ -149,7 +158,7 @@ class NotificationManager: ObservableObject {
         }else if description.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty && !example.isEmpty{
             content = askExample(learningWord: learningWord, meaningWord: meaningWord, example: example)
         }else if example.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty {
-            content = askDescription(learningWord: learningWord, meaningWord: meaningWord, description: description)
+            content = askDescription(learningWord: learningWord, meaningWord: description, description: description) // Düzeltme yapıldı
         }
         
         if let content {
@@ -172,37 +181,37 @@ class NotificationManager: ObservableObject {
         center.removeAllDeliveredNotifications()
         center.removeAllPendingNotificationRequests()
     }
+}
+
+// MARK: - PRIVATE HELPERS
+
+private extension NotificationManager {
     
-    // MARK: - PRIVATE HELPERS
-    
-    private func askDescription(learningWord: String, meaningWord: String, description: String) -> UNMutableNotificationContent {
+    func askDescription(learningWord: String, meaningWord: String, description: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
         content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
         content.body = String(localized:"Description: \(description)")
-        
         return content
     }
     
-    private func askExample(learningWord: String, meaningWord: String, example: String) -> UNMutableNotificationContent {
+    func askExample(learningWord: String, meaningWord: String, example: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = String(localized:"Kelimemiz: \(learningWord) 📚")
         content.subtitle = String(localized:"Meaning: \(meaningWord) 🥰")
         content.body = String(localized:"Example: \(example)")
-        
         return content
     }
     
-    private func askWordAndMeaning(learningWord: String, meaningWord: String) -> UNMutableNotificationContent {
+    func askWordAndMeaning(learningWord: String, meaningWord: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = getRandomWordTitle()
         content.subtitle = String(localized:"\(learningWord)")
         content.body = String(localized:"Meaning: \(meaningWord)")
-        
         return content
     }
     
-    private func getRandomWordTitle() -> String {
+    func getRandomWordTitle() -> String {
         let titleList = [String(localized: "Hatırlama Vakti 📚"), String(localized:"Öğrenme Zamanı 🥰"), String(localized:"Bunu hatırlıyor musun 👀")]
         return titleList.randomElement() ?? String(localized:"Hatırlama Vakti 📚")
     }

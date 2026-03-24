@@ -6,25 +6,42 @@
 //
 
 import Foundation
+import YakoSwift
 
 // MARK: - Libraries
 
-struct Libraries: Decodable {
+public struct Libraries: Decodable {
     let version: Int?
     let updatedAt: String?
     let libraries: [Library]?
+    
+    public init(version: Int?, updatedAt: String?, libraries: [Library]?) {
+        self.version = version
+        self.updatedAt = updatedAt
+        self.libraries = libraries
+    }
 }
 
 // MARK: - Library
 
-struct Library: Decodable, Identifiable, Hashable {
-    let id, sourceLanguage, targetLanguage: String?
+public struct Library: Decodable, Identifiable, Hashable {
+    public let id, sourceLanguage, targetLanguage: String?
     let name: String?
     let wordCount: Int?
     let fileKey, updatedAt: String?
+    
+    public init(id: String?, sourceLanguage: String?, targetLanguage: String?, name: String?, wordCount: Int?, fileKey: String?, updatedAt: String?) {
+        self.id = id
+        self.sourceLanguage = sourceLanguage
+        self.targetLanguage = targetLanguage
+        self.name = name
+        self.wordCount = wordCount
+        self.fileKey = fileKey
+        self.updatedAt = updatedAt
+    }
 }
 
-extension String {
+public extension String {
     func toLanguageDisplayName() -> String {
         let languages: [String: String] = [
             "en-US": String(localized: "İngilizce (Amerikan)"),

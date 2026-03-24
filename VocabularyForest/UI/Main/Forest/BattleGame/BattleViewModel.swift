@@ -9,6 +9,7 @@
 
 import Combine
 import Foundation
+import DependencyContainer
 
 protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func askQuestion()
@@ -46,11 +47,13 @@ protocol BattleViewModelOutputProcotol: AnyObject {
 
 class BattleViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    private let coreData: any CoreDataManagerProtocol
+    private let audioService: any AudioServiceProtocol
+    private let forestDataManager: any ForestDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
-    private let coreData: CoreDataManager
-    private let forestDataManager: ForestDataManager
-    private let audioService: AudioServiceProtocol
     private var questionList: [QuestionModel] = []
     private var answerBooks: [BookModel] = []
     private var currentQuestionId = 0
@@ -77,7 +80,11 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
 
-    init(coreDataManager: CoreDataManager = .shared, audioService: AudioServiceProtocol = ForestAudioService.shared, forestDataManager: ForestDataManager = .shared) {
+    init(
+        coreDataManager: (CoreDataManagerProtocol),
+        audioService: (AudioServiceProtocol),
+        forestDataManager: (ForestDataManagerProtocol)
+    ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
@@ -246,13 +253,13 @@ extension BattleViewModel: BattleViewModelProtocol {
                     errorModel = .emptyBookcase
                     return
                 }
-                guard let spesificBooks = coreData.fetchSafeBooksExampleDescription(model: bookcase, contextType: .background) else {
+                guard let spesificBooks = coreData.fetchSafeBooksExampleDescription(model: bookcase, sortDescriptors: nil, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(contextType: .background) else {
+                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(sortDescriptors: nil, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -270,7 +277,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     return
                 }
                 guard let spesificBooks = coreData.fetchBooks(
-                    model: bookcase,
+                    model: bookcase, sortDescriptors: nil,
                     contextType: .background
                 ) else {
                     errorModel = .emptyBookcase

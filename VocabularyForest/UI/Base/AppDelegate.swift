@@ -17,6 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         center.requestAuthorization(options: [.sound, .alert, .badge]) { granted, error in
             if (error != nil) { UIApplication.shared.registerForRemoteNotifications() }
         }
+        AppDependencyConfigurer.configure()
         return true
     }
     

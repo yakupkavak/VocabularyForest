@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DependencyContainer
 
 struct BookModel: Equatable, Codable, Hashable, Identifiable {
     var id: UUID
@@ -18,6 +19,10 @@ struct BookModel: Equatable, Codable, Hashable, Identifiable {
     var longMemory: Bool
     var shortMemory: Bool
     var partOfSpeech: PartOfSpeech
+    
+    private var coreDataManager: CoreDataManagerProtocol {
+        DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+    }
 }
 
 struct BookHelperModel {
@@ -28,12 +33,12 @@ struct BookHelperModel {
 
 extension BookModel {
     public var bookcaseName: String? {
-        CoreDataManager.shared.fetchBookHelperProperties(book: self, contextType: .main)?.bookcaseName
+        coreDataManager.fetchBookHelperProperties(book: self, contextType: .main)?.bookcaseName
     }
     public var learningLanguageCode: String? {
-        CoreDataManager.shared.fetchBookHelperProperties(book: self, contextType: .main)?.learningcode
+        coreDataManager.fetchBookHelperProperties(book: self, contextType: .main)?.learningcode
     }
     public var meaningLanguageCode: String? {
-        CoreDataManager.shared.fetchBookHelperProperties(book: self, contextType: .main)?.meaningCode
+        coreDataManager.fetchBookHelperProperties(book: self, contextType: .main)?.meaningCode
     }
 }

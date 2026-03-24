@@ -6,23 +6,25 @@
 //
 
 import Alamofire
+import CoreAPI
+import YakoSwift
 
-enum GetBookcase: EndPoint {
+public enum GetBookcase: EndPoint {
     
     case definition(_ value: GetBookcaseRequestModel)
 
-    var baseURL: String {
-        return AppConfig.baseURL
+    public var baseURL: String {
+        return "https://vocab-api.yakupkavk.workers.dev/api/"
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .definition(let value):
             "library/\(value.bookcaseID)"
         }
     }
     
-    var method: HTTPMethod {
+    public var method: HTTPMethod {
         switch self {
             case .definition:
                 return .get
@@ -33,7 +35,7 @@ enum GetBookcase: EndPoint {
         return [:]
     }
     
-    var headers: [String: String] {
+    public var headers: [String: String] {
         [:]
     }
 }

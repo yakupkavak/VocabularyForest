@@ -18,22 +18,31 @@ struct PolicyContent: Identifiable {
 
 class SettingsViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    
+    private let notificationManager: any NotificationManagerProtocol
+    private let coreDataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
-    private var manager: CoreDataManager
-    private var notificationManager = NotificationManager.shared
     private var cancellables = Set<AnyCancellable>()
     @Published var sheetContent: PolicyContent? = nil
     @Published var notificationsEnabled: Bool = false
     
     // MARK: - INIT
     
-    init(manager: CoreDataManager = .shared) {
-        self.manager = manager
-        notificationManager.$notificationsEnabled
-            .receive(on: RunLoop.main)
-            .assign(to: \.notificationsEnabled, on: self)
-            .store(in: &cancellables)
+    init(notificationManager: any NotificationManagerProtocol ,coreDataManager: CoreDataManagerProtocol) {
+        self.notificationManager = notificationManager
+        self.coreDataManager = coreDataManager
+        
+        self.notificationsEnabled = self.notificationManager.notificationsEnabled
+        self.notificationManager.objectWillChange
+        .receive(on: RunLoop.main)
+        .sink { [weak self] _ in
+            guard let self = self else { return }
+            self.notificationsEnabled = self.notificationManager.notificationsEnabled
+        }
+        .store(in: &cancellables)
     }
     
     // MARK: - HELPERS
@@ -202,6 +211,6 @@ class SettingsViewModel: ObservableObject {
     }
     
     func deleteAllData() {
-        manager.deleteEverything(contextType: .background)
+        coreDataManager.deleteEverything(contextType: .background)
     }
 }

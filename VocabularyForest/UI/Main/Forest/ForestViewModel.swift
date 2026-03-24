@@ -44,6 +44,12 @@ protocol ForestViewModelProtocol: AnyObject {
 
 class ForestViewModel: BaseViewModel {
     
+    // MARK: - DEPENDENCIES
+    
+    private let coreDataManager: CoreDataManagerProtocol
+    private let audioService: AudioServiceProtocol
+    private let forestDataManager: ForestDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var dailyQuestList: [QuestModel] = []
@@ -60,16 +66,20 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    let coreDataManager = ForestDataManager.shared
-    private let audioService: AudioServiceProtocol
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
     
     // MARK: - INIT
     
-    init(audioService: AudioServiceProtocol = ForestAudioService.shared) {
+    init(
+        audioService: AudioServiceProtocol,
+        coreDataManager: CoreDataManagerProtocol,
+        forestDataManager: ForestDataManagerProtocol
+    ) {
         self.audioService = audioService
+        self.coreDataManager = coreDataManager
+        self.forestDataManager = forestDataManager
         super.init()
     }
 }
@@ -92,7 +102,10 @@ extension ForestViewModel {
         if type == .learning {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllBooksWithExampleDescription(contextType: .background) else {
+                guard let books = coreDataManager.fetchAllBooksWithExampleDescription(
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -100,7 +113,11 @@ extension ForestViewModel {
                     return false
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchSafeBooksExampleDescription(model: bookcase, contextType: .background) else {
+                guard let books = coreDataManager.fetchSafeBooksExampleDescription(
+                    model: bookcase,
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if books.filter({ $0.shortMemory == true }).count < minBook {
@@ -112,7 +129,7 @@ extension ForestViewModel {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = CoreDataManager.shared.fetchAllSafeBooks(contextType: .background) else {
+                guard let books = coreDataManager.fetchAllSafeBooks(contextType: .background) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -127,7 +144,11 @@ extension ForestViewModel {
                     }
                 }
             case .spesific(let bookcase):
-                guard let books = CoreDataManager.shared.fetchBooks(model: bookcase, contextType: .background) else {
+                guard let books = coreDataManager.fetchBooks(
+                    model: bookcase,
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) else {
                     showBookThreshold = true
                     return false }
                 if type == .competitive {
@@ -158,7 +179,7 @@ extension ForestViewModel {
             guard let self else { return }
             
             if !forestInitalized {
-                let result = coreDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
+                let result = forestDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
                 await MainActor.run {
                     if result.status == .success {
                         UserDefaults.standard.set(true, forKey: "forestInitalized")
@@ -166,12 +187,15 @@ extension ForestViewModel {
                 }
             }
             
-            let fetchedAnimals = coreDataManager.fetchAnimals(contextType: .background).data ?? []
-            let fetchedSculptures = coreDataManager.fetchSculptures(contextType: .background).data ?? []
-            let fetchedTrees = coreDataManager.fetchTrees(contextType: .background).data ?? []
-            let fetchedBookcases = CoreDataManager.shared.fetchSafeBookcases(contextType: .background)
-            let statusResult = coreDataManager.fetchForestStatus(contextType: .background)
-            let questResult = coreDataManager.fetchQuests(contextType: .background)
+            let fetchedAnimals = forestDataManager.fetchAnimals(contextType: .background).data ?? []
+            let fetchedSculptures = forestDataManager.fetchSculptures(contextType: .background).data ?? []
+            let fetchedTrees = forestDataManager.fetchTrees(contextType: .background).data ?? []
+            let fetchedBookcases = coreDataManager.fetchSafeBookcases(
+                sortDescriptors: nil,
+                contextType: .background
+            )
+            let statusResult = forestDataManager.fetchForestStatus(contextType: .background)
+            let questResult = forestDataManager.fetchQuests(contextType: .background)
             
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
@@ -239,7 +263,7 @@ extension ForestViewModel {
     func startRain() {
         showRainButton = false
         output?.startRain()
-        coreDataManager.startRain(contextType: .background)
+        forestDataManager.startRain(contextType: .background)
         var time = 0
         let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self else { return }
@@ -291,7 +315,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     func updateComponentName(name: String) {
         guard let selectedModel else { return }
         guard let componentUUID else { return }
-        let result = ForestDataManager.shared.updateComponentName(
+        let result = forestDataManager.updateComponentName(
             id: componentUUID,
             type: selectedModel,
             newName: name,
@@ -300,15 +324,15 @@ extension ForestViewModel: ForestViewModelProtocol {
         if result.status == .success {
             switch selectedModel {
             case .animal:
-                if let model = coreDataManager.fetchAnimal(id: componentUUID, contextType: .background) {
+                if let model = forestDataManager.fetchAnimal(id: componentUUID, contextType: .background) {
                     self.output?.setupAnimal(animal: model)
                 }
             case .plant:
-                if let model = coreDataManager.fetchPlant(id: componentUUID, contextType: .background) {
+                if let model = forestDataManager.fetchPlant(id: componentUUID, contextType: .background) {
                     self.output?.setupPlant(plant: model)
                 }
             case .sculpture:
-                if let model = coreDataManager.fetchSculpture(id: componentUUID, contextType: .background) {
+                if let model = forestDataManager.fetchSculpture(id: componentUUID, contextType: .background) {
                     self.output?.setupSculpture(sculpture: model)
                 }
             }
@@ -318,7 +342,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
-        let result = coreDataManager.claimReward(quest: quest, contextType: .background)
+        let result = forestDataManager.claimReward(quest: quest, contextType: .background)
         if result.status == .success {
             fetchForest()
         }
@@ -343,7 +367,7 @@ extension ForestViewModel: ForectSceneProtocol {
                 xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
             }
         }
-        coreDataManager.updateComponentPosition(
+        forestDataManager.updateComponentPosition(
             model: model,
             xValue: xValue,
             yValue: yValue,

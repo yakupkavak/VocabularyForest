@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import DependencyContainer
 
 // MARK: - CORE DATA MANAGER ENUMS
 
@@ -16,11 +17,12 @@ extension CoreDataManager {
         case background
         
         var context: NSManagedObjectContext {
-            switch self {
+            let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+            return switch self {
             case .main:
-                CoreDataManager.shared.viewContext
+                coreDataManager.viewContext
             case .background:
-                CoreDataManager.shared.backgroundContext
+                coreDataManager.backgroundContext
             }
         }
     }
@@ -30,11 +32,55 @@ extension CoreDataManager {
     }
 }
 
-class CoreDataManager {
+// MARK: - CORE DATA PROTOCOL
+
+protocol CoreDataManagerProtocol: AnyObject {
+    
+    // MARK: Properties
+    
+    var viewContext: NSManagedObjectContext { get }
+    var backgroundContext: NSManagedObjectContext { get set }
+    
+    // MARK: Core Data Operations
+    
+    func save(in context: NSManagedObjectContext)
+    func save(type contextType: CoreDataManager.ContextType)
+    func deleteEverything(contextType: CoreDataManager.ContextType)
+    
+    // MARK: Book Operations
+    
+    func updateBookAnswer(book: BookModel, type: BattleQuestionType, contextType: CoreDataManager.ContextType) -> Resource<Bool>
+    func createSafeBook(learningWord: String, meaningWord: String, exampleSentence: String?, descriptionWord: String?, partOfSpeech: String?, safeBookcase bookcase: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookModel?
+    func createBook(learningWord: String, meaningWord: String, exampleSentence: String?, descriptionWord: String?, partOfSpeech: String?, in bookcase: Bookcase, contextType: CoreDataManager.ContextType) -> Book
+    func updateBook(bookToUpdate: BookModel, learningWord: String, meaningWord: String, descriptionWord: String?, exampleSentence: String?, onComplete: () -> (), contextType: CoreDataManager.ContextType)
+    func deleteBook(book: BookModel, contextType: CoreDataManager.ContextType)
+    func fetchBookHelperProperties(book model: BookModel, contextType: CoreDataManager.ContextType) -> BookHelperModel?
+    func fetchAllSafeBooks(contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchSafeBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    // MARK: Bookcase Operations
+    
+    func updateBookcase(item: BookcaseDisplayItem, newName: String, learningLang: Language, meaningLang: Language, onComplete: () -> (), contextType: CoreDataManager.ContextType)
+    func createBookcase(name: String, learningLanguage: String, meaningLanguage: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+    func importBookcase(_ request: BookcaseRequest, overwrite: Bool, contextType: CoreDataManager.ContextType, completion: @escaping (Result<Bookcase, CoreDataManager.ImportBookcaseError>) -> Void)
+    func deleteBookcase(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType)
+    func deleteBookcase(bookcase: Bookcase, contextType: CoreDataManager.ContextType)
+    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookcaseStatus?
+    func fetchSafeBookcases(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookcaseModel]?
+    func fetchSafeBookcase(book: BookModel, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+    func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
+}
+
+class CoreDataManager: CoreDataManagerProtocol {
     
     // MARK: - PROPERTIES
     
-    static let shared = CoreDataManager()
+    private let forestDataManager = DC.shared.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+    private let notificationManager = DC.shared.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
     let container: NSPersistentContainer
     var viewContext: NSManagedObjectContext {
         return container.viewContext
@@ -45,9 +91,10 @@ class CoreDataManager {
         return context
     }()
     
+    
     // MARK: - INIT
     
-    private init(inMemory: Bool = false) {
+    init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "VocabularyForest")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -82,7 +129,7 @@ class CoreDataManager {
                 }
                 save(in: context)
             }
-            ForestDataManager.shared.checkGame(contextType: contextType == .background ? .background : .main)
+            forestDataManager.checkGame(contextType: contextType == .background ? .background : .main)
         }
     }
     
@@ -161,7 +208,7 @@ extension CoreDataManager {
                     partOfSpeech: String?,
                     safeBookcase bookcase: BookcaseModel,
                     contextType: ContextType) -> BookModel? {
-        contextType.context.performAndWait {
+        return contextType.context.performAndWait { () -> BookModel? in
             let context = contextType.context
             let book = Book(context: context)
             guard let bookcase = fetchSingleBookcase(bookcase: bookcase, contextType: contextType) else { return nil }
@@ -175,13 +222,15 @@ extension CoreDataManager {
             book.shortMemory = true
             save(in: context)
             let persistentBookID = book.objectID.uriRepresentation().absoluteString
-            NotificationManager.shared.createNotification(
-                bookId: persistentBookID,
-                learningWord: learningWord,
-                meaningWord: meaningWord,
-                description: descriptionWord ?? "",
-                example: exampleSentence ?? ""
-            )
+            Task { @MainActor in
+                notificationManager.createNotification(
+                    bookId: persistentBookID,
+                    learningWord: learningWord,
+                    meaningWord: meaningWord,
+                    description: descriptionWord ?? "",
+                    example: exampleSentence ?? ""
+                )
+            }
             guard let bookId = book.id, let bookcaseId = bookcase.id else { return nil }
             let safeBook = BookModel(id: bookId, bookcaseId: bookcaseId, createdDate: Date(), learningWord: learningWord, meaningWord: meaningWord, longMemory: false, shortMemory: true, partOfSpeech: PartOfSpeech.convertFromCoreData(value: partOfSpeech))
             return safeBook
@@ -209,7 +258,7 @@ extension CoreDataManager {
             book.shortMemory = true
             save(in: context)
             let persistentBookID = book.objectID.uriRepresentation().absoluteString
-            NotificationManager.shared.createNotification(
+            notificationManager.createNotification(
                 bookId: persistentBookID,
                 learningWord: learningWord,
                 meaningWord: meaningWord,
@@ -249,7 +298,7 @@ extension CoreDataManager {
             if let bookModel = fetchSingleBook(book: book, contextType: contextType) {
                 context.delete(bookModel)
                 let persistentBookID = bookModel.objectID.uriRepresentation().absoluteString
-                NotificationManager.shared.deleteNotification(bookId: persistentBookID)
+                notificationManager.deleteNotification(bookId: persistentBookID)
                 save(in: context)
             }
         }

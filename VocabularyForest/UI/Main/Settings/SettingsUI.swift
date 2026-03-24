@@ -12,7 +12,7 @@ struct SettingsUI: View {
     
     // MARK: - PROPERTIES
     
-    @StateObject private var viewModel = SettingsViewModel()
+    @ObservedObject var viewModel: SettingsViewModel
     @State private var showingDeleteAlert = false
     @Environment(\.requestReview) var requestReview
 
@@ -144,5 +144,5 @@ private struct PolicySheetView: View {
 }
 
 #Preview {
-    SettingsUI()
+    SettingsUI(viewModel: SettingsViewModel(notificationManager: NotificationManager(), coreDataManager: CoreDataManager()))
 }

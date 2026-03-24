@@ -7,20 +7,23 @@
 //
 
 import Alamofire
+import CoreAPI
+import YakoSwift
 
-enum GetLibraries: EndPoint {
+@DefaultInit
+public enum GetLibraries: EndPoint {
     
     case standart
     
-    var baseURL: String {
-        return AppConfig.baseURL
+    public var baseURL: String {
+        return "https://vocab-api.yakupkavk.workers.dev/api/"
     }
     
-    var path: String {
+    public var path: String {
         "libraries"
     }
     
-    var method: HTTPMethod {
+    public var method: HTTPMethod {
         .get
     }
     
@@ -28,7 +31,7 @@ enum GetLibraries: EndPoint {
         return [:]
     }
     
-    var headers: [String: String] {
+    public var headers: [String: String] {
         [:]
     }
 }

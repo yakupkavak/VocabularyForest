@@ -10,6 +10,10 @@ import Foundation
 
 final class BookcaseDetailViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    
+    private let dataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var books: [BookModel] = []
@@ -17,7 +21,6 @@ final class BookcaseDetailViewModel: ObservableObject {
     @Published var createdAnyBook = false
     @Published var editingBook: BookModel? = nil
     private var bookcase: BookcaseModel? = nil
-    private var dataManager = CoreDataManager.shared
     private var allBooks: [BookModel] = []
     private var cancellables = Set<AnyCancellable>()
     var bookcaseName: String
@@ -26,11 +29,11 @@ final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - INIT
     
-    init(bookcaseName: String, learningLanguage: String, meaningLanguage: String) {
+    init(bookcaseName: String, learningLanguage: String, meaningLanguage: String, dataManager: CoreDataManagerProtocol) {
         self.bookcaseName = bookcaseName
         self.learningLanguage = learningLanguage
         self.meaningLanguage = meaningLanguage
-
+        self.dataManager = dataManager
         fetchBookcase(bookcaseName: bookcaseName, learningLanguage: learningLanguage, meaningLanguage: meaningLanguage)
         if let bookcase {
             fetchBooks(bookcase: bookcase)
@@ -100,7 +103,11 @@ final class BookcaseDetailViewModel: ObservableObject {
         Task {
             let fetchedBooks = await Task.detached(priority: .userInitiated) { [weak self] in
                 guard let self else { return [] }
-                return await dataManager.fetchSafeBooks(model: bookcase, contextType: .background) ?? ([] as [BookModel])
+                return await dataManager.fetchSafeBooks(
+                    model: bookcase,
+                    sortDescriptors: nil,
+                    contextType: .background
+                ) ?? ([] as [BookModel])
             }.value as [BookModel]?
             
             await MainActor.run { [weak self] in
@@ -126,11 +133,18 @@ final class BookcaseDetailViewModel: ObservableObject {
         descriptionWord: String?,
         exampleSentence: String?
     ) {
-        CoreDataManager.shared.updateBook(bookToUpdate: bookToUpdate, learningWord: learningWord, meaningWord: meaningWord, descriptionWord: descriptionWord, exampleSentence: exampleSentence, onComplete: {
-            if let bookcase = self.bookcase {
-                fetchBooks(bookcase: bookcase)
-            }
-            self.editingBook = nil
-        }, contextType: .main)
+        dataManager.updateBook(
+            bookToUpdate: bookToUpdate,
+            learningWord: learningWord,
+            meaningWord: meaningWord,
+            descriptionWord: descriptionWord,
+            exampleSentence: exampleSentence,
+            onComplete: {
+                if let bookcase = self.bookcase {
+                    fetchBooks(bookcase: bookcase)
+                }
+                self.editingBook = nil
+            },
+            contextType: .main)
     }
 }

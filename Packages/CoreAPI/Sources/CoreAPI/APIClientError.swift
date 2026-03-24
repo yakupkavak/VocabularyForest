@@ -5,9 +5,9 @@
 //  Created by Yakup Kavak on 22.12.2025.
 //
 
-internal import Foundation
+import Foundation
 
-public protocol APIError: Decodable {
+public protocol APIError: Decodable, Sendable {
     var message: String { get }
     var debugMessage: String { get }
     var code: Int { get }

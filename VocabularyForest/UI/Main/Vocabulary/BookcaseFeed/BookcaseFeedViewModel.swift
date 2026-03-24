@@ -11,6 +11,10 @@ internal import CoreData
 
 class BookcaseFeedViewModel: ObservableObject {
     
+    // MARK: - DEPENDENCIES
+    
+    private let coreDataManager: CoreDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     @Published var bookcases: [BookcaseDisplayItem] = []
@@ -19,12 +23,11 @@ class BookcaseFeedViewModel: ObservableObject {
     @Published var editingBookcaseItem: BookcaseDisplayItem? = nil
     private var allBookcases: [BookcaseDisplayItem] = []
     private var cancellables = Set<AnyCancellable>()
-    private var manager: CoreDataManager
 
     // MARK: - INIT
   
-    init(manager: CoreDataManager = .shared) {
-        self.manager = manager
+    init(coreDataManager: CoreDataManagerProtocol) {
+        self.coreDataManager = coreDataManager
         fetchBookcases()
         setListener()
     }
@@ -53,7 +56,10 @@ class BookcaseFeedViewModel: ObservableObject {
     }
     
     func fetchBookcases(){
-        let fetchedBookcases = manager.fetchSafeBookcases(contextType: .main) ?? []
+        let fetchedBookcases = coreDataManager.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ) ?? []
         bookcases = fetchedBookcases.map { bookcase in
             BookcaseDisplayItem(
                 id: bookcase.id,
@@ -73,7 +79,7 @@ class BookcaseFeedViewModel: ObservableObject {
     func deleteBookcaseIndex(offsets: IndexSet) {
         let bookcasessToDelete = offsets.map { self.bookcases[$0] }
         for bookcaseDisplayItem in bookcasessToDelete {
-            manager.deleteBookcase(bookcase: bookcaseDisplayItem.bookcase, contextType: .main)
+            coreDataManager.deleteBookcase(bookcase: bookcaseDisplayItem.bookcase, contextType: .main)
             if let index = allBookcases.firstIndex(of: bookcaseDisplayItem) {
                 allBookcases.remove(at: index)
             }
@@ -85,7 +91,7 @@ class BookcaseFeedViewModel: ObservableObject {
     }
 
     func deleteBookcase(item: BookcaseDisplayItem) {
-        manager.deleteBookcase(bookcase: item.bookcase, contextType: .main)
+        coreDataManager.deleteBookcase(bookcase: item.bookcase, contextType: .main)
         if let index = allBookcases.firstIndex(of: item) {
             allBookcases.remove(at: index)
         }
@@ -102,9 +108,15 @@ class BookcaseFeedViewModel: ObservableObject {
         learningLang: Language,
         meaningLang: Language
     ) {
-        manager.updateBookcase(item: item, newName: newName, learningLang: learningLang, meaningLang: meaningLang, onComplete: {
-            fetchBookcases()
-            self.editingBookcaseItem = nil
-        }, contextType: .main)
+        coreDataManager.updateBookcase(
+            item: item,
+            newName: newName,
+            learningLang: learningLang,
+            meaningLang: meaningLang,
+            onComplete: {
+                fetchBookcases()
+                self.editingBookcaseItem = nil
+            },
+            contextType: .main)
     }
 }

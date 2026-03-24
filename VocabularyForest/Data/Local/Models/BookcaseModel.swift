@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DependencyContainer
 
 struct BookcaseModel: Equatable, Codable, Hashable, Identifiable {
     var id: UUID
@@ -13,6 +14,10 @@ struct BookcaseModel: Equatable, Codable, Hashable, Identifiable {
     var createdDate: Date
     var learningLanguage: String
     var meaningLanguage: String
+    
+    private var coreDataManager: CoreDataManagerProtocol {
+        DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+    }
 }
 
 struct BookcaseStatus {
@@ -28,21 +33,21 @@ struct BookcaseStatus {
 
 extension BookcaseModel {
     public var longMemoryBooksCount: Int? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.longMemoryCount
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.longMemoryCount
     }
     public var shortMemoryBooksCount: Int? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.shortMemoryCount
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.shortMemoryCount
     }
     public var totalBooksCount: Int? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.totalBooksCount
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.totalBooksCount
     }
     public var longMemoryBooks: [BookModel]? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.longMemoryBooks
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.longMemoryBooks
     }
     public var shortMemoryBooks: [BookModel]? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.shortMemoryBooks
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.shortMemoryBooks
     }
     public var booksArray: [BookModel]? {
-        CoreDataManager.shared.fetchBookcaseProperties(bookcase: self, contextType: .main)?.bookList
+        coreDataManager.fetchBookcaseProperties(bookcase: self, contextType: .main)?.bookList
     }
 }

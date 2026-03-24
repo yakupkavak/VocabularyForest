@@ -2,6 +2,14 @@ import Foundation
 
 public typealias DC = DependencyContainer
 
+public protocol DCResolve {
+    func resolve<Value>(type: DependencyContainerResolvingType, for interface: Value.Type) -> Value
+}
+
+public protocol DCRegister {
+    func register(type: DependencyContainerRegistrationType, for interface: Any.Type)
+}
+
 public final class DependencyContainer {
     
     // MARK: - PUBLIC PROPERTIES
@@ -20,21 +28,10 @@ public final class DependencyContainer {
     // MARK: - INIT
 
     private init() { }
-    
-    // MARK: - HELPERS
-    
-    public func register(type: DependencyContainerRegistrationType, for interface: Any.Type) {
-        dependencyAccessQueue.sync(flags: .barrier) {
-            let objectIdentifier = ObjectIdentifier(interface)
-            switch type {
-            case .singleInstance(let instance):
-                singleInstanceDependencies[objectIdentifier] = instance
-            case .closureBased(let closure):
-                closureBasedDependecies[objectIdentifier] = closure
-            }
-        }
-    }
-    
+        
+}
+
+extension DependencyContainer: DCResolve {
     public func resolve<Value>(type: DependencyContainerResolvingType, for interface: Value.Type) -> Value {
         var value: Value!
         dependencyAccessQueue.sync {
@@ -54,5 +51,19 @@ public final class DependencyContainer {
             }
         }
         return value
+    }
+}
+
+extension DependencyContainer: DCRegister {
+    public func register(type: DependencyContainerRegistrationType, for interface: Any.Type) {
+        dependencyAccessQueue.sync(flags: .barrier) {
+            let objectIdentifier = ObjectIdentifier(interface)
+            switch type {
+            case .singleInstance(let instance):
+                singleInstanceDependencies[objectIdentifier] = instance
+            case .closureBased(let closure):
+                closureBasedDependecies[objectIdentifier] = closure
+            }
+        }
     }
 }

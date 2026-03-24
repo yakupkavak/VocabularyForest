@@ -12,7 +12,7 @@ struct LearningFeedUI: View {
     
     // MARK: - PROPERTIES
     
-    @StateObject var viewModel = LearningFeedViewModel()
+    @ObservedObject var viewModel: LearningFeedViewModel
     @EnvironmentObject var router: LearningRouter
 
     // MARK: - VIEW
@@ -63,5 +63,5 @@ private extension LearningFeedUI {
 }
 
 #Preview {
-    LearningFeedUI()
+    LearningFeedUI(viewModel: LearningFeedViewModel(coreDataManager: CoreDataManager()))
 }

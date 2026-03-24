@@ -13,7 +13,7 @@ struct CreateBookcaseUI: View {
     // MARK: - PROPERTIES
     
     @EnvironmentObject private var router: BookcaseRouter
-    @StateObject private var viewModel = CreateBookcaseViewModel()
+    @ObservedObject var viewModel: CreateBookcaseViewModel
     @FocusState private var focusedField: Field?
     @State private var activeSheet: SheetTypes? = nil
     
@@ -112,5 +112,5 @@ private extension CreateBookcaseUI {
 }
 
 #Preview {
-    CreateBookcaseUI()
+    CreateBookcaseUI(viewModel: CreateBookcaseViewModel(coreDataManager: CoreDataManager()))
 }

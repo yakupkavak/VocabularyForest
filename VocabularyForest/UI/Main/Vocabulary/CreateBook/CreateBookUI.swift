@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DTO
 
 // MARK: - CREATE BOOK TYPE ENUM
 
@@ -28,7 +29,7 @@ struct CreateBookUI: View {
     @EnvironmentObject private var createBookRouter: CreateBookRouter
     @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
-    @StateObject private var viewModel = CreateBookViewModel()
+    @ObservedObject var viewModel: CreateBookViewModel
     @State private var showSelectBookcase = false
     @State private var selectedBookcase: BookcaseModel? = nil
 
@@ -243,5 +244,5 @@ private extension CreateBookUI {
 }
 
 #Preview {
-    CreateBookUI()
+    CreateBookUI(viewModel: CreateBookViewModel(coreDataManager: CoreDataManager()))
 }

@@ -5,6 +5,9 @@
 //  Created by Yakup Kavak on 22.12.2025.
 //
 
+import CoreAPI
+import DTO
+
 typealias BookcaseRequestResult = Result<BookcaseRequest, APIClientError>
 typealias LibrariesResult = Result<Libraries, APIClientError>
 
@@ -13,7 +16,7 @@ protocol APIServiceProtocol: AnyObject {
     func fetchLibraries(completion: @escaping (LibrariesResult) -> Void)
 }
 
-class APIService: APIServiceProtocol {
+public class APIService: APIServiceProtocol {
     
     // MARK: - PROPERTIES
     

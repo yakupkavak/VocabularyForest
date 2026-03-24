@@ -7,6 +7,7 @@
 
 import CoreData
 import UserNotifications
+import DependencyContainer
 
 enum ForestError: Error {
     case emptyList
@@ -24,25 +25,67 @@ extension ForestDataManager {
         case background
         
         var context: NSManagedObjectContext {
-            switch self {
+            let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+            return switch self {
             case .main:
-                CoreDataManager.shared.viewContext
+                coreDataManager.viewContext
             case .background:
-                CoreDataManager.shared.backgroundContext
+                coreDataManager.backgroundContext
             }
         }
     }
 }
 
-class ForestDataManager {
+// MARK: - FOREST DATA PROTOCOL
+
+protocol ForestDataManagerProtocol: AnyObject {
+    
+    // MARK: Update Quests & Game State
+    
+    func checkAndResetTimeBasedQuests(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func checkGame(contextType: ForestDataManager.ContextType)
+    func checkAndUpdateRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    
+    // MARK: Create Helpers
+    
+    func createForestGame(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createTree(tree model: TreeModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createAnimal(animal model: AnimalModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createSculpture(sculpture model: SculptureModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    
+    // MARK: Fetch Helpers
+    
+    func fetchSculpture(id: UUID, contextType: ForestDataManager.ContextType) -> SculptureModel?
+    func fetchAnimal(id: UUID, contextType: ForestDataManager.ContextType) -> AnimalModel?
+    func fetchPlant(id: UUID, contextType: ForestDataManager.ContextType) -> TreeModel?
+    func getCurrentForest(context: NSManagedObjectContext) -> Forest?
+    func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
+    func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestModel]>
+    func fetchAnimals(contextType: ForestDataManager.ContextType) -> Resource<[AnimalModel]>
+    func fetchTrees(contextType: ForestDataManager.ContextType) -> Resource<[TreeModel]>
+    func fetchSculptures(contextType: ForestDataManager.ContextType) -> Resource<[SculptureModel]>
+    
+    // MARK: Update Helpers
+    
+    func claimReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func winGame(gameLevel: GameLevel, battleEnemyMode: BattleEnemyModel, gameType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func correctAnswer(questionType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateComponentPosition(model: ComponentModelProtocol, xValue: CGFloat, yValue: CGFloat, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateComponentName(id: UUID, type: ComponentType, newName: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func startRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+}
+
+class ForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - PROPERTIES
-    
-    static let shared = ForestDataManager()
+    private let notificationManager = DC.shared.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
     
     // MARK: - INIT
     
-    private init() {}
+    init() {}
     
     // MARK: - UPDATE QUESTS
         
@@ -183,7 +226,9 @@ private extension ForestDataManager {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else { return }
             
-            NotificationManager.shared.cancelHealthNotifications()
+            Task { @MainActor in
+                notificationManager.cancelHealthNotifications()
+            }
             
             let currentHealth = Int(forest.landHealthPercent)
             let decayPerHour: Double = 4.0
@@ -194,11 +239,12 @@ private extension ForestDataManager {
                     let diff = currentHealth - target
                     let hoursUntilDrop = Double(diff) / decayPerHour
                     let secondsUntilDrop = hoursUntilDrop * 3600
-                    
-                    NotificationManager.shared.scheduleHealthNotification(
-                        targetValue: target,
-                        timeInterval: secondsUntilDrop
-                    )
+                    Task { @MainActor in
+                        notificationManager.scheduleHealthNotification(
+                            targetValue: target,
+                            timeInterval: secondsUntilDrop
+                        )
+                    }
                 }
             }
         }
