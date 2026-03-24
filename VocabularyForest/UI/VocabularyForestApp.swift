@@ -21,9 +21,11 @@ struct VocabularyForestApp: App {
     @StateObject private var routerCreateBookcase = CreateBookRouter()
     @StateObject private var tabbarController = TabBarController()
     @StateObject private var coordinator: VocabularyForestCoordinator
-    private let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+    
+    // MARK: - INIT
     
     init() {
+        AppDependencyConfigurer.configure()
         let resolver = DC.shared
         _coordinator = StateObject(wrappedValue: VocabularyForestCoordinator(resolver: resolver))
     }
@@ -34,6 +36,8 @@ struct VocabularyForestApp: App {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
                 if phase == .background {
+                    print("geldim")
+                    let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
                     coreDataManager.save(type: .main)
                 }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)

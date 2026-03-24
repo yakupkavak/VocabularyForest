@@ -15,10 +15,14 @@ enum AppDependencyConfigurer {
         let forestData = ForestDataManager()
         let audioManager = ForestAudioService()
         let notificationManager = NotificationManager()
-        DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)
         DC.shared.register(type: .singleInstance(coreData), for: CoreDataManagerProtocol.self)
-        DC.shared.register(type: .singleInstance(forestData), for: ForestDataManagerProtocol.self)
+        DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)
         DC.shared.register(type: .singleInstance(audioManager), for: AudioServiceProtocol.self)
         DC.shared.register(type: .singleInstance(notificationManager), for: (any NotificationManagerProtocol).self)
+        DC.shared.register(type: .singleInstance(forestData), for: ForestDataManagerProtocol.self)
+        coreData.notificationManager = notificationManager
+        forestData.checkGame(contextType: .background)
+        forestData.notificationManager = notificationManager
+        print("Configure completed")
     }
 }

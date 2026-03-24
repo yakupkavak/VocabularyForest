@@ -81,11 +81,12 @@ protocol ForestDataManagerProtocol: AnyObject {
 class ForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - PROPERTIES
-    private let notificationManager = DC.shared.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
+    
+    weak var notificationManager: (any NotificationManagerProtocol)?
     
     // MARK: - INIT
     
-    init() {}
+    init() { }
     
     // MARK: - UPDATE QUESTS
         
@@ -226,8 +227,8 @@ private extension ForestDataManager {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else { return }
             
-            Task { @MainActor in
-                notificationManager.cancelHealthNotifications()
+            Task { @MainActor [weak self] in
+                self?.notificationManager?.cancelHealthNotifications()
             }
             
             let currentHealth = Int(forest.landHealthPercent)
@@ -240,7 +241,7 @@ private extension ForestDataManager {
                     let hoursUntilDrop = Double(diff) / decayPerHour
                     let secondsUntilDrop = hoursUntilDrop * 3600
                     Task { @MainActor in
-                        notificationManager.scheduleHealthNotification(
+                        notificationManager?.scheduleHealthNotification(
                             targetValue: target,
                             timeInterval: secondsUntilDrop
                         )
