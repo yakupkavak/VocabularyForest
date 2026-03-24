@@ -7,7 +7,7 @@
 import YakoSwift
 
 public struct GetBookcaseRequestModel {
-    let bookcaseID: String
+    public let bookcaseID: String
 
     public init(bookcaseID: String) {
         self.bookcaseID = bookcaseID

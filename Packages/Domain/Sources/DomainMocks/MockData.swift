@@ -1,17 +1,17 @@
 //
 //  MockData.swift
-//  VocabularyForest
+//  Domain
 //
-//  Created by Yakup Kavak on 22.12.2025.
+//  Created by Yakup Kavak on 24.03.2026.
 //
 
 import Foundation
 import DTO
 
-// MARK: - Mock Libraries List
+// MARK: - MOCK
 
-public extension Libraries {
-    static let mock: Libraries = Libraries(
+extension Libraries {
+    nonisolated(unsafe) static let mock: Libraries = Libraries(
         version: 1,
         updatedAt: "2025-12-22T12:00:00.000Z",
         libraries: [
@@ -139,11 +139,11 @@ public extension Libraries {
 
 // MARK: - Mock Bookcase Requests (Details)
 
-extension BookcaseRequest {
+public extension BookcaseRequest {
     
     // --- MEVCUTLAR ---
     
-    static let mockEnUSTrA1: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockEnUSTrA1: BookcaseRequest = BookcaseRequest(
         id: "en-US_tr/a1",
         sourceLanguage: "en-US",
         targetLanguage: "tr",
@@ -158,7 +158,7 @@ extension BookcaseRequest {
         ]
     )
 
-    static let mockEnUSEnGBA1: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockEnUSEnGBA1: BookcaseRequest = BookcaseRequest(
         id: "en-US_en-GB/a1",
         sourceLanguage: "en-US",
         targetLanguage: "en-GB",
@@ -172,7 +172,7 @@ extension BookcaseRequest {
         ]
     )
 
-    static let mockDeEnA2: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockDeEnA2: BookcaseRequest = BookcaseRequest(
         id: "de_en/a2",
         sourceLanguage: "de",
         targetLanguage: "en-US",
@@ -191,7 +191,7 @@ extension BookcaseRequest {
     // --- YENİ DETAYLI VERİLER ---
     
     // İspanyolca -> İngilizce (US) (B1 - Orta Seviye)
-    static let mockEsEnB1: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockEsEnB1: BookcaseRequest = BookcaseRequest(
         id: "es_en-US/b1",
         sourceLanguage: "es",
         targetLanguage: "en-US",
@@ -209,7 +209,7 @@ extension BookcaseRequest {
     )
     
     // Fransızca -> Türkçe (A1)
-    static let mockFrTrA1: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockFrTrA1: BookcaseRequest = BookcaseRequest(
         id: "fr_tr/a1",
         sourceLanguage: "fr",
         targetLanguage: "tr",
@@ -225,7 +225,7 @@ extension BookcaseRequest {
     )
     
     // Japonca -> İngilizce (US) (N5)
-    static let mockJaEnN5: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockJaEnN5: BookcaseRequest = BookcaseRequest(
         id: "ja_en-US/n5",
         sourceLanguage: "ja",
         targetLanguage: "en-US",
@@ -242,7 +242,7 @@ extension BookcaseRequest {
     )
     
     // Çince -> Türkçe (HSK1)
-    static let mockZhTrHSK1: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockZhTrHSK1: BookcaseRequest = BookcaseRequest(
         id: "zh-CN_tr/hsk1",
         sourceLanguage: "zh-CN",
         targetLanguage: "tr",
@@ -258,7 +258,7 @@ extension BookcaseRequest {
     )
     
     // Arapça -> İngilizce (US) (RTL Testi)
-    static let mockArEnBasic: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockArEnBasic: BookcaseRequest = BookcaseRequest(
         id: "ar_en-US/basic",
         sourceLanguage: "ar",
         targetLanguage: "en-US",
@@ -274,7 +274,7 @@ extension BookcaseRequest {
     )
     
     // Rusça -> Türkçe (A2)
-    static let mockRuTrA2: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockRuTrA2: BookcaseRequest = BookcaseRequest(
         id: "ru_tr/a2",
         sourceLanguage: "ru",
         targetLanguage: "tr",
@@ -290,7 +290,7 @@ extension BookcaseRequest {
     )
     
     // Korece -> İngilizce (US)
-    static let mockKoEnBeginner: BookcaseRequest = BookcaseRequest(
+    nonisolated(unsafe) static let mockKoEnBeginner: BookcaseRequest = BookcaseRequest(
         id: "ko_en-US/beginner",
         sourceLanguage: "ko",
         targetLanguage: "en-US",
@@ -305,3 +305,4 @@ extension BookcaseRequest {
         ]
     )
 }
+

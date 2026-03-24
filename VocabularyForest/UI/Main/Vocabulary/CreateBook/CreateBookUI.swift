@@ -27,6 +27,7 @@ struct CreateBookUI: View {
     // MARK: - PROPERTIES
 
     @EnvironmentObject private var createBookRouter: CreateBookRouter
+    @EnvironmentObject private var coordinator: VocabularyForestCoordinator
     @Environment(\.presentToast) var presentToast
     @FocusState private var focusedField: Field?
     @ObservedObject var viewModel: CreateBookViewModel
@@ -40,7 +41,7 @@ struct CreateBookUI: View {
             Color.backgroundSystem.ignoresSafeArea()
             VStack {
                 if viewModel.bookcasesList.isEmpty {
-                    CreateBookcaseUI()
+                    coordinator.startCreateBookcaseUI()
                 } else {
                     defaultHeader
                     ScrollView(.vertical, showsIndicators: false) {

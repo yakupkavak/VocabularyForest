@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DTO
 
 struct BookcasePacketRow: View {
     

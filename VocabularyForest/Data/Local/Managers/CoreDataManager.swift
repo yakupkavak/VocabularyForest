@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import DependencyContainer
+import DTO
 
 // MARK: - CORE DATA MANAGER ENUMS
 

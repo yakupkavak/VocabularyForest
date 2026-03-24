@@ -11,10 +11,10 @@ import YakoSwift
 // MARK: - BookcaseRequest
 
 public struct BookcaseRequest: Codable {
-    let id, sourceLanguage, targetLanguage, name: String?
-    let wordCount, version: Int?
-    let updatedAt: String?
-    let words: [Word]?
+    public let id, sourceLanguage, targetLanguage, name: String?
+    public let wordCount, version: Int?
+    public let updatedAt: String?
+    public let words: [Word]?
     
     public init(id: String?, sourceLanguage: String?, targetLanguage: String?, name: String?, wordCount: Int?, version: Int?, updatedAt: String?, words: [Word]?) {
         self.id = id
@@ -31,8 +31,8 @@ public struct BookcaseRequest: Codable {
 // MARK: - Word
 
 public struct Word: Codable {
-    let id, term, definition, example: String?
-    let description, partOfSpeech, createdAt: String?
+    public let id, term, definition, example: String?
+    public let description, partOfSpeech, createdAt: String?
     
     public init(id: String?, term: String?, definition: String?, example: String?, description: String?, partOfSpeech: String?, createdAt: String?) {
         self.id = id

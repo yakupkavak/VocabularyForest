@@ -1,5 +1,8 @@
 import SwiftUI
+
 import Lottie
+import DTO
+import DomainMocks
 
 struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewModelProtocol {
     @EnvironmentObject private var router: BookcaseRouter
@@ -91,15 +94,16 @@ extension BookcasePacketsUI {
                 VStack(spacing: 0) {
                     let filteredBySource = libraries.filter { $0.sourceLanguage == selected }
                     let groupedLibraries = Dictionary(grouping: filteredBySource) { $0.targetLanguage ?? String(localized: "Bilinmiyor") }
-                    let sortedKeys = groupedLibraries.keys.sorted()
-                    if sortedKeys.isEmpty {
-                        Text("Bu dil için kütüphane bulunamadı.").foregroundColor(.gray).padding()
+                    let sortedGroups = groupedLibraries.map { (language: $0.key, libs: $0.value) }
+                        .sorted { $0.language < $1.language }
+                    if sortedGroups.isEmpty {
+                        Text("Bu dil için kütüphane bulunamadı.")
+                            .foregroundColor(.gray)
+                            .padding()
                     } else {
-                        ForEach(sortedKeys, id: \.self) { targetLangKey in
-                            if let libsForTarget = groupedLibraries[targetLangKey] {
-                                BookcasePacketRow(language: targetLangKey, libraries: libsForTarget) { library in
-                                    viewModel.downloadLibrary(model: library)
-                                }
+                        ForEach(sortedGroups, id: \.language) { group in
+                            BookcasePacketRow(language: group.language, libraries: group.libs) { library in
+                                viewModel.downloadLibrary(model: library)
                             }
                         }
                     }

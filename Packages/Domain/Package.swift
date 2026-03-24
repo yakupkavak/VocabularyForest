@@ -12,12 +12,10 @@ let package = Package(
             name: "Domain",
             targets: ["Domain", "DTO"]
         ),
+        .library(name: "DomainMocks", targets: ["DomainMocks"])
     ],
     dependencies: [
-        // 1. YakoSwift makromuz GitHub'dan geliyor (Senin eklediğin)
         .package(url: "https://github.com/yakupkavak/YakoSwift", from: "1.0.0"),
-        
-        // 2. YENİ: CoreAPI lokalden, hemen yan klasörden geliyor!
         .package(path: "../CoreAPI")
     ],
     targets: [
@@ -29,12 +27,13 @@ let package = Package(
         .target(
             name: "DTO",
             dependencies: [
-                // YakoSwift'i DTO'ya bağladık
                 .product(name: "YakoSwift", package: "YakoSwift"),
-                
-                // 3. YENİ: CoreAPI'yi DTO'ya bağladık (EndPoint vs. kullanabilmek için)
                 .product(name: "CoreAPI", package: "CoreAPI")
             ]
+        ),
+        .target(
+            name: "DomainMocks",
+            dependencies: ["Domain", "DTO"]
         ),
         .testTarget(
             name: "DomainTests",

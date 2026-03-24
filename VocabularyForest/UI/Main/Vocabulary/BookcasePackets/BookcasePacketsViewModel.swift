@@ -89,7 +89,7 @@ class BookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
             guard let self else { return }
             switch result {
             case .success(let requestResult):
-                self.coreDataService.importBookcase(requestResult, contextType: .background) { result in
+                coreDataService.importBookcase(requestResult, overwrite: true, contextType: .background) { result in
                     switch result {
                     case .success(let success):
                         self.downloadState = .success

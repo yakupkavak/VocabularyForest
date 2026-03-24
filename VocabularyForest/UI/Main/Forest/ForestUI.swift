@@ -327,7 +327,8 @@ extension ForestUI: ForestUIProtocol {
     }
 }
 
-#Preview {
+/*
+ #Preview {
     @State var tabbar = BaseTabTypes.bookcases
     let bookcaseRouter = BookcaseRouter()
     let mockCoreData = CoreDataManager.preview
@@ -335,4 +336,5 @@ extension ForestUI: ForestUIProtocol {
     let mockForestData = ForestDataManager()
     let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData)
     return ForestUI(tabBar: $tabbar, bookcaseRouter: bookcaseRouter, viewModel: viewModel).environmentObject(LearningRouter())
-}
+ }
+ */

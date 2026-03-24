@@ -11,9 +11,9 @@ import YakoSwift
 // MARK: - Libraries
 
 public struct Libraries: Decodable {
-    let version: Int?
-    let updatedAt: String?
-    let libraries: [Library]?
+    public let version: Int?
+    public let updatedAt: String?
+    public let libraries: [Library]?
     
     public init(version: Int?, updatedAt: String?, libraries: [Library]?) {
         self.version = version
@@ -26,9 +26,9 @@ public struct Libraries: Decodable {
 
 public struct Library: Decodable, Identifiable, Hashable {
     public let id, sourceLanguage, targetLanguage: String?
-    let name: String?
-    let wordCount: Int?
-    let fileKey, updatedAt: String?
+    public let name: String?
+    public let wordCount: Int?
+    public let fileKey, updatedAt: String?
     
     public init(id: String?, sourceLanguage: String?, targetLanguage: String?, name: String?, wordCount: Int?, fileKey: String?, updatedAt: String?) {
         self.id = id

@@ -15,6 +15,7 @@
 		3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */ = {isa = PBXBuildFile; productRef = 3791D1A42F6EE10F002D219E /* DependencyContainer */; };
 		37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 37D84B5F2EA8C43A0063F4D8 /* Lottie */; };
 		37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 37D8A7982EF928A700E59CA9 /* Alamofire */; };
+		37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */ = {isa = PBXBuildFile; productRef = 37E8617B2F72C94300DD54C6 /* DomainMocks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
 				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
+				37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
 				373232812F7239AC004F3DF9 /* Domain in Frameworks */,
 				3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */,
@@ -198,6 +200,7 @@
 				375FE1B72F704F7200765018 /* Router */,
 				3732327E2F723975004F3DF9 /* YakoSwift */,
 				373232802F7239AC004F3DF9 /* Domain */,
+				37E8617B2F72C94300DD54C6 /* DomainMocks */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -458,7 +461,7 @@
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VocabularyForest/Info.plist;
+				INFOPLIST_FILE = VocabularyForest/Data/Source/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -501,7 +504,7 @@
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VocabularyForest/Info.plist;
+				INFOPLIST_FILE = VocabularyForest/Data/Source/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -668,6 +671,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		37E8617B2F72C94300DD54C6 /* DomainMocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DomainMocks;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

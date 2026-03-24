@@ -1016,6 +1016,7 @@
       }
     },
     "Bağlantı hatası" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2253,6 +2254,7 @@
       }
     },
     "Decode Hatası Oluştu: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4822,6 +4824,7 @@
       }
     },
     "İngilizce (Amerikan)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4890,6 +4893,7 @@
       }
     },
     "İngilizce (Birleşik Krallık) " : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5163,6 +5167,7 @@
       }
     },
     "İstek zaman aşımına uğradı" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
