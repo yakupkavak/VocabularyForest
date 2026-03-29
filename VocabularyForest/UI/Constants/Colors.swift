@@ -32,3 +32,11 @@ let goldGradient = LinearGradient(
         startPoint: .top,
         endPoint: .bottom
     )
+let woodBrownGradient = LinearGradient(
+    colors: [
+        Color(red: 160/255, green: 125/255, blue: 85/255), // Açık ahşap tonu
+        Color(red: 150/255, green: 100/255, blue: 50/255)   // Koyu ahşap tonu
+    ],
+    startPoint: .top,
+    endPoint: .bottom
+)

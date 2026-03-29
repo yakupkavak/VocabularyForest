@@ -19,6 +19,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		37B28C562F74FE75008A7591 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37267D182E90E9D90019D139 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 37267D1F2E90E9D90019D139;
+			remoteInfo = VocabularyForest;
+		};
 		37BFA05B2F6D24C0007C20E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 37267D182E90E9D90019D139 /* Project object */;
@@ -36,6 +43,7 @@
 		375FE1AA2F70071100765018 /* Router */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Router; sourceTree = "<group>"; };
 		3791D1A12F6EBC0A002D219E /* DependencyContainer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DependencyContainer; sourceTree = "<group>"; };
 		3791D1A22F6EBDE5002D219E /* VocabularyForest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = VocabularyForest.xctestplan; sourceTree = "<group>"; };
+		37B28C502F74FE75008A7591 /* VocabularyForestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabularyForestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabularyForestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,6 +78,11 @@
 				37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */,
 			);
 			path = VocabularyForest;
+			sourceTree = "<group>";
+		};
+		37B28C512F74FE75008A7591 /* VocabularyForestUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VocabularyForestUITests;
 			sourceTree = "<group>";
 		};
 		37BFA0582F6D24C0007C20E7 /* VocabularyForestTests */ = {
@@ -112,6 +125,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37B28C4D2F74FE75008A7591 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37BFA0542F6D24C0007C20E7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,6 +150,7 @@
 				37BFA0632F6E6778007C20E7 /* Packages */,
 				37267D222E90E9D90019D139 /* VocabularyForest */,
 				37BFA0582F6D24C0007C20E7 /* VocabularyForestTests */,
+				37B28C512F74FE75008A7591 /* VocabularyForestUITests */,
 				3791D1A32F6EE10F002D219E /* Frameworks */,
 				37267D212E90E9D90019D139 /* Products */,
 			);
@@ -140,6 +161,7 @@
 			children = (
 				37267D202E90E9D90019D139 /* VocabularyForest.app */,
 				37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */,
+				37B28C502F74FE75008A7591 /* VocabularyForestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -206,6 +228,29 @@
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
 			productType = "com.apple.product-type.application";
 		};
+		37B28C4F2F74FE75008A7591 /* VocabularyForestUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37B28C582F74FE75008A7591 /* Build configuration list for PBXNativeTarget "VocabularyForestUITests" */;
+			buildPhases = (
+				37B28C4C2F74FE75008A7591 /* Sources */,
+				37B28C4D2F74FE75008A7591 /* Frameworks */,
+				37B28C4E2F74FE75008A7591 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				37B28C572F74FE75008A7591 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				37B28C512F74FE75008A7591 /* VocabularyForestUITests */,
+			);
+			name = VocabularyForestUITests;
+			packageProductDependencies = (
+			);
+			productName = VocabularyForestUITests;
+			productReference = 37B28C502F74FE75008A7591 /* VocabularyForestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		37BFA0562F6D24C0007C20E7 /* VocabularyForestTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37BFA05D2F6D24C0007C20E7 /* Build configuration list for PBXNativeTarget "VocabularyForestTests" */;
@@ -242,8 +287,13 @@
 					37267D1F2E90E9D90019D139 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
+					37B28C4F2F74FE75008A7591 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 37267D1F2E90E9D90019D139;
+					};
 					37BFA0562F6D24C0007C20E7 = {
 						CreatedOnToolsVersion = 26.0.1;
+						LastSwiftMigration = 2600;
 						TestTargetID = 37267D1F2E90E9D90019D139;
 					};
 				};
@@ -273,12 +323,20 @@
 			targets = (
 				37267D1F2E90E9D90019D139 /* VocabularyForest */,
 				37BFA0562F6D24C0007C20E7 /* VocabularyForestTests */,
+				37B28C4F2F74FE75008A7591 /* VocabularyForestUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		37267D1E2E90E9D90019D139 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37B28C4E2F74FE75008A7591 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -302,6 +360,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37B28C4C2F74FE75008A7591 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		37BFA0532F6D24C0007C20E7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -312,6 +377,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		37B28C572F74FE75008A7591 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+			targetProxy = 37B28C562F74FE75008A7591 /* PBXContainerItemProxy */;
+		};
 		37BFA05C2F6D24C0007C20E7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
@@ -533,21 +603,65 @@
 			};
 			name = Release;
 		};
-		37BFA05E2F6D24C0007C20E7 /* Debug */ = {
+		37B28C592F74FE75008A7591 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VocabularyForest;
+			};
+			name = Debug;
+		};
+		37B28C5A2F74FE75008A7591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FNF48X95J5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = VocabularyForest;
+			};
+			name = Release;
+		};
+		37BFA05E2F6D24C0007C20E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FNF48X95J5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -559,11 +673,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -594,6 +709,15 @@
 			buildConfigurations = (
 				37267D312E90E9DB0019D139 /* Debug */,
 				37267D322E90E9DB0019D139 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37B28C582F74FE75008A7591 /* Build configuration list for PBXNativeTarget "VocabularyForestUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37B28C592F74FE75008A7591 /* Debug */,
+				37B28C5A2F74FE75008A7591 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

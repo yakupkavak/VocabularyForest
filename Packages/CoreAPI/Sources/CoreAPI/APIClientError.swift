@@ -37,7 +37,7 @@ public enum APIClientError: Error {
         case .handledError(let error):
             error.message
         case .networkError:
-            String(localized: "Bağlantı hatası")
+            String(localized: "Bağlantı hatası", bundle: .module)
         case .decoding(let error):
             String(localized:"Decode Hatası Oluştu: \(String(describing: error))")
         case .timeout:
