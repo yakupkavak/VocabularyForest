@@ -36,7 +36,7 @@ class EnvironmentManager {
     private let waterStatue = SKSpriteNode(imageNamed: "water_statue")
     private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
-    private let questButton = SKSpriteNode(imageNamed: "quest_button")
+    private let announcementButton = SKSpriteNode(imageNamed: "announcement_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
     private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
@@ -174,10 +174,10 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         menuButton.zPosition = 4
         menuButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
         menuButton.name = Constant.menuButtonName
-        questButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.83)
-        questButton.zPosition = 4
-        questButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        questButton.name = "quest_button"
+        announcementButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.83)
+        announcementButton.zPosition = 4
+        announcementButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
+        announcementButton.name = "announcementButton"
         playButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.76)
         playButton.zPosition = 4
         playButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
@@ -194,7 +194,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         refuseIcon.name = ForestConstant.refuseIconName
         scene.addChild(forestButton)
         scene.addChild(playButton)
-        scene.addChild(questButton)
+        scene.addChild(announcementButton)
         scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }

@@ -10,7 +10,7 @@ import SpriteKit
 
 protocol ForestUIProtocol {
     func showOptions()
-    func showQuests()
+    func showAnnouncement()
     func showGameSelection()
     func showForestInfo()
     func updateComponentName(model: ComponentNameable, type: ComponentType)
@@ -43,7 +43,7 @@ struct ForestUI: View {
     @State private var showOption = false
     @State private var showSetting = false
     @State private var showGameSelect = false
-    @State private var showQuest = false
+    @State private var showAnnounce = false
     @State private var showForest = false
     @State private var showUpdateName = false
     @State private var componentName = ""
@@ -79,12 +79,12 @@ struct ForestUI: View {
                 settings.zIndex(4.0)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
-            if showQuest {
+            if showAnnounce {
                 ForestQuestUI(
-                    showQuest: $showQuest,
+                    showQuest: $showAnnounce,
                     selectQuest: { model in
                         selectedQuestForGame = model
-                        showQuest = false
+                        showAnnounce = false
                         showGameSelect = true
                     },
                     dailyQuests: viewModel.dailyQuestList,
@@ -285,7 +285,7 @@ private extension ForestUI {
 private extension ForestUI {
     
     func openQuestGame(model: QuestModel) {
-        showQuest = false
+        showAnnounce = false
         showGameSelect = true
     }
     
@@ -311,12 +311,8 @@ extension ForestUI: ForestUIProtocol {
         showGameSelect = true
     }
     
-    func showQuests() {
-        showQuest = true
-    }
-    
-    func hideQuests() {
-        showQuest = false
+    func showAnnouncement() {
+        showAnnounce = true
     }
     
     func hideOptions() {
@@ -327,7 +323,7 @@ extension ForestUI: ForestUIProtocol {
     }
 }
 
-/*
+
  #Preview {
     @State var tabbar = BaseTabTypes.bookcases
     let bookcaseRouter = BookcaseRouter()
@@ -335,6 +331,7 @@ extension ForestUI: ForestUIProtocol {
     let mockAudio = ForestAudioService()
     let mockForestData = ForestDataManager()
     let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData)
-    return ForestUI(tabBar: $tabbar, bookcaseRouter: bookcaseRouter, viewModel: viewModel).environmentObject(LearningRouter())
+     
+    ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
  }
- */
+ 

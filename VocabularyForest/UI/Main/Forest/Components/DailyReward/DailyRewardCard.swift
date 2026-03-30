@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-struct DailyCardModel {
-    var day: Int
-    var bounty: DailyBountyModel
-    var status: BountyStatus
-}
-
 struct DailyCard: View {
     
     // MARK: - PROPERTIES

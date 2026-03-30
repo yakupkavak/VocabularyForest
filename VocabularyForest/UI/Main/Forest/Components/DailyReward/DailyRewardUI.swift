@@ -9,11 +9,16 @@ import SwiftUI
 
 struct DailyRewardUI: View {
     
-    // MARK: - INIT
+    // MARK: - PROPERTIES
     
+    @Binding var isOpen: Bool
     let cardList: [DailyCardModel]
-    let backgroundHeight = 0.8
+    let onClick: (DailyCardModel) -> Void
     
+    // MARK: - PRIVATE PROPERTIES
+    
+    private let backgroundHeight = 0.8
+
     // MARK: - UI
     
     var body: some View {
@@ -51,7 +56,7 @@ struct DailyRewardUI: View {
                     }
                     .overlay(alignment: .bottomTrailing, content: {
                         Button {
-                            print("clsoe")
+                            isOpen.toggle()
                         } label: {
                             Image("close_button_gold")
                                 .renderingMode(.template)
@@ -66,34 +71,38 @@ struct DailyRewardUI: View {
                     })
                     .padding()
                     .padding(.top, -16)
+    
+                    if cardList.count >= 7 {
+                        Grid(horizontalSpacing: 16, verticalSpacing: 34) {
+                            
+                            GridRow {
+                                ForEach(0..<3, id: \.self) { index in
+                                    DailyCard(parentWidth: screenWidth, model: cardList[index]) {
+                                        onClick(cardList[index])
+                                    }
+                                }
+                            }
+                            
+                            GridRow {
+                                ForEach(3..<6, id: \.self) { index in
+                                    DailyCard(parentWidth: screenWidth, model: cardList[index]) {
+                                        onClick(cardList[index])
+                                    }
+                                }
+                            }
+                        }
                         
-                    Grid(horizontalSpacing: 16, verticalSpacing: 34) {
-                        GridRow {
-                            DailyCard(parentWidth: screenWidth, model: cardList[0]) {
-                                print("yakup")
-                            }
-                            DailyCard(parentWidth: screenWidth, model: cardList[1]) {
-                                print("yakup")
-                            }
-                            DailyCard(parentWidth: screenWidth, model: cardList[2]) {
-                                print("yakup")
-                            }
-                        }
-                        GridRow {
-                            DailyCard(parentWidth: screenWidth, model: cardList[3]) {
-                                print("yakup")
-                            }
-                            DailyCard(parentWidth: screenWidth, model: cardList[4]) {
-                                print("yakup")
-                            }
-                            DailyCard(parentWidth: screenWidth, model: cardList[5]) {
-                                print("yakup")
-                            }
-                        }
+                        DailyCard(
+                            parentWidth: screenWidth,
+                            model: cardList[6],
+                            verticalPadding: 10,
+                            onClick: {
+                                onClick(cardList[6])
+                            },
+                            isSpecial: true
+                        )
+                        .padding(.top)
                     }
-                    DailyCard(parentWidth: screenWidth, model: cardList[6], verticalPadding: 10, onClick:  {
-                        print("yakup")
-                    }, isSpecial: true).padding(.top)
                     Spacer()
                     Spacer()
                     Spacer()
@@ -115,5 +124,7 @@ struct DailyRewardUI: View {
     let waterModel3 = DailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let chest1 = DailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let list = [goldModel,waterModel,goldModel1,waterModel2,goldModel3,waterModel3,chest1]
-    DailyRewardUI(cardList: list)
+    DailyRewardUI(isOpen: .constant(true), cardList: list) { card in
+        print("\(card)")
+    }
 }

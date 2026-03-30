@@ -19,25 +19,29 @@ struct ForestSettingsUI: View {
     // MARK: - UI VIEW
     
     var body: some View {
-        GamePopUpContainer(title: "Settings", onClose: onClose) {
-            VStack(spacing: 24) {
-                Group {
-                    customSliderRow(title: "Music", icon: "music.note", value: $musicVolume)
-                        .disabled(isMuted)
-                        .opacity(isMuted ? 0.5 : 1.0)
-                    
-                    customSliderRow(title: "SFX", icon: "speaker.wave.2.fill", value: $sfxVolume)
-                        .disabled(isMuted)
-                        .opacity(isMuted ? 0.5 : 1.0)
-                    
-                    customToggleRow(title: "Mute All", icon: "speaker.slash.fill", isOn: $isMuted)
+        GeometryReader { geometry in
+            GamePopUpContainer(title: "Settings", onClose: onClose, screenWidth: geometry.size.width) {
+                VStack(spacing: 24) {
+                    Group {
+                        customSliderRow(title: "Music", icon: "music.note", value: $musicVolume)
+                            .disabled(isMuted)
+                            .opacity(isMuted ? 0.5 : 1.0)
+                        
+                        customSliderRow(title: "SFX", icon: "speaker.wave.2.fill", value: $sfxVolume)
+                            .disabled(isMuted)
+                            .opacity(isMuted ? 0.5 : 1.0)
+                        
+                        customToggleRow(title: "Mute All", icon: "speaker.slash.fill", isOn: $isMuted)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    Group {
+                        customToggleRow(title: "Haptics", icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
+                    }
                 }
-                Divider().background(Color.white.opacity(0.5))
-                Group {
-                    customToggleRow(title: "Haptics", icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
-                }
+                .padding(.horizontal, 8)
             }
-            .padding(.horizontal, 8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        
     }
 }
