@@ -25,7 +25,8 @@ extension Sculpture {
     @NSManaged public var yPosition: Double
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
-
+    @NSManaged public var lastUpdatedDate: Date?
+    
 }
 
 extension Sculpture: ConvertSafeModel {

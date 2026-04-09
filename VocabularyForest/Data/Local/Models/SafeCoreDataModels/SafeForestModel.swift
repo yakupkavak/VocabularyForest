@@ -22,4 +22,6 @@ struct SafeForestModel: Sendable {
     let sculptures: [SculptureModel]
     let trees: [TreeModel]
     let animals: [AnimalModel]
+    var lastUpdatedDate: Date
+
 }

@@ -17,5 +17,7 @@ struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
     let isAlive: Bool
     var xPosition: CGFloat
     var yPosition: CGFloat
+    var lastUpdatedDate: Date
+
 }
 

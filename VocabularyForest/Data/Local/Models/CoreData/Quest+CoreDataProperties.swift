@@ -31,6 +31,7 @@ extension Quest {
     @NSManaged public var questType: String?
     @NSManaged public var battleEnemyModel: String?
     @NSManaged public var gameLevel: String?
+    @NSManaged public var lastUpdatedDate: Date?
 
 }
 

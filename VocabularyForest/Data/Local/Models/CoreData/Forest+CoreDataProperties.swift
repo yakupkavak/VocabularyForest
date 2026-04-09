@@ -32,7 +32,8 @@ extension Forest {
     @NSManaged public var sculptures: NSSet?
     @NSManaged public var trees: NSSet?
     @NSManaged public var animals: NSSet?
-
+    @NSManaged public var lastUpdatedDate: Date?
+    
 }
 
 extension Forest: ConvertSafeModel {
