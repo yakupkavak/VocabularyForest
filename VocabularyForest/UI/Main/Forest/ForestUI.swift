@@ -27,6 +27,14 @@ private extension ForestUI {
             SettingsModel(title: String(localized: "Home"), icon: "exit_button", color: .brown500, type: .home)
         ]
     }
+    enum ForestUIState: Identifiable, Equatable {
+        case option, setting, gameSelect
+        case announce, forest, quest
+        case updateName, empty, dailySpin
+        case dailyTrack, userRoad
+        
+        var id: Self { self }
+    }
 }
 
 // MARK: - VIEW
@@ -40,14 +48,12 @@ struct ForestUI: View {
     @EnvironmentObject var bookcaseRouter: BookcaseRouter
     @ObservedObject var viewModel: ForestViewModel
     @State private var forestScene = ForestScene()
-    @State private var showOption = false
-    @State private var showSetting = false
-    @State private var showGameSelect = false
-    @State private var showAnnounce = false
-    @State private var showForest = false
-    @State private var showUpdateName = false
+    
+    @State private var uiState: ForestUIState = .empty
+    
     @State private var componentName = ""
     @State private var selectedQuestForGame: QuestModel? = nil
+    
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -58,77 +64,24 @@ struct ForestUI: View {
     
     var body: some View {
         ZStack {
+            SpriteView(scene: gameScene)
+                .ignoresSafeArea(.all)
+                .navigationBarBackButtonHidden()
+                .zIndex(1.0)
+            
             if !forestSeen {
                 GameInfoUI(showForestPopUp: Binding(
-                    get: {
-                        return !forestSeen
-                    },
-                    set: { newValue in
-                        if newValue == false {
-                            forestSeen = true
-                        }
-                    }
+                    get: { !forestSeen },
+                    set: { if !$0 { forestSeen = true } }
                 ))
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
-            if showOption {
-                options.zIndex(4.0)
+            
+            if uiState != .empty {
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+                userMenu.zIndex(4.0)
             }
-            if showSetting {
-                settings.zIndex(4.0)
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-            }
-            if showAnnounce {
-                ForestQuestUI(
-                    showQuest: $showAnnounce,
-                    selectQuest: { model in
-                        selectedQuestForGame = model
-                        showAnnounce = false
-                        showGameSelect = true
-                    },
-                    dailyQuests: viewModel.dailyQuestList,
-                    weeklyQuests: viewModel.weeklyQuestList,
-                    monthlyQuests: viewModel.monthlyQuestList,
-                    specialQuests: viewModel.specialQuestList
-                ) { model in
-                    viewModel.claimReward(quest: model)
-                }.zIndex(4.0)
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-            }
-            if showGameSelect {
-                gameSelect.zIndex(4.0).frame(maxHeight: UIScreen.main.bounds.height * 0.75)
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-            }
-            if showForest {
-                ForestInfoUI(forestModel: viewModel.forestStatus) {
-                    showForest = false
-                }.zIndex(4.0)
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-            }
-            if showUpdateName { // TODO: - SOLVE UPDATE NAME PROBLEM
-                VStack {
-                    Text("Update name").foregroundStyle(.white).font(.system(size: 20))
-                    HStack {
-                        Spacer()
-                        Button {
-                            showUpdateName = false
-                        } label: {
-                            Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
-                        }
-                        TextField("Name", text: $componentName).frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal).background(.brown300.opacity(0.9)).cornerRadius(16)
-                        Button {
-                            viewModel.updateComponentName(name: componentName)
-                            showUpdateName = false
-                        } label: {
-                            Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
-                        }
-                        Spacer()
-                    }
-                }
-                .compositingGroup().zIndex(3.0)
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-            }
+            
             if viewModel.showRainButton {
                 VStack{
                     Spacer()
@@ -139,17 +92,24 @@ struct ForestUI: View {
                     }.padding(.bottom, 32)
                 }.zIndex(4.0)
             }
+            
             if viewModel.showBookThreshold {
-                ForestPopUp(titleText: String(localized: "Eksik soru"), descriptionText: String(localized: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin"), onConfirm: {
-                    tabbarController.navigateTo(tab: .bookcases)
-                    bookcaseRouter.navigate(to: .bookcasePacket)
-                    exitForest()
-                }, onDenied: {viewModel.closeBookError()}, confirmText: String(localized: "Kütüphane"), deniedText: String(localized: "Orman"), showForestPopUp: $viewModel.showBookThreshold)
+                ForestPopUp(
+                    titleText: String(localized: "Eksik soru"),
+                    descriptionText: String(localized: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin"),
+                    onConfirm: {
+                        tabbarController.navigateTo(tab: .bookcases)
+                        bookcaseRouter.navigate(to: .bookcasePacket)
+                        exitForest()
+                    },
+                    onDenied: { viewModel.closeBookError() },
+                    confirmText: String(localized: "Kütüphane"),
+                    deniedText: String(localized: "Orman"),
+                    showForestPopUp: $viewModel.showBookThreshold
+                ).zIndex(4.0)
             }
-            SpriteView(scene: gameScene)
-                .ignoresSafeArea(.all)
-                .navigationBarBackButtonHidden().zIndex(1.0)
-        }.task {
+        }
+        .task {
             self.viewModel.output = forestScene
             self.forestScene.helper = viewModel
             viewModel.fetchForest()
@@ -173,15 +133,106 @@ struct ForestUI: View {
 // MARK: - UI COMPONENTS
 
 private extension ForestUI {
+    
+    @ViewBuilder
+    var userMenu: some View {
+        switch uiState {
+        case .option:
+            options
+        case .setting:
+            settings
+        case .gameSelect:
+            gameSelect
+        case .announce:
+            announcementView
+        case .forest:
+            ForestInfoUI(forestModel: viewModel.forestStatus) {
+                uiState = .empty
+            }
+        case .quest:
+            questView
+        case .updateName:
+            updateNameView
+        case .dailySpin:
+            dailySpinView
+        case .empty:
+            EmptyView()
+        case .dailyTrack:
+            dailyTrackView
+        case .userRoad:
+            EmptyView()
+        }
+    }
+    
+    var dailySpinView: some View {
+        VStack {
+            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}))
+        }
+    }
+    
+    var dailyTrackView: some View {
+        DailyRewardUI(isOpen: Binding ( get: { uiState == .dailyTrack }, set: { newValue in
+            if !newValue { uiState = .empty }
+        }), cardList: []) { dailyModel in
+            print("model selected")
+        }
+    }
+    
+    var announcementView: some View {
+        ForestAnnouncementUI(
+            isVisible: Binding(
+                get: { uiState == .announce },
+                set: { newValue in
+                    if newValue == false && uiState == .announce {
+                        uiState = .empty
+                    }
+                }
+            )
+        ) { model in
+            switch model {
+            case .tasks:
+                uiState = .quest
+            case .dailyReward:
+                uiState = .dailyTrack
+            case .dailySpin:
+                uiState = .dailySpin
+            case .adventureRoad:
+                uiState = .userRoad
+            }
+        }
+    }
+    
+    var questView: some View {
+        ForestQuestUI(
+            showQuest: Binding(
+                get: { uiState == .quest },
+                set: { if !$0  { uiState = .empty } }
+            ),
+            selectQuest: { model in
+                selectedQuestForGame = model
+                uiState = .gameSelect
+            },
+            dailyQuests: viewModel.dailyQuestList,
+            weeklyQuests: viewModel.weeklyQuestList,
+            monthlyQuests: viewModel.monthlyQuestList,
+            specialQuests: viewModel.specialQuestList
+        ) { model in
+            viewModel.claimReward(quest: model)
+        }
+    }
+    
     var gameSelect: some View {
         GameSelectUI(
             initialQuest: selectedQuestForGame,
-            showGameSelect: $showGameSelect,
+            showGameSelect: Binding(
+                get: { uiState == .gameSelect },
+                set: { if !$0 { uiState = .empty } }
+            ),
             bookcaseList: viewModel.bookcaseList,
             startGame: { type, mode, level, questionSelection in
-                if (viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection)) {
+                if viewModel.checkBookCount(type: type, battleMode: mode, gameLevel: level, bookcaseSelection: questionSelection) {
                     selectedQuestForGame = nil
-                    showGameSelect = false
+                    uiState = .empty
                     switch questionSelection {
                     case .allBookcases:
                         router.navigate(to: .game(type, mode, level, nil))
@@ -191,9 +242,34 @@ private extension ForestUI {
                 }
             }
         )
-        .zIndex(4.0)
         .frame(maxHeight: UIScreen.main.bounds.height * 0.75)
     }
+    
+    var updateNameView: some View {
+        VStack {
+            Text("Update name").foregroundStyle(.white).font(.system(size: 20))
+            HStack {
+                Spacer()
+                Button {
+                    uiState = .empty
+                } label: {
+                    Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
+                }
+                TextField("Name", text: $componentName)
+                    .frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal)
+                    .background(.brown300.opacity(0.9)).cornerRadius(16)
+                Button {
+                    viewModel.updateComponentName(name: componentName)
+                    uiState = .empty
+                } label: {
+                    Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
+                }
+                Spacer()
+            }
+        }
+        .compositingGroup()
+    }
+    
     var gameScene: SKScene {
         forestScene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         forestScene.scaleMode = .fill
@@ -201,6 +277,7 @@ private extension ForestUI {
         forestScene.forestHelper = self
         return forestScene
     }
+    
     var options: some View {
         VStack {
             ZStack {
@@ -211,28 +288,30 @@ private extension ForestUI {
                 settingsRow(model: model).onTapGesture {
                     switch model.type {
                     case .resume:
-                        showOption = false
+                        uiState = .empty
                     case .settings:
-                        showOption = false
-                        showSetting = true
+                        uiState = .setting
                     case .home:
-                        showOption = false
+                        uiState = .empty
                         exitForest()
                     case .info:
+                        uiState = .empty
                         forestSeen = false
                     }
                 }
             }
-        }.padding().background(.brown.opacity(0.8)).cornerRadius(16).zIndex(3.0).frame(width: UIScreen.main.bounds.width * 0.6)
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    showOption = false
-                } label: {
-                    Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
-                        .offset(x: 12, y: -12)
-                }
+        }
+        .padding().background(.brown.opacity(0.8)).cornerRadius(16).frame(width: UIScreen.main.bounds.width * 0.6)
+        .overlay(alignment: .topTrailing) {
+            Button {
+                uiState = .empty
+            } label: {
+                Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
+                    .offset(x: 12, y: -12)
             }
+        }
     }
+    
     var settings: some View {
         VStack(spacing: 20) {
             ZStack {
@@ -267,11 +346,10 @@ private extension ForestUI {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color("brown300"), lineWidth: 4)
         )
-        .zIndex(3.0)
         .frame(width: UIScreen.main.bounds.width * 0.7)
         .overlay(alignment: .topTrailing) {
             Button {
-                showSetting = false
+                uiState = .empty
             } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
@@ -285,8 +363,7 @@ private extension ForestUI {
 private extension ForestUI {
     
     func openQuestGame(model: QuestModel) {
-        showAnnounce = false
-        showGameSelect = true
+        uiState = .gameSelect
     }
     
     func exitForest() {
@@ -295,36 +372,37 @@ private extension ForestUI {
     }
 }
 
+// MARK: - PROTOCOL CONFORMANCE
+
 extension ForestUI: ForestUIProtocol {
     
     func updateComponentName(model: any ComponentNameable, type: ComponentType) {
         componentName = model.characterName
         viewModel.setComponent(uuid: model.id, for: type)
-        showUpdateName = true
+        uiState = .updateName
     }
     
     func showForestInfo() {
-        showForest = true
+        uiState = .forest
     }
     
     func showGameSelection() {
-        showGameSelect = true
+        uiState = .gameSelect
     }
     
     func showAnnouncement() {
-        showAnnounce = true
+        uiState = .announce
     }
     
     func hideOptions() {
-        showOption = false
+        uiState = .empty
     }
     func showOptions() {
-        showOption = true
+        uiState = .option
     }
 }
 
-
- #Preview {
+#Preview {
     @State var tabbar = BaseTabTypes.bookcases
     let bookcaseRouter = BookcaseRouter()
     let mockCoreData = CoreDataManager.preview
@@ -333,5 +411,4 @@ extension ForestUI: ForestUIProtocol {
     let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData)
      
     ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
- }
- 
+}

@@ -225,6 +225,9 @@
         }
       }
     },
+    "Account" : {
+
+    },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
         "en" : {
@@ -292,6 +295,9 @@
           }
         }
       }
+    },
+    "Adventure Road" : {
+
     },
     "Almanca" : {
       "localizations" : {
@@ -704,7 +710,14 @@
       }
     },
     "antique_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antique Chest"
+          }
+        }
+      }
     },
     "Arapça" : {
       "localizations" : {
@@ -2148,6 +2161,9 @@
     "Daily Reward" : {
 
     },
+    "Daily Spin" : {
+
+    },
     "Dance with Fire 🔥" : {
       "localizations" : {
         "en" : {
@@ -2664,7 +2680,14 @@
       }
     },
     "diamond_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diamond Chest"
+          }
+        }
+      }
     },
     "Diğer" : {
       "localizations" : {
@@ -3760,7 +3783,14 @@
       }
     },
     "gold_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gold Chest"
+          }
+        }
+      }
     },
     "Göreve git" : {
       "localizations" : {
@@ -4278,6 +4308,9 @@
           }
         }
       }
+    },
+    "Hesaba Giriş Yap" : {
+
     },
     "Heykel" : {
       "localizations" : {
@@ -6716,7 +6749,14 @@
       }
     },
     "nature_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nature Chest"
+          }
+        }
+      }
     },
     "New Discoveries 🗺️" : {
       "localizations" : {
@@ -7466,6 +7506,9 @@
           }
         }
       }
+    },
+    "Ormanını buluta kaydetmek için giriş yap." : {
+
     },
     "Örnek" : {
       "localizations" : {
@@ -8909,6 +8952,9 @@
     "So thirsty... I can't breathe." : {
 
     },
+    "Son eşitleme: Az önce" : {
+
+    },
     "Sorular Hakkında" : {
       "localizations" : {
         "en" : {
@@ -9011,6 +9057,9 @@
         }
       }
     },
+    "Start Spin" : {
+
+    },
     "Such peaceful and ancient vibes." : {
 
     },
@@ -9083,6 +9132,9 @@
           }
         }
       }
+    },
+    "Tasks" : {
+
     },
     "Tebrikler!" : {
       "localizations" : {
@@ -9661,6 +9713,9 @@
           }
         }
       }
+    },
+    "User mail" : {
+
     },
     "Uzun zamandır sana ihtiyacımız vardı" : {
       "localizations" : {

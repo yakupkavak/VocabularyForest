@@ -56,7 +56,7 @@ struct DailyRewardUI: View {
                     }
                     .overlay(alignment: .bottomTrailing, content: {
                         Button {
-                            isOpen.toggle()
+                            isOpen = false
                         } label: {
                             Image("close_button_gold")
                                 .renderingMode(.template)
@@ -66,8 +66,9 @@ struct DailyRewardUI: View {
                                 .foregroundStyle(
                                     goldGradient
                                 )
-                                .shadow(color: .black.opacity(0.3), radius: 1).offset(x: -geometry.size.width * 0.1, y: -geometry.size.height * 0.01)
+                                .shadow(color: .black.opacity(0.3), radius: 1)
                         }
+                        .offset(x: -geometry.size.width * 0.1, y: -geometry.size.height * 0.01)
                     })
                     .padding()
                     .padding(.top, -16)

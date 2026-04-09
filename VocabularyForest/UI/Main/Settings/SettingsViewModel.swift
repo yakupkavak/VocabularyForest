@@ -9,11 +9,16 @@ import CoreData
 import UserNotifications
 import Combine
 import StoreKit
+import AuthenticationServices
 
 struct PolicyContent: Identifiable {
     let id = UUID()
     let title: String
     let text: String
+}
+
+enum AuthError: Error {
+    case invalidCredantial
 }
 
 class SettingsViewModel: ObservableObject {
@@ -22,20 +27,23 @@ class SettingsViewModel: ObservableObject {
     
     private let notificationManager: any NotificationManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol
-    
+    private let authManager: any AuthManagerProtocol
+
     // MARK: - PROPERTIES
     
     private var cancellables = Set<AnyCancellable>()
     @Published var sheetContent: PolicyContent? = nil
     @Published var notificationsEnabled: Bool = false
+    @Published var userSignIn: Bool = false
     
     // MARK: - INIT
     
-    init(notificationManager: any NotificationManagerProtocol ,coreDataManager: CoreDataManagerProtocol) {
+    init(notificationManager: any NotificationManagerProtocol, coreDataManager: CoreDataManagerProtocol, authManager: any AuthManagerProtocol) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
-        
+        self.authManager = authManager
         self.notificationsEnabled = self.notificationManager.notificationsEnabled
+        self.userSignIn = self.authManager.isUserSignedIn
         self.notificationManager.objectWillChange
         .receive(on: RunLoop.main)
         .sink { [weak self] _ in
@@ -43,9 +51,49 @@ class SettingsViewModel: ObservableObject {
             self.notificationsEnabled = self.notificationManager.notificationsEnabled
         }
         .store(in: &cancellables)
+        
+        self.authManager.isUserSignedInPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isSignedIn in
+                guard let self = self else { return }
+                self.userSignIn = isSignedIn
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - HELPERS
+    
+    func signInApple(auth: ASAuthorization){
+        guard let appleIDCredentials = auth.credential as? ASAuthorizationAppleIDCredential else { return }
+        Task {
+            do {
+                let result = try await authManager.appleAuth(appleIDCredentials, nonce: AppleSignInManager.nonce)
+                if result != nil {
+                    print("sign in yapıldı")
+                }
+            } catch(let error) {
+                print(error)
+            }
+        }
+    }
+    
+    func signInGoogle(){
+        Task {
+            do {
+                try await authManager.signInWithGoogle()
+            }catch {
+                print(error)
+            }
+        }
+    }
+    
+    func signOut() {
+        do {
+            try authManager.signOut()
+        }catch {
+            print(error)
+        }
+    }
     
     func handleNotificationToggleChange() {
         let currentStatus = notificationManager.notificationsEnabled

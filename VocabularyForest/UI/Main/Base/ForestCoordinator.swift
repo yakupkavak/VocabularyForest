@@ -70,10 +70,12 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     func startSettingsUI() -> AnyView {
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let notification = resolver.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
+        let auth = resolver.resolve(type: .singleInstance, for: (any AuthManagerProtocol).self)
 
         let viewModel = SettingsViewModel(
             notificationManager: notification,
-            coreDataManager: coreData
+            coreDataManager: coreData,
+            authManager: auth
         )
         return AnyView(
             SettingsUI(viewModel: viewModel)

@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import DependencyContainer
+import FirebaseCore
 
 @main
 struct VocabularyForestApp: App {
@@ -25,6 +26,7 @@ struct VocabularyForestApp: App {
     // MARK: - INIT
     
     init() {
+        FirebaseApp.configure()
         AppDependencyConfigurer.configure()
         let resolver = DC.shared
         _coordinator = StateObject(wrappedValue: VocabularyForestCoordinator(resolver: resolver))
@@ -36,7 +38,6 @@ struct VocabularyForestApp: App {
         WindowGroup {
             SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
                 if phase == .background {
-                    print("geldim")
                     let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
                     coreDataManager.save(type: .main)
                 }
