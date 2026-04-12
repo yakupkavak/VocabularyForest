@@ -36,7 +36,7 @@ extension Animal: ConvertSafeModel {
     
     func safeObject(context: NSManagedObjectContext) throws -> AnimalModel {
         try context.performAndWait {
-            if let id, let createdDate, let assetName, let characterName {
+            if let id, let createdDate, let assetName, let characterName, let lastUpdatedDate {
                 return AnimalModel(
                     id: id,
                     characterName: characterName,
@@ -45,7 +45,8 @@ extension Animal: ConvertSafeModel {
                     healthValue: Int(healtValue),
                     isAlive: isAlive,
                     xPosition: xPosition,
-                    yPosition: yPosition
+                    yPosition: yPosition,
+                    lastUpdatedDate: lastUpdatedDate
                 )
             }
             throw SafeModelError.emptyValue

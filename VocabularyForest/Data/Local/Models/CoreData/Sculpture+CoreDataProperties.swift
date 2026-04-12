@@ -34,14 +34,15 @@ extension Sculpture: ConvertSafeModel {
     
     func safeObject(context: NSManagedObjectContext) throws -> SculptureModel {
         try context.performAndWait {
-            if let id, let createdDate, let assetName, let characterName {
+            if let id, let createdDate, let assetName, let characterName, let lastUpdatedDate {
                 return SculptureModel(
                     id: id,
                     assetName: assetName,
                     characterName: characterName,
                     createdDate: createdDate,
                     xPosition: self.xPosition,
-                    yPosition: self.yPosition
+                    yPosition: self.yPosition,
+                    lastUpdatedDate: lastUpdatedDate
                 )
             }
             throw SafeModelError.emptyValue

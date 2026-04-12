@@ -31,7 +31,6 @@ enum SignInType {
 
 class AuthManager: AuthManagerProtocol {
     
-    
     // MARK: - PROPERTIES
     
     private let auth = Auth.auth()

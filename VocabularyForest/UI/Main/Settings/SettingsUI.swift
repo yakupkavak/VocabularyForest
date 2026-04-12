@@ -36,29 +36,7 @@ struct SettingsUI: View {
             
             Divider()
             
-            Text("Bildirimler")
-                .font(.callout)
-                .foregroundColor(.gray)
-                .padding(.top)
-
-            VStack(alignment: .leading) {
-                Toggle("Kelime Bildirimleri", isOn: Binding(
-                    get: { viewModel.notificationsEnabled },
-                    set: { newValue in
-                        viewModel.handleNotificationToggleChange()
-                    }
-                ))
-                Button("Bildirim Ayarlarını Aç") {
-                    viewModel.openAppSettings()
-                }.tint(.logoGreen)
-            }
-            .padding(.horizontal)
-            .background(Color.backgroundSystem)
-            .cornerRadius(10)
-            
-            Text("Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir.")
-                .font(.caption)
-                .foregroundColor(.gray)
+            notificationView
             
             Divider()
 
@@ -141,10 +119,54 @@ struct SettingsUI: View {
             .presentationBackground(.clear)
             
         }
+        .overlay {
+            if viewModel.userHaveForestInFirebase,
+               let local = viewModel.userLocalForest,
+               let cloud = viewModel.firebaseForest {
+                
+                ForestConflictView(
+                    localForest: local,
+                    cloudForest: cloud,
+                    onResolve: { source in
+                        viewModel.resolveForestConflict(keep: source)
+                    }
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                .zIndex(100) 
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.userHaveForestInFirebase)
     }
 }
 
 private extension SettingsUI {
+    
+    @ViewBuilder
+    var notificationView: some View {
+        Text("Bildirimler")
+            .font(.callout)
+            .foregroundColor(.gray)
+            .padding(.top)
+
+        VStack(alignment: .leading) {
+            Toggle("Kelime Bildirimleri", isOn: Binding(
+                get: { viewModel.notificationsEnabled },
+                set: { newValue in
+                    viewModel.handleNotificationToggleChange()
+                }
+            ))
+            Button("Bildirim Ayarlarını Aç") {
+                viewModel.openAppSettings()
+            }.tint(.logoGreen)
+        }
+        .padding(.horizontal)
+        .background(Color.backgroundSystem)
+        .cornerRadius(10)
+        
+        Text("Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir.")
+            .font(.caption)
+            .foregroundColor(.gray)
+    }
     
     @ViewBuilder
     var aboutPage: some View {
@@ -194,7 +216,7 @@ private extension SettingsUI {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .font(.caption2)
-                        Text("Son eşitleme: Az önce")
+                        Text("Son eşitleme: \(viewModel.lastSyncDate)")
                             .font(.caption)
                     }
                     .foregroundColor(.gray)
@@ -272,5 +294,13 @@ private struct PolicySheetView: View {
 }
 
 #Preview {
-    SettingsUI(viewModel: SettingsViewModel(notificationManager: NotificationManager(), coreDataManager: CoreDataManager(), authManager: AuthManager()))
+    SettingsUI(
+        viewModel: SettingsViewModel(
+            notificationManager: NotificationManager(),
+            coreDataManager: CoreDataManager(),
+            authManager: AuthManager(),
+            syncManager: ForestSyncManager(),
+            forestManager: ForestDataManager()
+        )
+    )
 }

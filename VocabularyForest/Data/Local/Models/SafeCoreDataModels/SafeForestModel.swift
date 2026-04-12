@@ -8,6 +8,8 @@
 import Foundation
 
 struct SafeForestModel: Sendable {
+    let forestId: UUID
+    let ownerId: String?
     let rainValue: Int
     let moneyValue: Int
     let diamondValue: Int
@@ -22,6 +24,6 @@ struct SafeForestModel: Sendable {
     let sculptures: [SculptureModel]
     let trees: [TreeModel]
     let animals: [AnimalModel]
-    var lastUpdatedDate: Date
-
+    let lastUpdatedDate: Date
+    let lastSyncCloudTime: Date
 }

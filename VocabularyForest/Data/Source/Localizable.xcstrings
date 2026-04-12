@@ -66,6 +66,9 @@
         }
       }
     },
+    "%lld days ago" : {
+
+    },
     "%lld Diamond" : {
 
     },
@@ -102,6 +105,12 @@
           }
         }
       }
+    },
+    "%lld hours ago" : {
+
+    },
+    "%lld minutes ago" : {
+
     },
     "%lld Water Drops" : {
       "localizations" : {
@@ -156,6 +165,12 @@
           }
         }
       }
+    },
+    "1 hour ago" : {
+
+    },
+    "1 minute ago" : {
+
     },
     "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat." : {
       "localizations" : {
@@ -1612,6 +1627,12 @@
         }
       }
     },
+    "Bu orman başka bir hesaba bağlı. Lütfen kendi hesabınıza giriş yapın veya oyunu sıfırlayın." : {
+
+    },
+    "Bulut verisi bulunamadı. Lütfen tekrar deneyin." : {
+
+    },
     "Bunu hatırlıyor musun 👀" : {
       "localizations" : {
         "en" : {
@@ -1919,6 +1940,9 @@
         }
       }
     },
+    "Cloud Forest" : {
+
+    },
     "Completed!" : {
       "localizations" : {
         "en" : {
@@ -1949,6 +1973,24 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Tamamlandı!"
+          }
+        }
+      }
+    },
+    "Confirm Selection" : {
+
+    },
+    "Conflict Detected" : {
+
+    },
+    "conflict_confirm_keyword" : {
+      "comment" : "Keyword to type for confirmation",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "confirm"
           }
         }
       }
@@ -2688,6 +2730,9 @@
           }
         }
       }
+    },
+    "Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**" : {
+
     },
     "Diğer" : {
       "localizations" : {
@@ -3611,6 +3656,9 @@
           }
         }
       }
+    },
+    "Forest data manager eklenmedi." : {
+
     },
     "Fransızca" : {
       "localizations" : {
@@ -5268,6 +5316,9 @@
         }
       }
     },
+    "Just now" : {
+
+    },
     "Kapat" : {
       "localizations" : {
         "en" : {
@@ -5369,6 +5420,9 @@
           }
         }
       }
+    },
+    "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin." : {
+
     },
     "Kelime" : {
       "localizations" : {
@@ -6395,6 +6449,9 @@
         }
       }
     },
+    "Local Forest" : {
+
+    },
     "Locked" : {
       "localizations" : {
         "en" : {
@@ -6428,6 +6485,9 @@
           }
         }
       }
+    },
+    "Lütfen yeni bir yedekleme yapmak için %lld dakika bekleyin." : {
+
     },
     "Maceraya Atıl" : {
       "localizations" : {
@@ -8741,6 +8801,9 @@
         }
       }
     },
+    "Senkronize edilecek yeni bir veri bulunamadı." : {
+
+    },
     "Settings" : {
       "localizations" : {
         "en" : {
@@ -8952,7 +9015,7 @@
     "So thirsty... I can't breathe." : {
 
     },
-    "Son eşitleme: Az önce" : {
+    "Son eşitleme: %@" : {
 
     },
     "Sorular Hakkında" : {
@@ -9097,6 +9160,9 @@
           }
         }
       }
+    },
+    "Sunucu eşleştirilemedi" : {
+
     },
     "Taşı" : {
       "extractionState" : "stale",
@@ -9633,6 +9699,9 @@
         }
       }
     },
+    "Type **'%@'** to confirm your selection:" : {
+
+    },
     "umut" : {
 
     },
@@ -9974,6 +10043,12 @@
         }
       }
     },
+    "Yedekleme yapmak için giriş yapmalısınız." : {
+
+    },
+    "Yerel veriler okunurken bir hata oluştu." : {
+
+    },
     "Yes" : {
       "localizations" : {
         "en" : {
@@ -10007,6 +10082,9 @@
           }
         }
       }
+    },
+    "Yesterday at %@" : {
+
     },
     "Your Forest" : {
       "localizations" : {

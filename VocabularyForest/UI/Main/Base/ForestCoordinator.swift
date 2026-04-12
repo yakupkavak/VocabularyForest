@@ -21,15 +21,30 @@ protocol VocabularyForestCoordinatorProtocol {
     func startCreateBookcaseUI() -> AnyView
 }
 
-final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, ObservableObject{    
+final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, ObservableObject{
+    
     @EnvironmentObject var tabbarController: TabBarController
     private let resolver: DCResolve
+    
+    private var cachedForestViewModel: ForestViewModel?
+    private var cachedBattleViewModel: BattleViewModel?
+    private var cachedLearningFeedViewModel: LearningFeedViewModel?
+    private var cachedSettingsViewModel: SettingsViewModel?
+    private var cachedBookcaseDetailViewModel: BookcaseDetailViewModel?
+    private var cachedBookcaseFeedViewModel: BookcaseFeedViewModel?
+    private var cachedBookcasePacketsViewModel: BookcasePacketsViewModel?
+    private var cachedCreateBookViewModel: CreateBookViewModel?
+    private var cachedCreateBookcaseViewModel: CreateBookcaseViewModel?
     
     init(resolver: DCResolve) {
         self.resolver = resolver
     }
 
     func startForestUI() -> AnyView {
+        if let cachedVM = cachedForestViewModel {
+            return AnyView(ForestUI(viewModel: cachedVM))
+        }
+        
         let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
@@ -39,12 +54,17 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestDataManager: forestData
         )
         
+        self.cachedForestViewModel = viewModel
         return AnyView(
             ForestUI(viewModel: viewModel)
         )
     }
     
     func startBattleUI(gameType: BattleQuestionType, battleMode: BattleEnemyModel, gameLevel: GameLevel, selectedBookcase: BookcaseModel?) -> AnyView {
+        if let cachedVM = cachedBattleViewModel {
+            return AnyView(BattleUI(viewModel: cachedVM, gameType: gameType, battleMode: battleMode, gameLevel: gameLevel, selectedBookcase: selectedBookcase))
+        }
+        
         let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
@@ -54,35 +74,56 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestDataManager: forestData
         )
         
+        self.cachedBattleViewModel = viewModel
         return AnyView(
             BattleUI(viewModel: viewModel, gameType: gameType, battleMode: battleMode, gameLevel: gameLevel, selectedBookcase: selectedBookcase)
         )
     }
     
     func startLearningFeedUI() -> AnyView {
+        if let cachedVM = cachedLearningFeedViewModel {
+            return AnyView(LearningFeedUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = LearningFeedViewModel(coreDataManager: coreData)
+        
+        self.cachedLearningFeedViewModel = viewModel
         return AnyView(
             LearningFeedUI(viewModel: viewModel)
         )
     }
     
     func startSettingsUI() -> AnyView {
+        if let cachedVM = cachedSettingsViewModel {
+            return AnyView(SettingsUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let notification = resolver.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
         let auth = resolver.resolve(type: .singleInstance, for: (any AuthManagerProtocol).self)
+        let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManager.self)
+        let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
 
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
-            authManager: auth
+            authManager: auth,
+            syncManager: sync,
+            forestManager: forestData
         )
+        
+        self.cachedSettingsViewModel = viewModel
         return AnyView(
             SettingsUI(viewModel: viewModel)
         )
     }
     
     func startBookcaseDetailUI(bookcaseName: String, learningLanguage: String, meaningLanguage: String) -> AnyView {
+        if let cachedVM = cachedBookcaseDetailViewModel {
+            return AnyView(BookcaseDetailUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = BookcaseDetailViewModel(
             bookcaseName: bookcaseName,
@@ -90,35 +131,65 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             meaningLanguage: meaningLanguage,
             dataManager: coreData
         )
+        
+        self.cachedBookcaseDetailViewModel = viewModel
         return AnyView(
             BookcaseDetailUI(viewModel: viewModel)
         )
     }
+    
     func startBookcaseFeedUI() -> AnyView {
+        if let cachedVM = cachedBookcaseFeedViewModel {
+            return AnyView(BookcaseFeedUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = BookcaseFeedViewModel(coreDataManager: coreData)
+        
+        self.cachedBookcaseFeedViewModel = viewModel
         return AnyView(
             BookcaseFeedUI(viewModel: viewModel)
         )
     }
+    
     func startBookcasePacketsUI() -> AnyView {
+        if let cachedVM = cachedBookcasePacketsViewModel {
+            return AnyView(BookcasePacketsUI(viewModel: cachedVM))
+        }
+        
         let networkService = resolver.resolve(type: .singleInstance, for: APIServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData)
+        
+        self.cachedBookcasePacketsViewModel = viewModel
         return AnyView(
             BookcasePacketsUI(viewModel: viewModel)
         )
     }
+    
     func startCreateBookUI() -> AnyView {
+        if let cachedVM = cachedCreateBookViewModel {
+            return AnyView(CreateBookUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = CreateBookViewModel(coreDataManager: coreData)
+        
+        self.cachedCreateBookViewModel = viewModel
         return AnyView(
             CreateBookUI(viewModel: viewModel)
         )
     }
+    
     func startCreateBookcaseUI() -> AnyView {
+        if let cachedVM = cachedCreateBookcaseViewModel {
+            return AnyView(CreateBookcaseUI(viewModel: cachedVM))
+        }
+        
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let viewModel = CreateBookcaseViewModel(coreDataManager: coreData)
+        
+        self.cachedCreateBookcaseViewModel = viewModel
         return AnyView(
             CreateBookcaseUI(viewModel: viewModel)
         )
