@@ -24,6 +24,7 @@ struct SafeForestModel: Sendable {
     let sculptures: [SculptureModel]
     let trees: [TreeModel]
     let animals: [AnimalModel]
+    let player: PlayerModel
     let lastUpdatedDate: Date
-    let lastSyncCloudTime: Date
+    let lastSyncCloudTime: Date?
 }

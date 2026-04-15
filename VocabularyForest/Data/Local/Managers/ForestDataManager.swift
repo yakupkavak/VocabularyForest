@@ -36,6 +36,12 @@ extension ForestDataManager {
             }
         }
     }
+    enum ForestConstants {
+        static let initialLandHealthPercent = Int16(100)
+        static let initialRainValue = Int16(0)
+        static let initialMoneyValue = Int16(0)
+        static let initialDiamond = Int16(0)
+    }
 }
 
 // MARK: - FOREST DATA PROTOCOL
@@ -50,7 +56,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     // MARK: Create Helpers
     
-    func createForestGame(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createForest(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Forest>
     func createTree(tree model: TreeModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func createAnimal(animal model: AnimalModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func createSculpture(sculpture model: SculptureModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
@@ -301,7 +307,7 @@ private extension ForestDataManager {
 
 extension ForestDataManager {
     
-    func createForestGame(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Bool> {
+    func createForest(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Forest> {
         contextType.context.performAndWait {
             let context = contextType.context
             let dailyQuests = helper.initalizeDailyQuests()
@@ -313,18 +319,18 @@ extension ForestDataManager {
             setupQuests(questList: weeklyQuests, contextType: contextType)
             setupQuests(questList: monthlyQuests, contextType: contextType)
             setupQuests(questList: specialQuests, contextType: contextType)
-            forest.rainValue = 0
+            forest.rainValue = ForestConstants.initialRainValue
             forest.isRaining = false
-            forest.landHealthPercent = 100
+            forest.landHealthPercent = ForestConstants.initialLandHealthPercent
             forest.landStatus = true
-            forest.moneyValue = 0
+            forest.moneyValue = ForestConstants.initialMoneyValue
             forest.lastUpdatedDate = Date()
+            forest.forestId = UUID()
             for sculpture in baseSculptureList {
-                createSculpture(sculpture: sculpture, contextType: contextType)
+                let sculpResult = createSculpture(sculpture: sculpture, contextType: contextType)
             }
             do {
-                try save(context: context)
-                return Resource.success(nil)
+                return Resource.success(forest)
             } catch {
                 return Resource.error(error: ForestError.saveError)
             }

@@ -17,6 +17,10 @@ enum AppDependencyConfigurer {
         let notificationManager = NotificationManager()
         let authManager = AuthManager()
         let cloudSyncManager = ForestSyncManager()
+        let playerDataManager = PlayerDataManager()
+        coreData.notificationManager = notificationManager
+        cloudSyncManager.dataManager = forestData
+        forestData.notificationManager = notificationManager
         DC.shared.register(type: .singleInstance(coreData), for: CoreDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)
         DC.shared.register(type: .singleInstance(audioManager), for: AudioServiceProtocol.self)
@@ -24,9 +28,8 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(forestData), for: ForestDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(authManager), for: (any AuthManagerProtocol).self)
         DC.shared.register(type: .singleInstance(cloudSyncManager), for: ForestSyncManager.self)
-        coreData.notificationManager = notificationManager
-        cloudSyncManager.dataManager = forestData
+        DC.shared.register(type: .singleInstance(playerDataManager), for: PlayerDataManagerProtocol.self)
         forestData.checkGame(contextType: .background)
-        forestData.notificationManager = notificationManager
+        cloudSyncManager.backgroundSyncIfNeeded()
     }
 }

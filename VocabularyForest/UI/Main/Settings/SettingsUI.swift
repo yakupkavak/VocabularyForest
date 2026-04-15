@@ -212,7 +212,7 @@ private extension SettingsUI {
                     .frame(width: 45, height: 30)
                     .foregroundColor(.logoGreen)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("User mail")
+                    Text(viewModel.playerName)
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.triangle.2.circlepath")
                             .font(.caption2)
@@ -300,7 +300,8 @@ private struct PolicySheetView: View {
             coreDataManager: CoreDataManager(),
             authManager: AuthManager(),
             syncManager: ForestSyncManager(),
-            forestManager: ForestDataManager()
+            forestManager: ForestDataManager(),
+            playerManager: PlayerDataManager()
         )
     )
 }

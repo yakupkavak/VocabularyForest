@@ -15,13 +15,16 @@ private enum ForestSyncConstants {
     static let usersCollection = "Users"
     static let forestsCollection = "Forests"
     static let mainForestDocument = "mainForest"
-    
+    static let playerDocument = "player"
+
     static let treesCollection = "Trees"
     static let animalsCollection = "Animals"
     static let sculpturesCollection = "Sculptures"
     static let questsCollection = "Quests"
-    
+    static let playerCollection = "Player"
+
     static let idField = "id"
+    static let nameField = "name"
     static let typeField = "type"
     static let assetNameField = "assetName"
     static let characterNameField = "characterName"
@@ -93,7 +96,7 @@ enum ForestSyncError: LocalizedError {
 protocol ForestSyncManagerProtocol: AnyObject {
     var lastSyncDatePublisher: AnyPublisher<Date?, Never> { get }
     func manualSync() async -> Resource<Bool>
-    func backgroundSyncIfNeeded() async -> Resource<Bool>
+    func backgroundSyncIfNeeded()
     func userHaveForest() async -> Resource<SafeForestModel>
     func forceOverwriteCloud() async -> Resource<Bool>
     func downloadAndOverwriteLocal(with safeForest: SafeForestModel) async -> Resource<Bool>
@@ -138,7 +141,6 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         do {
             let docSnapshot = try await forestDoc.getDocument()
             guard docSnapshot.exists, let forestData = docSnapshot.data() else {
-                //user haven't syncronized firebase
                 return .success(false)
             }
             let cloudUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
@@ -150,7 +152,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 return .success(true)
             }
 
-            let timeDifference = abs(cloudUpdatedDate.timeIntervalSince(localForest.lastSyncCloudTime))
+            guard let localSyncTime = localForest.lastSyncCloudTime else {
+                return .success(true)
+            }
+
+            let timeDifference = abs(cloudUpdatedDate.timeIntervalSince(localSyncTime))
             if timeDifference > 2.0 {
                 return .success(true)
             }
@@ -196,8 +202,9 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             async let animalsSnapshot = forestDoc.collection(ForestSyncConstants.animalsCollection).getDocuments()
             async let sculpturesSnapshot = forestDoc.collection(ForestSyncConstants.sculpturesCollection).getDocuments()
             async let questsSnapshot = forestDoc.collection(ForestSyncConstants.questsCollection).getDocuments()
+            async let playerSnapshot = forestDoc.collection(ForestSyncConstants.playerCollection).getDocuments()
             
-            let (treesDocs, animalsDocs, sculpturesDocs, questsDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot)
+            let (treesDocs, animalsDocs, sculpturesDocs, questsDocs, playerDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot, playerSnapshot)
             
             let parsedTrees = treesDocs.documents.compactMap { document -> TreeModel? in
                 let data = document.data()
@@ -255,6 +262,14 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 return nil
             }
             
+            let parsedPlayer = playerDocs.documents.compactMap { document -> PlayerModel in
+                let data = document.data()
+                return PlayerModel(
+                    name: data[ForestSyncConstants.nameField] as? String ?? "Error",
+                    lastUpdateDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
+                )
+            }.first ?? PlayerModel(name: "Error", lastUpdateDate: Date())
+            
             let safeModel = SafeForestModel(
                 forestId: forestId,
                 ownerId: parsedOwnerId,
@@ -272,6 +287,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 sculptures: parsedSculptures,
                 trees: parsedTrees,
                 animals: parsedAnimals,
+                player: parsedPlayer,
                 lastUpdatedDate: lastUpdatedDate,
                 lastSyncCloudTime: Date()
             )
@@ -320,13 +336,15 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         }
     }
     
-    func backgroundSyncIfNeeded() async -> Resource<Bool> {
-        do {
-            try checkCooldown(hoursRequired: ForestSyncConstants.backgroundSyncCooldownHours)
-            try await performDeltaSync()
-            return .success(true)
-        } catch {
-            return .error(error: error)
+    func backgroundSyncIfNeeded() {
+        Task.detached { [weak self] in
+            guard let self else { return }
+            do {
+                try await checkCooldown(hoursRequired: ForestSyncConstants.backgroundSyncCooldownHours)
+                try await performDeltaSync()
+            } catch {
+                print(error)
+            }
         }
     }
 }
@@ -359,7 +377,7 @@ private extension ForestSyncManager {
             throw ForestSyncError.fetchError
         }
         
-        let lastSyncDate = forest.lastSyncCloudTime
+        let lastSyncDate = forest.lastSyncCloudTime ?? Date.distantPast
         
         let batch = db.batch()
         let serverTime = FieldValue.serverTimestamp()
@@ -374,6 +392,12 @@ private extension ForestSyncManager {
                 ForestSyncConstants.lastUpdatedDateField: serverTime
             ]
             batch.setData(mainData, forDocument: forestDoc, merge: true)
+            totalOperations += 1
+        }
+        
+        if forest.player.lastUpdateDate > lastSyncDate {
+            let playerDocRef = forestDoc.collection(ForestSyncConstants.playerCollection).document(ForestSyncConstants.playerDocument)
+            batch.setData(playerPayload(forest.player, serverTime: serverTime), forDocument: playerDocRef, merge: true)
             totalOperations += 1
         }
         
@@ -476,6 +500,12 @@ private extension ForestSyncManager {
             ForestSyncConstants.questionTypeField: quest.questionType.valueForCoreData,
             ForestSyncConstants.battleEnemyModelField: quest.battleEnemyModel.valueForCoreData,
             ForestSyncConstants.gameLevelField: quest.gameLevel.valueForCoreData,
+            ForestSyncConstants.lastUpdatedDateField: serverTime
+        ]
+    }
+    func playerPayload(_ player: PlayerModel, serverTime: FieldValue) -> [String: Any] {
+        [
+            ForestSyncConstants.nameField: player.name,
             ForestSyncConstants.lastUpdatedDateField: serverTime
         ]
     }

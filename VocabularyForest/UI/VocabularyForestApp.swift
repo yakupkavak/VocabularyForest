@@ -36,7 +36,7 @@ struct VocabularyForestApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
+            coordinator.startSplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
                 if phase == .background {
                     let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
                     coreDataManager.save(type: .main)

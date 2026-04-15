@@ -30,7 +30,8 @@ class SettingsViewModel: ObservableObject {
     private let authManager: any AuthManagerProtocol
     private let syncManager: ForestSyncManagerProtocol
     private let forestManager: ForestDataManagerProtocol
-
+    private let playerManager: PlayerDataManagerProtocol
+    
     // MARK: - PROPERTIES
     
     private var cancellables = Set<AnyCancellable>()
@@ -43,6 +44,7 @@ class SettingsViewModel: ObservableObject {
     @Published var userLocalForest: SafeForestModel? = nil
     @Published var showConflictError: Bool = false
     @Published var conflictErrorMsg: String = ""
+    @Published var playerName: String = ""
     
     // MARK: - INIT
     
@@ -51,13 +53,15 @@ class SettingsViewModel: ObservableObject {
         coreDataManager: CoreDataManagerProtocol,
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
-        forestManager: ForestDataManagerProtocol
+        forestManager: ForestDataManagerProtocol,
+        playerManager: PlayerDataManagerProtocol
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
         self.authManager = authManager
         self.syncManager = syncManager
         self.forestManager = forestManager
+        self.playerManager = playerManager
         setupInit()
     }
     
@@ -314,8 +318,20 @@ class SettingsViewModel: ObservableObject {
 
 private extension SettingsViewModel {
     func setupInit() {
+        setupPlayer()
+        setupNotification()
+        setupUserInit()
+        setupSync()
+    }
+    
+    func setupPlayer() {
+        let player = self.playerManager.fetchSafePlayer(contextType: .main)
+        if let player {
+            playerName = player.name
+        }
+    }
+    func setupNotification() {
         self.notificationsEnabled = self.notificationManager.notificationsEnabled
-        self.userSignIn = self.authManager.isUserSignedIn
         self.notificationManager.objectWillChange
         .receive(on: RunLoop.main)
         .sink { [weak self] _ in
@@ -323,7 +339,9 @@ private extension SettingsViewModel {
             self.notificationsEnabled = self.notificationManager.notificationsEnabled
         }
         .store(in: &cancellables)
-        
+    }
+    func setupUserInit() {
+        self.userSignIn = self.authManager.isUserSignedIn
         self.authManager.isUserSignedInPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] isSignedIn in
@@ -336,7 +354,9 @@ private extension SettingsViewModel {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    func setupSync() {
         self.syncManager.lastSyncDatePublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] lastSyncTime in
@@ -345,9 +365,5 @@ private extension SettingsViewModel {
                 }
             }
             .store(in: &cancellables)
-
-        Task.detached { [weak self] in
-            await self?.syncManager.backgroundSyncIfNeeded()
-        }
     }
 }

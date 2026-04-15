@@ -50,9 +50,15 @@
         <attribute name="ownerId" optional="YES" attributeType="String"/>
         <attribute name="rainValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="animals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Animal" inverseName="forest" inverseEntity="Animal"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="forest" inverseEntity="Player"/>
         <relationship name="quests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Quest" inverseName="forest" inverseEntity="Quest"/>
         <relationship name="sculptures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sculpture" inverseName="forest" inverseEntity="Sculpture"/>
         <relationship name="trees" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tree" inverseName="forest" inverseEntity="Tree"/>
+    </entity>
+    <entity name="Player" representedClassName="Player" syncable="YES">
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="player" inverseEntity="Forest"/>
     </entity>
     <entity name="Quest" representedClassName="Quest" syncable="YES">
         <attribute name="battleEnemyModel" optional="YES" attributeType="String"/>

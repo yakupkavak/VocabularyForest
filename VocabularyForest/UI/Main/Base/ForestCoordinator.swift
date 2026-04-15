@@ -26,6 +26,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     @EnvironmentObject var tabbarController: TabBarController
     private let resolver: DCResolve
     
+    private var cachedSplashViewModel: SplashViewModel?
     private var cachedForestViewModel: ForestViewModel?
     private var cachedBattleViewModel: BattleViewModel?
     private var cachedLearningFeedViewModel: LearningFeedViewModel?
@@ -38,6 +39,25 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     
     init(resolver: DCResolve) {
         self.resolver = resolver
+    }
+    
+    func startSplashUI() -> AnyView {
+        if let cachedVM = cachedSplashViewModel {
+            return AnyView(SplashUI(viewModel: cachedVM))
+        }
+        let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+        let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+        let forestControllerService = ForestControllerService(
+            forestManager: forestData,
+            playerManager: playerManager,
+            coreData: coreData
+        )
+        let viewModel = SplashViewModel(forestController: forestControllerService)
+        self.cachedSplashViewModel = viewModel
+        return AnyView(
+            SplashUI(viewModel: viewModel)
+        )
     }
 
     func startForestUI() -> AnyView {
@@ -104,13 +124,14 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let auth = resolver.resolve(type: .singleInstance, for: (any AuthManagerProtocol).self)
         let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManager.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
-
+        let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
             authManager: auth,
             syncManager: sync,
-            forestManager: forestData
+            forestManager: forestData,
+            playerManager: playerManager
         )
         
         self.cachedSettingsViewModel = viewModel

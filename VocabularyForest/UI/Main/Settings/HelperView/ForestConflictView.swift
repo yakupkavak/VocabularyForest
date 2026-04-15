@@ -217,6 +217,7 @@ struct ForestConflictView: View {
             sculptures: [],
             trees: [],
             animals: [],
+            player: PlayerModel(name: "Ichigo", lastUpdateDate: Date()),
             lastUpdatedDate: Date(),
             lastSyncCloudTime: Date()
         ),
@@ -237,6 +238,7 @@ struct ForestConflictView: View {
             sculptures: [],
             trees: [],
             animals: [],
+            player: PlayerModel(name: "Ichigo", lastUpdateDate: Date()),
             lastUpdatedDate: Date(),
             lastSyncCloudTime: Date()
         ),

@@ -39,7 +39,6 @@ struct DailyRewardUI: View {
                                 .white.opacity(0.95)
                             )
                             .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 3)
-                            
                     }
                 VStack {
                     Spacer()

@@ -179,12 +179,7 @@ extension ForestViewModel {
             guard let self else { return }
             
             if !forestInitalized {
-                let result = forestDataManager.createForestGame(helper: ForestGameHelper(), contextType: .background)
-                await MainActor.run {
-                    if result.status == .success {
-                        UserDefaults.standard.set(true, forKey: "forestInitalized")
-                    }
-                }
+                // TODO: - CREATE FOREST IF NOT CREATED
             }
             
             let fetchedAnimals = forestDataManager.fetchAnimals(contextType: .background).data ?? []
