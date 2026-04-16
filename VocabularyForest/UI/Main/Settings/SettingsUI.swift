@@ -16,6 +16,8 @@ struct SettingsUI: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     @State private var showingDeleteAlert = false
+    @State private var showNameEditAlert = false
+    @State private var newUserName = ""
     @State private var showSignIn = false
     @Environment(\.requestReview) var requestReview
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -67,6 +69,11 @@ struct SettingsUI: View {
         .padding(.horizontal)
         .background(Color.backgroundSystem.ignoresSafeArea())
         .navigationTitle("Ayarlar")
+        .alert("Bir Sorun Oluştu", isPresented: $viewModel.showConflictError) {
+            Button("Tamam", role: .cancel) { }
+        } message: {
+            Text(viewModel.conflictErrorMsg)
+        }
         .alert("Tüm Veriler Silinsin mi?", isPresented: $showingDeleteAlert) {
             Button("Vazgeç", role: .cancel) { }
             Button("Sil", role: .destructive) {
@@ -74,6 +81,20 @@ struct SettingsUI: View {
             }
         } message: {
             Text("Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir.")
+        }
+        .alert("Kullanıcı Adı", isPresented: $showNameEditAlert) {
+            TextField("Yeni adınız", text: $newUserName)
+            
+            Button("Vazgeç", role: .cancel) { }
+            
+            Button("Kaydet") {
+                let trimmedName = newUserName.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !trimmedName.isEmpty {
+                    viewModel.updateUserName(name: trimmedName)
+                }
+            }
+        } message: {
+            Text("Lütfen yeni kullanıcı adınızı girin.")
         }
         .sheet(item: $viewModel.sheetContent) { content in
             PolicySheetView(content: content)
@@ -212,10 +233,22 @@ private extension SettingsUI {
                     .frame(width: 45, height: 30)
                     .foregroundColor(.logoGreen)
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(viewModel.playerName)
+                    HStack {
+                        Text(viewModel.playerName)
+                        Button {
+                            newUserName = viewModel.playerName
+                            showNameEditAlert = true
+                        } label: {
+                            Image(systemName: "pencil")
+                        }
+
+                    }
                     HStack(spacing: 4) {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                            .font(.caption2)
+                        Button {
+                            viewModel.trySyncManuel()
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath").font(.caption2)
+                        }.foregroundStyle(.clickableText)
                         Text("Son eşitleme: \(viewModel.lastSyncDate)")
                             .font(.caption)
                     }

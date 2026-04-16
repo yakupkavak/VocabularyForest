@@ -172,6 +172,16 @@ extension ForestViewModel {
 
 extension ForestViewModel {
     
+    func initalizeForest() {
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            animalList.removeAll()
+            sculptureList.removeAll()
+            treeList.removeAll()
+            fetchForest()
+        }
+    }
+    
     func fetchForest() {
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
 

@@ -112,7 +112,7 @@ struct ForestUI: View {
         .task {
             self.viewModel.output = forestScene
             self.forestScene.helper = viewModel
-            viewModel.fetchForest()
+            viewModel.initalizeForest()
         }
         .onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)

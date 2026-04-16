@@ -7,63 +7,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "601E4FB4-FCBC-481E-B763-3C6A0A13F0AE"
+            uuid = "4CD08B7F-3EA1-4046-A723-4A6C8B1F3695"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Local/Managers/PlayerDataManager.swift"
+            filePath = "VocabularyForest/Data/Local/Models/CoreData/Forest+CoreDataProperties.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "fetchSafePlayer(contextType:)"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
+            landmarkName = "safeObject(context:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "830D66ED-9793-4D28-B264-1FF4AEBF84B8"
+            uuid = "D9DE80B6-098E-496F-8287-9F092267A286"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Local/Managers/PlayerDataManager.swift"
+            filePath = "VocabularyForest/Data/Local/Models/CoreData/Forest+CoreDataProperties.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "fetchSafePlayer(contextType:)"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "safeObject(context:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "830D66ED-9793-4D28-B264-1FF4AEBF84B8 - a4471e0d8dd39192"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Sendable () -&gt; Swift.Optional&lt;VocabularyForest.PlayerModel&gt; in VocabularyForest.PlayerDataManager.fetchSafePlayer(contextType: VocabularyForest.PlayerDataManager.ContextType) -&gt; Swift.Optional&lt;VocabularyForest.PlayerModel&gt;"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/PlayerDataManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "85"
-                  endingLineNumber = "85">
-               </Location>
-               <Location
-                  uuid = "830D66ED-9793-4D28-B264-1FF4AEBF84B8 - a4471e0d8dd391f3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Sendable () -&gt; Swift.Optional&lt;VocabularyForest.PlayerModel&gt; in VocabularyForest.PlayerDataManager.fetchSafePlayer(contextType: VocabularyForest.PlayerDataManager.ContextType) -&gt; Swift.Optional&lt;VocabularyForest.PlayerModel&gt;"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Managers/PlayerDataManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "84"
-                  endingLineNumber = "84">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

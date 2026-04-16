@@ -92,6 +92,22 @@ class SettingsViewModel: ObservableObject {
         }
     }
     
+    func updateUserName(name: String) {
+        if playerManager.updatePlayerName(contextType: .main, name: name).status == .success {
+            playerName = name
+        }
+    }
+    
+    func trySyncManuel() {
+        Task {
+            let result = await syncManager.manualSync()
+            if let error = result.error {
+                let errorMessage = error.localizedDescription
+                self.showError(message: errorMessage)
+            }
+        }
+    }
+    
     func checkUserForest() async {
         let conflictCheck = await syncManager.checkHasConflictOnlyMetadata()
         if conflictCheck.status == .error {

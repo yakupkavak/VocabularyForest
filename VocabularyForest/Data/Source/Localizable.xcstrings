@@ -1320,6 +1320,9 @@
         }
       }
     },
+    "Bir Sorun Oluştu" : {
+
+    },
     "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz" : {
       "localizations" : {
         "en" : {
@@ -6276,6 +6279,9 @@
         }
       }
     },
+    "Kullanıcı Adı" : {
+
+    },
     "Kullanım Koşulları" : {
       "localizations" : {
         "en" : {
@@ -6487,6 +6493,9 @@
       }
     },
     "Lütfen yeni bir yedekleme yapmak için %lld dakika bekleyin." : {
+
+    },
+    "Lütfen yeni kullanıcı adınızı girin." : {
 
     },
     "Maceraya Atıl" : {
@@ -9164,6 +9173,9 @@
     "Sunucu eşleştirilemedi" : {
 
     },
+    "Tamam" : {
+
+    },
     "Taşı" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -10041,6 +10053,9 @@
       }
     },
     "Yedekleme yapmak için giriş yapmalısınız." : {
+
+    },
+    "Yeni adınız" : {
 
     },
     "Yerel veriler okunurken bir hata oluştu." : {
