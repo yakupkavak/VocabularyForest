@@ -88,10 +88,13 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+        let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
-            forestDataManager: forestData
+            forestDataManager: forestData,
+            playerDataManager: playerManager
         )
         
         self.cachedBattleViewModel = viewModel

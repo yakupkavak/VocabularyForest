@@ -32,6 +32,7 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     var uiStation: BattleUIStation { get }
     var errorModel: BattleError? { get }
     var playerAnger: CharacterAnger? { get }
+    var playerName: String { get }
     var enemyAnger: CharacterAnger? { get }
     var gameStatus: GameStatusModel { get }
 }
@@ -51,7 +52,8 @@ class BattleViewModel: ObservableObject {
     private let coreData: any CoreDataManagerProtocol
     private let audioService: any AudioServiceProtocol
     private let forestDataManager: any ForestDataManagerProtocol
-    
+    private let playerDataManager: any PlayerDataManagerProtocol
+
     // MARK: - PROPERTIES
     
     private var questionList: [QuestionModel] = []
@@ -79,15 +81,18 @@ class BattleViewModel: ObservableObject {
         wrongCount: 0,
         wrongWords: []
     )
+    @Published var playerName: String = ""
 
     init(
         coreDataManager: (CoreDataManagerProtocol),
         audioService: (AudioServiceProtocol),
-        forestDataManager: (ForestDataManagerProtocol)
+        forestDataManager: (ForestDataManagerProtocol),
+        playerDataManager: PlayerDataManagerProtocol
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
+        self.playerDataManager = playerDataManager
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
@@ -292,7 +297,8 @@ extension BattleViewModel: BattleViewModelProtocol {
                 books = allBooks
             }
         }
-        
+        let safePlayerModel = playerDataManager.fetchSafePlayer(contextType: .main)
+        playerName = safePlayerModel?.name ?? String(localized: "Ichigo")
         let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         self.gameLevel = gameLevel
         self.questionType = questionType

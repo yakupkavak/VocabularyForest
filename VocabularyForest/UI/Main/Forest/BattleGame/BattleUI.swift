@@ -299,7 +299,7 @@ private extension BattleUI {
                 if let playerAnger = viewModel.playerAnger {
                     VStack {
                         Image("player_title_header").resizable().scaledToFit().overlay{
-                            Text(playerAnger.name).foregroundStyle(.white).padding(8)
+                            Text(viewModel.playerName).foregroundStyle(.white).padding(8)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
