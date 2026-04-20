@@ -118,7 +118,7 @@ final class MockForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - UPDATE HELPERS
     
-    func claimReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
+    func claimQuestReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
         capturedQuestToClaim = quest
         return mockBoolResult
     }

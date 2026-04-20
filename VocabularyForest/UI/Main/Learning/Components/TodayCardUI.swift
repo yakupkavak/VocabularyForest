@@ -150,7 +150,7 @@ struct CardBack : View {
                         .frame(width: width * 17 / 24, height: height * 13 / 24)
                         .foregroundColor(Color(hex: "#010D00").opacity(0.7))
                 }.padding(.top, 8)
-                Text(learningWord.isEmpty ? String(localized: "Create your first book") : learningWord).font(.system(size: titleFontSize)).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).padding(.top, -12)
+                Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).font(.system(size: titleFontSize)).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).padding(.top, -12)
             }
 
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))

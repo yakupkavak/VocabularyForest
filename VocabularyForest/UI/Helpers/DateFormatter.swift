@@ -39,4 +39,11 @@ extension Date {
         
         return String(localized: "Just now")
     }
+    func toFriendlyRemaintime() -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "HH:mm:ss"
+        let timeString = formatter.string(from: self)
+        return timeString
+    }
 }

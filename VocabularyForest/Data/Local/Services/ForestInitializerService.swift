@@ -13,11 +13,11 @@ enum ForestInitError: Error {
     case alreadyCreated
 }
 
-protocol ForestControllerServiceProtocol {
+protocol ForestInitializerServiceProtocol {
     func initializeNewGame() async -> Resource<Bool>
 }
 
-class ForestControllerService: ForestControllerServiceProtocol {
+class ForestInitializerService: ForestInitializerServiceProtocol {
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol

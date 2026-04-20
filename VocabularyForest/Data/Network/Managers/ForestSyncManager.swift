@@ -11,7 +11,7 @@ import FirebaseAuth
 
 // MARK: - CONSTANTS
 
-private enum ForestSyncConstants {
+enum ForestSyncConstants {
     static let usersCollection = "Users"
     static let forestsCollection = "Forests"
     static let mainForestDocument = "mainForest"
@@ -22,6 +22,7 @@ private enum ForestSyncConstants {
     static let sculpturesCollection = "Sculptures"
     static let questsCollection = "Quests"
     static let playerCollection = "Player"
+    static let dailyRewardsCollection = "DailyRewards"
 
     static let idField = "id"
     static let nameField = "name"
@@ -50,6 +51,14 @@ private enum ForestSyncConstants {
     static let questionTypeField = "questionType"
     static let battleEnemyModelField = "battleEnemyModel"
     static let gameLevelField = "gameLevel"
+    
+    static let metadataDocument = "metadata"
+    static let weeklyStreakCurrentDayField = "weeklyStreakCurrentDayField"
+    static let weeklyStreakLastClaimDateField = "weeklyStreakLastClaimDate"
+    static let lastFetchDateField = "lastFetchDate"
+    static let fixedTimeZoneField = "fixedTimeZone"
+    static let dailySpinLastUsedDateField = "dailySpinLastUsedDate"
+    static let firstVisitTimestamp = "firstVisitTimestamp"
     
     static let plantType = "plant"
     static let animalType = "animal"
@@ -203,8 +212,12 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             async let sculpturesSnapshot = forestDoc.collection(ForestSyncConstants.sculpturesCollection).getDocuments()
             async let questsSnapshot = forestDoc.collection(ForestSyncConstants.questsCollection).getDocuments()
             async let playerSnapshot = forestDoc.collection(ForestSyncConstants.playerCollection).getDocuments()
+            async let dailySnapshot = forestDoc
+                            .collection(ForestSyncConstants.dailyRewardsCollection)
+                            .document(ForestSyncConstants.metadataDocument)
+                            .getDocument()
             
-            let (treesDocs, animalsDocs, sculpturesDocs, questsDocs, playerDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot, playerSnapshot)
+            let (treesDocs, animalsDocs, sculpturesDocs, questsDocs, playerDocs, dailyDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot, playerSnapshot, dailySnapshot)
             
             let parsedTrees = treesDocs.documents.compactMap { document -> TreeModel? in
                 let data = document.data()
@@ -270,6 +283,16 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 )
             }.first ?? PlayerModel(name: "Error", lastUpdateDate: Date())
             
+            let dailyData = dailyDocs.data() ?? [:]
+            let parsedDaily = DailyActivitiesModel(
+                weeklyStreakLastClaimDate: (dailyData[ForestSyncConstants.weeklyStreakLastClaimDateField] as? Timestamp)?.dateValue(),
+                weeklyStreakCurrentDay: dailyData[ForestSyncConstants.weeklyStreakCurrentDayField] as? Int ?? 0,
+                lastFetchDate: (dailyData[ForestSyncConstants.lastFetchDateField] as? Timestamp)?.dateValue(),
+                fixedTimeZone: dailyData[ForestSyncConstants.fixedTimeZoneField] as? String ?? TimeZone.current.identifier,
+                dailySpinLastUsedDate: (dailyData[ForestSyncConstants.dailySpinLastUsedDateField] as? Timestamp)?.dateValue(),
+                lastUpdatedDate: (dailyData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
+            )
+            
             let safeModel = SafeForestModel(
                 forestId: forestId,
                 ownerId: parsedOwnerId,
@@ -289,7 +312,8 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 animals: parsedAnimals,
                 player: parsedPlayer,
                 lastUpdatedDate: lastUpdatedDate,
-                lastSyncCloudTime: Date()
+                lastSyncCloudTime: Date(),
+                dailyActivities: parsedDaily
             )
             
             return .success(safeModel)
@@ -380,7 +404,6 @@ private extension ForestSyncManager {
         let lastSyncDate = forest.lastSyncCloudTime ?? Date.distantPast
         
         let batch = db.batch()
-        let serverTime = FieldValue.serverTimestamp()
         var totalOperations = 0
         
         if forest.lastUpdatedDate > lastSyncDate {
@@ -389,43 +412,55 @@ private extension ForestSyncManager {
                 ForestSyncConstants.diamondValueField: forest.diamondValue,
                 ForestSyncConstants.rainValueField: forest.rainValue,
                 ForestSyncConstants.landHealthPercentField: forest.landHealthPercent,
-                ForestSyncConstants.lastUpdatedDateField: serverTime
+                ForestSyncConstants.lastUpdatedDateField: forest.lastUpdatedDate
             ]
             batch.setData(mainData, forDocument: forestDoc, merge: true)
-            totalOperations += 1
-        }
-        
-        if forest.player.lastUpdateDate > lastSyncDate {
-            let playerDocRef = forestDoc.collection(ForestSyncConstants.playerCollection).document(ForestSyncConstants.playerDocument)
-            batch.setData(playerPayload(forest.player, serverTime: serverTime), forDocument: playerDocRef, merge: true)
             totalOperations += 1
         }
         
         let updatedTrees = forest.trees.filter { $0.lastUpdatedDate > lastSyncDate }
         for tree in updatedTrees {
             let docRef = forestDoc.collection(ForestSyncConstants.treesCollection).document(tree.id.uuidString)
-            batch.setData(treePayload(tree, serverTime: serverTime), forDocument: docRef, merge: true)
+            batch.setData(treePayload(tree), forDocument: docRef, merge: true)
             totalOperations += 1
         }
         
         let updatedAnimals = forest.animals.filter { $0.lastUpdatedDate > lastSyncDate }
         for animal in updatedAnimals {
             let docRef = forestDoc.collection(ForestSyncConstants.animalsCollection).document(animal.id.uuidString)
-            batch.setData(animalPayload(animal, serverTime: serverTime), forDocument: docRef, merge: true)
+            batch.setData(animalPayload(animal), forDocument: docRef, merge: true)
             totalOperations += 1
         }
         
         let updatedSculptures = forest.sculptures.filter { $0.lastUpdatedDate > lastSyncDate }
         for sculpture in updatedSculptures {
             let docRef = forestDoc.collection(ForestSyncConstants.sculpturesCollection).document(sculpture.id.uuidString)
-            batch.setData(sculpturePayload(sculpture, serverTime: serverTime), forDocument: docRef, merge: true)
+            batch.setData(sculpturePayload(sculpture), forDocument: docRef, merge: true)
             totalOperations += 1
         }
         
         let updatedQuests = forest.quests.filter { $0.lastUpdatedDate > lastSyncDate }
         for quest in updatedQuests {
             let docRef = forestDoc.collection(ForestSyncConstants.questsCollection).document(quest.id.uuidString)
-            batch.setData(questPayload(quest, serverTime: serverTime), forDocument: docRef, merge: true)
+            batch.setData(questPayload(quest), forDocument: docRef, merge: true)
+            totalOperations += 1
+        }
+        
+        if forest.player.lastUpdateDate > lastSyncDate {
+            let playerDocRef = forestDoc.collection(ForestSyncConstants.playerCollection).document(ForestSyncConstants.playerDocument)
+            batch.setData(playerPayload(forest.player), forDocument: playerDocRef, merge: true)
+            totalOperations += 1
+        }
+        
+        if forest.dailyActivities.lastUpdatedDate > lastSyncDate {
+            let dailyDocRef = forestDoc
+                .collection(ForestSyncConstants.dailyRewardsCollection)
+                .document(ForestSyncConstants.metadataDocument)
+            batch.setData(
+                dailyActivitiesPayload(forest.dailyActivities),
+                forDocument: dailyDocRef,
+                merge: true
+            )
             totalOperations += 1
         }
         
@@ -443,7 +478,7 @@ private extension ForestSyncManager {
         }
     }
     
-    func treePayload(_ tree: TreeModel, serverTime: FieldValue) -> [String: Any] {
+    func treePayload(_ tree: TreeModel) -> [String: Any] {
         [
             ForestSyncConstants.idField: tree.id.uuidString,
             ForestSyncConstants.typeField: ForestSyncConstants.plantType,
@@ -454,11 +489,11 @@ private extension ForestSyncManager {
             ForestSyncConstants.isAliveField: tree.isAlive,
             ForestSyncConstants.healthValueField: tree.treeHealthValue,
             ForestSyncConstants.createdDateField: tree.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: serverTime
+            ForestSyncConstants.lastUpdatedDateField: tree.lastUpdatedDate
         ]
     }
     
-    func animalPayload(_ animal: AnimalModel, serverTime: FieldValue) -> [String: Any] {
+    func animalPayload(_ animal: AnimalModel) -> [String: Any] {
         [
             ForestSyncConstants.idField: animal.id.uuidString,
             ForestSyncConstants.typeField: ForestSyncConstants.animalType,
@@ -469,11 +504,11 @@ private extension ForestSyncManager {
             ForestSyncConstants.isAliveField: animal.isAlive,
             ForestSyncConstants.healthValueField: animal.healthValue,
             ForestSyncConstants.createdDateField: animal.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: serverTime
+            ForestSyncConstants.lastUpdatedDateField: animal.lastUpdatedDate
         ]
     }
     
-    func sculpturePayload(_ sculpture: SculptureModel, serverTime: FieldValue) -> [String: Any] {
+    func sculpturePayload(_ sculpture: SculptureModel) -> [String: Any] {
         [
             ForestSyncConstants.idField: sculpture.id.uuidString,
             ForestSyncConstants.typeField: ForestSyncConstants.sculptureType,
@@ -482,11 +517,11 @@ private extension ForestSyncManager {
             ForestSyncConstants.xPositionField: sculpture.xPosition,
             ForestSyncConstants.yPositionField: sculpture.yPosition,
             ForestSyncConstants.createdDateField: sculpture.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: serverTime
+            ForestSyncConstants.lastUpdatedDateField: sculpture.lastUpdatedDate
         ]
     }
     
-    func questPayload(_ quest: QuestModel, serverTime: FieldValue) -> [String: Any] {
+    func questPayload(_ quest: QuestModel) -> [String: Any] {
         [
             ForestSyncConstants.idField: quest.id.uuidString,
             ForestSyncConstants.typeField: quest.type.valueForCoreData,
@@ -500,13 +535,34 @@ private extension ForestSyncManager {
             ForestSyncConstants.questionTypeField: quest.questionType.valueForCoreData,
             ForestSyncConstants.battleEnemyModelField: quest.battleEnemyModel.valueForCoreData,
             ForestSyncConstants.gameLevelField: quest.gameLevel.valueForCoreData,
-            ForestSyncConstants.lastUpdatedDateField: serverTime
+            ForestSyncConstants.lastUpdatedDateField: quest.lastUpdatedDate
         ]
     }
-    func playerPayload(_ player: PlayerModel, serverTime: FieldValue) -> [String: Any] {
+    
+    func playerPayload(_ player: PlayerModel) -> [String: Any] {
         [
             ForestSyncConstants.nameField: player.name,
-            ForestSyncConstants.lastUpdatedDateField: serverTime
+            ForestSyncConstants.lastUpdatedDateField: player.lastUpdateDate
         ]
+    }
+    
+    func dailyActivitiesPayload(_ daily: DailyActivitiesModel) -> [String: Any] {
+        var payload: [String: Any] = [
+            ForestSyncConstants.weeklyStreakCurrentDayField: daily.weeklyStreakCurrentDay,
+            ForestSyncConstants.fixedTimeZoneField: daily.fixedTimeZone ?? TimeZone.current.identifier,
+            ForestSyncConstants.lastUpdatedDateField: daily.lastUpdatedDate
+        ]
+        
+        if let claimDate = daily.weeklyStreakLastClaimDate {
+            payload[ForestSyncConstants.weeklyStreakLastClaimDateField] = claimDate
+        }
+        if let fetchDate = daily.lastFetchDate {
+            payload[ForestSyncConstants.lastFetchDateField] = fetchDate
+        }
+        if let spinDate = daily.dailySpinLastUsedDate {
+            payload[ForestSyncConstants.dailySpinLastUsedDateField] = spinDate
+        }
+        
+        return payload
     }
 }

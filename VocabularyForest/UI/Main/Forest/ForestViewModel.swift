@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import YKSpinWheel
 
 // MARK: - PROTOCOLS
 
@@ -49,6 +50,7 @@ class ForestViewModel: BaseViewModel {
     private let coreDataManager: CoreDataManagerProtocol
     private let audioService: AudioServiceProtocol
     private let forestDataManager: ForestDataManagerProtocol
+    private let adventureService: ForestAdventureServiceProtocol
     
     // MARK: - PROPERTIES
     
@@ -60,6 +62,8 @@ class ForestViewModel: BaseViewModel {
     @Published var forestStatus: ForestStatusModel? = nil
     @Published var showRainButton = false
     @Published var showBookThreshold = false
+    @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
+    @Published var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
     private var treeList: [TreeModel] = []
@@ -69,18 +73,22 @@ class ForestViewModel: BaseViewModel {
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
-    
+    private var dailyTimeCancellable: AnyCancellable?
+
     // MARK: - INIT
     
     init(
         audioService: AudioServiceProtocol,
         coreDataManager: CoreDataManagerProtocol,
-        forestDataManager: ForestDataManagerProtocol
+        forestDataManager: ForestDataManagerProtocol,
+        forestAdventureService: ForestAdventureServiceProtocol
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
         self.forestDataManager = forestDataManager
+        self.adventureService = forestAdventureService
         super.init()
+        
     }
 }
 
@@ -179,6 +187,7 @@ extension ForestViewModel {
             sculptureList.removeAll()
             treeList.removeAll()
             fetchForest()
+            checkDailySpinStatus()
         }
     }
     
@@ -347,9 +356,19 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
-        let result = forestDataManager.claimReward(quest: quest, contextType: .background)
+        let result = forestDataManager.claimQuestReward(quest: quest, contextType: .background)
         if result.status == .success {
             fetchForest()
+        }
+    }
+    
+    func claimReward(model: QuestRewardModel) {
+        Task { @MainActor in
+            let result = await adventureService.claimDailySpinReward(reward: model, contextType: .main)
+            if result.status == .success {
+                self.nextDailySpinTime = Date().addingTimeInterval(86400)
+                self.startSpinTimer()                
+            }
         }
     }
 }
@@ -446,6 +465,34 @@ private extension ForestViewModel {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestViewModel {
+    
+    func checkDailySpinStatus() {
+        Task { @MainActor in
+            let result = await adventureService.fetchDailySpinStatusDate()
+            
+            if let targetTime = result.data {
+                self.nextDailySpinTime = targetTime
+                self.startSpinTimer()
+            }
+        }
+    }
+    
+    func startSpinTimer() {
+        dailyTimeCancellable?.cancel()
+        dailyTimeCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self = self, let target = self.nextDailySpinTime else { return }
+                
+                if Date() >= target {
+                    self.nextDailySpinTime = nil
+                    self.talkCancellable?.cancel()
+                } else {
+                    self.nextDailySpinTime = self.nextDailySpinTime
+                }
+            }
+    }
+    
     func processQuests(quests: [QuestModel]) {
         var daily: [QuestModel] = []
         var weekly: [QuestModel] = []

@@ -12,8 +12,8 @@ struct DailyRewardUI: View {
     // MARK: - PROPERTIES
     
     @Binding var isOpen: Bool
-    let cardList: [DailyCardModel]
-    let onClick: (DailyCardModel) -> Void
+    let cardList: [WeeklyDailyCardModel]
+    let onClick: (WeeklyDailyCardModel) -> Void
     
     // MARK: - PRIVATE PROPERTIES
     
@@ -116,13 +116,13 @@ struct DailyRewardUI: View {
 }
 
 #Preview {
-    let goldModel = DailyCardModel(day: 1, bounty: .chest(model: .gold), status: .claimed)
-    let waterModel = DailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), status: .passed)
-    let goldModel1 = DailyCardModel(day: 3, bounty: .chest(model: .gold), status: .claimed)
-    let waterModel2 = DailyCardModel(day: 4, bounty: .standart(model: .gold(count: 200)), status: .claimed)
-    let goldModel3 = DailyCardModel(day: 5, bounty: .chest(model: .gold), status: .ready)
-    let waterModel3 = DailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), status: .locked)
-    let chest1 = DailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
+    let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .claimed)
+    let waterModel = WeeklyDailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), status: .passed)
+    let goldModel1 = WeeklyDailyCardModel(day: 3, bounty: .chest(model: .gold), status: .claimed)
+    let waterModel2 = WeeklyDailyCardModel(day: 4, bounty: .standart(model: .gold(count: 200)), status: .claimed)
+    let goldModel3 = WeeklyDailyCardModel(day: 5, bounty: .chest(model: .gold), status: .ready)
+    let waterModel3 = WeeklyDailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), status: .locked)
+    let chest1 = WeeklyDailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let list = [goldModel,waterModel,goldModel1,waterModel2,goldModel3,waterModel3,chest1]
     DailyRewardUI(isOpen: .constant(true), cardList: list) { card in
         print("\(card)")

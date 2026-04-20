@@ -27,4 +27,5 @@ struct SafeForestModel: Sendable {
     let player: PlayerModel
     let lastUpdatedDate: Date
     let lastSyncCloudTime: Date?
+    let dailyActivities: DailyActivitiesModel
 }

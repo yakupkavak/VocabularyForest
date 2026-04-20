@@ -219,7 +219,15 @@ struct ForestConflictView: View {
             animals: [],
             player: PlayerModel(name: "Ichigo", lastUpdateDate: Date()),
             lastUpdatedDate: Date(),
-            lastSyncCloudTime: Date()
+            lastSyncCloudTime: Date(),
+            dailyActivities: DailyActivitiesModel(
+                weeklyStreakLastClaimDate: nil,
+                weeklyStreakCurrentDay: 10,
+                lastFetchDate: nil,
+                fixedTimeZone: nil,
+                dailySpinLastUsedDate: nil,
+                lastUpdatedDate: Date()
+            )
         ),
         cloudForest: SafeForestModel(
             forestId: UUID(),
@@ -240,8 +248,17 @@ struct ForestConflictView: View {
             animals: [],
             player: PlayerModel(name: "Ichigo", lastUpdateDate: Date()),
             lastUpdatedDate: Date(),
-            lastSyncCloudTime: Date()
+            lastSyncCloudTime: Date(),
+            dailyActivities: DailyActivitiesModel(
+                weeklyStreakLastClaimDate: nil,
+                weeklyStreakCurrentDay: 10,
+                lastFetchDate: nil,
+                fixedTimeZone: nil,
+                dailySpinLastUsedDate: nil,
+                lastUpdatedDate: Date()
+            )
         ),
-        onResolve: { _ in }
+        onResolve: { _ in
+        }
     )
 }

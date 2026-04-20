@@ -33,6 +33,15 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="bookcase" inverseEntity="Book"/>
     </entity>
+    <entity name="DailyActivities" representedClassName="DailyActivities" syncable="YES">
+        <attribute name="dailySpinLastUsedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fixedTimeZone" optional="YES" attributeType="String"/>
+        <attribute name="lastFetchDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="weeklyStreakCurrentDay" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weeklyStreakLastClaimDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="dailyActivities" inverseEntity="Forest"/>
+    </entity>
     <entity name="Forest" representedClassName="Forest" syncable="YES">
         <attribute name="diamondValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="forestId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -50,6 +59,7 @@
         <attribute name="ownerId" optional="YES" attributeType="String"/>
         <attribute name="rainValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="animals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Animal" inverseName="forest" inverseEntity="Animal"/>
+        <relationship name="dailyActivities" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyActivities" inverseName="forest" inverseEntity="DailyActivities"/>
         <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="forest" inverseEntity="Player"/>
         <relationship name="quests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Quest" inverseName="forest" inverseEntity="Quest"/>
         <relationship name="sculptures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sculpture" inverseName="forest" inverseEntity="Sculpture"/>

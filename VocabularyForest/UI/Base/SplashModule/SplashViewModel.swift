@@ -9,9 +9,9 @@ import Foundation
 
 class SplashViewModel: BaseViewModel {
     
-    private let forestController: ForestControllerServiceProtocol
+    private let forestController: ForestInitializerServiceProtocol
     
-    init(forestController: ForestControllerServiceProtocol) {
+    init(forestController: ForestInitializerServiceProtocol) {
         self.forestController = forestController
         super.init()
         setupApplication()

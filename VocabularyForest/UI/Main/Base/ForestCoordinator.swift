@@ -48,7 +48,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
-        let forestControllerService = ForestControllerService(
+        let forestControllerService = ForestInitializerService(
             forestManager: forestData,
             playerManager: playerManager,
             coreData: coreData
@@ -68,10 +68,12 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+        let adventureService = resolver.resolve(type: .singleInstance, for: ForestAdventureServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
             coreDataManager: coreData,
-            forestDataManager: forestData
+            forestDataManager: forestData,
+            forestAdventureService: adventureService
         )
         
         self.cachedForestViewModel = viewModel

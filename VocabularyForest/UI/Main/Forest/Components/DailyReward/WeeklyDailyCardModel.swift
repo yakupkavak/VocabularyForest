@@ -5,7 +5,7 @@
 //  Created by Yakup Kavak on 29.03.2026.
 //
 
-struct DailyCardModel {
+struct WeeklyDailyCardModel {
     var day: Int
     var bounty: DailyBountyModel
     var status: BountyStatus

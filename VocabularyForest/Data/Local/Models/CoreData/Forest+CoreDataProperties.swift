@@ -35,6 +35,7 @@ extension Forest {
     @NSManaged public var trees: NSSet?
     @NSManaged public var animals: NSSet?
     @NSManaged public var player: Player?
+    @NSManaged public var dailyActivities: DailyActivities?
     @NSManaged public var lastUpdatedDate: Date?
     @NSManaged public var lastSyncCloudTime: Date?
     
@@ -82,6 +83,11 @@ extension Forest: ConvertSafeModel {
                 safePlayer = PlayerHelper.createDefaultPlayer()
             }
             
+            let safeDaily: DailyActivitiesModel
+            guard let dailyActivity = self.dailyActivities else {
+                throw ForestError.emptyLastDate
+            }
+            safeDaily = try dailyActivity.safeObject(context: context)
             return SafeForestModel(
                 forestId: forestId,
                 ownerId: ownerId,
@@ -101,7 +107,8 @@ extension Forest: ConvertSafeModel {
                 animals: safeAnimals,
                 player: safePlayer,
                 lastUpdatedDate: lastUpdatedDate,
-                lastSyncCloudTime: lastSyncCloudTime
+                lastSyncCloudTime: lastSyncCloudTime,
+                dailyActivities: safeDaily
             )
         }
     }

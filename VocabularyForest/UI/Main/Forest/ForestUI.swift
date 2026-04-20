@@ -166,7 +166,9 @@ private extension ForestUI {
     
     var dailySpinView: some View {
         VStack {
-            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}))
+            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}), nextSpinTime: $viewModel.nextDailySpinTime) { rewardModel in
+                
+            }
         }
     }
     
@@ -408,7 +410,7 @@ extension ForestUI: ForestUIProtocol {
     let mockCoreData = CoreDataManager.preview
     let mockAudio = ForestAudioService()
     let mockForestData = ForestDataManager()
-    let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData)
+    let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData, forestAdventureService: ForestAdventureService(forestManager: mockForestData, playerManager: PlayerDataManager(), coreData: mockCoreData))
      
     ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
 }

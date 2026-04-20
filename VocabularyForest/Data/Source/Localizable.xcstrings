@@ -2033,6 +2033,7 @@
       }
     },
     "Create your first book" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3660,6 +3661,9 @@
         }
       }
     },
+    "Firstly create a book" : {
+
+    },
     "Forest data manager eklenmedi." : {
 
     },
@@ -5044,6 +5048,9 @@
           }
         }
       }
+    },
+    "İnternet bağlantınız yok. Ödüllerinizi almak için lütfen bağlantınızı kontrol edip tekrar deneyin." : {
+
     },
     "İptal" : {
       "localizations" : {
@@ -6458,6 +6465,9 @@
     "Local Forest" : {
 
     },
+    "Local forest data is not available." : {
+
+    },
     "Locked" : {
       "localizations" : {
         "en" : {
@@ -6826,6 +6836,9 @@
           }
         }
       }
+    },
+    "Network error occurred. Please check your connection." : {
+
     },
     "New Discoveries 🗺️" : {
       "localizations" : {
@@ -9173,6 +9186,9 @@
     "Sunucu eşleştirilemedi" : {
 
     },
+    "Sunucu saati alınamadı. Lütfen daha sonra tekrar deneyin." : {
+
+    },
     "Tamam" : {
 
     },
@@ -9900,6 +9916,9 @@
     "Venüs" : {
 
     },
+    "Wait until \n %@" : {
+
+    },
     "Watching over the trees is my duty." : {
 
     },
@@ -10096,6 +10115,9 @@
       }
     },
     "Yesterday at %@" : {
+
+    },
+    "You must be authenticated to use the reward system." : {
 
     },
     "Your Forest" : {

@@ -12,7 +12,7 @@ struct DailyCard: View {
     // MARK: - PROPERTIES
     
     var parentWidth: CGFloat
-    var model: DailyCardModel
+    var model: WeeklyDailyCardModel
     var verticalPadding: CGFloat = 8
     var onClick: () -> Void
     var isSpecial: Bool = false
@@ -89,8 +89,8 @@ struct DailyHeader: View {
 }
 
 #Preview {
-    let goldModel = DailyCardModel(day: 1, bounty: .chest(model: .gold), status: .ready)
-    let waterModel = DailyCardModel(day: 1, bounty: .standart(model: .gold(count: 200)), status: .passed)
+    let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .ready)
+    let waterModel = WeeklyDailyCardModel(day: 1, bounty: .standart(model: .gold(count: 200)), status: .passed)
     HStack {
         Spacer()
         VStack {
