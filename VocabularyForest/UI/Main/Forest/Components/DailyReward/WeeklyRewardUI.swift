@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DailyRewardUI: View {
+struct WeeklyRewardUI: View {
     
     // MARK: - PROPERTIES
     
@@ -124,7 +124,7 @@ struct DailyRewardUI: View {
     let waterModel3 = WeeklyDailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let chest1 = WeeklyDailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let list = [goldModel,waterModel,goldModel1,waterModel2,goldModel3,waterModel3,chest1]
-    DailyRewardUI(isOpen: .constant(true), cardList: list) { card in
+    WeeklyRewardUI(isOpen: .constant(true), cardList: list) { card in
         print("\(card)")
     }
 }
