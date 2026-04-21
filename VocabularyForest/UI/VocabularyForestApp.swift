@@ -44,6 +44,7 @@ struct VocabularyForestApp: App {
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .environmentObject(tabbarController).environmentObject(coordinator)
                 .installToast(position: .bottom)
+                .withGlobalPopup()
         }
     }
 }

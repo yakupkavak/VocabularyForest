@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import YKSpinWheel
 
 enum PlantReward: String, CaseIterable {
     case sunFlower = "SunFlower"
@@ -207,4 +208,26 @@ struct RewardHelper {
             return .sculpture(modelName: sculpture.name)
         }
     }
+    
+    static func convertDailyRewardModel(from rewardModel: SpinModel) -> DailyBountyModel {
+        let spinRewards = DailySpinRewards.allCases.filter { $0 != .diamondChest }
+        let safeIndex = max(0, min(rewardModel.id - 1, spinRewards.count - 1))
+        let spinReward = spinRewards[safeIndex]
+
+        switch spinReward {
+        case .goldChest:
+            return .chest(model: .gold)
+        case .antiqueChest:
+            return .chest(model: .antique)
+        case .natureChest:
+            return .chest(model: .nature)
+        case .diamondChest:
+            return .chest(model: .diamond)
+        case .gold:
+            return .standart(model: .gold(count: spinReward.rewardCount))
+        case .water:
+            return .standart(model: .water(count: spinReward.rewardCount))
+        }
+    }
+
 }

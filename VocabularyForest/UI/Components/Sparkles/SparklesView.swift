@@ -25,7 +25,7 @@ struct SparklesView: View {
                     .frame(width: sparkleSize(for: index), height: sparkleSize(for: index))
                     .offset(x: sparkleXOffset(for: index), y: sparkleYOffset(for: index))
                     .scaleEffect(isAnimating ? 1.18 : 0.72)
-                    .opacity(isAnimating ? 0.95 : 0.35)
+                    .opacity(isAnimating ? 0.85 : 0.35)
                     .shadow(color: .white.opacity(0.8), radius: 6)
                     .blur(radius: isAnimating ? 1 : 0)
                     .animation(

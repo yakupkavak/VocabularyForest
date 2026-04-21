@@ -167,15 +167,21 @@ private extension ForestUI {
     var dailySpinView: some View {
         VStack {
             DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}), nextSpinTime: $viewModel.nextDailySpinTime) { rewardModel in
-                
+                let reward = RewardHelper.convertDailyRewardModel(from: rewardModel)
+                PopupManager.shared.show {
+                    ClaimRewardUI(reward: reward) { reward in
+                        print("Reward claimed: \(reward)")
+                        PopupManager.shared.dismiss()
+                    }
+                }
             }
         }
     }
     
     var dailyTrackView: some View {
-        DailyRewardUI(isOpen: Binding ( get: { uiState == .dailyTrack }, set: { newValue in
+        WeeklyRewardUI(isOpen: Binding ( get: { uiState == .dailyTrack }, set: { newValue in
             if !newValue { uiState = .empty }
-        }), cardList: []) { dailyModel in
+        }), cardList: viewModel.weeklyDailyCards) { dailyModel in
             print("model selected")
         }
     }

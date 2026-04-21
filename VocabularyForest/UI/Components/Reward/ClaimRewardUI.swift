@@ -4,7 +4,6 @@
 //
 //  Created by Yakup Kavak on 20.04.2026.
 //
-
 import SwiftUI
 import Combine
 
@@ -27,95 +26,16 @@ struct ClaimRewardUI: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let width = geometry.size.width
-            let height = geometry.size.height
-            let sparklePalette = currentSparklePalette()
-            
-            let mainImageWidth = isPad ? min(width * 0.35, 450) : width * 0.5
-            let revealedImageWidth = isPad ? min(width * 0.25, 300) : width * 0.3
-            let sparkleSpread = isPad ? min(width * 0.6, 600) : width * 0.8
-            let buttonMaxWidth = isPad ? CGFloat(400) : .infinity
-            
             ZStack {
-                backgroundGradientForCurrentReward().ignoresSafeArea()
-                SparklesView(
-                    spreadDiameter: sparkleSpread,
-                    primaryColor: sparklePalette.primary,
-                    secondaryColor: sparklePalette.secondary
-                )
-                .opacity(0.95)
-                .zIndex(0)
+                backgroundSection(size: geometry.size)
                 
                 VStack {
                     Spacer()
-                    switch reward {
-                    case .standart(let model):
-                        Image(model.rewardImage).resizable().scaledToFit().frame(width: mainImageWidth)
-                        Text(model.rewardName)
-                            .font(isPad ? .largeTitle : .title)
-                            .fontWeight(.bold)
-                            .foregroundColor(model.theme.textColor)
-                            .shadow(color: .black.opacity(0.3), radius: 5)
-                    case .chest(let chestModel):
-                        ZStack {
-                            Image(chestModel.getChestImage(status: chestStatus))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: mainImageWidth)
-                                .offset(x: shakeOffset)
-                                .offset(y: isChestOpened ? height * 0.15 : 0)
-                                .zIndex(1)
-                            
-                            if isChestOpened, let revealed = revealedReward {
-                                VStack {
-                                    Image(revealed.rewardImage).resizable().scaledToFit().frame(width: revealedImageWidth)
-                                        .frame(maxHeight: height * 0.15)
-                                    Text(revealed.rewardName)
-                                        .font(isPad ? .largeTitle : .title)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(revealed.theme.textColor)
-                                        .shadow(color: .black.opacity(0.3), radius: 5)
-                                }
-                                .padding(isPad ? 30 : 16)
-                                .padding(.horizontal, isPad ? 20 : 10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 32)
-                                        .fill(LinearGradient(colors: revealed.theme.panelColors, startPoint: .topLeading, endPoint: .bottomTrailing))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 32)
-                                                .stroke(revealed.theme.panelStroke.opacity(0.55), lineWidth: 1.5)
-                                        )
-                                )
-                                .borderShape(radius: 32)
-                                .offset(y: -height * 0.15)
-                                .zIndex(2)
-                                .transition(.scale.combined(with: .opacity).combined(with: .move(edge: .bottom)))
-                            }
-                        }
-                    }
+                    mainContentSection(size: geometry.size)
                     Spacer()
                     
                     if rewardIsReadyToClaim() {
-                        Button(action: {
-                            handleClaim()
-                        }) {
-                            Text(String(localized: "Claim reward"))
-                                .font(.system(size: isPad ? 38 : 28, weight: .black, design: .rounded))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, isPad ? 24 : 20)
-                                .frame(maxWidth: buttonMaxWidth)
-                                .background(claimButtonGradient)
-                                .clipShape(RoundedRectangle(cornerRadius: 25))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .stroke(claimButtonStrokeColor.opacity(0.4), lineWidth: 1.5)
-                                )
-                                .shadow(color: claimButtonShadowColor.opacity(0.5), radius: 10, x: 0, y: 10)
-                        }
-                        .padding(.horizontal, 30)
-                        .padding(.bottom, isPad ? 80 : 50)
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        actionButton(size: geometry.size)
                     }
                 }
             }
@@ -130,9 +50,132 @@ struct ClaimRewardUI: View {
     }
 }
 
+// MARK: - UI COMPONENTS
+
+private extension ClaimRewardUI {
+    
+    func backgroundSection(size: CGSize) -> some View {
+        let sparklePalette = currentSparklePalette()
+        let sparkleSpread = isPad ? min(size.width * 0.6, 600) : size.width * 0.8
+        
+        return ZStack {
+            opaqueBackgroundColorForCurrentReward().ignoresSafeArea()
+            backgroundGradientForCurrentReward().ignoresSafeArea()
+            SparklesView(
+                spreadDiameter: sparkleSpread,
+                primaryColor: sparklePalette.primary,
+                secondaryColor: sparklePalette.secondary
+            )
+            .opacity(0.95)
+            .zIndex(0)
+        }
+    }
+    
+    @ViewBuilder
+    func mainContentSection(size: CGSize) -> some View {
+        switch reward {
+        case .standart(let model):
+            standartRewardView(model: model, size: size)
+        case .chest(let chestModel):
+            chestRewardView(chestModel: chestModel, size: size)
+        }
+    }
+    
+    func standartRewardView(model: QuestRewardModel, size: CGSize) -> some View {
+        let mainImageWidth = isPad ? min(size.width * 0.35, 450) : size.width * 0.4
+        let rewardTextSize: CGFloat = isPad ? 40 : 32
+        
+        return VStack {
+            Image(model.rewardImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: mainImageWidth)
+            Text(LocalizedStringKey(model.rewardName))
+                .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                .foregroundColor(model.theme.textColor)
+                .shadow(color: .black.opacity(0.3), radius: 5)
+        }
+    }
+    
+    func chestRewardView(chestModel: ChestBountyModel, size: CGSize) -> some View {
+        let mainImageWidth = isPad ? min(size.width * 0.35, 450) : size.width * 0.4
+        
+        return ZStack {
+            Image(chestModel.getChestImage(status: chestStatus))
+                .resizable()
+                .scaledToFit()
+                .frame(width: mainImageWidth)
+                .offset(x: shakeOffset)
+                .offset(y: isChestOpened ? size.height * 0.15 : 0)
+                .zIndex(1)
+            
+            if isChestOpened, let revealed = revealedReward {
+                revealedRewardCard(revealed: revealed, size: size)
+            }
+        }
+    }
+    
+    func revealedRewardCard(revealed: QuestRewardModel, size: CGSize) -> some View {
+        let revealedImageWidth = isPad ? min(size.width * 0.25, 300) : size.width * 0.3
+        let rewardTextSize: CGFloat = isPad ? 40 : 32
+        
+        return VStack {
+            Image(revealed.rewardImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: revealedImageWidth)
+                .frame(maxHeight: size.height * 0.15)
+            Text(LocalizedStringKey(revealed.rewardName))
+                .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                .foregroundColor(revealed.theme.textColor)
+                .shadow(color: .black.opacity(0.3), radius: 5)
+        }
+        .padding(isPad ? 30 : 16)
+        .padding(.horizontal, isPad ? 20 : 10)
+        .background(
+            RoundedRectangle(cornerRadius: 32)
+                .fill(LinearGradient(colors: revealed.theme.panelColors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 32)
+                        .stroke(revealed.theme.panelStroke.opacity(0.55), lineWidth: 1.5)
+                )
+        )
+        .borderShape(radius: 32)
+        .offset(y: -size.height * 0.15)
+        .zIndex(2)
+        .transition(.scale.combined(with: .opacity).combined(with: .move(edge: .bottom)))
+    }
+    
+    func actionButton(size: CGSize) -> some View {
+        let buttonMaxWidth = isPad ? CGFloat(400) : .infinity
+        
+        return Button(action: {
+            handleClaim()
+        }) {
+            Text(LocalizedStringKey("Claim reward"))
+                .font(.system(size: isPad ? 38 : 28, weight: .black, design: .rounded))
+                .foregroundColor(.white)
+                .padding(.horizontal, 6)
+                .padding(.vertical, isPad ? 24 : 20)
+                .frame(maxWidth: buttonMaxWidth)
+                .background(claimButtonGradient)
+                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 25)
+                        .stroke(claimButtonStrokeColor.opacity(0.4), lineWidth: 1.5)
+                )
+                .shadow(color: claimButtonShadowColor.opacity(0.5), radius: 10, x: 0, y: 10)
+        }
+        .padding(.horizontal, 30)
+        .padding(.bottom, isPad ? 80 : 50)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+}
+
 // MARK: - PRIVATE HELPERS
 
 private extension ClaimRewardUI {
+    
     func rewardIsReadyToClaim() -> Bool {
         switch reward {
         case .standart:
@@ -181,6 +224,44 @@ private extension ClaimRewardUI {
             return standardBackgroundGradient(for: model)
         case .chest:
             return RewardHelper.getBackgroundGradient(reward: reward)
+        }
+    }
+    
+    func opaqueBackgroundColorForCurrentReward() -> Color {
+        switch reward {
+        case .standart(let model):
+            return opaqueBackgroundBaseColor(for: model)
+        case .chest(let chestModel):
+            if let revealed = revealedReward {
+                return opaqueBackgroundBaseColor(for: revealed)
+            }
+            switch chestModel {
+            case .gold:
+                return Color(hex: "#FFF4C2")
+            case .nature:
+                return Color(hex: "#EFF299")
+            case .diamond:
+                return Color(hex: "#EAFAFC")
+            case .antique:
+                return Color(hex: "#BFB3A8")
+            }
+        }
+    }
+    
+    func opaqueBackgroundBaseColor(for model: QuestRewardModel) -> Color {
+        switch model {
+        case .gold:
+            return Color(hex: "#FFF4C2")
+        case .water:
+            return Color(hex: "#E2F5FA")
+        case .diamond:
+            return Color(hex: "#EAFAFC")
+        case .plant:
+            return Color(hex: "#F3FFE2")
+        case .animal:
+            return Color(hex: "#EAF7FF")
+        case .sculpture:
+            return Color(hex: "#FFF4E8")
         }
     }
 
@@ -242,6 +323,8 @@ private extension ClaimRewardUI {
         }
     }
 }
+
+// MARK: - PREVIEW
 
 #Preview {
     ClaimRewardUI(reward: .chest(model: .diamond)) { reward in

@@ -39,6 +39,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func closeBookError()
     func updateComponentName(name: String)
     func setComponent(uuid: UUID, for componentType: ComponentType)
+    func fetchWeeklyDailyCards()
 }
 
 // MARK: - VIEW MODEL
@@ -180,6 +181,17 @@ extension ForestViewModel {
 
 extension ForestViewModel {
     
+    func fetchWeeklyDailyCards() {
+        Task { @MainActor in
+            let result = await adventureService.fetchWeeklyDailyRewards()
+            if result.status == .success, let cards = result.data {
+                self.weeklyDailyCards = cards
+            } else {
+                print("Hata: Haftalık kartlar çekilemedi -> \(result.error?.localizedDescription ?? "")")
+            }
+        }
+    }
+    
     func initalizeForest() {
         Task(priority: .background) { [weak self] in
             guard let self else { return }
@@ -188,6 +200,7 @@ extension ForestViewModel {
             treeList.removeAll()
             fetchForest()
             checkDailySpinStatus()
+            fetchWeeklyDailyCards()
         }
     }
     
