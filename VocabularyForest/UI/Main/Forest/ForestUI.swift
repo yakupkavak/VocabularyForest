@@ -166,11 +166,11 @@ private extension ForestUI {
     
     var dailySpinView: some View {
         VStack {
-            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}), nextSpinTime: $viewModel.nextDailySpinTime) { rewardModel in
+            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}), nextSpinTime: $viewModel.dailySpinTime) { rewardModel in
                 let reward = RewardHelper.convertDailyRewardModel(from: rewardModel)
                 PopupManager.shared.show {
                     ClaimRewardUI(reward: reward) { reward in
-                        print("Reward claimed: \(reward)")
+                        viewModel.claimDailyReward(model: reward)
                         PopupManager.shared.dismiss()
                     }
                 }
@@ -182,7 +182,14 @@ private extension ForestUI {
         WeeklyRewardUI(isOpen: Binding ( get: { uiState == .dailyTrack }, set: { newValue in
             if !newValue { uiState = .empty }
         }), cardList: viewModel.weeklyDailyCards) { dailyModel in
-            print("model selected")
+            if dailyModel.status == .ready{
+                PopupManager.shared.show {
+                    ClaimRewardUI(reward: dailyModel.bounty) { reward in
+                        viewModel.claimWeeklyReward(reward: reward, weeklyModel: dailyModel)
+                        PopupManager.shared.dismiss()
+                    }
+                }
+            }
         }
     }
     

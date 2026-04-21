@@ -64,7 +64,8 @@ class ForestViewModel: BaseViewModel {
     @Published var showRainButton = false
     @Published var showBookThreshold = false
     @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
-    @Published var nextDailySpinTime: Date? = nil
+    @Published var dailySpinTime: Date? = nil
+    private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
     private var treeList: [TreeModel] = []
@@ -75,6 +76,7 @@ class ForestViewModel: BaseViewModel {
     
     private var talkCancellable: AnyCancellable?
     private var dailyTimeCancellable: AnyCancellable?
+    private var rainTimeCancellable: AnyCancellable?
 
     // MARK: - INIT
     
@@ -292,13 +294,18 @@ extension ForestViewModel {
         output?.startRain()
         forestDataManager.startRain(contextType: .background)
         var time = 0
-        let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            time += 1
-            if time == 40 {
-                output?.stopRain()
+        
+        rainTimeCancellable?.cancel()
+        rainTimeCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                time += 1
+                if time == 40 {
+                    self.output?.stopRain()
+                    self.rainTimeCancellable?.cancel()
+                }
             }
-        }
     }
 }
 
@@ -375,12 +382,26 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
-    func claimReward(model: QuestRewardModel) {
+    func claimDailyReward(model: QuestRewardModel) {
         Task { @MainActor in
             let result = await adventureService.claimDailySpinReward(reward: model, contextType: .main)
             if result.status == .success {
-                self.nextDailySpinTime = Date().addingTimeInterval(86400)
-                self.startSpinTimer()                
+                let target = Date().addingTimeInterval(86400)
+                self.nextDailySpinTime = target
+                self.dailySpinTime = target
+                self.startDailySpinTimer()
+            }
+        }
+    }
+    
+    func claimWeeklyReward(reward: QuestRewardModel, weeklyModel:  WeeklyDailyCardModel) {
+        Task { @MainActor in
+            let result = await adventureService.saveWeeklyReward(weeklyModel: weeklyModel, contextType: .main)
+            let _ = forestDataManager.claimReward(model: reward, contextType: .main)
+            if result.status == .success {
+                if let index = self.weeklyDailyCards.firstIndex(where: { $0.day == weeklyModel.day }) {
+                    self.weeklyDailyCards[index].status = .claimed
+                }
             }
         }
     }
@@ -485,25 +506,28 @@ private extension ForestViewModel {
             
             if let targetTime = result.data {
                 self.nextDailySpinTime = targetTime
-                self.startSpinTimer()
+                self.dailySpinTime = targetTime
+                self.startDailySpinTimer()
             }
         }
     }
     
-    func startSpinTimer() {
+    func startDailySpinTimer() {
         dailyTimeCancellable?.cancel()
         dailyTimeCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                guard let self = self, let target = self.nextDailySpinTime else { return }
-                
-                if Date() >= target {
-                    self.nextDailySpinTime = nil
-                    self.talkCancellable?.cancel()
-                } else {
-                    self.nextDailySpinTime = self.nextDailySpinTime
+        .autoconnect()
+        .sink { [weak self] _ in
+            guard let self = self, let target = self.nextDailySpinTime else { return }
+            if Date() >= target {
+                self.nextDailySpinTime = nil
+                self.dailySpinTime = nil
+                self.dailyTimeCancellable?.cancel()
+            } else {
+                if let currentSpinTime = self.dailySpinTime {
+                    self.dailySpinTime = currentSpinTime.addingTimeInterval(-1)
                 }
             }
+        }
     }
     
     func processQuests(quests: [QuestModel]) {

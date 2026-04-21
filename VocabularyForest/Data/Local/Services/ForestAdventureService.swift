@@ -33,14 +33,15 @@ enum ForestAdventureError: LocalizedError {
 
 protocol ForestAdventureServiceProtocol {
     func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]>
-    func claimWeeklyReward(day: Int) async -> Resource<Bool>
     func fetchDailySpinStatusDate() async -> Resource<Date?>
     func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
+    func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
 }
 
 // MARK: - FOREST ADVENTURE SERVICE
 
 class ForestAdventureService: ForestAdventureServiceProtocol {
+
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol
@@ -122,31 +123,35 @@ extension ForestAdventureService {
         }
     }
     
-    func claimWeeklyReward(day: Int) async -> Resource<Bool> {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return .error(error: ForestAdventureError.unauthenticated)
-        }
-        let localNow = Date()
-        let context = coreDataManager.viewContext
-        context.performAndWait {
-            if let forest = forestManager.getCurrentForest(context: context), let dailyActivities = forest.dailyActivities {
-                dailyActivities.weeklyStreakCurrentDay = Int16(day)
-                dailyActivities.weeklyStreakLastClaimDate = localNow
-                dailyActivities.lastFetchDate = localNow
-                coreDataManager.save(in: context)
+    func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool> {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return .error(error: ForestAdventureError.unauthenticated)
             }
-        }
-        let docRef = db.collection(ForestSyncConstants.usersCollection).document(uid).collection(ForestSyncConstants.dailyRewardsCollection).document(ForestSyncConstants.metadataDocument)
-        docRef.setData([
-            ForestSyncConstants.weeklyStreakCurrentDayField: day,
-            ForestSyncConstants.weeklyStreakLastClaimDateField: FieldValue.serverTimestamp()
-        ], merge: true) { error in
-            if let error = error {
-                print("Background Firebase write error: \(error.localizedDescription)")
+            
+            let day = weeklyModel.day
+            let localNow = Date()
+            let context = contextType.context
+            
+            context.performAndWait {
+                if let forest = forestManager.getCurrentForest(context: context), let dailyActivities = forest.dailyActivities {
+                    dailyActivities.weeklyStreakCurrentDay = Int16(day)
+                    dailyActivities.weeklyStreakLastClaimDate = localNow
+                    dailyActivities.lastFetchDate = localNow
+                    coreDataManager.save(in: context)
+                }
             }
+            let docRef = db.collection(ForestSyncConstants.usersCollection).document(uid).collection(ForestSyncConstants.dailyRewardsCollection).document(ForestSyncConstants.metadataDocument)
+            
+            docRef.setData([
+                ForestSyncConstants.weeklyStreakCurrentDayField: day,
+                ForestSyncConstants.weeklyStreakLastClaimDateField: FieldValue.serverTimestamp()
+            ], merge: true) { error in
+                if let error = error {
+                    print("Background Firebase write error: \(error.localizedDescription)")
+                }
+            }
+            return .success(true)
         }
-        return .success(true)
-    }
 }
 
 // MARK: - DAILY SPIN REWARDS

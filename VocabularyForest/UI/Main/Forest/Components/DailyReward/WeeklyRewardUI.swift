@@ -74,7 +74,7 @@ private extension WeeklyRewardUI {
             HStack {
                 Spacer()
                 Text("Play everyday and get additional bonuses")
-                    .font(.system(size: isPad ? 32 : 20, weight: .heavy, design: .rounded))
+                    .font(.system(size: isPad ? 32 : 18, weight: .heavy, design: .rounded))
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)
