@@ -8,6 +8,11 @@
 import Foundation
 
 struct DailyActivitiesModel {
+    let adventureSeasonID: String?
+    let claimedLongTiers: String?
+    let claimedShortTiers: String?
+    let monthlyLongLearnedCount: Int
+    let monthlyShortLearnedCount: Int
     let weeklyStreakLastClaimDate: Date?
     let weeklyStreakCurrentDay: Int
     let lastFetchDate: Date?

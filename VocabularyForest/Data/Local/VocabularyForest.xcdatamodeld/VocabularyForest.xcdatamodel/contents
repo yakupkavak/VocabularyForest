@@ -34,10 +34,15 @@
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="bookcase" inverseEntity="Book"/>
     </entity>
     <entity name="DailyActivities" representedClassName="DailyActivities" syncable="YES">
+        <attribute name="adventureSeasonID" optional="YES" attributeType="String"/>
+        <attribute name="claimedLongTiers" optional="YES" attributeType="String"/>
+        <attribute name="claimedShortTiers" optional="YES" attributeType="String"/>
         <attribute name="dailySpinLastUsedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fixedTimeZone" optional="YES" attributeType="String"/>
         <attribute name="lastFetchDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="monthlyLongLearnedCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="monthlyShortLearnedCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="weeklyStreakCurrentDay" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="weeklyStreakLastClaimDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="dailyActivities" inverseEntity="Forest"/>

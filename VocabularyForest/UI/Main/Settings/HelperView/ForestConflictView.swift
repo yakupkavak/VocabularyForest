@@ -221,6 +221,11 @@ struct ForestConflictView: View {
             lastUpdatedDate: Date(),
             lastSyncCloudTime: Date(),
             dailyActivities: DailyActivitiesModel(
+                adventureSeasonID: nil,
+                claimedLongTiers: nil,
+                claimedShortTiers: nil,
+                monthlyLongLearnedCount: 0,
+                monthlyShortLearnedCount: 0,
                 weeklyStreakLastClaimDate: nil,
                 weeklyStreakCurrentDay: 10,
                 lastFetchDate: nil,
@@ -250,6 +255,11 @@ struct ForestConflictView: View {
             lastUpdatedDate: Date(),
             lastSyncCloudTime: Date(),
             dailyActivities: DailyActivitiesModel(
+                adventureSeasonID: nil,
+                claimedLongTiers: nil,
+                claimedShortTiers: nil,
+                monthlyLongLearnedCount: 0,
+                monthlyShortLearnedCount: 0,
                 weeklyStreakLastClaimDate: nil,
                 weeklyStreakCurrentDay: 10,
                 lastFetchDate: nil,

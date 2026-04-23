@@ -4,7 +4,7 @@
 //
 //  Created by Yakup Kavak on 9.04.2026.
 //
-import Foundation
+
 import Combine
 import FirebaseFirestore
 import FirebaseAuth
@@ -60,10 +60,17 @@ enum ForestSyncConstants {
     static let dailySpinLastUsedDateField = "dailySpinLastUsedDate"
     static let firstVisitTimestamp = "firstVisitTimestamp"
     
+    static let adventureSeasonIDField = "adventureSeasonID"
+    static let claimedLongTiersField = "claimedLongTiers"
+    static let claimedShortTiersField = "claimedShortTiers"
+    static let monthlyLongLearnedCountField = "monthlyLongLearnedCount"
+    static let monthlyShortLearnedCountField = "monthlyShortLearnedCount"
+    
     static let plantType = "plant"
     static let animalType = "animal"
     static let sculptureType = "sculpture"
     static let ownerId = "ownerId"
+    
     static let manualSyncCooldownHours: Double = 1.0
     static let backgroundSyncCooldownHours: Double = 24.0
 }
@@ -99,7 +106,6 @@ enum ForestSyncError: LocalizedError {
     }
 }
 
-
 // MARK: - PROTOCOL
 
 protocol ForestSyncManagerProtocol: AnyObject {
@@ -120,6 +126,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
     
     private let db = Firestore.firestore()
     private let lastSyncSubject = CurrentValueSubject<Date?, Never>(nil)
+    
     private var forestDocument: DocumentReference? {
         guard let uid = Auth.auth().currentUser?.uid else { return nil }
         return db
@@ -132,6 +139,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
     // MARK: - PROPERTIES
     
     weak var dataManager: ForestDataManagerProtocol?
+    
     var lastSyncDatePublisher: AnyPublisher<Date?, Never> {
         lastSyncSubject.eraseToAnyPublisher()
     }
@@ -152,6 +160,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             guard docSnapshot.exists, let forestData = docSnapshot.data() else {
                 return .success(false)
             }
+            
             let cloudUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
             
             guard let dataManager = dataManager else { return .error(error: ForestSyncError.dataManager) }
@@ -213,9 +222,9 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             async let questsSnapshot = forestDoc.collection(ForestSyncConstants.questsCollection).getDocuments()
             async let playerSnapshot = forestDoc.collection(ForestSyncConstants.playerCollection).getDocuments()
             async let dailySnapshot = forestDoc
-                            .collection(ForestSyncConstants.dailyRewardsCollection)
-                            .document(ForestSyncConstants.metadataDocument)
-                            .getDocument()
+                .collection(ForestSyncConstants.dailyRewardsCollection)
+                .document(ForestSyncConstants.metadataDocument)
+                .getDocument()
             
             let (treesDocs, animalsDocs, sculpturesDocs, questsDocs, playerDocs, dailyDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot, playerSnapshot, dailySnapshot)
             
@@ -285,6 +294,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             
             let dailyData = dailyDocs.data() ?? [:]
             let parsedDaily = DailyActivitiesModel(
+                adventureSeasonID: dailyData[ForestSyncConstants.adventureSeasonIDField] as? String,
+                claimedLongTiers: dailyData[ForestSyncConstants.claimedLongTiersField] as? String,
+                claimedShortTiers: dailyData[ForestSyncConstants.claimedShortTiersField] as? String,
+                monthlyLongLearnedCount: dailyData[ForestSyncConstants.monthlyLongLearnedCountField] as? Int ?? 0,
+                monthlyShortLearnedCount: dailyData[ForestSyncConstants.monthlyShortLearnedCountField] as? Int ?? 0,
                 weeklyStreakLastClaimDate: (dailyData[ForestSyncConstants.weeklyStreakLastClaimDateField] as? Timestamp)?.dateValue(),
                 weeklyStreakCurrentDay: dailyData[ForestSyncConstants.weeklyStreakCurrentDayField] as? Int ?? 0,
                 lastFetchDate: (dailyData[ForestSyncConstants.lastFetchDateField] as? Timestamp)?.dateValue(),
@@ -396,6 +410,7 @@ private extension ForestSyncManager {
     func performDeltaSync() async throws {
         guard let forestDoc = forestDocument else { throw ForestSyncError.unauthenticated }
         guard let dataManager else { throw ForestSyncError.fetchError }
+        
         let forestRes = dataManager.fetchSafeForest(contextType: .main)
         guard forestRes.status == .success, let forest = forestRes.data else {
             throw ForestSyncError.fetchError
@@ -549,6 +564,8 @@ private extension ForestSyncManager {
     func dailyActivitiesPayload(_ daily: DailyActivitiesModel) -> [String: Any] {
         var payload: [String: Any] = [
             ForestSyncConstants.weeklyStreakCurrentDayField: daily.weeklyStreakCurrentDay,
+            ForestSyncConstants.monthlyLongLearnedCountField: daily.monthlyLongLearnedCount,
+            ForestSyncConstants.monthlyShortLearnedCountField: daily.monthlyShortLearnedCount,
             ForestSyncConstants.fixedTimeZoneField: daily.fixedTimeZone ?? TimeZone.current.identifier,
             ForestSyncConstants.lastUpdatedDateField: daily.lastUpdatedDate
         ]
@@ -561,6 +578,15 @@ private extension ForestSyncManager {
         }
         if let spinDate = daily.dailySpinLastUsedDate {
             payload[ForestSyncConstants.dailySpinLastUsedDateField] = spinDate
+        }
+        if let seasonID = daily.adventureSeasonID {
+            payload[ForestSyncConstants.adventureSeasonIDField] = seasonID
+        }
+        if let claimedLong = daily.claimedLongTiers {
+            payload[ForestSyncConstants.claimedLongTiersField] = claimedLong
+        }
+        if let claimedShort = daily.claimedShortTiers {
+            payload[ForestSyncConstants.claimedShortTiersField] = claimedShort
         }
         
         return payload
