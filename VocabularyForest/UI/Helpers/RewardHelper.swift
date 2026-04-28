@@ -127,7 +127,7 @@ struct RewardHelper {
     
     // MARK: - BACKGROUND GRADIENT
     
-    static func getBackgroundGradient(reward: DailyBountyModel) -> RadialGradient {
+    static func getBackgroundGradient(reward: LocalRewardModel) -> RadialGradient {
         let palette: [Color]
         switch reward {
         case .standart(let model):
@@ -209,8 +209,8 @@ struct RewardHelper {
         }
     }
     
-    static func convertDailyRewardModel(from rewardModel: SpinModel) -> DailyBountyModel {
-        let spinRewards = DailySpinRewards.allCases.filter { $0 != .diamondChest }
+    static func convertDailyRewardModel(from rewardModel: SpinModel) -> LocalRewardModel {
+        let spinRewards = AdventureReward.allCases.filter { $0 != .diamondChest }
         let safeIndex = max(0, min(rewardModel.id - 1, spinRewards.count - 1))
         let spinReward = spinRewards[safeIndex]
 

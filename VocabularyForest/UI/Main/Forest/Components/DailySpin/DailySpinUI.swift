@@ -12,16 +12,16 @@ import Combine
 // MARK: - CONSTANTS & MODELS
 
 private extension DailySpinUI {
-    static let models: [SpinModel] = DailySpinRewards.allCases.filter { reward in
+    static let models: [SpinModel] = AdventureReward.allCases.filter { reward in
         reward != .diamondChest
     }.enumerated().map { index, reward in
         SpinModel(
             id: index + 1,
-            text: reward.rewardName,
-            image: Image(reward.rewardImage),
+            text: reward.name,
+            image: Image(reward.image),
             weight: reward.probabilityWeight,
-            textColor: reward.rewardColor,
-            background: reward.rewardBackground
+            textColor: reward.textColor,
+            background: reward.gradientBackground
         )
     }
     static let backgroundHeight = 0.7

@@ -146,6 +146,9 @@
         }
       }
     },
+    "%lld words" : {
+
+    },
     "%lld/%lld" : {
       "localizations" : {
         "en" : {
@@ -313,6 +316,69 @@
     },
     "Adventure Road" : {
 
+    },
+    "adventure_road_countdown_ended" : {
+      "comment" : "Adventure Road countdown text when the event has ended",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Time is up"
+          }
+        }
+      }
+    },
+    "adventure_road_countdown_format" : {
+      "comment" : "Adventure Road countdown format with day and hour placeholders",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$d d %2$d h"
+          }
+        }
+      }
+    },
+    "adventure_road_subtitle" : {
+
+    },
+    "adventure_road_title" : {
+      "comment" : "Main title of the Adventure Road screen",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Adventure Road"
+          }
+        }
+      }
+    },
+    "adventure_track_long_term" : {
+      "comment" : "Adventure Road long-term track title",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Long Memory"
+          }
+        }
+      }
+    },
+    "adventure_track_short_term" : {
+      "comment" : "Adventure Road short-term track title",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Short Memory"
+          }
+        }
+      }
     },
     "Almanca" : {
       "localizations" : {
@@ -3769,6 +3835,9 @@
         }
       }
     },
+    "Gold %lld" : {
+
+    },
     "Gold Hunt 💰" : {
       "localizations" : {
         "en" : {
@@ -5050,6 +5119,9 @@
       }
     },
     "İnternet bağlantınız yok. Ödüllerinizi almak için lütfen bağlantınızı kontrol edip tekrar deneyin." : {
+
+    },
+    "Internet connection is required to complete the initial setup." : {
 
     },
     "İptal" : {
@@ -8381,6 +8453,9 @@
         }
       }
     },
+    "Remote configuration data is missing." : {
+
+    },
     "Resume" : {
       "localizations" : {
         "en" : {
@@ -9733,6 +9808,12 @@
     "umut" : {
 
     },
+    "Unable to decode remote configuration data." : {
+
+    },
+    "Unable to fetch remote configuration." : {
+
+    },
     "unexpectedError" : {
       "localizations" : {
         "tr" : {
@@ -9920,6 +10001,9 @@
 
     },
     "Watching over the trees is my duty." : {
+
+    },
+    "Water %lld" : {
 
     },
     "We desperately need some rain..." : {

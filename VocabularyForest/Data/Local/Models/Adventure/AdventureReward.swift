@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum DailySpinRewards: CaseIterable {
+enum AdventureReward: CaseIterable {
     case goldChest
     case antiqueChest
     case natureChest
@@ -16,7 +16,7 @@ enum DailySpinRewards: CaseIterable {
     case water
 }
 
-extension DailySpinRewards {
+extension AdventureReward {
     var rewardCount: Int {
         return switch self {
         case .goldChest:
@@ -34,7 +34,7 @@ extension DailySpinRewards {
         }
     }
     
-    var rewardImage: String {
+    var image: String {
         return switch self {
         case .goldChest:
             ChestBountyModel.gold.rewardImage
@@ -51,7 +51,7 @@ extension DailySpinRewards {
         }
     }
     
-    var rewardName: String {
+    var name: String {
         return switch self {
         case .goldChest:
             ChestBountyModel.gold.rewardName
@@ -62,13 +62,13 @@ extension DailySpinRewards {
         case .diamondChest:
             ChestBountyModel.diamond.rewardName
         case .gold:
-            "Gold \(rewardCount)"
+            String(localized: "Gold \(rewardCount)")
         case .water:
-            "Water \(rewardCount)"
+            String(localized: "Water \(rewardCount)")
         }
     }
     
-    var rewardColor: Color {
+    var textColor: Color {
         return switch self {
         case .goldChest:
             Color(hex: "#F2DA91")
@@ -104,7 +104,7 @@ extension DailySpinRewards {
     
     // MARK: - Dynamic Gradient Backgrounds
     
-    var rewardBackground: AnyView {
+    var gradientBackground: AnyView {
         let colors: [Color]
 
         switch self {

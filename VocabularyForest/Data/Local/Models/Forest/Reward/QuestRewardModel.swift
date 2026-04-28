@@ -13,7 +13,7 @@ protocol Rewardable {
     var rewardCount: Int? { get }
 }
 
-enum QuestRewardModel: Hashable {
+enum QuestRewardModel: Hashable, Encodable {
     case animal(modelName: String)
     case plant(modelName: String)
     case gold(count: Int)

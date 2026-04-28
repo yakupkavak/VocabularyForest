@@ -91,65 +91,10 @@ enum AdventureMemoryTrack: String, CaseIterable {
     }
 }
 
-enum AdventureMilestoneKind {
-    case reward
-    case chest
-}
-
-enum AdventureRewardResource: CaseIterable {
-    case water
-    case gold
-    case diamond
-
-    var iconName: String {
-        switch self {
-        case .water:
-            return "water_icon"
-        case .gold:
-            return "gold_icon"
-        case .diamond:
-            return "diamond_icon"
-        }
-    }
-}
-
-enum AdventureMilestoneReward {
-    case resource(type: AdventureRewardResource, amount: Int)
-    case chest(type: ChestBountyModel)
-
-    var iconName: String {
-        switch self {
-        case .resource(let type, _):
-            return type.iconName
-        case .chest(let type):
-            return type.rewardImage
-        }
-    }
-
-    var amountText: String {
-        switch self {
-        case .resource(_, let amount):
-            return String(localized: "x\(amount)")
-        case .chest(let type):
-            return type.rewardName
-        }
-    }
-
-    var isChestReward: Bool {
-        switch self {
-        case .chest:
-            return true
-        case .resource:
-            return false
-        }
-    }
-}
-
 struct AdventureMilestoneModel: Identifiable {
     let track: AdventureMemoryTrack
     let wordCount: Int
-    let kind: AdventureMilestoneKind
-    let reward: AdventureMilestoneReward
+    let reward: LocalRewardModel
     let isClaimed: Bool
 
     var id: String {
@@ -223,46 +168,50 @@ enum AdventureRoadMockData {
     ) -> AdventureMilestoneModel {
         let milestoneStep = max((wordCount / 10) - 1, 0)
         let isChest = wordCount.isMultiple(of: 50)
-        let resourceCycle: [AdventureRewardResource] = track == .shortTerm
-            ? [.gold, .water, .gold, .water, .diamond]
-            : [.gold, .water, .gold, .water, .diamond]
+        let resourceCycle: [QuestRewardModel] = [
+            .gold(count: 0),
+            .water(count: 0),
+            .gold(count: 0),
+            .water(count: 0),
+            .diamond(count: 0)
+        ]
         let chestCycle: [ChestBountyModel] = track == .shortTerm
             ? [.gold, .diamond, .gold]
             : [.nature, .gold, .nature]
-        let reward: AdventureMilestoneReward
+        let reward: LocalRewardModel
 
         if isChest {
-            reward = .chest(type: chestCycle[milestoneStep % chestCycle.count])
+            reward = .chest(model: chestCycle[milestoneStep % chestCycle.count])
         } else {
             let resource = resourceCycle[milestoneStep % resourceCycle.count]
-            let amount = amountForReward(resource: resource, step: milestoneStep, track: track)
-            reward = .resource(type: resource, amount: amount)
+            reward = .standart(model: rewardForResource(resource: resource, step: milestoneStep, track: track))
         }
 
         return AdventureMilestoneModel(
             track: track,
             wordCount: wordCount,
-            kind: isChest ? .chest : .reward,
             reward: reward,
             isClaimed: wordCount <= claimedWordCount
         )
     }
 
-    private static func amountForReward(
-        resource: AdventureRewardResource,
+    private static func rewardForResource(
+        resource: QuestRewardModel,
         step: Int,
         track: AdventureMemoryTrack
-    ) -> Int {
+    ) -> QuestRewardModel {
         switch resource {
         case .water:
             let values = track == .shortTerm ? [30, 45, 25, 30, 45] : [10, 15, 10, 15, 20]
-            return values[step % values.count]
+            return .water(count: values[step % values.count])
         case .gold:
             let values = track == .shortTerm ? [300, 800, 1000, 450, 600] : [300, 300, 500, 250, 300]
-            return values[step % values.count]
+            return .gold(count: values[step % values.count])
         case .diamond:
             let values = track == .shortTerm ? [10, 20, 30, 45, 20] : [5, 10, 10, 15, 20]
-            return values[step % values.count]
+            return .diamond(count: values[step % values.count])
+        default:
+            return .gold(count: 0)
         }
     }
 }

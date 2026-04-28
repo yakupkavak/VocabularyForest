@@ -1,0 +1,79 @@
+{
+  "id": "weekly_rewards_config_v1",
+  "items": [
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e201",
+      "day": 1,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g401",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 100,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e202",
+      "day": 2,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g402",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 50,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e203",
+      "day": 3,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g403",
+        "type": "chest",
+        "category": "antique",
+        "rewardCount": 1
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e204",
+      "day": 4,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g404",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 200,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e205",
+      "day": 5,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g405",
+        "type": "chest",
+        "category": "gold",
+        "rewardCount": 1
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e206",
+      "day": 6,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g406",
+        "type": "resource",
+        "category": "diamond",
+        "rewardCount": 10,
+        "imageName": "diamond_icon"
+      }
+    },
+    {
+      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e207",
+      "day": 7,
+      "reward": {
+        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g407",
+        "type": "chest",
+        "category": "gold",
+        "rewardCount": 1
+      }
+    }
+  ]
+}

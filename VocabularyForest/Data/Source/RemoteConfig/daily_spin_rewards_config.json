@@ -1,0 +1,62 @@
+{
+  "id": "daily_spin_rewards_config_v1",
+  "items": [
+    {
+      "id": "a86af2a4-a1f2-4b63-bf8e-e41cb4d3d101",
+      "weight": 3,
+      "reward": {
+        "id": "c28df4c6-c3f4-4d85-d1af-063ed6f5f301",
+        "type": "chest",
+        "category": "gold",
+        "rewardCount": 1,
+        "probabilityWeight": 3
+      }
+    },
+    {
+      "id": "a86af2a4-a1f2-4b63-bf8e-e41cb4d3d102",
+      "weight": 1,
+      "reward": {
+        "id": "c28df4c6-c3f4-4d85-d1af-063ed6f5f302",
+        "type": "chest",
+        "category": "antique",
+        "rewardCount": 1,
+        "probabilityWeight": 1
+      }
+    },
+    {
+      "id": "a86af2a4-a1f2-4b63-bf8e-e41cb4d3d103",
+      "weight": 1,
+      "reward": {
+        "id": "c28df4c6-c3f4-4d85-d1af-063ed6f5f303",
+        "type": "chest",
+        "category": "nature",
+        "rewardCount": 1,
+        "probabilityWeight": 1
+      }
+    },
+    {
+      "id": "a86af2a4-a1f2-4b63-bf8e-e41cb4d3d104",
+      "weight": 5,
+      "reward": {
+        "id": "c28df4c6-c3f4-4d85-d1af-063ed6f5f304",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 5,
+        "probabilityWeight": 5,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "a86af2a4-a1f2-4b63-bf8e-e41cb4d3d105",
+      "weight": 5,
+      "reward": {
+        "id": "c28df4c6-c3f4-4d85-d1af-063ed6f5f305",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 10,
+        "probabilityWeight": 5,
+        "imageName": "water_icon"
+      }
+    }
+  ]
+}

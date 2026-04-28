@@ -9,9 +9,15 @@ import SwiftUI
 
 struct AdventureRoadUI: View {
     
+    // MARK: - PROPERTIES
+    
     private let screenModel = AdventureRoadMockData.screenModel()
     @Environment(\.dismiss) private var dismiss
-
+    @Binding var isVisible: Bool
+    @Binding var seasonLeftTime: Date
+    
+    // MARK: - UI
+    
     var body: some View {
         GeometryReader { geometry in
             let w = geometry.size.width
@@ -102,7 +108,7 @@ private extension AdventureRoadUI {
     func topHeaderBar(w: CGFloat) -> some View {
         HStack {
             Button {
-                dismiss()
+                isVisible = false
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: w * 0.06, weight: .regular))
@@ -319,13 +325,13 @@ private struct AdventureCenterRoads: View {
 
     private func nodeOuterColor(milestone: AdventureMilestoneModel) -> Color {
         switch milestone.reward {
-        case .chest(type: .gold):
+        case .chest(model: .gold):
             return Color(hex: "#E8B83F")
-        case .chest(type: .nature):
+        case .chest(model: .nature):
             return Color(hex: "#99D04E")
-        case .chest(type: .diamond):
+        case .chest(model: .diamond):
             return Color(hex: "#7BDDF2")
-        case .chest(type: .antique):
+        case .chest(model: .antique):
             return Color(hex: "#D1A05B")
         default:
             return Color.white.opacity(0.97)
@@ -401,47 +407,53 @@ private struct AdventureRewardCard: View {
     private var cardFillGradient: LinearGradient {
         let colors: [Color]
         switch milestone.reward {
-        case .resource(type: .gold, amount: _):
+        case .standart(model: .gold(count: _)):
             colors = [
                 Color(hex: "#FFF5CC").opacity(0.98),
                 Color(hex: "#F4C430").opacity(0.78),
                 Color(hex: "#C88A1E").opacity(0.74)
             ]
-        case .resource(type: .water, amount: _):
+        case .standart(model: .water(count: _)):
             colors = [
                 Color(hex: "#E2F5FA").opacity(0.98),
                 Color(hex: "#77AFCA").opacity(0.74),
                 Color(hex: "#3A7192").opacity(0.7)
             ]
-        case .resource(type: .diamond, amount: _):
+        case .standart(model: .diamond(count: _)):
             colors = [
                 Color(hex: "#F0FDFF").opacity(0.99),
                 Color(hex: "#8BE9F7").opacity(0.78),
                 Color(hex: "#2783D7").opacity(0.74)
             ]
-        case .chest(type: .gold):
+        case .chest(model: .gold):
             colors = [
                 Color(hex: "#FFF1BF").opacity(0.99),
                 Color(hex: "#FFCC4D").opacity(0.82),
                 Color(hex: "#B67F1E").opacity(0.72)
             ]
-        case .chest(type: .nature):
+        case .chest(model: .nature):
             colors = [
                 Color(hex: "#F2FFD5").opacity(0.98),
                 Color(hex: "#A8EA6A").opacity(0.78),
                 Color(hex: "#4D922A").opacity(0.72)
             ]
-        case .chest(type: .diamond):
+        case .chest(model: .diamond):
             colors = [
                 Color(hex: "#EAFDFF").opacity(0.99),
                 Color(hex: "#72DFFF").opacity(0.82),
                 Color(hex: "#2A67D3").opacity(0.72)
             ]
-        case .chest(type: .antique):
+        case .chest(model: .antique):
             colors = [
                 Color(hex: "#F7E4C2").opacity(0.99),
                 Color(hex: "#CD9F5F").opacity(0.82),
                 Color(hex: "#8A5A2B").opacity(0.72)
+            ]
+        case .standart:
+            colors = [
+                Color(hex: "#F0FDFF").opacity(0.99),
+                Color(hex: "#8BE9F7").opacity(0.78),
+                Color(hex: "#2783D7").opacity(0.74)
             ]
         }
 
@@ -454,7 +466,7 @@ private struct AdventureRewardCard: View {
 
     private var borderGradient: LinearGradient {
         switch milestone.reward {
-        case .resource(type: .gold, amount: _), .chest(type: .gold):
+        case .standart(model: .gold(count: _)), .chest(model: .gold):
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -464,7 +476,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .resource(type: .water, amount: _):
+        case .standart(model: .water(count: _)):
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.96),
@@ -474,7 +486,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .resource(type: .diamond, amount: _), .chest(type: .diamond):
+        case .standart(model: .diamond(count: _)), .chest(model: .diamond):
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -484,7 +496,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .chest(type: .nature):
+        case .chest(model: .nature):
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -494,7 +506,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .chest(type: .antique):
+        case .chest(model: .antique):
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -504,44 +516,58 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
+        case .standart:
+            return LinearGradient(
+                colors: [
+                    Color.white.opacity(0.98),
+                    Color(hex: "#7BDDF2").opacity(0.92),
+                    Color(hex: "#2A67D3").opacity(0.9)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
         }
     }
 
     private var claimedOverlayColor: Color {
         switch milestone.reward {
-        case .chest(type: .gold):
+        case .chest(model: .gold):
             return Color(hex: "#8B5E00").opacity(0.16)
-        case .chest(type: .nature):
+        case .chest(model: .nature):
             return Color(hex: "#2F5D1B").opacity(0.16)
-        case .chest(type: .diamond):
+        case .chest(model: .diamond):
             return Color(hex: "#0B3A64").opacity(0.16)
-        case .chest(type: .antique):
+        case .chest(model: .antique):
             return Color(hex: "#6B4A1E").opacity(0.16)
-        case .resource(type: .gold, amount: _):
+        case .standart(model: .gold(count: _)):
             return Color(hex: "#8B5E00").opacity(0.14)
-        case .resource(type: .water, amount: _):
+        case .standart(model: .water(count: _)):
             return Color(hex: "#0B4F6C").opacity(0.14)
-        case .resource(type: .diamond, amount: _):
+        case .standart(model: .diamond(count: _)):
+            return Color(hex: "#0B3A64").opacity(0.14)
+        case .standart:
             return Color(hex: "#0B3A64").opacity(0.14)
         }
     }
 
     private var rewardValueColor: Color {
         switch milestone.reward {
-        case .resource(type: .water, amount: _):
+        case .standart(model: .water(count: _)):
             return Color(hex: "#0B4F6C")
-        case .resource(type: .gold, amount: _):
+        case .standart(model: .gold(count: _)):
             return Color(hex: "#8B5E00")
-        case .resource(type: .diamond, amount: _):
+        case .standart(model: .diamond(count: _)):
             return Color(hex: "#0B3A64")
-        case .chest(type: .gold):
+        case .chest(model: .gold):
             return Color(hex: "#8B5E00")
-        case .chest(type: .nature):
+        case .chest(model: .nature):
             return Color(hex: "#2F5D1B")
-        case .chest(type: .diamond):
+        case .chest(model: .diamond):
             return Color(hex: "#0B3A64")
-        case .chest(type: .antique):
+        case .chest(model: .antique):
             return Color(hex: "#6B4A1E")
+        case .standart:
+            return Color(hex: "#0B3A64")
         }
     }
 
@@ -566,5 +592,5 @@ private struct AdventureRewardCard: View {
 // MARK: - PREVIEW
 
 #Preview {
-    AdventureRoadUI()
+    AdventureRoadUI(isVisible: .constant(true), seasonLeftTime: .constant(Date()))
 }
