@@ -40,6 +40,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func updateComponentName(name: String)
     func setComponent(uuid: UUID, for componentType: ComponentType)
     func fetchWeeklyDailyCards()
+    func fetchAdventureRoadData()
 }
 
 // MARK: - VIEW MODEL
@@ -52,6 +53,8 @@ class ForestViewModel: BaseViewModel {
     private let audioService: AudioServiceProtocol
     private let forestDataManager: ForestDataManagerProtocol
     private let adventureService: ForestAdventureServiceProtocol
+    private let remoteConfigRepository: RemoteConfigRepositoryProtocol
+    private let playerDataManager: PlayerDataManagerProtocol
     
     // MARK: - PROPERTIES
     
@@ -65,6 +68,8 @@ class ForestViewModel: BaseViewModel {
     @Published var showBookThreshold = false
     @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
     @Published var dailySpinTime: Date? = nil
+    @Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
+    @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -84,12 +89,16 @@ class ForestViewModel: BaseViewModel {
         audioService: AudioServiceProtocol,
         coreDataManager: CoreDataManagerProtocol,
         forestDataManager: ForestDataManagerProtocol,
-        forestAdventureService: ForestAdventureServiceProtocol
+        forestAdventureService: ForestAdventureServiceProtocol,
+        remoteConfigRepository: RemoteConfigRepositoryProtocol,
+        playerDataManager: PlayerDataManagerProtocol
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
         self.forestDataManager = forestDataManager
         self.adventureService = forestAdventureService
+        self.remoteConfigRepository = remoteConfigRepository
+        self.playerDataManager = playerDataManager
         super.init()
         
     }
@@ -203,6 +212,38 @@ extension ForestViewModel {
             fetchForest()
             checkDailySpinStatus()
             fetchWeeklyDailyCards()
+            fetchAdventureRoadData()
+        }
+    }
+    
+    func fetchAdventureRoadData() {
+        Task { @MainActor in
+            let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
+            var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
+            
+            if let config = configResult.data, trueNow >= config.seasonEndDate {
+                configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
+            }
+            
+            let progress = playerDataManager.fetchAdventureRoadProgress(contextType: .main) ?? AdventureRoadProgressModel(
+                seasonID: nil,
+                monthlyShortLearnedCount: 0,
+                monthlyLongLearnedCount: 0
+            )
+            
+            guard configResult.status == .success, let config = configResult.data else {
+                adventureRoadScreenModel = AdventureRoadMockData.screenModel()
+                adventureRoadSeasonLeftTime = adventureRoadScreenModel.eventEndDate
+                return
+            }
+            
+            adventureRoadScreenModel = AdventureRoadBuilder.screenModel(
+                rewards: config.rewards,
+                progress: progress,
+                eventEndDate: config.seasonEndDate,
+                referenceDate: trueNow
+            )
+            adventureRoadSeasonLeftTime = config.seasonEndDate
         }
     }
     
@@ -499,7 +540,6 @@ private extension ForestViewModel {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestViewModel {
-    
     func checkDailySpinStatus() {
         Task { @MainActor in
             let result = await adventureService.fetchDailySpinStatusDate()

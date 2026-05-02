@@ -39,6 +39,8 @@ protocol PlayerDataManagerProtocol {
     func createInitialPlayer(contextType: PlayerDataManager.ContextType) -> Resource<Player>
     func bindForest(contextType: PlayerDataManager.ContextType, forest: Forest) -> Resource<Bool>
     func updatePlayerName(contextType: PlayerDataManager.ContextType, name: String) -> Resource<Bool>
+    func fetchAdventureRoadProgress(contextType: PlayerDataManager.ContextType) -> AdventureRoadProgressModel?
+    func increaseMonthlyLearnedCount(for questionType: BattleQuestionType, contextType: PlayerDataManager.ContextType) -> Resource<Bool>
 }
 
 class PlayerDataManager {
@@ -46,6 +48,42 @@ class PlayerDataManager {
 }
 
 extension PlayerDataManager: PlayerDataManagerProtocol {
+    func fetchAdventureRoadProgress(contextType: ContextType) -> AdventureRoadProgressModel? {
+        let context = contextType.context
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context),
+                  let daily = forest.dailyActivities else {
+                return nil
+            }
+            return AdventureRoadProgressModel(
+                seasonID: daily.adventureSeasonID,
+                monthlyShortLearnedCount: Int(daily.monthlyShortLearnedCount),
+                monthlyLongLearnedCount: Int(daily.monthlyLongLearnedCount)
+            )
+        }
+    }
+    
+    func increaseMonthlyLearnedCount(for questionType: BattleQuestionType, contextType: ContextType) -> Resource<Bool> {
+        let context = contextType.context
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context),
+                  let daily = forest.dailyActivities else {
+                return .error(error: PlayerDataError.emptyPlayer)
+            }
+            
+            switch questionType {
+            case .learning, .competitive:
+                daily.monthlyShortLearnedCount += 1
+            case .remainder:
+                daily.monthlyLongLearnedCount += 1
+            }
+            
+            daily.lastUpdatedDate = Date()
+            save(context: context)
+            return .success(true)
+        }
+    }
+    
     func updatePlayerName(contextType: ContextType, name: String) -> Resource<Bool> {
         let context = contextType.context
         return context.performAndWait {
@@ -89,6 +127,16 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
 }
 
 private extension PlayerDataManager {
+    func getCurrentForest(context: NSManagedObjectContext) -> Forest? {
+        let request: NSFetchRequest<Forest> = Forest.fetchRequest()
+        request.fetchLimit = 1
+        do {
+            return try context.performAndWait { try context.fetch(request).first }
+        } catch {
+            return nil
+        }
+    }
+    
     func getCurrentPlayer(context: NSManagedObjectContext) -> Player? {
         let request: NSFetchRequest<Player> = Player.fetchRequest()
         request.fetchLimit = 1

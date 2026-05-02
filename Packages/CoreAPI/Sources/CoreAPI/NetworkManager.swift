@@ -65,4 +65,32 @@ public final class NetworkManager<EndpointItem: EndPoint> {
             }
         }
     }
+    
+    public func requestData(endpoint: EndpointItem, completion: @escaping @Sendable (Result<Data, APIClientError>) -> Void) {
+        if (!Reachability.isConnectedToNetwork()) {
+            completion(.failure(.networkError))
+            return
+        }
+        
+        AF.request(
+            endpoint.url,
+            method: endpoint.method,
+            parameters: endpoint.parameters,
+            encoding: endpoint.encoding,
+            headers: HTTPHeaders(endpoint.headers)
+        )
+        .validate()
+        .responseData { response in
+            switch response.result {
+            case .success(let data):
+                completion(.success(data))
+            case .failure(let error):
+                if NSURLErrorTimedOut == (error as NSError).code {
+                    completion(.failure(.timeout))
+                } else {
+                    completion(.failure(.networkError))
+                }
+            }
+        }
+    }
 }

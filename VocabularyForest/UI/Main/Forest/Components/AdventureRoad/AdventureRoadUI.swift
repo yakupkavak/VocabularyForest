@@ -11,16 +11,17 @@ struct AdventureRoadUI: View {
     
     // MARK: - PROPERTIES
     
-    private let screenModel = AdventureRoadMockData.screenModel()
-    @Environment(\.dismiss) private var dismiss
+    let screenModel: AdventureRoadScreenModel
     @Binding var isVisible: Bool
     @Binding var seasonLeftTime: Date
+    @Environment(\.safeAreaInsets) private var globalSafeArea
     
     // MARK: - UI
     
     var body: some View {
         GeometryReader { geometry in
             let w = geometry.size.width
+            let safeBottomInset = geometry.safeAreaInsets.bottom
             let horizontalPadding = w * 0.04
             let availableWidth = w - (horizontalPadding * 2)
             
@@ -30,79 +31,72 @@ struct AdventureRoadUI: View {
             let rowHeight = cardWidth * 0.8
             let rowSpacingForSideColumns = rowHeight * 0.24
 
-            ZStack {
-                backgroundGradient
-
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: w * 0.04) {
-                        
-                        VStack(spacing: w * 0.045) {
-                            topHeaderBar(w: w)
-                            titleSection(w: w)
-                        }
-
-                        HStack {
-                            AdventurePassBadge(track: .shortTerm)
-                                .frame(width: cardWidth, height: rowHeight * 0.7)
-                            
-                            Spacer(minLength: 0)
-                            
-                            AdventurePassBadge(track: .longTerm)
-                                .frame(width: cardWidth, height: rowHeight * 0.7)
-                        }
-
-                        HStack(alignment: .top) {
-                            AdventureLaneColumn(
-                                milestones: screenModel.rows.map(\.leftMilestone),
-                                notchSide: .right,
-                                cardWidth: cardWidth,
-                                rowHeight: rowHeight,
-                                rowSpacing: rowSpacingForSideColumns
-                            )
-                            .frame(width: cardWidth)
-
-                            Spacer(minLength: 0)
-
-                            AdventureCenterRoads(
-                                rows: screenModel.rows,
-                                centerWidth: centerWidth,
-                                cardWidth: cardWidth,
-                                columnSpacing: 0,
-                                rowHeightOfCard: rowHeight,
-                                rowSpacingOfCard: rowSpacingForSideColumns
-                            )
-                            .frame(width: centerWidth)
-                            
-                            Spacer(minLength: 0)
-                            
-                            AdventureLaneColumn(
-                                milestones: screenModel.rows.map(\.rightMilestone),
-                                notchSide: .left,
-                                cardWidth: cardWidth,
-                                rowHeight: rowHeight,
-                                rowSpacing: rowSpacingForSideColumns
-                            )
-                            .frame(width: cardWidth)
-                        }
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: w * 0.04) {
+                    VStack(spacing: w * 0.045) {
+                        topHeaderBar(w: w)
+                        titleSection(w: w)
                     }
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.top, w * 0.02)
-                    .padding(.bottom, w * 0.3)
+                    HStack {
+                        AdventurePassBadge(track: .shortTerm)
+                            .frame(width: cardWidth, height: rowHeight * 0.7)
+                        
+                        Spacer(minLength: 0)
+                        
+                        AdventurePassBadge(track: .longTerm)
+                            .frame(width: cardWidth, height: rowHeight * 0.7)
+                    }
+
+                    HStack(alignment: .top) {
+                        AdventureLaneColumn(
+                            milestones: screenModel.rows.map(\.leftMilestone),
+                            notchSide: .right,
+                            cardWidth: cardWidth,
+                            rowHeight: rowHeight,
+                            rowSpacing: rowSpacingForSideColumns
+                        )
+                        .frame(width: cardWidth)
+
+                        Spacer(minLength: 0)
+
+                        AdventureCenterRoads(
+                            rows: screenModel.rows,
+                            centerWidth: centerWidth,
+                            cardWidth: cardWidth,
+                            columnSpacing: 0,
+                            rowHeightOfCard: rowHeight,
+                            rowSpacingOfCard: rowSpacingForSideColumns
+                        )
+                        .frame(width: centerWidth)
+                        
+                        Spacer(minLength: 0)
+                        
+                        AdventureLaneColumn(
+                            milestones: screenModel.rows.map(\.rightMilestone),
+                            notchSide: .left,
+                            cardWidth: cardWidth,
+                            rowHeight: rowHeight,
+                            rowSpacing: rowSpacingForSideColumns
+                        )
+                        .frame(width: cardWidth)
+                    }
                 }
+                .padding(.horizontal, horizontalPadding)
+                .padding(.bottom, safeBottomInset + (w * 0.06))
             }
+            .padding(.top, globalSafeArea.top > 0 ? globalSafeArea.top : w * 0.04)        .background(backgroundGradient)
         }
     }
 }
 
 private extension AdventureRoadUI {
     
-    var backgroundGradient: some View {
+    var backgroundGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 0.74, green: 0.88, blue: 0.55), Color(red: 0.16, green: 0.56, blue: 0.33)],
             startPoint: .top,
             endPoint: .init(x: 0.5, y: 0.9)
         )
-        .ignoresSafeArea()
     }
     
     func topHeaderBar(w: CGFloat) -> some View {
@@ -592,5 +586,9 @@ private struct AdventureRewardCard: View {
 // MARK: - PREVIEW
 
 #Preview {
-    AdventureRoadUI(isVisible: .constant(true), seasonLeftTime: .constant(Date()))
+    AdventureRoadUI(
+        screenModel: AdventureRoadMockData.screenModel(),
+        isVisible: .constant(true),
+        seasonLeftTime: .constant(Date())
+    )
 }

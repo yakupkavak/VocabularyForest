@@ -41,6 +41,9 @@ struct VocabularyForestApp: App {
                     let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
                     coreDataManager.save(type: .main)
                 }
+            }.task {
+                let gameManager = DC.shared.resolve(type: .singleInstance, for: GameManagerProtocol.self)
+                _ = await gameManager.refreshEconomyConfig()
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .environmentObject(tabbarController).environmentObject(coordinator)
                 .installToast(position: .bottom)

@@ -348,6 +348,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                     gameStatus.trueCount += 1
                     if let questionType, let answerBook = answer.book {
                         coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .background)
+                        _ = playerDataManager.increaseMonthlyLearnedCount(for: questionType, contextType: .background)
                         // TODO: SHOW SAVE ERROR
                         let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .background)
                     }
@@ -437,4 +438,3 @@ extension BattleViewModel: BattleSceneProtocol {
         uiStation = .gameOver
     }
 }
-

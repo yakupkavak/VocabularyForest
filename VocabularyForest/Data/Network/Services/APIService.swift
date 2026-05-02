@@ -7,13 +7,16 @@
 
 import CoreAPI
 import DTO
+import Foundation
 
 typealias BookcaseRequestResult = Result<BookcaseRequest, APIClientError>
 typealias LibrariesResult = Result<Libraries, APIClientError>
+typealias ImageResult = Result<Data, APIClientError>
 
 protocol APIServiceProtocol: AnyObject {
     func fetchBookcaseRequest(values: GetBookcaseRequestModel, completion: @escaping (BookcaseRequestResult) -> Void)
     func fetchLibraries(completion: @escaping (LibrariesResult) -> Void)
+    func fetchImage(values: GetImageRequestModel,completion: @escaping (ImageResult) -> Void)
 }
 
 public class APIService: APIServiceProtocol {
@@ -22,19 +25,42 @@ public class APIService: APIServiceProtocol {
     
     let bookcaseRequestManager = NetworkManager<GetBookcase>()
     let librariesManager = NetworkManager<GetLibraries>()
+    let imageManager = NetworkManager<GetImage>()
+    private let vocabularyBaseURLProvider: VocabularyBaseURLProviderProtocol
+    
+    // MARK: - INIT
+
+    init(vocabularyBaseURLProvider: VocabularyBaseURLProviderProtocol = VocabularyBaseURLProvider()) {
+        self.vocabularyBaseURLProvider = vocabularyBaseURLProvider
+    }
     
     // MARK: - HELPERS
     
     func fetchBookcaseRequest(values: GetBookcaseRequestModel, completion: @escaping (BookcaseRequestResult) -> Void) {
-        bookcaseRequestManager.request(endpoint: .definition(values), type: BookcaseRequest.self) { result in
-            completion(result)
+        vocabularyBaseURLProvider.resolveVocabURL { [weak self] baseURL in
+            guard let self else { return }
+
+            self.bookcaseRequestManager.request(endpoint: .definition(values, baseURL: baseURL), type: BookcaseRequest.self) { result in
+                completion(result)
+            }
         }
     }
     
     func fetchLibraries(completion: @escaping (LibrariesResult) -> Void) {
-        librariesManager.request(endpoint: .standart, type: Libraries.self) { result in
-            completion(result)
+        vocabularyBaseURLProvider.resolveVocabURL { [weak self] baseURL in
+            guard let self else { return }
+            self.librariesManager.request(endpoint: .standart(baseURL: baseURL), type: Libraries.self) { result in
+                completion(result)
+            }
         }
     }
     
+    func fetchImage(values: GetImageRequestModel, completion: @escaping (ImageResult) -> Void) {
+        vocabularyBaseURLProvider.resolveImageURL { [weak self] baseURL in
+            guard let self else { return }
+            self.imageManager.requestData(endpoint: .image(values, baseURL: baseURL)) { result in
+                completion(result)
+            }
+        }
+    }
 }

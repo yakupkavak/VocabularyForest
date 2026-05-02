@@ -10,7 +10,8 @@ import Foundation
 
 enum AppDependencyConfigurer {
     static func configure() {
-        let networkManager = APIService()
+        let vocabularyBaseURLProvider = VocabularyBaseURLProvider()
+        let networkManager = APIService(vocabularyBaseURLProvider: vocabularyBaseURLProvider)
         let coreData = CoreDataManager()
         let forestData = ForestDataManager()
         let audioManager = ForestAudioService()
@@ -19,6 +20,14 @@ enum AppDependencyConfigurer {
         let cloudSyncManager = ForestSyncManager()
         let playerDataManager = PlayerDataManager()
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData)
+        let adventureRoadSeasonProgressStore = AdventureRoadSeasonProgressStore(
+            coreDataManager: coreData,
+            forestDataManager: forestData
+        )
+        let remoteConfigRepository = RemoteConfigRepository(
+            adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore
+        )
+        let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
         forestData.notificationManager = notificationManager
@@ -31,6 +40,9 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(cloudSyncManager), for: ForestSyncManager.self)
         DC.shared.register(type: .singleInstance(playerDataManager), for: PlayerDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(adventureRoadSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
+        DC.shared.register(type: .singleInstance(remoteConfigRepository), for: RemoteConfigRepositoryProtocol.self)
+        DC.shared.register(type: .singleInstance(gameManager), for: GameManagerProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

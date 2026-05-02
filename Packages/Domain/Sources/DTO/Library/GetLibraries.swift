@@ -13,10 +13,13 @@ import YakoSwift
 @DefaultInit
 public enum GetLibraries: EndPoint {
     
-    case standart
+    case standart(baseURL: String)
     
     public var baseURL: String {
-        return "https://vocab-api.yakupkavk.workers.dev/api/"
+        switch self {
+        case .standart(let baseURL):
+            return baseURL
+        }
     }
     
     public var path: String {

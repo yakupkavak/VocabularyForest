@@ -17,13 +17,14 @@ enum AdventureTicketNotchSide {
 struct AdventureRoadScreenModel {
     let title: String
     let eventEndDate: Date
+    let referenceDate: Date
     let shortTermCorrectWords: Int
     let longTermCorrectWords: Int
     let maxWordCount: Int
     let rows: [AdventureRoadRowModel]
 
     var countdownText: String {
-        let components = Calendar.current.dateComponents([.day, .hour], from: Date(), to: eventEndDate)
+        let components = Calendar.current.dateComponents([.day, .hour], from: referenceDate, to: eventEndDate)
         let day = max(0, components.day ?? 0)
         let hour = max(0, components.hour ?? 0)
 
@@ -58,6 +59,12 @@ struct AdventureRoadScreenModel {
         guard maxWordCount > 0 else { return 0 }
         return min(max(Double(correctWords) / Double(maxWordCount), 0), 1)
     }
+}
+
+struct AdventureRoadProgressModel {
+    let seasonID: String?
+    let monthlyShortLearnedCount: Int
+    let monthlyLongLearnedCount: Int
 }
 
 enum AdventureMemoryTrack: String, CaseIterable {
@@ -130,6 +137,7 @@ enum AdventureRoadMockData {
                 comment: "Main title of the Adventure Road screen"
             ),
             eventEndDate: Calendar.current.date(byAdding: .hour, value: 203, to: Date()) ?? Date(),
+            referenceDate: Date(),
             shortTermCorrectWords: shortWords,
             longTermCorrectWords: longWords,
             maxWordCount: maxWordCount,
@@ -213,5 +221,48 @@ enum AdventureRoadMockData {
         default:
             return .gold(count: 0)
         }
+    }
+}
+
+enum AdventureRoadBuilder {
+    static func screenModel(
+        rewards: [AdventureRoadRewardModel],
+        progress: AdventureRoadProgressModel,
+        eventEndDate: Date,
+        referenceDate: Date
+    ) -> AdventureRoadScreenModel {
+        let sortedRewards = rewards.sorted { $0.wordCount < $1.wordCount }
+        let maxWordCount = sortedRewards.map(\.wordCount).max() ?? 0
+        let rows = sortedRewards.map { reward in
+            AdventureRoadRowModel(
+                wordCount: reward.wordCount,
+                leftMilestone: AdventureMilestoneModel(
+                    track: .shortTerm,
+                    wordCount: reward.wordCount,
+                    reward: reward.shortTermReward,
+                    isClaimed: reward.wordCount <= progress.monthlyShortLearnedCount
+                ),
+                rightMilestone: AdventureMilestoneModel(
+                    track: .longTerm,
+                    wordCount: reward.wordCount,
+                    reward: reward.longTermReward,
+                    isClaimed: reward.wordCount <= progress.monthlyLongLearnedCount
+                )
+            )
+        }
+        
+        return AdventureRoadScreenModel(
+            title: String(
+                localized: "adventure_road_title",
+                defaultValue: "Adventure Road",
+                comment: "Main title of the Adventure Road screen"
+            ),
+            eventEndDate: eventEndDate,
+            referenceDate: referenceDate,
+            shortTermCorrectWords: progress.monthlyShortLearnedCount,
+            longTermCorrectWords: progress.monthlyLongLearnedCount,
+            maxWordCount: maxWordCount,
+            rows: rows
+        )
     }
 }

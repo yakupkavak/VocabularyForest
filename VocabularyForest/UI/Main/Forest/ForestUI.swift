@@ -160,7 +160,7 @@ private extension ForestUI {
         case .dailyTrack:
             dailyTrackView
         case .userRoad:
-            EmptyView()
+            userRoadView
         }
     }
     
@@ -193,6 +193,14 @@ private extension ForestUI {
         }
     }
     
+    var userRoadView: some View {
+        AdventureRoadUI(
+            screenModel: viewModel.adventureRoadScreenModel,
+            isVisible: Binding(get: { uiState == .userRoad }, set: { if !$0 { uiState = .empty } }),
+            seasonLeftTime: $viewModel.adventureRoadSeasonLeftTime
+        )
+    }
+    
     var announcementView: some View {
         ForestAnnouncementUI(
             isVisible: Binding(
@@ -213,6 +221,7 @@ private extension ForestUI {
                 uiState = .dailySpin
             case .adventureRoad:
                 uiState = .userRoad
+                viewModel.fetchAdventureRoadData()
             }
         }
     }
@@ -423,7 +432,18 @@ extension ForestUI: ForestUIProtocol {
     let mockCoreData = CoreDataManager.preview
     let mockAudio = ForestAudioService()
     let mockForestData = ForestDataManager()
-    let viewModel = ForestViewModel(audioService: mockAudio, coreDataManager: mockCoreData, forestDataManager: mockForestData, forestAdventureService: ForestAdventureService(forestManager: mockForestData, playerManager: PlayerDataManager(), coreData: mockCoreData))
+    let mockPlayerManager = PlayerDataManager()
+    let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData)
+    let mockAdventureRoadStore = AdventureRoadSeasonProgressStore(coreDataManager: mockCoreData, forestDataManager: mockForestData)
+    let mockRemoteConfig = RemoteConfigRepository(adventureRoadSeasonProgressStore: mockAdventureRoadStore)
+    let viewModel = ForestViewModel(
+        audioService: mockAudio,
+        coreDataManager: mockCoreData,
+        forestDataManager: mockForestData,
+        forestAdventureService: mockAdventureService,
+        remoteConfigRepository: mockRemoteConfig,
+        playerDataManager: mockPlayerManager
+    )
      
     ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
 }

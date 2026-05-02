@@ -1,37 +1,36 @@
 //
-//  GetBookcase.swift
-//  VocabularyForest
+//  GetImage.swift
+//  Domain
 //
-//  Created by Yakup Kavak on 22.12.2025.
+//  Created by Yakup Kavak on 30.04.2026.
 //
+
 
 import Alamofire
 import CoreAPI
 import YakoSwift
 
-public enum GetBookcase: EndPoint {
+@DefaultInit
+public enum GetImage: EndPoint {
     
-    case definition(_ value: GetBookcaseRequestModel, baseURL: String)
-
+    case image(_ value: GetImageRequestModel, baseURL: String)
+    
     public var baseURL: String {
         switch self {
-        case .definition(_, let baseURL):
+        case .image(_, let baseURL):
             return baseURL
         }
     }
     
     public var path: String {
         switch self {
-        case .definition(let value, _):
-            "library/\(value.bookcaseID)"
+        case .image(let model, _):
+            return model.imagePath
         }
     }
     
     public var method: HTTPMethod {
-        switch self {
-            case .definition:
-                return .get
-        }
+        .get
     }
     
     var parameters: [String: Any] {

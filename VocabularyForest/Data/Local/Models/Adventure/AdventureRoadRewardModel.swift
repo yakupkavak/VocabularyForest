@@ -12,3 +12,9 @@ struct AdventureRoadRewardModel: Encodable {
     let shortTermReward: LocalRewardModel
     let longTermReward: LocalRewardModel
 }
+
+struct AdventureRoadConfigModel {
+    let id: String?
+    let seasonEndDate: Date
+    let rewards: [AdventureRoadRewardModel]
+}

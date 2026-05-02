@@ -94,6 +94,21 @@ extension RewardHelper {
 }
 
 struct RewardHelper {
+    private struct ChestRuntimeConfig {
+        let goldDiamondChance: Int
+        let goldWaterChance: Int
+        let natureAnimalChance: Int
+        let antiqueAnimalChance: Int
+        let goldMin: Int
+        let goldMax: Int
+        let bonusDiamondMin: Int
+        let bonusDiamondMax: Int
+        let bonusWaterMin: Int
+        let bonusWaterMax: Int
+        let diamondChestMin: Int
+        let diamondChestMax: Int
+    }
+
     private enum BackgroundGradientConfig {
         static let startRadius: CGFloat = 30
         static let endRadius: CGFloat = 620
@@ -174,21 +189,22 @@ struct RewardHelper {
     // MARK: - CHEST REWARD GENERATOR
     
     static func generateRandomReward(from chest: ChestBountyModel) -> QuestRewardModel {
+        let config = chestRuntimeConfig()
         switch chest {
         case .gold:
             let roll = Int.random(in: 0..<RandomConfig.percentScale)
-            let waterThreshold = RandomConfig.goldDiamondChance + RandomConfig.goldWaterChance
-            if roll < RandomConfig.goldDiamondChance {
-                return .diamond(count: Int.random(in: RandomConfig.bonusDiamondMin...RandomConfig.bonusDiamondMax))
+            let waterThreshold = config.goldDiamondChance + config.goldWaterChance
+            if roll < config.goldDiamondChance {
+                return .diamond(count: Int.random(in: config.bonusDiamondMin...config.bonusDiamondMax))
             }
             if roll < waterThreshold {
-                return .water(count: Int.random(in: RandomConfig.bonusWaterMin...RandomConfig.bonusWaterMax))
+                return .water(count: Int.random(in: config.bonusWaterMin...config.bonusWaterMax))
             }
-            return .gold(count: Int.random(in: RandomConfig.goldMin...RandomConfig.goldMax))
+            return .gold(count: Int.random(in: config.goldMin...config.goldMax))
             
         case .nature:
             let roll = Int.random(in: 0..<RandomConfig.percentScale)
-            if roll < RandomConfig.natureAnimalChance {
+            if roll < config.natureAnimalChance {
                 let animal = AnimalReward.allCases.randomElement() ?? .dog
                 return .animal(modelName: animal.name)
             }
@@ -196,11 +212,11 @@ struct RewardHelper {
             return .plant(modelName: plant.name)
             
         case .diamond:
-            return .diamond(count: Int.random(in: RandomConfig.diamondChestMin...RandomConfig.diamondChestMax))
+            return .diamond(count: Int.random(in: config.diamondChestMin...config.diamondChestMax))
             
         case .antique:
             let roll = Int.random(in: 0..<RandomConfig.percentScale)
-            if roll < RandomConfig.antiqueAnimalChance {
+            if roll < config.antiqueAnimalChance {
                 let animal = AnimalReward.allCases.randomElement() ?? .dog
                 return .animal(modelName: animal.name)
             }
@@ -230,4 +246,41 @@ struct RewardHelper {
         }
     }
 
+}
+
+private extension RewardHelper {
+    private static func chestRuntimeConfig() -> ChestRuntimeConfig {
+        guard let economyConfig = GameManager.snapshotEconomyConfig() else {
+            return ChestRuntimeConfig(
+                goldDiamondChance: RandomConfig.goldDiamondChance,
+                goldWaterChance: RandomConfig.goldWaterChance,
+                natureAnimalChance: RandomConfig.natureAnimalChance,
+                antiqueAnimalChance: RandomConfig.antiqueAnimalChance,
+                goldMin: RandomConfig.goldMin,
+                goldMax: RandomConfig.goldMax,
+                bonusDiamondMin: RandomConfig.bonusDiamondMin,
+                bonusDiamondMax: RandomConfig.bonusDiamondMax,
+                bonusWaterMin: RandomConfig.bonusWaterMin,
+                bonusWaterMax: RandomConfig.bonusWaterMax,
+                diamondChestMin: RandomConfig.diamondChestMin,
+                diamondChestMax: RandomConfig.diamondChestMax
+            )
+        }
+        
+        let ranges = economyConfig.chestRewardRanges
+        return ChestRuntimeConfig(
+            goldDiamondChance: economyConfig.chestOdds.goldChestDiamondChance,
+            goldWaterChance: economyConfig.chestOdds.goldChestWaterChance,
+            natureAnimalChance: economyConfig.chestOdds.natureChestAnimalChance,
+            antiqueAnimalChance: economyConfig.chestOdds.antiqueChestAnimalChance,
+            goldMin: ranges.goldChestGoldMin,
+            goldMax: ranges.goldChestGoldMax,
+            bonusDiamondMin: ranges.goldChestDiamondMin,
+            bonusDiamondMax: ranges.goldChestDiamondMax,
+            bonusWaterMin: RandomConfig.bonusWaterMin,
+            bonusWaterMax: RandomConfig.bonusWaterMax,
+            diamondChestMin: ranges.diamondChestDiamondMin,
+            diamondChestMax: ranges.diamondChestDiamondMax
+        )
+    }
 }

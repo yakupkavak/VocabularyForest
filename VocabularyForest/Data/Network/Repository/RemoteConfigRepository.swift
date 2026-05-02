@@ -31,7 +31,9 @@ enum RemoteConfigError: Error, LocalizedError {
 protocol RemoteConfigRepositoryProtocol {
     func fetchDailySpinRewards() async -> Resource<[DailySpinModel]>
     func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]>
+    func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel>
     func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
+    func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
 }
 
 final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
@@ -40,11 +42,25 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         static let dailySpinRewards = "daily_spin_rewards_config"
         static let weeklyRewards = "weekly_rewards_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
+        static let gameEconomyConfig = "game_economy_config"
+    }
+    
+    private enum DefaultsKeys {
+        static let remoteConfigIDPrefix = "remote_config.last_id."
     }
 
-    private let remoteConfig = RemoteConfig.remoteConfig()
+    private let remoteConfig: RemoteConfig
+    private let userDefaults: UserDefaults
+    private let adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
 
-    init() {
+    init(
+        remoteConfig: RemoteConfig = RemoteConfig.remoteConfig(),
+        userDefaults: UserDefaults = .standard,
+        adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
+    ) {
+        self.remoteConfig = remoteConfig
+        self.userDefaults = userDefaults
+        self.adventureRoadSeasonProgressStore = adventureRoadSeasonProgressStore
         let settings = RemoteConfigSettings()
         // For development: 0 fetch interval. Increase for production.
         settings.minimumFetchInterval = 0
@@ -52,14 +68,15 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     }
 
     func fetchDailySpinRewards() async -> Resource<[DailySpinModel]> {
-        let decodedResult: Result<[RemoteDailySpinItemDTO], RemoteConfigError> = await fetchDecodedArray(
+        let decodedResult: Result<DecodedPayload<RemoteDailySpinItemDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.dailySpinRewards,
             as: RemoteDailySpinItemDTO.self
         )
 
         switch decodedResult {
-        case .success(let dtos):
-            let safeModels = dtos.map { dto in
+        case .success(let payload):
+            _ = persistConfigID(payload.id, forRemoteKey: Keys.dailySpinRewards)
+            let safeModels = payload.items.map { dto in
                 DailySpinModel(
                     weight: safeWeight(dto.weight ?? dto.reward?.safeProbabilityWeight),
                     reward: mapToLocalReward(dto.reward)
@@ -76,14 +93,15 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     }
 
     func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]> {
-        let decodedResult: Result<[RemoteWeeklyRewardItemDTO], RemoteConfigError> = await fetchDecodedArray(
+        let decodedResult: Result<DecodedPayload<RemoteWeeklyRewardItemDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.weeklyRewards,
             as: RemoteWeeklyRewardItemDTO.self
         )
 
         switch decodedResult {
-        case .success(let dtos):
-            let safeModels = dtos.enumerated().map { index, dto in
+        case .success(let payload):
+            _ = persistConfigID(payload.id, forRemoteKey: Keys.weeklyRewards)
+            let safeModels = payload.items.enumerated().map { index, dto in
                 WeeklyRewardModel(
                     id: safeUUID(from: dto.id),
                     day: safeDay(dto.day, fallback: index + 1),
@@ -100,15 +118,22 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         }
     }
 
-    func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]> {
-        let decodedResult: Result<[RemoteAdventureRoadRewardDTO], RemoteConfigError> = await fetchDecodedArray(
+    func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel> {
+        let decodedResult: Result<DecodedPayload<RemoteAdventureRoadRewardDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.adventureRoadRewards,
             as: RemoteAdventureRoadRewardDTO.self
         )
 
         switch decodedResult {
-        case .success(let dtos):
-            let safeModels = dtos.enumerated().map { index, dto in
+        case .success(let payload):
+            let change = persistConfigID(payload.id, forRemoteKey: Keys.adventureRoadRewards)
+            applyAdventureRoadSeasonChangeIfNeeded(change: change, seasonID: payload.id)
+            
+            guard let seasonEndDate = parseSeasonEndDate(payload.seasonEndDateString) else {
+                return .error(error: RemoteConfigError.dataMissing)
+            }
+            
+            let safeModels = payload.items.enumerated().map { index, dto in
                 AdventureRoadRewardModel(
                     wordCount: safeWordCount(dto.wordCount, fallback: (index + 1) * 10),
                     shortTermReward: mapToLocalReward(dto.shortTermReward),
@@ -118,15 +143,101 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             guard !safeModels.isEmpty else {
                 return .error(error: RemoteConfigError.dataMissing)
             }
-            return .success(safeModels)
+            return .success(
+                AdventureRoadConfigModel(
+                    id: payload.id,
+                    seasonEndDate: seasonEndDate,
+                    rewards: safeModels
+                )
+            )
 
         case .failure(let error):
             return .error(error: error)
         }
     }
+    
+    func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]> {
+        let configResult = await fetchAdventureRoadConfig()
+        switch configResult.status {
+        case .success:
+            return .success(configResult.data?.rewards ?? [])
+        case .loading:
+            return .loading()
+        case .error:
+            return .error(error: configResult.error)
+        }
+    }
+    
+    func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel> {
+        do {
+            let jsonString = try await fetchJSONString(forKey: Keys.gameEconomyConfig)
+            let data = Data(jsonString.utf8)
+            let payload = try JSONDecoder().decode(RemoteGameEconomyPayload.self, from: data)
+            _ = persistConfigID(payload.id, forRemoteKey: Keys.gameEconomyConfig)
+            
+            let minGold = safePositive(payload.killCap?.minGoldPerKill, fallback: EconomyDefaults.minGoldPerKill)
+            let maxGoldCandidate = safePositive(payload.killCap?.maxGoldPerKill, fallback: EconomyDefaults.maxGoldPerKill)
+            let maxGold = max(minGold, maxGoldCandidate)
+            
+            let goldChestGoldRange = safeRange(
+                min: payload.chestRewardRanges?.goldChestGoldMin,
+                max: payload.chestRewardRanges?.goldChestGoldMax,
+                fallbackMin: EconomyDefaults.goldChestGoldMin,
+                fallbackMax: EconomyDefaults.goldChestGoldMax
+            )
+            let goldChestDiamondRange = safeRange(
+                min: payload.chestRewardRanges?.goldChestDiamondMin,
+                max: payload.chestRewardRanges?.goldChestDiamondMax,
+                fallbackMin: EconomyDefaults.goldChestDiamondMin,
+                fallbackMax: EconomyDefaults.goldChestDiamondMax
+            )
+            let diamondChestDiamondRange = safeRange(
+                min: payload.chestRewardRanges?.diamondChestDiamondMin,
+                max: payload.chestRewardRanges?.diamondChestDiamondMax,
+                fallbackMin: EconomyDefaults.diamondChestDiamondMin,
+                fallbackMax: EconomyDefaults.diamondChestDiamondMax
+            )
+            
+            let model = GameEconomyConfigModel(
+                id: trimmed(payload.id),
+                season: trimmed(payload.season) ?? trimmed(payload.seasonID) ?? trimmed(payload.seasonId),
+                chestOdds: GameChestOddsModel(
+                    goldChestDiamondChance: safePercent(payload.chestOdds?.goldChestDiamondChance, fallback: EconomyDefaults.goldChestDiamondChance),
+                    goldChestWaterChance: safePercent(payload.chestOdds?.goldChestWaterChance, fallback: EconomyDefaults.goldChestWaterChance),
+                    natureChestAnimalChance: safePercent(payload.chestOdds?.natureChestAnimalChance, fallback: EconomyDefaults.natureChestAnimalChance),
+                    antiqueChestAnimalChance: safePercent(payload.chestOdds?.antiqueChestAnimalChance, fallback: EconomyDefaults.antiqueChestAnimalChance)
+                ),
+                chestRewardRanges: GameChestRewardRangesModel(
+                    goldChestGoldMin: goldChestGoldRange.min,
+                    goldChestGoldMax: goldChestGoldRange.max,
+                    goldChestDiamondMin: goldChestDiamondRange.min,
+                    goldChestDiamondMax: goldChestDiamondRange.max,
+                    diamondChestDiamondMin: diamondChestDiamondRange.min,
+                    diamondChestDiamondMax: diamondChestDiamondRange.max
+                ),
+                killCap: GameKillCapModel(
+                    minGoldPerKill: minGold,
+                    maxGoldPerKill: maxGold,
+                    dailyKillCountCap: safePositive(payload.killCap?.dailyKillCountCap, fallback: EconomyDefaults.dailyKillCountCap)
+                )
+            )
+            
+            return .success(model)
+        } catch let error as RemoteConfigError {
+            return .error(error: error)
+        } catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+    }
 }
 
 private extension RemoteConfigRepository {
+    struct DecodedPayload<Item> {
+        let id: String?
+        let seasonEndDateString: String?
+        let items: [Item]
+    }
+    
     struct RemoteDailySpinItemDTO: Decodable {
         let id: String?
         let weight: Double?
@@ -144,18 +255,76 @@ private extension RemoteConfigRepository {
         let shortTermReward: RemoteRewardModel?
         let longTermReward: RemoteRewardModel?
     }
+    
+    struct RemoteGameEconomyPayload: Decodable {
+        let id: String?
+        let season: String?
+        let seasonID: String?
+        let seasonId: String?
+        let chestOdds: RemoteChestOddsDTO?
+        let chestRewardRanges: RemoteChestRewardRangesDTO?
+        let killCap: RemoteKillCapDTO?
+    }
+    
+    struct RemoteChestOddsDTO: Decodable {
+        let goldChestDiamondChance: Int?
+        let goldChestWaterChance: Int?
+        let natureChestAnimalChance: Int?
+        let antiqueChestAnimalChance: Int?
+    }
+    
+    struct RemoteKillCapDTO: Decodable {
+        let minGoldPerKill: Int?
+        let maxGoldPerKill: Int?
+        let dailyKillCountCap: Int?
+    }
+    
+    struct RemoteChestRewardRangesDTO: Decodable {
+        let goldChestGoldMin: Int?
+        let goldChestGoldMax: Int?
+        let goldChestDiamondMin: Int?
+        let goldChestDiamondMax: Int?
+        let diamondChestDiamondMin: Int?
+        let diamondChestDiamondMax: Int?
+    }
 
     struct RemoteArrayPayload<Item: Decodable>: Decodable {
+        let id: String?
+        let seasonEndDate: String?
+        let seasonEndDateUTC: String?
+        let seasonEndDateUtc: String?
         let items: [Item]?
         let data: [Item]?
         let rewards: [Item]?
     }
+    
+    enum RemoteConfigIDChange {
+        case unchanged
+        case firstStored
+        case updated
+    }
+    
+    enum EconomyDefaults {
+        static let goldChestDiamondChance = 10
+        static let goldChestWaterChance = 20
+        static let natureChestAnimalChance = 20
+        static let antiqueChestAnimalChance = 50
+        static let goldChestGoldMin = 50
+        static let goldChestGoldMax = 100
+        static let goldChestDiamondMin = 1
+        static let goldChestDiamondMax = 3
+        static let diamondChestDiamondMin = 10
+        static let diamondChestDiamondMax = 20
+        static let minGoldPerKill = 1
+        static let maxGoldPerKill = 3
+        static let dailyKillCountCap = 40
+    }
 
-    func fetchDecodedArray<T: Decodable>(forKey key: String, as _: T.Type) async -> Result<[T], RemoteConfigError> {
+    func fetchDecodedArray<T: Decodable>(forKey key: String, as _: T.Type) async -> Result<DecodedPayload<T>, RemoteConfigError> {
         do {
             let jsonString = try await fetchJSONString(forKey: key)
-            let items = try decodeArray(T.self, from: jsonString)
-            return .success(items)
+            let payload = try decodePayload(T.self, from: jsonString)
+            return .success(payload)
         } catch let error as RemoteConfigError {
             return .failure(error)
         } catch {
@@ -200,19 +369,85 @@ private extension RemoteConfigRepository {
         throw RemoteConfigError.dataMissing
     }
 
-    func decodeArray<T: Decodable>(_ type: T.Type, from jsonString: String) throws -> [T] {
+    func decodePayload<T: Decodable>(_ type: T.Type, from jsonString: String) throws -> DecodedPayload<T> {
         let data = Data(jsonString.utf8)
         let decoder = JSONDecoder()
 
         if let directArray = try? decoder.decode([T].self, from: data) {
-            return directArray
+            return DecodedPayload(id: nil, seasonEndDateString: nil, items: directArray)
         }
 
         if let payload = try? decoder.decode(RemoteArrayPayload<T>.self, from: data) {
-            return payload.items ?? payload.data ?? payload.rewards ?? []
+            return DecodedPayload(
+                id: payload.id?.trimmingCharacters(in: .whitespacesAndNewlines),
+                seasonEndDateString: payload.seasonEndDate ?? payload.seasonEndDateUTC ?? payload.seasonEndDateUtc,
+                items: payload.items ?? payload.data ?? payload.rewards ?? []
+            )
         }
 
         throw RemoteConfigError.decodeFailed
+    }
+    
+    func persistConfigID(_ configID: String?, forRemoteKey remoteKey: String) -> RemoteConfigIDChange {
+        guard let configID = configID?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !configID.isEmpty else {
+            return .unchanged
+        }
+        
+        let key = DefaultsKeys.remoteConfigIDPrefix + remoteKey
+        let defaults = userDefaults
+        
+        guard let previousID = defaults.string(forKey: key), !previousID.isEmpty else {
+            defaults.set(configID, forKey: key)
+            return .firstStored
+        }
+        
+        guard previousID != configID else {
+            return .unchanged
+        }
+        
+        defaults.set(configID, forKey: key)
+        return .updated
+    }
+    
+    func applyAdventureRoadSeasonChangeIfNeeded(change: RemoteConfigIDChange, seasonID: String?) {
+        guard let seasonID = seasonID?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !seasonID.isEmpty else {
+            return
+        }
+        
+        switch change {
+        case .firstStored:
+            updateAdventureRoadProgress(seasonID: seasonID, resetProgress: false)
+        case .updated:
+            updateAdventureRoadProgress(seasonID: seasonID, resetProgress: true)
+        case .unchanged:
+            break
+        }
+    }
+    
+    func updateAdventureRoadProgress(seasonID: String, resetProgress: Bool) {
+        adventureRoadSeasonProgressStore.applySeasonUpdate(
+            seasonID: seasonID,
+            resetProgress: resetProgress
+        )
+    }
+    
+    func parseSeasonEndDate(_ value: String?) -> Date? {
+        guard let raw = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !raw.isEmpty else {
+            return nil
+        }
+        
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = isoFormatter.date(from: raw) {
+            return date
+        }
+        
+        let fallbackFormatter = ISO8601DateFormatter()
+        fallbackFormatter.formatOptions = [.withInternetDateTime]
+        return fallbackFormatter.date(from: raw)
     }
 
     func trimmedConfigValue(forKey key: String) -> String {
@@ -310,5 +545,31 @@ private extension RemoteConfigRepository {
             return trimmed
         }
         return fallback
+    }
+    
+    func safePercent(_ value: Int?, fallback: Int) -> Int {
+        let safeValue = value ?? fallback
+        return min(max(safeValue, 0), 100)
+    }
+    
+    func safePositive(_ value: Int?, fallback: Int) -> Int {
+        guard let value, value > 0 else {
+            return fallback
+        }
+        return value
+    }
+    
+    func safeRange(min minValue: Int?, max maxValue: Int?, fallbackMin: Int, fallbackMax: Int) -> (min: Int, max: Int) {
+        let safeMin = safePositive(minValue, fallback: fallbackMin)
+        let safeMaxCandidate = safePositive(maxValue, fallback: fallbackMax)
+        return (safeMin, Swift.max(safeMin, safeMaxCandidate))
+    }
+    
+    func trimmed(_ value: String?) -> String? {
+        guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value
     }
 }

@@ -4,6 +4,7 @@
 //
 //  Created by Yakup Kavak on 22.12.2025.
 //
+
 import YakoSwift
 
 public struct GetBookcaseRequestModel {
