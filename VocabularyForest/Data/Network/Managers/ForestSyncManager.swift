@@ -195,15 +195,21 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             guard docSnapshot.exists, let forestData = docSnapshot.data() else {
                 return .error(error: ForestSyncError.noDataToSync)
             }
-            
-            guard let idString = forestData[ForestSyncConstants.idField] as? String,
-                  let forestId = UUID(uuidString: idString) else {
-                return .error(error: ForestSyncError.fetchError)
+            let localForest = dataManager?.fetchSafeForest(contextType: .main).data
+            let forestId: UUID
+            if let idString = forestData[ForestSyncConstants.idField] as? String,
+               let parsedId = UUID(uuidString: idString) {
+                forestId = parsedId
+            } else if let localForestId = localForest?.forestId {
+                // Backward compatibility: older cloud records may not contain "id".
+                forestId = localForestId
+            } else {
+                forestId = UUID()
             }
             
             let ownerUIDString = forestData[ForestSyncConstants.ownerId] as? String
             var parsedOwnerId: String? = nil
-            if let ownerString = ownerUIDString {
+            if ownerUIDString != nil {
                 parsedOwnerId = ownerUIDString
             }
             
@@ -213,8 +219,6 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             let landHealthPercent = forestData[ForestSyncConstants.landHealthPercentField] as? Int ?? 100
             
             let lastUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-            
-            let localForest = dataManager?.fetchSafeForest(contextType: .main).data
             
             async let treesSnapshot = forestDoc.collection(ForestSyncConstants.treesCollection).getDocuments()
             async let animalsSnapshot = forestDoc.collection(ForestSyncConstants.animalsCollection).getDocuments()
@@ -409,6 +413,7 @@ private extension ForestSyncManager {
     
     func performDeltaSync() async throws {
         guard let forestDoc = forestDocument else { throw ForestSyncError.unauthenticated }
+        guard let currentUID = Auth.auth().currentUser?.uid else { throw ForestSyncError.unauthenticated }
         guard let dataManager else { throw ForestSyncError.fetchError }
         
         let forestRes = dataManager.fetchSafeForest(contextType: .main)
@@ -420,6 +425,21 @@ private extension ForestSyncManager {
         
         let batch = db.batch()
         var totalOperations = 0
+        
+        let remoteSnapshot = try await forestDoc.getDocument()
+        let remoteData = remoteSnapshot.data()
+        let expectedOwnerId = forest.ownerId ?? currentUID
+        let remoteId = remoteData?[ForestSyncConstants.idField] as? String
+        let remoteOwnerId = remoteData?[ForestSyncConstants.ownerId] as? String
+        
+        if remoteId != forest.forestId.uuidString || remoteOwnerId != expectedOwnerId {
+            let identityData: [String: Any] = [
+                ForestSyncConstants.idField: forest.forestId.uuidString,
+                ForestSyncConstants.ownerId: expectedOwnerId
+            ]
+            batch.setData(identityData, forDocument: forestDoc, merge: true)
+            totalOperations += 1
+        }
         
         if forest.lastUpdatedDate > lastSyncDate {
             let mainData: [String: Any] = [

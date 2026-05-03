@@ -46,12 +46,16 @@ protocol ForestViewModelProtocol: AnyObject {
 // MARK: - VIEW MODEL
 
 class ForestViewModel: BaseViewModel {
+    private static let defaultDailySpinWheel = RewardHelper.createDailySpinWheel(
+        from: RewardHelper.defaultDailySpinRewards()
+    )
     
     // MARK: - DEPENDENCIES
     
     private let coreDataManager: CoreDataManagerProtocol
     private let audioService: AudioServiceProtocol
     private let forestDataManager: ForestDataManagerProtocol
+    private let forestEntityService: ForestEntityServiceProtocol
     private let adventureService: ForestAdventureServiceProtocol
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let playerDataManager: PlayerDataManagerProtocol
@@ -68,6 +72,8 @@ class ForestViewModel: BaseViewModel {
     @Published var showBookThreshold = false
     @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
     @Published var dailySpinTime: Date? = nil
+    @Published var dailySpinModels: [SpinModel] = ForestViewModel.defaultDailySpinWheel.0
+    @Published var dailySpinModelVersion = UUID()
     @Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
     @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     private var nextDailySpinTime: Date? = nil
@@ -77,6 +83,7 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
+    private var dailySpinRewardMap: [Int: LocalRewardModel] = ForestViewModel.defaultDailySpinWheel.1
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
@@ -89,6 +96,7 @@ class ForestViewModel: BaseViewModel {
         audioService: AudioServiceProtocol,
         coreDataManager: CoreDataManagerProtocol,
         forestDataManager: ForestDataManagerProtocol,
+        forestEntityService: ForestEntityServiceProtocol,
         forestAdventureService: ForestAdventureServiceProtocol,
         remoteConfigRepository: RemoteConfigRepositoryProtocol,
         playerDataManager: PlayerDataManagerProtocol
@@ -96,6 +104,7 @@ class ForestViewModel: BaseViewModel {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
         self.forestDataManager = forestDataManager
+        self.forestEntityService = forestEntityService
         self.adventureService = forestAdventureService
         self.remoteConfigRepository = remoteConfigRepository
         self.playerDataManager = playerDataManager
@@ -211,9 +220,30 @@ extension ForestViewModel {
             treeList.removeAll()
             fetchForest()
             checkDailySpinStatus()
+            refreshDailySpinRewards()
             fetchWeeklyDailyCards()
             fetchAdventureRoadData()
         }
+    }
+    
+    func refreshDailySpinRewards() {
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            let result = await remoteConfigRepository.fetchDailySpinRewards()
+            guard result.status == .success, let rewards = result.data else { return }
+            let (models, rewardMap) = RewardHelper.createDailySpinWheel(from: rewards)
+            
+            await MainActor.run { [weak self] in
+                guard let self else { return }
+                self.dailySpinModels = models
+                self.dailySpinRewardMap = rewardMap
+                self.dailySpinModelVersion = UUID()
+            }
+        }
+    }
+    
+    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel {
+        dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
     }
     
     func fetchAdventureRoadData() {
@@ -257,9 +287,9 @@ extension ForestViewModel {
                 // TODO: - CREATE FOREST IF NOT CREATED
             }
             
-            let fetchedAnimals = forestDataManager.fetchAnimals(contextType: .background).data ?? []
-            let fetchedSculptures = forestDataManager.fetchSculptures(contextType: .background).data ?? []
-            let fetchedTrees = forestDataManager.fetchTrees(contextType: .background).data ?? []
+            let fetchedAnimals = forestEntityService.fetchAnimals(contextType: .background).data ?? []
+            let fetchedSculptures = forestEntityService.fetchSculptures(contextType: .background).data ?? []
+            let fetchedTrees = forestEntityService.fetchTrees(contextType: .background).data ?? []
             let fetchedBookcases = coreDataManager.fetchSafeBookcases(
                 sortDescriptors: nil,
                 contextType: .background
@@ -390,7 +420,7 @@ extension ForestViewModel: ForestViewModelProtocol {
     func updateComponentName(name: String) {
         guard let selectedModel else { return }
         guard let componentUUID else { return }
-        let result = forestDataManager.updateComponentName(
+        let result = forestEntityService.updateComponentName(
             id: componentUUID,
             type: selectedModel,
             newName: name,
@@ -399,15 +429,15 @@ extension ForestViewModel: ForestViewModelProtocol {
         if result.status == .success {
             switch selectedModel {
             case .animal:
-                if let model = forestDataManager.fetchAnimal(id: componentUUID, contextType: .background) {
+                if let model = forestEntityService.fetchAnimal(id: componentUUID, contextType: .background) {
                     self.output?.setupAnimal(animal: model)
                 }
             case .plant:
-                if let model = forestDataManager.fetchPlant(id: componentUUID, contextType: .background) {
+                if let model = forestEntityService.fetchPlant(id: componentUUID, contextType: .background) {
                     self.output?.setupPlant(plant: model)
                 }
             case .sculpture:
-                if let model = forestDataManager.fetchSculpture(id: componentUUID, contextType: .background) {
+                if let model = forestEntityService.fetchSculpture(id: componentUUID, contextType: .background) {
                     self.output?.setupSculpture(sculpture: model)
                 }
             }
@@ -466,7 +496,7 @@ extension ForestViewModel: ForectSceneProtocol {
                 xValue -= CGFloat(direction.count) * ForestConstant.perHorizontalMove
             }
         }
-        forestDataManager.updateComponentPosition(
+        forestEntityService.updateComponentPosition(
             model: model,
             xValue: xValue,
             yValue: yValue,

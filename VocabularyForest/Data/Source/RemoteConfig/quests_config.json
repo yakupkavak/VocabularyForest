@@ -1,0 +1,365 @@
+{
+  "id": "quests_config_v1",
+  "items": [
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec001",
+      "type": "daily",
+      "title": "A Sip of Water",
+      "description": "Revive your memory: Repeat 5 old words and master them!",
+      "targetCount": 5,
+      "questionType": "remainder",
+      "battleEnemyModel": "classic",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-001",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 2,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec002",
+      "type": "daily",
+      "title": "Two Sips of Water",
+      "description": "Revive your memory: Repeat 10 old words and master them!",
+      "targetCount": 5,
+      "questionType": "remainder",
+      "battleEnemyModel": "iceElemental",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-002",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 10,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec003",
+      "type": "daily",
+      "title": "Endless Water",
+      "description": "Revive your memory: Repeat 20 old words and master them!",
+      "targetCount": 20,
+      "questionType": "remainder",
+      "battleEnemyModel": "fireDragon",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-003",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 25,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec004",
+      "type": "daily",
+      "title": "New Discoveries",
+      "description": "The forest is expanding! Meet 5 new words and learn their meanings.",
+      "targetCount": 5,
+      "questionType": "learning",
+      "battleEnemyModel": "classic",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-004",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 2,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec005",
+      "type": "daily",
+      "title": "New Discoveries 2",
+      "description": "Meet 10 new words and learn their meanings.",
+      "targetCount": 10,
+      "questionType": "learning",
+      "battleEnemyModel": "classic",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-005",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 10,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec006",
+      "type": "daily",
+      "title": "New Discoveries 3",
+      "description": "Meet 20 new words and learn their meanings.",
+      "targetCount": 20,
+      "questionType": "learning",
+      "battleEnemyModel": "classic",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-006",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 25,
+        "imageName": "water_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec007",
+      "type": "daily",
+      "title": "Gold Hunt",
+      "description": "No hints, only victory! Pass 4 new words on your own merit.",
+      "targetCount": 4,
+      "questionType": "competitive",
+      "battleEnemyModel": "natureElemental",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-007",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 4,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec008",
+      "type": "daily",
+      "title": "Gold Hunt 2",
+      "description": "No hints, only victory! Pass 10 new words on your own merit.",
+      "targetCount": 10,
+      "questionType": "competitive",
+      "battleEnemyModel": "classic",
+      "gameLevel": "easy",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-daily-008",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 10,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec009",
+      "type": "weekly",
+      "title": "Chasing the Sunflower",
+      "description": "Defeat the Vampire 5 times and add that rare SunFlower to your collection.",
+      "targetCount": 5,
+      "questionType": "competitive",
+      "battleEnemyModel": "classic",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-001",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "SunFlower"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec010",
+      "type": "weekly",
+      "title": "Trail of the Blue Flame",
+      "description": "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours.",
+      "targetCount": 4,
+      "questionType": "competitive",
+      "battleEnemyModel": "fireDragon",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-002",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "BlueFlameBush"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec011",
+      "type": "weekly",
+      "title": "Dance with Fire",
+      "description": "Defeat the Fire Elemental 5 times and earn the sacred Emberbud.",
+      "targetCount": 5,
+      "questionType": "competitive",
+      "battleEnemyModel": "fireElemental",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-003",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "Emberbud"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec012",
+      "type": "weekly",
+      "title": "Ice Cold Victory",
+      "description": "Defeat the Ice Elemental 5 times, grab the Moon Bell!",
+      "targetCount": 5,
+      "questionType": "learning",
+      "battleEnemyModel": "iceElemental",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-004",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "MoonBell"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec013",
+      "type": "weekly",
+      "title": "Crystal Reed Quest",
+      "description": "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!",
+      "targetCount": 7,
+      "questionType": "learning",
+      "battleEnemyModel": "natureElemental",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-005",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "CrystalReed"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec014",
+      "type": "weekly",
+      "title": "Quest for the Desert Star",
+      "description": "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!",
+      "targetCount": 7,
+      "questionType": "remainder",
+      "battleEnemyModel": "sandDragon",
+      "gameLevel": "medium",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-weekly-006",
+        "type": "model",
+        "category": "plant",
+        "rewardCount": 1,
+        "imageName": "DesertStarBloom"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec015",
+      "type": "monthly",
+      "title": "Icy Paws",
+      "description": "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat.",
+      "targetCount": 3,
+      "questionType": "competitive",
+      "battleEnemyModel": "iceElemental",
+      "gameLevel": "hard",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-monthly-001",
+        "type": "model",
+        "category": "animal",
+        "rewardCount": 1,
+        "imageName": "Cat"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec016",
+      "type": "monthly",
+      "title": "Fiery Friendship",
+      "description": "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you.",
+      "targetCount": 3,
+      "questionType": "learning",
+      "battleEnemyModel": "fireDragon",
+      "gameLevel": "hard",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-monthly-002",
+        "type": "model",
+        "category": "animal",
+        "rewardCount": 1,
+        "imageName": "Dog"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec017",
+      "type": "monthly",
+      "title": "White Shadow",
+      "description": "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat.",
+      "targetCount": 3,
+      "questionType": "remainder",
+      "battleEnemyModel": "classic",
+      "gameLevel": "hard",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-monthly-003",
+        "type": "model",
+        "category": "animal",
+        "rewardCount": 1,
+        "imageName": "WhiteCat"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec018",
+      "type": "special",
+      "title": "Emerald Legend",
+      "description": "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue.",
+      "targetCount": 1,
+      "questionType": "competitive",
+      "battleEnemyModel": "fireDragon",
+      "gameLevel": "insane",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-special-001",
+        "type": "model",
+        "category": "sculpture",
+        "rewardCount": 1,
+        "imageName": "EmeraldDragon"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec019",
+      "type": "special",
+      "title": "Spirit of the Forest",
+      "description": "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?",
+      "targetCount": 1,
+      "questionType": "competitive",
+      "battleEnemyModel": "classic",
+      "gameLevel": "insane",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-special-002",
+        "type": "model",
+        "category": "sculpture",
+        "rewardCount": 1,
+        "imageName": "Deer"
+      }
+    },
+    {
+      "id": "9fa7a12d-4f3f-4a3f-b3ca-8d0ce6eec020",
+      "type": "special",
+      "title": "Awakening of the Ancient Guardian",
+      "description": "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!",
+      "targetCount": 1,
+      "questionType": "competitive",
+      "battleEnemyModel": "sandDragon",
+      "gameLevel": "insane",
+      "status": "active",
+      "reward": {
+        "id": "quest-reward-special-003",
+        "type": "model",
+        "category": "sculpture",
+        "rewardCount": 1,
+        "imageName": "AncientLancer"
+      }
+    }
+  ]
+}

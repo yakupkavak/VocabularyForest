@@ -166,8 +166,12 @@ private extension ForestUI {
     
     var dailySpinView: some View {
         VStack {
-            DailySpinUI(isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}), nextSpinTime: $viewModel.dailySpinTime) { rewardModel in
-                let reward = RewardHelper.convertDailyRewardModel(from: rewardModel)
+            DailySpinUI(
+                models: viewModel.dailySpinModels,
+                isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}),
+                nextSpinTime: $viewModel.dailySpinTime
+            ) { rewardModel in
+                let reward = viewModel.resolveDailySpinReward(from: rewardModel)
                 PopupManager.shared.show {
                     ClaimRewardUI(reward: reward) { reward in
                         viewModel.claimDailyReward(model: reward)
@@ -175,6 +179,7 @@ private extension ForestUI {
                     }
                 }
             }
+            .id(viewModel.dailySpinModelVersion)
         }
     }
     
@@ -218,6 +223,7 @@ private extension ForestUI {
             case .dailyReward:
                 uiState = .dailyTrack
             case .dailySpin:
+                viewModel.refreshDailySpinRewards()
                 uiState = .dailySpin
             case .adventureRoad:
                 uiState = .userRoad
@@ -432,6 +438,7 @@ extension ForestUI: ForestUIProtocol {
     let mockCoreData = CoreDataManager.preview
     let mockAudio = ForestAudioService()
     let mockForestData = ForestDataManager()
+    let mockForestEntityService: ForestEntityServiceProtocol = ForestEntityServiceAdapter(coreDataManager: mockCoreData)
     let mockPlayerManager = PlayerDataManager()
     let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData)
     let mockAdventureRoadStore = AdventureRoadSeasonProgressStore(coreDataManager: mockCoreData, forestDataManager: mockForestData)
@@ -440,6 +447,7 @@ extension ForestUI: ForestUIProtocol {
         audioService: mockAudio,
         coreDataManager: mockCoreData,
         forestDataManager: mockForestData,
+        forestEntityService: mockForestEntityService,
         forestAdventureService: mockAdventureService,
         remoteConfigRepository: mockRemoteConfig,
         playerDataManager: mockPlayerManager

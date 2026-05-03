@@ -236,7 +236,7 @@ private extension ForestAdventureService {
         for dayIndex in 1...7 {
             let status: BountyStatus
             if dayIndex < activeDay {
-                status = .passed
+                status = .claimed
             } else if dayIndex == activeDay {
                 status = isClaimedToday ? .claimed : .ready
             } else {

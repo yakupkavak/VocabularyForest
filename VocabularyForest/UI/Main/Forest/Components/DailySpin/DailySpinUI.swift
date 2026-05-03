@@ -12,18 +12,6 @@ import Combine
 // MARK: - CONSTANTS & MODELS
 
 private extension DailySpinUI {
-    static let models: [SpinModel] = AdventureReward.allCases.filter { reward in
-        reward != .diamondChest
-    }.enumerated().map { index, reward in
-        SpinModel(
-            id: index + 1,
-            text: reward.name,
-            image: Image(reward.image),
-            weight: reward.probabilityWeight,
-            textColor: reward.textColor,
-            background: reward.gradientBackground
-        )
-    }
     static let backgroundHeight = 0.7
 }
 
@@ -33,11 +21,23 @@ struct DailySpinUI: View {
     
     // MARK: - PROPERTIES
 
-    @StateObject var controller = YKSpinController(models: DailySpinUI.models)
+    @StateObject var controller: YKSpinController
     @Binding var isVisible: Bool
     @Binding var nextSpinTime: Date?
     
     var onRewardClaimed: (SpinModel) -> Void
+    
+    init(
+        models: [SpinModel],
+        isVisible: Binding<Bool>,
+        nextSpinTime: Binding<Date?>,
+        onRewardClaimed: @escaping (SpinModel) -> Void
+    ) {
+        self._isVisible = isVisible
+        self._nextSpinTime = nextSpinTime
+        self.onRewardClaimed = onRewardClaimed
+        _controller = StateObject(wrappedValue: YKSpinController(models: models))
+    }
     
     // MARK: - BODY
     
@@ -165,9 +165,13 @@ private extension DailySpinUI {
         @State private var isVisible = true
         @State private var nextSpinTime: Date? = Date().addingTimeInterval(86400)
         let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        private let previewModels = RewardHelper.createDailySpinWheel(
+            from: RewardHelper.defaultDailySpinRewards()
+        ).0
         
         var body: some View {
             DailySpinUI(
+                models: previewModels,
                 isVisible: $isVisible,
                 nextSpinTime: $nextSpinTime
             ) { reward in

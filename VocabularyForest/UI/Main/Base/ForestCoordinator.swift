@@ -48,10 +48,12 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+        let remoteConfigRepository = resolver.resolve(type: .singleInstance, for: RemoteConfigRepositoryProtocol.self)
         let forestControllerService = ForestInitializerService(
             forestManager: forestData,
             playerManager: playerManager,
-            coreData: coreData
+            coreData: coreData,
+            remoteConfigRepository: remoteConfigRepository
         )
         let viewModel = SplashViewModel(forestController: forestControllerService)
         self.cachedSplashViewModel = viewModel
@@ -68,6 +70,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
+        let forestEntityService = resolver.resolve(type: .singleInstance, for: ForestEntityServiceProtocol.self)
         let adventureService = resolver.resolve(type: .singleInstance, for: ForestAdventureServiceProtocol.self)
         let remoteConfigRepository = resolver.resolve(type: .singleInstance, for: RemoteConfigRepositoryProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
@@ -75,6 +78,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             audioService: audioService,
             coreDataManager: coreData,
             forestDataManager: forestData,
+            forestEntityService: forestEntityService,
             forestAdventureService: adventureService,
             remoteConfigRepository: remoteConfigRepository,
             playerDataManager: playerManager

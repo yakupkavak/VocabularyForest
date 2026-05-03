@@ -30,6 +30,7 @@ enum RemoteConfigError: Error, LocalizedError {
 
 protocol RemoteConfigRepositoryProtocol {
     func fetchDailySpinRewards() async -> Resource<[DailySpinModel]>
+    func fetchQuestsConfig() async -> Resource<[QuestModel]>
     func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]>
     func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel>
     func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
@@ -40,6 +41,7 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
 
     private enum Keys {
         static let dailySpinRewards = "daily_spin_rewards_config"
+        static let questsConfig = "quests_config"
         static let weeklyRewards = "weekly_rewards_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
         static let gameEconomyConfig = "game_economy_config"
@@ -87,6 +89,57 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             }
             return .success(safeModels)
 
+        case .failure(let error):
+            return .error(error: error)
+        }
+    }
+    
+    func fetchQuestsConfig() async -> Resource<[QuestModel]> {
+        let decodedResult: Result<DecodedPayload<RemoteQuestItemDTO>, RemoteConfigError> = await fetchDecodedArray(
+            forKey: Keys.questsConfig,
+            as: RemoteQuestItemDTO.self
+        )
+        
+        switch decodedResult {
+        case .success(let payload):
+            _ = persistConfigID(payload.id, forRemoteKey: Keys.questsConfig)
+            var seenIDs = Set<UUID>()
+            var safeModels: [QuestModel] = []
+            
+            for dto in payload.items {
+                let safeID = safeUUID(from: dto.id)
+                if seenIDs.contains(safeID) {
+                    continue
+                }
+                seenIDs.insert(safeID)
+                
+                let type = QuestType.convertFromCoreData(string: trimmed(dto.type))
+                let quest = QuestModel(
+                    id: safeID,
+                    type: type,
+                    title: trimmed(dto.title) ?? "Quest",
+                    description: trimmed(dto.descriptionText) ?? "",
+                    reward: mapToQuestReward(
+                        category: normalized(dto.reward?.category, fallback: "water"),
+                        rewardCount: dto.reward?.safeRewardCount ?? 1,
+                        imageName: dto.reward?.imageName
+                    ),
+                    lastUpdatedDate: Date(),
+                    status: safeQuestStatus(dto.status),
+                    targetCount: safePositive(dto.targetCount, fallback: 1),
+                    currentProgressCount: 0,
+                    questionType: BattleQuestionType.convertFromCoreData(type: trimmed(dto.questionType)),
+                    battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: trimmed(dto.battleEnemyModel)),
+                    gameLevel: GameLevel.convertFromCoreData(value: trimmed(dto.gameLevel))
+                )
+                safeModels.append(quest)
+            }
+            
+            guard !safeModels.isEmpty else {
+                return .error(error: RemoteConfigError.dataMissing)
+            }
+            return .success(safeModels)
+            
         case .failure(let error):
             return .error(error: error)
         }
@@ -242,6 +295,32 @@ private extension RemoteConfigRepository {
         let id: String?
         let weight: Double?
         let reward: RemoteRewardModel?
+    }
+    
+    struct RemoteQuestItemDTO: Decodable {
+        let id: String?
+        let type: String?
+        let title: String?
+        let descriptionText: String?
+        let reward: RemoteRewardModel?
+        let targetCount: Int?
+        let questionType: String?
+        let battleEnemyModel: String?
+        let gameLevel: String?
+        let status: String?
+        
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case type
+            case title
+            case descriptionText = "description"
+            case reward
+            case targetCount
+            case questionType
+            case battleEnemyModel
+            case gameLevel
+            case status
+        }
     }
 
     struct RemoteWeeklyRewardItemDTO: Decodable {
@@ -563,6 +642,24 @@ private extension RemoteConfigRepository {
         let safeMin = safePositive(minValue, fallback: fallbackMin)
         let safeMaxCandidate = safePositive(maxValue, fallback: fallbackMax)
         return (safeMin, Swift.max(safeMin, safeMaxCandidate))
+    }
+    
+    func safeQuestStatus(_ value: String?) -> QuestStatus {
+        guard let status = trimmed(value)?.lowercased() else {
+            return .active
+        }
+        return switch status {
+        case "locked":
+            .locked
+        case "completed":
+            .completed
+        case "claimed":
+            .claimed
+        case "active":
+            .active
+        default:
+            .active
+        }
     }
     
     func trimmed(_ value: String?) -> String? {

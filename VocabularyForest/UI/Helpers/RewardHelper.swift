@@ -245,10 +245,136 @@ struct RewardHelper {
             return .standart(model: .water(count: spinReward.rewardCount))
         }
     }
+    
+    static func defaultDailySpinRewards() -> [DailySpinModel] {
+        AdventureReward.allCases
+            .filter { $0 != .diamondChest }
+            .map { reward in
+                switch reward {
+                case .goldChest:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .gold))
+                case .antiqueChest:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .antique))
+                case .natureChest:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .nature))
+                case .diamondChest:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .diamond))
+                case .gold:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .gold(count: reward.rewardCount)))
+                case .water:
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .water(count: reward.rewardCount)))
+                }
+            }
+    }
+    
+    static func createDailySpinWheel(from rewards: [DailySpinModel]) -> ([SpinModel], [Int: LocalRewardModel]) {
+        let safeRewards = rewards.isEmpty ? defaultDailySpinRewards() : rewards
+        var rewardMap: [Int: LocalRewardModel] = [:]
+        
+        let spinModels = safeRewards.enumerated().map { index, model in
+            let id = index + 1
+            rewardMap[id] = model.reward
+            return SpinModel(
+                id: id,
+                text: spinText(for: model.reward),
+                image: Image(model.reward.rewardImage),
+                weight: max(1.0, model.weight),
+                textColor: spinTextColor(for: model.reward),
+                background: spinBackground(for: model.reward)
+            )
+        }
+        return (spinModels, rewardMap)
+    }
 
 }
 
 private extension RewardHelper {
+    static func spinText(for reward: LocalRewardModel) -> String {
+        switch reward {
+        case .chest(let model):
+            return model.rewardName
+        case .standart(let model):
+            switch model {
+            case .gold(let count):
+                return String(localized: "Gold \(count)")
+            case .water(let count):
+                return String(localized: "Water \(count)")
+            case .diamond(let count):
+                return String(localized: "Diamond \(count)")
+            case .animal, .plant, .sculpture:
+                return String(localized: String.LocalizationValue(model.rewardName))
+            }
+        }
+    }
+    
+    static func spinTextColor(for reward: LocalRewardModel) -> Color {
+        switch reward {
+        case .chest(let model):
+            switch model {
+            case .gold:
+                return Color(hex: "#F2DA91")
+            case .antique:
+                return Color(hex: "#F2F2F2")
+            case .nature:
+                return Color(hex: "#B6D93B")
+            case .diamond:
+                return Color(hex: "#025928")
+            }
+        case .standart(let model):
+            switch model {
+            case .gold:
+                return Color(hex: "#D99B29")
+            case .water:
+                return Color(hex: "#598EB2")
+            case .diamond:
+                return Color(hex: "#53B7C6")
+            case .animal, .plant:
+                return Color(hex: "#B6D93B")
+            case .sculpture:
+                return Color(hex: "#BFB3A8")
+            }
+        }
+    }
+    
+    static func spinBackground(for reward: LocalRewardModel) -> AnyView {
+        let colors: [Color]
+        
+        switch reward {
+        case .chest(let model):
+            switch model {
+            case .gold:
+                colors = [Color(hex: "#F2DA91"), Color(hex: "#027333"), Color(hex: "#8C6A3F"), Color(hex: "#F2DA91")]
+            case .antique:
+                colors = [Color(hex: "#593825"), Color(hex: "#BF8C60"), Color(hex: "#BFB3A8")]
+            case .nature:
+                colors = [Color(hex: "#EFF299"), Color(hex: "#5A7302"), Color(hex: "#B6D93B"), Color(hex: "#86A614")]
+            case .diamond:
+                colors = [Color(hex: "#EAFAFC"), Color(hex: "#C6EFF5"), Color(hex: "#90D9E3"), Color(hex: "#53B7C6"), Color(hex: "#1E687A")]
+            }
+        case .standart(let model):
+            switch model {
+            case .gold:
+                colors = [Color(hex: "#FBF1CB"), Color(hex: "#E5C77D"), Color(hex: "#EEC94B"), Color(hex: "#C5963C"), Color(hex: "#6C673C")]
+            case .water:
+                colors = [Color(hex: "#E2F5FA"), Color(hex: "#9AC0DE"), Color(hex: "#77AFCA"), Color(hex: "#4D819D"), Color(hex: "#24475E")]
+            case .diamond:
+                colors = [Color(hex: "#EAFAFC"), Color(hex: "#90D9E3"), Color(hex: "#53B7C6"), Color(hex: "#1E687A")]
+            case .animal, .plant:
+                colors = [Color(hex: "#EFF299"), Color(hex: "#B6D93B"), Color(hex: "#5A7302")]
+            case .sculpture:
+                colors = [Color(hex: "#BFB3A8"), Color(hex: "#BF8C60"), Color(hex: "#593825")]
+            }
+        }
+        
+        return AnyView(
+            LinearGradient(
+                gradient: Gradient(colors: colors),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+    
     private static func chestRuntimeConfig() -> ChestRuntimeConfig {
         guard let economyConfig = GameManager.snapshotEconomyConfig() else {
             return ChestRuntimeConfig(
