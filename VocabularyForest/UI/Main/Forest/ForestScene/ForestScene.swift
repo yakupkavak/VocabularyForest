@@ -162,8 +162,8 @@ private extension ForestScene {
             forestHelper?.showOptions()
             return true
         }
-        if nodes.contains(where: { $0.name == "quest_button" }) {
-            forestHelper?.showQuests()
+        if nodes.contains(where: { $0.name == "announcementButton" }) {
+            forestHelper?.showAnnouncement()
             return true
         }
         if nodes.contains(where: { $0.name == "play_button" }) {

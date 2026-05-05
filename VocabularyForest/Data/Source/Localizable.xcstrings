@@ -66,6 +66,9 @@
         }
       }
     },
+    "%lld days ago" : {
+
+    },
     "%lld Diamond" : {
 
     },
@@ -103,6 +106,12 @@
         }
       }
     },
+    "%lld hours ago" : {
+
+    },
+    "%lld minutes ago" : {
+
+    },
     "%lld Water Drops" : {
       "localizations" : {
         "en" : {
@@ -137,6 +146,9 @@
         }
       }
     },
+    "%lld words" : {
+
+    },
     "%lld/%lld" : {
       "localizations" : {
         "en" : {
@@ -156,6 +168,12 @@
           }
         }
       }
+    },
+    "1 hour ago" : {
+
+    },
+    "1 minute ago" : {
+
     },
     "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat." : {
       "localizations" : {
@@ -225,6 +243,9 @@
         }
       }
     },
+    "Account" : {
+
+    },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
         "en" : {
@@ -289,6 +310,72 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Açıklama"
+          }
+        }
+      }
+    },
+    "Adventure Road" : {
+
+    },
+    "adventure_road_countdown_ended" : {
+      "comment" : "Adventure Road countdown text when the event has ended",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Time is up"
+          }
+        }
+      }
+    },
+    "adventure_road_countdown_format" : {
+      "comment" : "Adventure Road countdown format with day and hour placeholders",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$d d %2$d h"
+          }
+        }
+      }
+    },
+    "adventure_road_subtitle" : {
+
+    },
+    "adventure_road_title" : {
+      "comment" : "Main title of the Adventure Road screen",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Adventure Road"
+          }
+        }
+      }
+    },
+    "adventure_track_long_term" : {
+      "comment" : "Adventure Road long-term track title",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Long Memory"
+          }
+        }
+      }
+    },
+    "adventure_track_short_term" : {
+      "comment" : "Adventure Road short-term track title",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Short Memory"
           }
         }
       }
@@ -704,7 +791,14 @@
       }
     },
     "antique_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antique Chest"
+          }
+        }
+      }
     },
     "Arapça" : {
       "localizations" : {
@@ -1292,6 +1386,9 @@
         }
       }
     },
+    "Bir Sorun Oluştu" : {
+
+    },
     "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz" : {
       "localizations" : {
         "en" : {
@@ -1598,6 +1695,12 @@
           }
         }
       }
+    },
+    "Bu orman başka bir hesaba bağlı. Lütfen kendi hesabınıza giriş yapın veya oyunu sıfırlayın." : {
+
+    },
+    "Bulut verisi bulunamadı. Lütfen tekrar deneyin." : {
+
     },
     "Bunu hatırlıyor musun 👀" : {
       "localizations" : {
@@ -1906,6 +2009,9 @@
         }
       }
     },
+    "Cloud Forest" : {
+
+    },
     "Completed!" : {
       "localizations" : {
         "en" : {
@@ -1936,6 +2042,24 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Tamamlandı!"
+          }
+        }
+      }
+    },
+    "Confirm Selection" : {
+
+    },
+    "Conflict Detected" : {
+
+    },
+    "conflict_confirm_keyword" : {
+      "comment" : "Keyword to type for confirmation",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "confirm"
           }
         }
       }
@@ -1975,6 +2099,7 @@
       }
     },
     "Create your first book" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2146,6 +2271,9 @@
       }
     },
     "Daily Reward" : {
+
+    },
+    "Daily Spin" : {
 
     },
     "Dance with Fire 🔥" : {
@@ -2663,7 +2791,20 @@
         }
       }
     },
+    "Diamond %lld" : {
+
+    },
     "diamond_chest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diamond Chest"
+          }
+        }
+      }
+    },
+    "Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**" : {
 
     },
     "Diğer" : {
@@ -3589,6 +3730,12 @@
         }
       }
     },
+    "Firstly create a book" : {
+
+    },
+    "Forest data manager eklenmedi." : {
+
+    },
     "Fransızca" : {
       "localizations" : {
         "en" : {
@@ -3691,6 +3838,9 @@
         }
       }
     },
+    "Gold %lld" : {
+
+    },
     "Gold Hunt 💰" : {
       "localizations" : {
         "en" : {
@@ -3760,7 +3910,14 @@
       }
     },
     "gold_chest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gold Chest"
+          }
+        }
+      }
     },
     "Göreve git" : {
       "localizations" : {
@@ -4278,6 +4435,9 @@
           }
         }
       }
+    },
+    "Hesaba Giriş Yap" : {
+
     },
     "Heykel" : {
       "localizations" : {
@@ -4961,6 +5121,12 @@
         }
       }
     },
+    "İnternet bağlantınız yok. Ödüllerinizi almak için lütfen bağlantınızı kontrol edip tekrar deneyin." : {
+
+    },
+    "Internet connection is required to complete the initial setup." : {
+
+    },
     "İptal" : {
       "localizations" : {
         "en" : {
@@ -5235,6 +5401,9 @@
         }
       }
     },
+    "Just now" : {
+
+    },
     "Kapat" : {
       "localizations" : {
         "en" : {
@@ -5336,6 +5505,9 @@
           }
         }
       }
+    },
+    "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin." : {
+
     },
     "Kelime" : {
       "localizations" : {
@@ -6189,6 +6361,9 @@
         }
       }
     },
+    "Kullanıcı Adı" : {
+
+    },
     "Kullanım Koşulları" : {
       "localizations" : {
         "en" : {
@@ -6362,6 +6537,12 @@
         }
       }
     },
+    "Local Forest" : {
+
+    },
+    "Local forest data is not available." : {
+
+    },
     "Locked" : {
       "localizations" : {
         "en" : {
@@ -6395,6 +6576,12 @@
           }
         }
       }
+    },
+    "Lütfen yeni bir yedekleme yapmak için %lld dakika bekleyin." : {
+
+    },
+    "Lütfen yeni kullanıcı adınızı girin." : {
+
     },
     "Maceraya Atıl" : {
       "localizations" : {
@@ -6716,6 +6903,16 @@
       }
     },
     "nature_chest" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nature Chest"
+          }
+        }
+      }
+    },
+    "Network error occurred. Please check your connection." : {
 
     },
     "New Discoveries 🗺️" : {
@@ -7466,6 +7663,9 @@
           }
         }
       }
+    },
+    "Ormanını buluta kaydetmek için giriş yap." : {
+
     },
     "Örnek" : {
       "localizations" : {
@@ -8256,6 +8456,9 @@
         }
       }
     },
+    "Remote configuration data is missing." : {
+
+    },
     "Resume" : {
       "localizations" : {
         "en" : {
@@ -8698,6 +8901,9 @@
         }
       }
     },
+    "Senkronize edilecek yeni bir veri bulunamadı." : {
+
+    },
     "Settings" : {
       "localizations" : {
         "en" : {
@@ -8909,6 +9115,9 @@
     "So thirsty... I can't breathe." : {
 
     },
+    "Son eşitleme: %@" : {
+
+    },
     "Sorular Hakkında" : {
       "localizations" : {
         "en" : {
@@ -9011,6 +9220,9 @@
         }
       }
     },
+    "Start Spin" : {
+
+    },
     "Such peaceful and ancient vibes." : {
 
     },
@@ -9049,6 +9261,15 @@
         }
       }
     },
+    "Sunucu eşleştirilemedi" : {
+
+    },
+    "Sunucu saati alınamadı. Lütfen daha sonra tekrar deneyin." : {
+
+    },
+    "Tamam" : {
+
+    },
     "Taşı" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -9083,6 +9304,9 @@
           }
         }
       }
+    },
+    "Tasks" : {
+
     },
     "Tebrikler!" : {
       "localizations" : {
@@ -9581,7 +9805,16 @@
         }
       }
     },
+    "Type **'%@'** to confirm your selection:" : {
+
+    },
     "umut" : {
+
+    },
+    "Unable to decode remote configuration data." : {
+
+    },
+    "Unable to fetch remote configuration." : {
 
     },
     "unexpectedError" : {
@@ -9624,41 +9857,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ünlem"
-          }
-        }
-      }
-    },
-    "Unuttum" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I Forgot"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lo olvidé."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esqueci"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Я забыл"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Unuttum"
           }
         }
       }
@@ -9802,7 +10000,13 @@
     "Venüs" : {
 
     },
+    "Wait until \n %@" : {
+
+    },
     "Watching over the trees is my duty." : {
+
+    },
+    "Water %lld" : {
 
     },
     "We desperately need some rain..." : {
@@ -9954,6 +10158,15 @@
         }
       }
     },
+    "Yedekleme yapmak için giriş yapmalısınız." : {
+
+    },
+    "Yeni adınız" : {
+
+    },
+    "Yerel veriler okunurken bir hata oluştu." : {
+
+    },
     "Yes" : {
       "localizations" : {
         "en" : {
@@ -9987,6 +10200,12 @@
           }
         }
       }
+    },
+    "Yesterday at %@" : {
+
+    },
+    "You must be authenticated to use the reward system." : {
+
     },
     "Your Forest" : {
       "localizations" : {

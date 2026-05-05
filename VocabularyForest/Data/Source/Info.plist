@@ -4,5 +4,18 @@
 <dict>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.346070689740-9gshb39j1o7q26aqov5hnm0qrl8kg8ud</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>346070689740-9gshb39j1o7q26aqov5hnm0qrl8kg8ud.apps.googleusercontent.com</string>
 </dict>
 </plist>

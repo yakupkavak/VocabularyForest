@@ -15,9 +15,11 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     let createdDate: Date
     var xPosition: CGFloat
     var yPosition: CGFloat
+    var lastUpdatedDate: Date
+
 }
 
 let baseSculptureList = [
-    SculptureModel(id: UUID(), assetName: "water_statue", characterName: String(localized: "Peace"), createdDate: Date(), xPosition: 0.15, yPosition: 0.4),
-    SculptureModel(id: UUID(), assetName: "grass_statue", characterName: String(localized: "happiness"), createdDate: Date(), xPosition: 0.03, yPosition: 0.23)
+    SculptureModel(id: UUID(), assetName: "water_statue", characterName: String(localized: "Peace"), createdDate: Date(), xPosition: 0.15, yPosition: 0.4, lastUpdatedDate: Date()),
+    SculptureModel(id: UUID(), assetName: "grass_statue", characterName: String(localized: "happiness"), createdDate: Date(), xPosition: 0.03, yPosition: 0.23, lastUpdatedDate: Date())
 ]

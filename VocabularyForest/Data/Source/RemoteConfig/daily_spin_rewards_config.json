@@ -1,0 +1,57 @@
+{
+  "id": "daily_spin_rewards_config_v1",
+  "items": [
+    {
+      "id": "daily-spin-gold-chest",
+      "weight": 3,
+      "reward": {
+        "id": "reward-gold-chest",
+        "type": "chest",
+        "category": "gold",
+        "rewardCount": 1
+      }
+    },
+    {
+      "id": "daily-spin-antique-chest",
+      "weight": 1,
+      "reward": {
+        "id": "reward-antique-chest",
+        "type": "chest",
+        "category": "antique",
+        "rewardCount": 1
+      }
+    },
+    {
+      "id": "daily-spin-nature-chest",
+      "weight": 1,
+      "reward": {
+        "id": "reward-nature-chest",
+        "type": "chest",
+        "category": "nature",
+        "rewardCount": 1
+      }
+    },
+    {
+      "id": "daily-spin-gold-resource",
+      "weight": 5,
+      "reward": {
+        "id": "reward-gold-resource",
+        "type": "resource",
+        "category": "gold",
+        "rewardCount": 5,
+        "imageName": "gold_icon"
+      }
+    },
+    {
+      "id": "daily-spin-water-resource",
+      "weight": 5,
+      "reward": {
+        "id": "reward-water-resource",
+        "type": "resource",
+        "category": "water",
+        "rewardCount": 10,
+        "imageName": "water_icon"
+      }
+    }
+  ]
+}

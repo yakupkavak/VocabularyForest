@@ -45,6 +45,7 @@ struct ComponentBubble {
         static let titleFontSize: CGFloat = 16
         static let titleYOffset: CGFloat = 15
         static let interactionTitleYOffset: CGFloat = 25
+        static let titleMaxWidthPadding: CGFloat = 24
         
         static let separatorWidthReduction: CGFloat = 20
         static let separatorHeight: CGFloat = 1
@@ -100,11 +101,36 @@ struct ComponentBubble {
         return bubble
     }
     
-    static func createTitleLabel(text: String, fontColor: UIColor = .white, yOffset: CGFloat = Constants.titleYOffset) -> SKLabelNode {
+    static func createTitleLabel(
+        text: String,
+        fontColor: UIColor = .white,
+        yOffset: CGFloat = Constants.titleYOffset,
+        maxWidth: CGFloat? = nil
+    ) -> SKLabelNode {
         let titleLabel = SKLabelNode(fontNamed: "Arial-BoldMT")
-        titleLabel.text = text
         titleLabel.fontSize = Constants.titleFontSize
         titleLabel.fontColor = fontColor
+        titleLabel.verticalAlignmentMode = .center
+        titleLabel.horizontalAlignmentMode = .center
+        if let maxWidth {
+            titleLabel.numberOfLines = Int(Constants.zero)
+            titleLabel.preferredMaxLayoutWidth = maxWidth
+            titleLabel.lineBreakMode = .byWordWrapping
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+            paragraphStyle.lineBreakMode = .byWordWrapping
+            let titleFont = UIFont(name: "Arial-BoldMT", size: Constants.titleFontSize) ?? .boldSystemFont(ofSize: Constants.titleFontSize)
+            titleLabel.attributedText = NSAttributedString(
+                string: text,
+                attributes: [
+                    .paragraphStyle: paragraphStyle,
+                    .font: titleFont,
+                    .foregroundColor: fontColor
+                ]
+            )
+        } else {
+            titleLabel.text = text
+        }
         titleLabel.position = CGPoint(x: Constants.zero, y: yOffset)
         return titleLabel
     }
@@ -148,7 +174,8 @@ struct ComponentBubble {
         let titleLabel = createTitleLabel(
             text: displayName ?? String(localized: "Animal"),
             fontColor: .darkGray,
-            yOffset: Constants.interactionTitleYOffset
+            yOffset: Constants.interactionTitleYOffset,
+            maxWidth: Constants.interactionBubbleWidth - Constants.titleMaxWidthPadding
         )
         bubble.addChild(titleLabel)
         
@@ -174,7 +201,8 @@ struct ComponentBubble {
         let titleLabel = createTitleLabel(
             text: displayName ?? String(localized: "Heykel"),
             fontColor: .darkGray,
-            yOffset: Constants.interactionTitleYOffset
+            yOffset: Constants.interactionTitleYOffset,
+            maxWidth: Constants.interactionBubbleWidth - Constants.titleMaxWidthPadding
         )
         bubble.addChild(titleLabel)
         

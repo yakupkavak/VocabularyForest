@@ -211,6 +211,8 @@ extension CoreDataManager {
         return context.performAndWait { () -> BookModel? in
             let book = Book(context: context)
             guard let bookcase = fetchSingleBookcase(bookcase: bookcase, contextType: contextType) else { return nil }
+            let uuid = UUID()
+            book.id = uuid
             book.learningWord = learningWord
             book.meaningWord = meaningWord
             book.exampleSentence = exampleSentence
@@ -220,10 +222,9 @@ extension CoreDataManager {
             book.partOfSpeech = partOfSpeech
             book.shortMemory = true
             save(in: context)
-            let persistentBookID = book.objectID.uriRepresentation().absoluteString
             Task { @MainActor [weak self]in
                 self?.notificationManager?.createNotification(
-                    bookId: persistentBookID,
+                    bookId: uuid.uuidString,
                     learningWord: learningWord,
                     meaningWord: meaningWord,
                     description: descriptionWord ?? "",
@@ -471,7 +472,11 @@ extension CoreDataManager {
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+                    request.predicate = NSPredicate(
+                        format: "%K == %@ AND (exampleSentence != nil OR descriptionWord != nil)",
+                        #keyPath(Book.bookcase),
+                        bookcase
+                    )
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -501,7 +506,13 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@ AND (exampleSentence != nil OR descriptionWord != nil)", bookcase)
+            request.predicate = NSPredicate(
+                format: "%K == %@ AND (exampleSentence != nil OR descriptionWord != nil)",
+                #keyPath(
+                    Book.bookcase
+                ) ,
+                bookcase
+            )
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })

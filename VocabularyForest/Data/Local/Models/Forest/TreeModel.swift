@@ -17,6 +17,7 @@ struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
     let treeHealthValue: Int
     var xPosition: CGFloat
     var yPosition: CGFloat
+    var lastUpdatedDate: Date
 }
 
 protocol ComponentModelProtocol {
@@ -26,4 +27,5 @@ protocol ComponentModelProtocol {
     var xPosition: CGFloat { get set }
     var yPosition: CGFloat { get set }
     var type: ComponentType { get }
+    var lastUpdatedDate: Date { get }
 }

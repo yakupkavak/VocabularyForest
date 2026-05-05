@@ -27,7 +27,8 @@ extension Tree {
     @NSManaged public var yPosition: Double
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
-
+    @NSManaged public var lastUpdatedDate: Date?
+    
 }
 
 extension Tree: ConvertSafeModel {
@@ -35,7 +36,7 @@ extension Tree: ConvertSafeModel {
     
     func safeObject(context: NSManagedObjectContext) throws -> TreeModel {
         try context.performAndWait {
-            if let id, let assetName, let createdDate, let characterName {
+            if let id, let assetName, let createdDate, let characterName, let lastUpdatedDate {
                 return TreeModel(
                     id: id,
                     assetName: assetName,
@@ -43,7 +44,8 @@ extension Tree: ConvertSafeModel {
                     createdDate: createdDate,
                     treeHealthValue: Int(self.healthValue),
                     xPosition: self.xPosition,
-                    yPosition: self.yPosition
+                    yPosition: self.yPosition,
+                    lastUpdatedDate: lastUpdatedDate
                 )
             }
             throw SafeModelError.emptyValue

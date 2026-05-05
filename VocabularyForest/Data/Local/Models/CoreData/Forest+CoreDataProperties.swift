@@ -17,7 +17,9 @@ extension Forest {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Forest> {
         return NSFetchRequest<Forest>(entityName: "Forest")
     }
-
+    
+    @NSManaged public var forestId: UUID
+    @NSManaged public var ownerId: String?
     @NSManaged public var rainValue: Int16
     @NSManaged public var moneyValue: Int16
     @NSManaged public var diamondValue: Int16
@@ -32,7 +34,11 @@ extension Forest {
     @NSManaged public var sculptures: NSSet?
     @NSManaged public var trees: NSSet?
     @NSManaged public var animals: NSSet?
-
+    @NSManaged public var player: Player?
+    @NSManaged public var dailyActivities: DailyActivities?
+    @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var lastSyncCloudTime: Date?
+    
 }
 
 extension Forest: ConvertSafeModel {
@@ -66,22 +72,43 @@ extension Forest: ConvertSafeModel {
             } else {
                 safeAnimals = []
             }
+            guard let lastUpdatedDate else {
+                throw ForestError.emptyLastDate
+            }
             
+            let safePlayer: PlayerModel
+            if let playerSet = self.player {
+                safePlayer = try playerSet.safeObject(context: context)
+            } else {
+                safePlayer = PlayerHelper.createDefaultPlayer()
+            }
+            
+            let safeDaily: DailyActivitiesModel
+            guard let dailyActivity = self.dailyActivities else {
+                throw ForestError.emptyLastDate
+            }
+            safeDaily = try dailyActivity.safeObject(context: context)
             return SafeForestModel(
-                rainValue: Int(self.rainValue),
-                moneyValue: Int(self.moneyValue),
-                diamondValue: Int(self.diamondValue),
-                landHealthPercent: Int(self.landHealthPercent),
-                landStatus: self.landStatus,
-                isRaining: self.isRaining,
-                lastRainUpdateDate: self.lastRainUpdateDate,
-                lastDailyResetDate: self.lastDailyResetDate,
-                lastWeeklyResetDate: self.lastWeeklyResetDate,
-                lastMonthlyResetDate: self.lastMonthlyResetDate,
+                forestId: forestId,
+                ownerId: ownerId,
+                rainValue: Int(rainValue),
+                moneyValue: Int(moneyValue),
+                diamondValue: Int(diamondValue),
+                landHealthPercent: Int(landHealthPercent),
+                landStatus: landStatus,
+                isRaining: isRaining,
+                lastRainUpdateDate: lastRainUpdateDate,
+                lastDailyResetDate: lastDailyResetDate,
+                lastWeeklyResetDate: lastWeeklyResetDate,
+                lastMonthlyResetDate: lastMonthlyResetDate,
                 quests: safeQuests,
                 sculptures: safeSculptures,
                 trees: safeTrees,
-                animals: safeAnimals
+                animals: safeAnimals,
+                player: safePlayer,
+                lastUpdatedDate: lastUpdatedDate,
+                lastSyncCloudTime: lastSyncCloudTime,
+                dailyActivities: safeDaily
             )
         }
     }

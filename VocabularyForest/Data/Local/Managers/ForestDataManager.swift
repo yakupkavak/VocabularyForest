@@ -13,8 +13,10 @@ enum ForestError: Error {
     case emptyList
     case emptyForest
     case saveError
+    case safeObject
     case error(error: Error)
     case emptyUUID
+    case emptyLastDate
 }
 
 // MARK: - CONTEXT ENUM
@@ -34,6 +36,12 @@ extension ForestDataManager {
             }
         }
     }
+    enum ForestConstants {
+        static let initialLandHealthPercent = Int16(100)
+        static let initialRainValue = Int16(0)
+        static let initialMoneyValue = Int16(0)
+        static let initialDiamond = Int16(0)
+    }
 }
 
 // MARK: - FOREST DATA PROTOCOL
@@ -48,34 +56,28 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     // MARK: Create Helpers
     
-    func createForestGame(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func createTree(tree model: TreeModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func createAnimal(animal model: AnimalModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func createSculpture(sculpture model: SculptureModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func createForest(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Forest>
     
     // MARK: Fetch Helpers
     
-    func fetchSculpture(id: UUID, contextType: ForestDataManager.ContextType) -> SculptureModel?
-    func fetchAnimal(id: UUID, contextType: ForestDataManager.ContextType) -> AnimalModel?
-    func fetchPlant(id: UUID, contextType: ForestDataManager.ContextType) -> TreeModel?
     func getCurrentForest(context: NSManagedObjectContext) -> Forest?
     func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
     func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestModel]>
-    func fetchAnimals(contextType: ForestDataManager.ContextType) -> Resource<[AnimalModel]>
-    func fetchTrees(contextType: ForestDataManager.ContextType) -> Resource<[TreeModel]>
-    func fetchSculptures(contextType: ForestDataManager.ContextType) -> Resource<[SculptureModel]>
+    func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel>
     
     // MARK: Update Helpers
     
-    func claimReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func overwriteLocalForest(with safeForest: SafeForestModel, ownerId: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func bindForestToUser(uid: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateLastSyncCloudTime(date: Date, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func claimQuestReward(quest: QuestModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func winGame(gameLevel: GameLevel, battleEnemyMode: BattleEnemyModel, gameType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func correctAnswer(questionType: BattleQuestionType, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func updateComponentPosition(model: ComponentModelProtocol, xValue: CGFloat, yValue: CGFloat, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func updateComponentName(id: UUID, type: ComponentType, newName: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func startRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func claimReward(model: QuestRewardModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -279,6 +281,7 @@ private extension ForestDataManager {
                 quest.gameLevel = model.gameLevel.valueForCoreData
                 quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
                 quest.questType = model.questionType.valueForCoreData
+                quest.lastUpdatedDate = model.lastUpdatedDate
                 forest.addToQuests(quest)
             }
             do {
@@ -294,7 +297,7 @@ private extension ForestDataManager {
 
 extension ForestDataManager {
     
-    func createForestGame(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Bool> {
+    func createForest(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Forest> {
         contextType.context.performAndWait {
             let context = contextType.context
             let dailyQuests = helper.initalizeDailyQuests()
@@ -306,90 +309,30 @@ extension ForestDataManager {
             setupQuests(questList: weeklyQuests, contextType: contextType)
             setupQuests(questList: monthlyQuests, contextType: contextType)
             setupQuests(questList: specialQuests, contextType: contextType)
-            forest.rainValue = 0
+            forest.rainValue = ForestConstants.initialRainValue
             forest.isRaining = false
-            forest.landHealthPercent = 100
+            forest.landHealthPercent = ForestConstants.initialLandHealthPercent
             forest.landStatus = true
-            forest.moneyValue = 0
-            for sculpture in baseSculptureList {
-                createSculpture(sculpture: sculpture, contextType: contextType)
+            forest.moneyValue = ForestConstants.initialMoneyValue
+            forest.lastUpdatedDate = Date()
+            forest.forestId = UUID()
+            let dailyActivities = DailyActivities(context: context)
+            dailyActivities.lastUpdatedDate = Date()
+            forest.dailyActivities = dailyActivities
+            for sculptureModel in baseSculptureList {
+                let sculpture = Sculpture(context: context)
+                sculpture.id = sculptureModel.id
+                sculpture.assetName = sculptureModel.assetName
+                sculpture.createdDate = sculptureModel.createdDate
+                sculpture.characterName = generateRandomName(type: .sculpture)
+                sculpture.xPosition = sculptureModel.xPosition
+                sculpture.yPosition = sculptureModel.yPosition
+                sculpture.lastUpdatedDate = Date()
+                forest.addToSculptures(sculpture)
             }
             do {
                 try save(context: context)
-                return Resource.success(nil)
-            } catch {
-                return Resource.error(error: ForestError.saveError)
-            }
-        }
-    }
-
-    func createTree(tree model: TreeModel, contextType: ContextType) -> Resource<Bool>{
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            let tree = Tree(context: context)
-            tree.id = model.id
-            tree.createdDate = Date()
-            tree.characterName = generateRandomName(type: .plant)
-            tree.healthValue = Int16(model.treeHealthValue)
-            tree.isAlive = model.isAlive
-            tree.assetName = model.assetName
-            tree.xPosition = Double(model.xPosition)
-            tree.yPosition = Double(model.yPosition)
-            forest.addToTrees(tree)
-            do {
-                try save(context: context)
-                return Resource.success(nil)
-            } catch {
-                return Resource.error(error: ForestError.saveError)
-            }
-        }
-    }
-    
-    func createAnimal(animal model: AnimalModel, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            let animal = Animal(context: context)
-            animal.id = model.id
-            animal.characterName = generateRandomName(type: .animal)
-            animal.createdDate = Date()
-            animal.assetName = model.assetName
-            animal.healtValue = Int16(model.healthValue)
-            animal.isAlive = model.isAlive
-            animal.xPosition = Double(model.xPosition)
-            animal.yPosition = Double(model.yPosition)
-            forest.addToAnimals(animal)
-            do {
-                try save(context: context)
-                return Resource.success(nil)
-            } catch {
-                return Resource.error(error: ForestError.saveError)
-            }
-        }
-    }
-    
-    func createSculpture(sculpture model: SculptureModel, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            let sculpture = Sculpture(context: context)
-            sculpture.id = model.id
-            sculpture.assetName = model.assetName
-            sculpture.createdDate = model.createdDate
-            sculpture.characterName = generateRandomName(type: .sculpture)
-            sculpture.xPosition = model.xPosition
-            sculpture.yPosition = model.yPosition
-            forest.addToSculptures(sculpture)
-            do {
-                try save(context: context)
-                return Resource.success(nil)
+                return Resource.success(forest)
             } catch {
                 return Resource.error(error: ForestError.saveError)
             }
@@ -401,64 +344,18 @@ extension ForestDataManager {
 
 extension ForestDataManager {
     
-    func fetchSculpture(id: UUID, contextType: ContextType) -> SculptureModel? {
+    func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel> {
         contextType.context.performAndWait {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else {
-                return nil
+                return Resource.error(error: ForestError.emptyForest)
             }
-            if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
-               let sculpture = sculptures.first(where: { $0.id == id }) {
-                return SculptureModel(
-                    id: id,
-                    assetName: sculpture.assetName ?? "",
-                    characterName: sculpture.characterName ?? "",
-                    createdDate: sculpture.createdDate ?? Date(),
-                    xPosition: sculpture.xPosition,
-                    yPosition: sculpture.yPosition
-                )
+            do {
+                let safeForest = try forest.safeObject(context: context)
+                return Resource.success(safeForest)
+            }catch {
+                return Resource.error(error: ForestError.safeObject)
             }
-            return nil
-        }
-    }
-    
-    func fetchAnimal(id: UUID, contextType: ContextType) -> AnimalModel? {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
-                return nil
-            }
-            if let animals = forest.animals?.allObjects as? [Animal],
-               let animal = animals.first(where: { $0.id == id }) {
-                return AnimalModel(
-                    id: id,
-                    characterName: animal.characterName ?? "",
-                    assetName: animal.assetName ?? "",
-                    createdDate: animal.createdDate ?? Date(),
-                    healthValue: Int(animal.healtValue),
-                    isAlive: animal.isAlive,
-                    xPosition: animal.xPosition,
-                    yPosition: animal.yPosition
-                )
-            }
-            return nil
-        }
-    }
-    
-    func fetchPlant(id: UUID, contextType: ContextType) -> TreeModel? {
-        return contextType.context.performAndWait { () -> TreeModel? in
-            guard let forest = getCurrentForest(context: contextType.context) else {
-                return nil
-            }
-            if let plants = forest.trees?.allObjects as? [Tree],
-               let plant = plants.first(where: { $0.id == id }) {
-                do {
-                    return try plant.safeObject(context: contextType.context)
-                } catch {
-                    print(SafeModelError.invalidMapping.localizedDescription)
-                    return nil
-                }
-            }
-            return nil
         }
     }
     
@@ -512,77 +409,209 @@ extension ForestDataManager {
         }
     }
     
-    func fetchAnimals(contextType: ContextType) -> Resource<[AnimalModel]> {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            var animalList: [AnimalModel] = []
-            if let animalSet = forest.animals, let animals = animalSet.allObjects as? [Animal]  {
-                for animal in animals {
-                    do {
-                        let animalModel = try animal.safeObject(context: contextType.context)
-                        animalList.append(animalModel)
-                    } catch {
-                        print(SafeModelError.invalidMapping.localizedDescription)
-                        return Resource.error(error: SafeModelError.invalidMapping)
-                    }
-                }
-                return Resource.success(animalList)
-            }
-            return Resource.error(error: ForestError.emptyList)
-        }
-    }
-    
-    func fetchTrees(contextType: ContextType) -> Resource<[TreeModel]> {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            var treeList: [TreeModel] = []
-            if let treeSet = forest.trees, let trees = treeSet.allObjects as? [Tree]  {
-                for tree in trees {
-                    do {
-                        let treeModel = try tree.safeObject(context: contextType.context)
-                        treeList.append(treeModel)
-                    } catch {
-                        print(SafeModelError.invalidMapping.localizedDescription)
-                        return Resource.error(error: SafeModelError.invalidMapping)
-                    }
-                }
-                return Resource.success(treeList)
-            }
-            return Resource.error(error: ForestError.emptyList)
-        }
-    }
-    
-    func fetchSculptures(contextType: ContextType) -> Resource<[SculptureModel]> {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
-                return Resource.error(error: ForestError.emptyForest)
-            }
-            var sculptureList: [SculptureModel] = []
-            if let sculptureSet = forest.sculptures, let sculptures = sculptureSet.allObjects as? [Sculpture]  {
-                for sculpture in sculptures {
-                    do {
-                        let sculptureModel = try sculpture.safeObject(context: contextType.context)
-                        sculptureList.append(sculptureModel)
-                    } catch {
-                        print(SafeModelError.invalidMapping.localizedDescription)
-                        return Resource.error(error: SafeModelError.invalidMapping)
-                    }
-                }
-                return Resource.success(sculptureList)
-            }
-            return Resource.error(error: ForestError.emptyList)
-        }
-    }
 }
 
 // MARK: - UPDATE HELPERS
 
 extension ForestDataManager {
-    func claimReward(quest: QuestModel, contextType: ContextType) -> Resource<Bool> {
+    
+    func claimReward(model: QuestRewardModel, contextType: ContextType) -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.emptyForest)
+            }
+            
+            switch model {
+            case .animal(let name):
+                let animalModel = createSafeAnimal(assetName: name)
+                let animal = Animal(context: context)
+                animal.id = animalModel.id
+                animal.characterName = animalModel.characterName
+                animal.createdDate = animalModel.createdDate
+                animal.assetName = animalModel.assetName
+                animal.healtValue = Int16(animalModel.healthValue)
+                animal.isAlive = animalModel.isAlive
+                animal.xPosition = animalModel.xPosition
+                animal.yPosition = animalModel.yPosition
+                animal.lastUpdatedDate = animalModel.lastUpdatedDate
+                forest.addToAnimals(animal)
+                
+            case .plant(let name):
+                let treeModel = createSafePlant(assetName: name, contextType: contextType)
+                let tree = Tree(context: context)
+                tree.id = treeModel.id
+                tree.createdDate = treeModel.createdDate
+                tree.characterName = treeModel.characterName
+                tree.healthValue = Int16(treeModel.treeHealthValue)
+                tree.isAlive = treeModel.isAlive
+                tree.assetName = treeModel.assetName
+                tree.xPosition = treeModel.xPosition
+                tree.yPosition = treeModel.yPosition
+                tree.lastUpdatedDate = treeModel.lastUpdatedDate
+                forest.addToTrees(tree)
+                
+            case .sculpture(let name):
+                let sculptureModel = createSafeSculpture(assetName: name, contextType: contextType)
+                let sculpture = Sculpture(context: context)
+                sculpture.id = sculptureModel.id
+                sculpture.assetName = sculptureModel.assetName
+                sculpture.createdDate = sculptureModel.createdDate
+                sculpture.characterName = sculptureModel.characterName
+                sculpture.xPosition = sculptureModel.xPosition
+                sculpture.yPosition = sculptureModel.yPosition
+                sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
+                forest.addToSculptures(sculpture)
+                
+            case .gold(let count):
+                forest.moneyValue += Int16(count)
+                
+            case .water(let count):
+                forest.rainValue += Int16(count)
+                
+            case .diamond(let count):
+                forest.diamondValue += Int16(count)
+            }
+            
+            forest.lastUpdatedDate = Date()
+            
+            do {
+                try save(context: context)
+            } catch {
+                return Resource.error(error: error)
+            }
+            return .success(true)
+        }
+    }
+    
+    func overwriteLocalForest(
+        with safeForest: SafeForestModel,
+        ownerId: String,
+        contextType: ContextType
+    ) -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            if let oldForest = getCurrentForest(context: context) {
+                context.delete(oldForest)
+            }
+            let newForest = Forest(context: context)
+            newForest.forestId = safeForest.forestId
+            newForest.ownerId = ownerId
+            newForest.moneyValue = Int16(safeForest.moneyValue)
+            newForest.diamondValue = Int16(safeForest.diamondValue)
+            newForest.rainValue = Int16(safeForest.rainValue)
+            newForest.landHealthPercent = Int16(safeForest.landHealthPercent)
+            newForest.landStatus = safeForest.landStatus
+            newForest.lastRainUpdateDate = safeForest.lastRainUpdateDate
+            newForest.lastDailyResetDate = safeForest.lastDailyResetDate
+            newForest.lastWeeklyResetDate = safeForest.lastWeeklyResetDate
+            newForest.lastMonthlyResetDate = safeForest.lastMonthlyResetDate
+            newForest.lastUpdatedDate = safeForest.lastUpdatedDate
+            newForest.lastSyncCloudTime = Date()
+            
+            for treeModel in safeForest.trees {
+                let tree = Tree(context: context)
+                tree.id = treeModel.id
+                tree.assetName = treeModel.assetName
+                tree.characterName = treeModel.characterName
+                tree.createdDate = treeModel.createdDate
+                tree.healthValue = Int16(treeModel.treeHealthValue)
+                tree.isAlive = treeModel.isAlive
+                tree.lastUpdatedDate = treeModel.lastUpdatedDate
+                tree.xPosition = treeModel.xPosition
+                tree.yPosition = treeModel.yPosition
+                newForest.addToTrees(tree)
+            }
+            
+            for animalModel in safeForest.animals {
+                let animal = Animal(context: context)
+                animal.id = animalModel.id
+                animal.assetName = animalModel.assetName
+                animal.characterName = animalModel.characterName
+                animal.createdDate = animalModel.createdDate
+                animal.healtValue = Int16(animalModel.healthValue)
+                animal.isAlive = animalModel.isAlive
+                animal.lastUpdatedDate = animalModel.lastUpdatedDate
+                animal.xPosition = animalModel.xPosition
+                animal.yPosition = animalModel.yPosition
+                newForest.addToAnimals(animal)
+            }
+            
+            for sculptureModel in safeForest.sculptures {
+                let sculpture = Sculpture(context: context)
+                sculpture.id = sculptureModel.id
+                sculpture.assetName = sculptureModel.assetName
+                sculpture.characterName = sculptureModel.characterName
+                sculpture.createdDate = sculptureModel.createdDate
+                sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
+                sculpture.xPosition = sculptureModel.xPosition
+                sculpture.yPosition = sculptureModel.yPosition
+                newForest.addToSculptures(sculpture)
+            }
+            
+            for questModel in safeForest.quests {
+                let quest = Quest(context: context)
+                quest.id = questModel.id
+                quest.battleEnemyModel = questModel.battleEnemyModel.valueForCoreData
+                quest.currentProgressCount = Int16(questModel.currentProgressCount)
+                quest.description_quest = questModel.description
+                quest.gameLevel = questModel.gameLevel.valueForCoreData
+                quest.lastUpdatedDate = questModel.lastUpdatedDate
+                quest.questType = questModel.questionType.valueForCoreData
+                quest.rewardType = questModel.reward.typeName
+                quest.rewardValue = questModel.reward.coreDataValueString
+                quest.status = questModel.status.valueForCoreData
+                quest.targetCount = Int16(questModel.targetCount)
+                quest.title = questModel.title
+                quest.type = questModel.type.valueForCoreData
+                newForest.addToQuests(quest)
+            }
+            
+            do {
+                try save(context: context)
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+    }
+    
+    func bindForestToUser(uid: String, contextType: ContextType) -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return .error(error: ForestError.emptyForest)
+            }
+            forest.ownerId = uid
+            do {
+                try save(context: context)
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+    }
+    
+    func updateLastSyncCloudTime(date: Date, contextType: ContextType) -> Resource<Bool> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return .error(error: ForestError.emptyForest)
+            }
+            
+            forest.lastSyncCloudTime = date
+            
+            do {
+                try save(context: context)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+            
+            return .success(true)
+        }
+    }
+
+    func claimQuestReward(quest: QuestModel, contextType: ContextType) -> Resource<Bool> {
         contextType.context.performAndWait {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else {
@@ -590,62 +619,11 @@ extension ForestDataManager {
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == quest.id }) {
                 coreDataQuest.status = QuestStatus.claimed.valueForCoreData
+                coreDataQuest.lastUpdatedDate = Date()
             } else {
                 return .error(error: ForestError.emptyForest)
             }
-            switch quest.reward {
-                case .animal(let name):
-                    let animalModel = AnimalModel(
-                        id: UUID(),
-                        characterName: generateRandomName(type: .animal),
-                        assetName: name,
-                        createdDate: Date(),
-                        healthValue: 10,
-                        isAlive: true,
-                        xPosition: CGFloat.random(in: -50...50),
-                        yPosition: CGFloat.random(in: -50...50)
-                    )
-                    createAnimal(animal: animalModel, contextType: contextType)
-                    
-                case .plant(let name):
-                    let pos = generateValidPosition(for: .tree, contextType: contextType)
-                    let plantModel = TreeModel(
-                        id: UUID(),
-                        assetName: name,
-                        characterName: generateRandomName(type: .plant), isAlive: true,
-                        createdDate: Date(),
-                        treeHealthValue: 5,
-                        xPosition: pos.x,
-                        yPosition: pos.y
-                    )
-                    createTree(tree: plantModel, contextType: contextType)
-                    
-                case .gold(let count):
-                    updateMoneyValue(money: count, contextType: contextType)
-                    
-                case .water(let count):
-                    updateRainValue(rain: count, contextType: contextType)
-                    
-                case .sculpture(let name):
-                    let pos = generateValidPosition(for: .sculpture, contextType: contextType)
-                    let sculptureModel = SculptureModel(
-                        id: UUID(),
-                        assetName: name,
-                        characterName: generateRandomName(type: .sculpture), createdDate: Date(),
-                        xPosition: pos.x,
-                        yPosition: pos.y
-                    )
-                    createSculpture(sculpture: sculptureModel, contextType: contextType)
-                case .diamond(let count):
-                    updateDiamondValue(diamond: count, contextType: contextType)
-            }
-            do {
-                try save(context: context)
-            }
-            catch {
-                return Resource.error(error: error)
-            }
-            return .success(true)
+            return claimReward(model: quest.reward, contextType: contextType)
         }
     }
     
@@ -682,6 +660,7 @@ extension ForestDataManager {
             for quest in filteredQuests {
                 quest.currentProgressCount += 1
                 hasChanges = true
+                quest.lastUpdatedDate = Date()
                 if quest.currentProgressCount >= quest.targetCount {
                     quest.status = completedStatusStr
                 }
@@ -711,6 +690,7 @@ extension ForestDataManager {
                 }
                 for quest in generalFilteredQuests {
                     quest.currentProgressCount += Int16(1)
+                    quest.lastUpdatedDate = Date()
                     if quest.currentProgressCount >= quest.targetCount {
                         quest.status = QuestStatus.completed.valueForCoreData
                         quest.currentProgressCount = quest.targetCount
@@ -727,100 +707,6 @@ extension ForestDataManager {
         }
     }
     
-    func updateComponentPosition(
-        model: ComponentModelProtocol,
-        xValue: CGFloat,
-        yValue: CGFloat,
-        contextType: ContextType
-    ) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else {
-                return .error(error: ForestError.emptyForest)
-            }
-            var isFound = false
-            switch model.type {
-            case .animal:
-                if let animals = forest.animals?.allObjects as? [Animal],
-                   let target = animals.first(where: { $0.id == model.id }) {
-                    target.xPosition = xValue
-                    target.yPosition = yValue
-                    isFound = true
-                }
-                
-            case .plant:
-                if let trees = forest.trees?.allObjects as? [Tree],
-                   let target = trees.first(where: { $0.id == model.id }) {
-                    target.xPosition = xValue
-                    target.yPosition = yValue
-                    isFound = true
-                }
-                
-            case .sculpture:
-                if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
-                   let target = sculptures.first(where: { $0.id == model.id }) {
-                    target.xPosition = xValue
-                    target.yPosition = yValue
-                    isFound = true
-                }
-            default:
-                break
-            }
-            if isFound {
-                do {
-                    try save(context: context)
-                    return .success(true)
-                } catch {
-                    return .error(error: ForestError.saveError)
-                }
-            }
-            return .error(error: ForestError.emptyUUID)
-        }
-    }
-    
-    func updateComponentName(id: UUID, type: ComponentType, newName: String, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else {
-                return .error(error: ForestError.emptyForest)
-            }
-            var isFound = false
-            switch type {
-            case .animal:
-                if let animals = forest.animals?.allObjects as? [Animal],
-                   let target = animals.first(where: { $0.id == id }) {
-                    target.characterName = newName
-                    isFound = true
-                }
-                
-            case .plant:
-                if let trees = forest.trees?.allObjects as? [Tree],
-                   let target = trees.first(where: { $0.id == id }) {
-                    target.characterName = newName
-                    isFound = true
-                }
-                
-            case .sculpture:
-                if let sculptures = forest.sculptures?.allObjects as? [Sculpture],
-                   let target = sculptures.first(where: { $0.id == id }) {
-                    target.characterName = newName
-                    isFound = true
-                }
-            default:
-                break
-            }
-            if isFound {
-                do {
-                    try save(context: context)
-                    return .success(true)
-                } catch {
-                    return .error(error: ForestError.saveError)
-                }
-            }
-            return .error(error: ForestError.emptyUUID)
-        }
-    }
-    
     func updateRainValue(rain: Int, contextType: ContextType) -> Resource<Bool> {
         contextType.context.performAndWait {
             let context = contextType.context
@@ -828,6 +714,7 @@ extension ForestDataManager {
                 return Resource.error(error: ForestError.saveError)
             }
             forest.rainValue += Int16(rain)
+            forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
             }
@@ -847,6 +734,7 @@ extension ForestDataManager {
             forest.rainValue -= Int16(ForestConstant.rainValue)
             forest.landStatus = true
             forest.landHealthPercent = Int16(ForestConstant.healthyLandHealth)
+            forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
             }
@@ -864,6 +752,7 @@ extension ForestDataManager {
                 return Resource.error(error: ForestError.saveError)
             }
             forest.moneyValue += Int16(money)
+            forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
             }
@@ -881,6 +770,7 @@ extension ForestDataManager {
                 return Resource.error(error: ForestError.saveError)
             }
             forest.diamondValue += Int16(diamond)
+            forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
             }
@@ -939,5 +829,45 @@ private extension ForestDataManager {
             }
         }
         return (Double.random(in: xRange), Double.random(in: yRange))
+    }
+}
+
+private extension ForestDataManager {
+    func createSafeAnimal(assetName: String) -> AnimalModel {
+        return AnimalModel(
+            id: UUID(),
+            characterName: generateRandomName(type: .animal),
+            assetName: assetName,
+            createdDate: Date(),
+            healthValue: 10,
+            isAlive: true,
+            xPosition: CGFloat.random(in: -50...50),
+            yPosition: CGFloat.random(in: -50...50),
+            lastUpdatedDate: Date()
+        )
+    }
+    func createSafePlant(assetName: String, contextType: ContextType) -> TreeModel {
+        let pos = generateValidPosition(for: .tree, contextType: contextType)
+        return TreeModel(
+            id: UUID(),
+            assetName: assetName,
+            characterName: generateRandomName(type: .plant), isAlive: true,
+            createdDate: Date(),
+            treeHealthValue: 5,
+            xPosition: pos.x,
+            yPosition: pos.y,
+            lastUpdatedDate: Date()
+        )
+    }
+    func createSafeSculpture(assetName: String, contextType: ContextType) -> SculptureModel {
+        let pos = generateValidPosition(for: .sculpture, contextType: contextType)
+        return SculptureModel(
+            id: UUID(),
+            assetName: assetName,
+            characterName: generateRandomName(type: .sculpture), createdDate: Date(),
+            xPosition: pos.x,
+            yPosition: pos.y,
+            lastUpdatedDate: Date()
+        )
     }
 }

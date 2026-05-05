@@ -46,6 +46,17 @@
                ReferencedContainer = "container:VocabularyForest.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "37B28C4F2F74FE75008A7591"
+               BuildableName = "VocabularyForestUITests.xctest"
+               BlueprintName = "VocabularyForestUITests"
+               ReferencedContainer = "container:VocabularyForest.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

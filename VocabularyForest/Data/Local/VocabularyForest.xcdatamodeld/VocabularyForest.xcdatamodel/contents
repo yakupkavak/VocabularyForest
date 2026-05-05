@@ -7,6 +7,7 @@
         <attribute name="healtValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="animals" inverseEntity="Forest"/>
@@ -32,8 +33,23 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="bookcase" inverseEntity="Book"/>
     </entity>
+    <entity name="DailyActivities" representedClassName="DailyActivities" syncable="YES">
+        <attribute name="adventureSeasonID" optional="YES" attributeType="String"/>
+        <attribute name="claimedLongTiers" optional="YES" attributeType="String"/>
+        <attribute name="claimedShortTiers" optional="YES" attributeType="String"/>
+        <attribute name="dailySpinLastUsedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fixedTimeZone" optional="YES" attributeType="String"/>
+        <attribute name="lastFetchDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="monthlyLongLearnedCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="monthlyShortLearnedCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weeklyStreakCurrentDay" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weeklyStreakLastClaimDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="dailyActivities" inverseEntity="Forest"/>
+    </entity>
     <entity name="Forest" representedClassName="Forest" syncable="YES">
         <attribute name="diamondValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="forestId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isRaining" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="landHealthPercent" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -41,13 +57,23 @@
         <attribute name="lastDailyResetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastMonthlyResetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastRainUpdateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastSyncCloudTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastWeeklyResetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="moneyValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="ownerId" optional="YES" attributeType="String"/>
         <attribute name="rainValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="animals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Animal" inverseName="forest" inverseEntity="Animal"/>
+        <relationship name="dailyActivities" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyActivities" inverseName="forest" inverseEntity="DailyActivities"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="forest" inverseEntity="Player"/>
         <relationship name="quests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Quest" inverseName="forest" inverseEntity="Quest"/>
         <relationship name="sculptures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sculpture" inverseName="forest" inverseEntity="Sculpture"/>
         <relationship name="trees" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tree" inverseName="forest" inverseEntity="Tree"/>
+    </entity>
+    <entity name="Player" representedClassName="Player" syncable="YES">
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="player" inverseEntity="Forest"/>
     </entity>
     <entity name="Quest" representedClassName="Quest" syncable="YES">
         <attribute name="battleEnemyModel" optional="YES" attributeType="String"/>
@@ -55,6 +81,7 @@
         <attribute name="description_quest" optional="YES" attributeType="String"/>
         <attribute name="gameLevel" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="questType" optional="YES" attributeType="String"/>
         <attribute name="rewardType" optional="YES" attributeType="String"/>
         <attribute name="rewardValue" optional="YES" attributeType="String"/>
@@ -69,6 +96,7 @@
         <attribute name="characterName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="sculptures" inverseEntity="Forest"/>
@@ -80,6 +108,7 @@
         <attribute name="healthValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="trees" inverseEntity="Forest"/>

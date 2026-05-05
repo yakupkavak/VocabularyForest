@@ -26,21 +26,24 @@ struct GameOptionsUI: View {
     ]
     
     var body: some View {
-        GamePopUpContainer(title: "Options", onClose: onClose) {
-            VStack(spacing: 12) {
-                ForEach(options, id: \.title) { model in
-                    settingsRow(model: model)
-                        .onTapGesture {
-                            switch model.type {
-                            case .resume:   onResume()
-                            case .settings: onSettings()
-                            case .home:     onHome()
-                            case .info:
-                                print("")
+        GeometryReader { geometry in
+            GamePopUpContainer(title: "Options", onClose: onClose, screenWidth: geometry.size.width) {
+                VStack(spacing: 12) {
+                    ForEach(options, id: \.title) { model in
+                        settingsRow(model: model)
+                            .onTapGesture {
+                                switch model.type {
+                                case .resume:   onResume()
+                                case .settings: onSettings()
+                                case .home:     onHome()
+                                case .info:
+                                    print("")
+                                }
                             }
-                        }
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

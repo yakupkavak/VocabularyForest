@@ -11,11 +11,13 @@ struct GamePopUpContainer<Content: View>: View {
     
     let title: String
     let onClose: () -> Void
+    let screenWidth: CGFloat
     let content: Content
     
-    init(title: String, onClose: @escaping () -> Void, @ViewBuilder content: () -> Content) {
+    init(title: String, onClose: @escaping () -> Void, screenWidth: CGFloat ,@ViewBuilder content: () -> Content) {
         self.title = title
         self.onClose = onClose
+        self.screenWidth = screenWidth
         self.content = content()
     }
     
@@ -33,7 +35,8 @@ struct GamePopUpContainer<Content: View>: View {
             RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color("brown300"), lineWidth: 4)
         )
-        .frame(width: UIScreen.main.bounds.width * 0.7)
+        .frame(maxWidth: screenWidth * 0.7)
+        .fixedSize(horizontal: true, vertical: false)
         .overlay(alignment: .topTrailing) {
             Button {
                 onClose()

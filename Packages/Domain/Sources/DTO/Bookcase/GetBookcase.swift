@@ -11,15 +11,18 @@ import YakoSwift
 
 public enum GetBookcase: EndPoint {
     
-    case definition(_ value: GetBookcaseRequestModel)
+    case definition(_ value: GetBookcaseRequestModel, baseURL: String)
 
     public var baseURL: String {
-        return "https://vocab-api.yakupkavk.workers.dev/api/"
+        switch self {
+        case .definition(_, let baseURL):
+            return baseURL
+        }
     }
     
     public var path: String {
         switch self {
-        case .definition(let value):
+        case .definition(let value, _):
             "library/\(value.bookcaseID)"
         }
     }

@@ -17,45 +17,49 @@ struct ForestInfoUI: View {
     // MARK: - UI VIEW
     
     var body: some View {
-        GamePopUpContainer(title: String(localized: "Doğa Dengesi"), onClose: onClose) {
-            VStack(spacing: 24) {
-                if let forestModel {
-                    HStack {
-                        Image(systemName: "drop").resizable().scaledToFit().frame(width: 32).foregroundStyle(.blue).overlay{
-                            Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.blue).mask {
-                                GeometryReader { geo in
-                                    Rectangle().frame(height: geo.size.height * CGFloat(forestModel.rainValue) / CGFloat(50)
-                                )}
+        GeometryReader { geometry in
+            GamePopUpContainer(title: String(localized: "Doğa Dengesi"),onClose: onClose, screenWidth: geometry.size.width) {
+                VStack(spacing: 24) {
+                    if let forestModel {
+                        HStack {
+                            Image(systemName: "drop").resizable().scaledToFit().frame(width: 32).foregroundStyle(.brown700).overlay{
+                                Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.brown700).mask {
+                                    GeometryReader { geo in
+                                        Rectangle().frame(height: geo.size.height * CGFloat(forestModel.rainValue) / CGFloat(50)
+                                    )}
+                                }
                             }
+                            VStack(alignment: .leading) {
+                                Text("Doluluk oranı \(forestModel.rainValue) / 50").foregroundStyle(.white).font(.system(size: 16))
+                                Text("Ormanına can vermek için doldurmalısın.").foregroundStyle(.white).font(.system(size: 12))
+                            }
+                            Spacer()
                         }
-                        VStack(alignment: .leading) {
-                            Text("Doluluk oranı \(forestModel.rainValue) / 50").foregroundStyle(.white).font(.system(size: 16))
-                            Text("Ormanına can vermek için doldurmalısın.").foregroundStyle(.white).font(.system(size: 12))
+                        HStack {
+                            Image( "gold_icon").resizable().scaledToFit().frame(width: 32).foregroundStyle(.yellow)
+                            VStack(alignment: .leading) {
+                                Text("Altın: \(forestModel.gold)").foregroundStyle(.white).font(.system(size: 16))
+                                Text("Gelecek güncelleme ile mağazada kullanabileceksin.").foregroundStyle(.white).font(.system(size: 12))
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        HStack {
+                            Image(systemName: "leaf.fill").resizable().scaledToFit().frame(width: 32).foregroundStyle(.logoGreen)
+                            VStack(alignment: .leading) {
+                                Text("Toprak sağlığı: %\(forestModel.landHealthPercentage)").foregroundStyle(.white).font(.system(size: 16))
+                                Text("Mutlu hayvan ve bitkiler için olmazsa olmaz.").foregroundStyle(.white).font(.system(size: 12))
+                            }
+                            Spacer()
+                        }
+                    }else {
+                        Text("Beklenmedik hata").foregroundStyle(.white)
                     }
-                    HStack {
-                        Image( "gold_icon").resizable().scaledToFit().frame(width: 32).foregroundStyle(.yellow)
-                        VStack(alignment: .leading) {
-                            Text("Altın: \(forestModel.gold)").foregroundStyle(.white).font(.system(size: 16))
-                            Text("Gelecek güncelleme ile mağazada kullanabileceksin.").foregroundStyle(.white).font(.system(size: 12))
-                        }
-                        Spacer()
-                    }
-                    HStack {
-                        Image(systemName: "leaf.fill").resizable().scaledToFit().frame(width: 32).foregroundStyle(.logoGreen)
-                        VStack(alignment: .leading) {
-                            Text("Toprak sağlığı: %\(forestModel.landHealthPercentage)").foregroundStyle(.white).font(.system(size: 16))
-                            Text("Mutlu hayvan ve bitkiler için olmazsa olmaz.").foregroundStyle(.white).font(.system(size: 12))
-                        }
-                        Spacer()
-                    }
-                }else {
-                    Text("Beklenmedik hata").foregroundStyle(.white)
                 }
+                .padding(.horizontal, 2)
             }
-            .padding(.horizontal, 2)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        
     }
 }
 

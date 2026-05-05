@@ -13,7 +13,7 @@ protocol Rewardable {
     var rewardCount: Int? { get }
 }
 
-enum QuestRewardModel: Hashable {
+enum QuestRewardModel: Hashable, Encodable {
     case animal(modelName: String)
     case plant(modelName: String)
     case gold(count: Int)
@@ -84,44 +84,13 @@ extension QuestRewardModel: Rewardable {
     var rewardName: String {
         switch self {
         case .animal(let name):
-            return if name == "WhiteCat" {
-                "white_cat_name"
-            }else if name == "Cat" {
-                "cat_name"
-            }else if name == "Dog" {
-                "dog_name"
-            }else {
-                name
-            }
+            return AnimalReward(rawValue: name)?.localizedKey ?? name
         case .plant(let name):
-            return if name == "DesertStarBloom" {
-                "desert_star_bloom_name"
-            }else if name == "CrystalReed" {
-                "crystal_reed_name"
-            }else if name == "BlueFlameBush" {
-                "blue_flame_bush_name"
-            }else if name == "Emberbud" {
-                "emberbud_name"
-            }else if name == "MoonBell" {
-                "moon_beel_name"
-            }else if name == "SunFlower" {
-                "sun_flower_name"
-            }
-            else {
-                name
-            }
+            return PlantReward(rawValue: name)?.localizedKey ?? name
         case .water(let count):
             return String(count)
         case .sculpture(let name):
-            return if name == "EmeraldDragon" {
-                "emerald_dragon_name"
-            }else if name == "Deer" {
-                "ancient_deer_name"
-            }else if name == "AncientLancer" {
-                "ancient_lancer"
-            }else {
-                name
-            }
+            return SculptureReward(rawValue: name)?.localizedKey ?? name
         case .gold(let count):
             return String(count)
         case .diamond(let count):
