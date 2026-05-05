@@ -38,6 +38,7 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
     
     func initializeNewGame() async -> Resource<Bool> {
         let remoteQuestTemplates = await loadRemoteQuestTemplates()
+        let starterCompanionOptions = await loadRemoteStarterCompanions()
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
         
         if !forestInitalized {
@@ -56,6 +57,7 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
             if let remoteQuestTemplates, !remoteQuestTemplates.isEmpty {
                 syncLocalQuestDefinitions(with: remoteQuestTemplates, contextType: .background)
             }
+            syncSelectedStarterCompanionIfNeeded(with: starterCompanionOptions, contextType: .background)
             coreDataManager.save(type: .background)
             await MainActor.run {
                 UserDefaults.standard.set(true, forKey: "forestInitalized")
@@ -65,6 +67,7 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
             if let remoteQuestTemplates, !remoteQuestTemplates.isEmpty {
                 syncLocalQuestDefinitions(with: remoteQuestTemplates, contextType: .background)
             }
+            syncSelectedStarterCompanionIfNeeded(with: starterCompanionOptions, contextType: .background)
             return Resource.error(error: ForestInitError.alreadyCreated)
         }
     }
@@ -78,6 +81,14 @@ private extension ForestInitializerService {
         }
         ForestGameHelper.updateRemoteQuestTemplates(templates)
         return templates
+    }
+
+    func loadRemoteStarterCompanions() async -> [StarterCompanionModel] {
+        let result = await remoteConfigRepository.fetchStarterCompanionsConfig()
+        if result.status == .success, let options = result.data, !options.isEmpty {
+            return options
+        }
+        return RewardMediaCatalogStore.localStarterDefaults()
     }
     
     func syncLocalQuestDefinitions(
@@ -206,5 +217,57 @@ private extension ForestInitializerService {
         BattleEnemyModel.convertFromCoreData(string: quest.battleEnemyModel) == model.battleEnemyModel &&
         GameLevel.convertFromCoreData(value: quest.gameLevel) == model.gameLevel &&
         Int(quest.targetCount) == model.targetCount
+    }
+
+    func syncSelectedStarterCompanionIfNeeded(
+        with options: [StarterCompanionModel],
+        contextType: ForestDataManager.ContextType
+    ) {
+        guard RewardMediaCatalogStore.hasSelectedStarterCompanion(),
+              let selectedID = RewardMediaCatalogStore.selectedStarterID(),
+              let selectedOption = options.first(where: { $0.id == selectedID }) else {
+            return
+        }
+
+        let modelKey = selectedOption.modelKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !modelKey.isEmpty else {
+            return
+        }
+
+        let normalizedCategory = selectedOption.category
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        let context = contextType.context
+        var alreadyExists = false
+        context.performAndWait {
+            guard let forest = forestManager.getCurrentForest(context: context) else { return }
+            switch normalizedCategory {
+            case "animal":
+                let animals = (forest.animals?.allObjects as? [Animal]) ?? []
+                alreadyExists = animals.contains(where: { ($0.assetName ?? "").caseInsensitiveCompare(modelKey) == .orderedSame })
+            case "plant":
+                let trees = (forest.trees?.allObjects as? [Tree]) ?? []
+                alreadyExists = trees.contains(where: { ($0.assetName ?? "").caseInsensitiveCompare(modelKey) == .orderedSame })
+            case "sculpture":
+                let sculptures = (forest.sculptures?.allObjects as? [Sculpture]) ?? []
+                alreadyExists = sculptures.contains(where: { ($0.assetName ?? "").caseInsensitiveCompare(modelKey) == .orderedSame })
+            default:
+                break
+            }
+        }
+
+        guard !alreadyExists else { return }
+
+        switch normalizedCategory {
+        case "animal":
+            _ = forestManager.claimReward(model: .animal(modelName: modelKey), contextType: contextType)
+        case "plant":
+            _ = forestManager.claimReward(model: .plant(modelName: modelKey), contextType: contextType)
+        case "sculpture":
+            _ = forestManager.claimReward(model: .sculpture(modelName: modelKey), contextType: contextType)
+        default:
+            break
+        }
     }
 }

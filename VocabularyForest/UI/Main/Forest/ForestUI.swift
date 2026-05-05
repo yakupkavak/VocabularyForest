@@ -50,6 +50,7 @@ struct ForestUI: View {
     @State private var forestScene = ForestScene()
     
     @State private var uiState: ForestUIState = .empty
+    @State private var showStarterCompanionSelection = false
     
     @State private var componentName = ""
     @State private var selectedQuestForGame: QuestModel? = nil
@@ -117,6 +118,7 @@ struct ForestUI: View {
         .onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
             viewModel.startGameMusic()
+            showStarterCompanionSelection = !RewardMediaCatalogStore.hasSelectedStarterCompanion()
         }
         .onChange(of: musicVolume) { newValue in
             viewModel.updateAudioSettings(music: newValue, sfx: sfxVolume, isMuted: isMuted)
@@ -126,6 +128,13 @@ struct ForestUI: View {
         }
         .onChange(of: isMuted) { newValue in
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: newValue)
+        }
+        .fullScreenCover(isPresented: $showStarterCompanionSelection) {
+            StarterCompanionSelectionUI {
+                showStarterCompanionSelection = false
+                viewModel.fetchForest()
+            }
+            .interactiveDismissDisabled(true)
         }
     }
 }

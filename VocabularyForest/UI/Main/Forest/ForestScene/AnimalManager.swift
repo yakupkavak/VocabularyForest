@@ -90,10 +90,23 @@ private extension AnimalManager {
     
     // MARK: - SETUP ASSETS
     
-    func loadTextures(for type: String) {
-        idleTextures = loadAtlas(named: "\(type)Idle", prefix: "\(type.lowercased())_idle_")
-        jumpTextures = loadAtlas(named: "\(type)Jump", prefix: "\(type.lowercased())_jump_")
-        walkingTextures = loadAtlas(named: "\(type)Walk", prefix: "\(type.lowercased())_walk_")
+    func loadTextures(for model: AnimalModel) {
+        idleTextures.removeAll()
+        jumpTextures.removeAll()
+        walkingTextures.removeAll()
+
+        let resolvedPath = model.mediaLocalPath ?? ForestLocalMediaPathResolver.resolvePath(for: model.assetName)
+        idleTextures = LocalMediaBundleLoader.textures(rootPath: resolvedPath, animationKey: .idle)
+        jumpTextures = LocalMediaBundleLoader.textures(rootPath: resolvedPath, animationKey: .jump)
+        walkingTextures = LocalMediaBundleLoader.textures(rootPath: resolvedPath, animationKey: .walk)
+
+        guard !idleTextures.isEmpty, !jumpTextures.isEmpty, !walkingTextures.isEmpty else {
+            let type = model.assetName
+            idleTextures = loadAtlas(named: "\(type)Idle", prefix: "\(type.lowercased())_idle_")
+            jumpTextures = loadAtlas(named: "\(type)Jump", prefix: "\(type.lowercased())_jump_")
+            walkingTextures = loadAtlas(named: "\(type)Walk", prefix: "\(type.lowercased())_walk_")
+            return
+        }
     }
 
     func loadCircleAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
@@ -159,7 +172,7 @@ private extension AnimalManager {
     }
 
     func setupAnimal(animal: AnimalModel) {
-        loadTextures(for: animal.assetName)
+        loadTextures(for: animal)
         setupAnimalFrames(model: animal)
         idleAnimation()
         randomActions()

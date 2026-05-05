@@ -16,6 +16,7 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var xPosition: CGFloat
     var yPosition: CGFloat
     var lastUpdatedDate: Date
+    var mediaLocalPath: String? = nil
 
 }
 

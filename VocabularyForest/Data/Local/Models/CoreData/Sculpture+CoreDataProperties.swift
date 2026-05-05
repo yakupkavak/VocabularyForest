@@ -26,6 +26,7 @@ extension Sculpture {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var mediaLocalPath: String?
     
 }
 
@@ -42,7 +43,8 @@ extension Sculpture: ConvertSafeModel {
                     createdDate: createdDate,
                     xPosition: self.xPosition,
                     yPosition: self.yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    mediaLocalPath: mediaLocalPath
                 )
             }
             throw SafeModelError.emptyValue

@@ -18,6 +18,11 @@ struct RemoteRewardModel: Codable, Identifiable {
     let rewardCount: Int?
     let nameKey: String?          // Localization key instead of raw text
     let imageName: String?
+    let mediaSourceType: String?
+    let mediaFileType: String?
+    let previewImageURL: String?
+    let sourceFieldKey: String?
+    let sourceVersion: String?
     let probabilityWeight: Double?
     let textColorHex: String?
     let gradientHexes: [String]?

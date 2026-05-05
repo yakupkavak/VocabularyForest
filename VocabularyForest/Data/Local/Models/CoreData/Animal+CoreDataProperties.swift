@@ -28,6 +28,7 @@ extension Animal {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var mediaLocalPath: String?
 
 }
 
@@ -46,7 +47,8 @@ extension Animal: ConvertSafeModel {
                     isAlive: isAlive,
                     xPosition: xPosition,
                     yPosition: yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    mediaLocalPath: mediaLocalPath
                 )
             }
             throw SafeModelError.emptyValue

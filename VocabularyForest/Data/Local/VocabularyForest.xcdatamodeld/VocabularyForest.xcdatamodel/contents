@@ -8,6 +8,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="mediaLocalPath" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="animals" inverseEntity="Forest"/>
@@ -97,6 +98,7 @@
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="mediaLocalPath" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="sculptures" inverseEntity="Forest"/>
@@ -109,6 +111,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="mediaLocalPath" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="trees" inverseEntity="Forest"/>

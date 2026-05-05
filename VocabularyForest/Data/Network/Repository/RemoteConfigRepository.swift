@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 import FirebaseRemoteConfig
 
 enum RemoteConfigError: Error, LocalizedError {
@@ -32,6 +33,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchDailySpinRewards() async -> Resource<[DailySpinModel]>
     func fetchQuestsConfig() async -> Resource<[QuestModel]>
     func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]>
+    func fetchStarterCompanionsConfig() async -> Resource<[StarterCompanionModel]>
     func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel>
     func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
@@ -43,6 +45,7 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         static let dailySpinRewards = "daily_spin_rewards_config"
         static let questsConfig = "quests_config"
         static let weeklyRewards = "weekly_rewards_config"
+        static let starterCompanions = "starter_companions_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
         static let gameEconomyConfig = "game_economy_config"
     }
@@ -132,6 +135,8 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                     battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: trimmed(dto.battleEnemyModel)),
                     gameLevel: GameLevel.convertFromCoreData(value: trimmed(dto.gameLevel))
                 )
+
+                registerRewardMediaDescriptorIfNeeded(dto.reward)
                 safeModels.append(quest)
             }
             
@@ -142,6 +147,78 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             
         case .failure(let error):
             return .error(error: error)
+        }
+    }
+
+    func fetchStarterCompanionsConfig() async -> Resource<[StarterCompanionModel]> {
+        let decodedResult: Result<DecodedPayload<RemoteStarterCompanionItemDTO>, RemoteConfigError> = await fetchDecodedArray(
+            forKey: Keys.starterCompanions,
+            as: RemoteStarterCompanionItemDTO.self
+        )
+
+        switch decodedResult {
+        case .success(let payload):
+            _ = persistConfigID(payload.id, forRemoteKey: Keys.starterCompanions)
+
+            let mapped = payload.items.compactMap { item -> StarterCompanionModel? in
+                let modelKey = safeAssetName(from: item.modelKey, fallback: "")
+                guard !modelKey.isEmpty else {
+                    return nil
+                }
+
+                let category = normalized(item.category, fallback: "animal")
+                let rawSourceType = normalized(item.mediaSourceType, fallback: RewardMediaSourceType.localAsset.rawValue)
+                let sourceType = RewardMediaSourceType(rawValue: rawSourceType) ?? .localAsset
+                let fileType = resolveFileType(rawValue: item.mediaFileType, sourceType: sourceType)
+
+                return StarterCompanionModel(
+                    id: trimmed(item.id) ?? UUID().uuidString,
+                    modelKey: modelKey,
+                    category: category,
+                    displayName: trimmed(item.displayName),
+                    previewImageName: trimmed(item.previewImageName) ?? modelKey,
+                    mediaSourceType: sourceType,
+                    mediaFileType: fileType,
+                    previewImageURL: nil,
+                    sourceFieldKey: trimmed(item.sourceFieldKey),
+                    sourceVersion: trimmed(item.sourceVersion)
+                )
+            }
+
+            let options = mapped.isEmpty ? RewardMediaCatalogStore.localStarterDefaults() : mapped
+            let catalogEntries = options.map {
+                RewardMediaCatalogEntry(
+                    category: $0.category,
+                    modelKey: $0.modelKey,
+                    descriptor: RewardMediaDescriptor(
+                        sourceType: $0.mediaSourceType,
+                        fileType: $0.mediaFileType,
+                        previewImageURL: $0.previewImageURL,
+                        sourceFieldKey: $0.sourceFieldKey,
+                        sourceVersion: $0.sourceVersion
+                    )
+                )
+            }
+            RewardMediaCatalogStore.save(entries: catalogEntries)
+            return .success(options)
+
+        case .failure:
+            let localDefaults = RewardMediaCatalogStore.localStarterDefaults()
+            let catalogEntries = localDefaults.map {
+                RewardMediaCatalogEntry(
+                    category: $0.category,
+                    modelKey: $0.modelKey,
+                    descriptor: RewardMediaDescriptor(
+                        sourceType: $0.mediaSourceType,
+                        fileType: $0.mediaFileType,
+                        previewImageURL: $0.previewImageURL,
+                        sourceFieldKey: $0.sourceFieldKey,
+                        sourceVersion: $0.sourceVersion
+                    )
+                )
+            }
+            RewardMediaCatalogStore.save(entries: catalogEntries)
+            return .success(localDefaults)
         }
     }
 
@@ -327,6 +404,18 @@ private extension RemoteConfigRepository {
         let id: String?
         let day: Int?
         let reward: RemoteRewardModel?
+    }
+
+    struct RemoteStarterCompanionItemDTO: Decodable {
+        let id: String?
+        let modelKey: String?
+        let category: String?
+        let displayName: String?
+        let previewImageName: String?
+        let mediaSourceType: String?
+        let mediaFileType: String?
+        let sourceFieldKey: String?
+        let sourceVersion: String?
     }
 
     struct RemoteAdventureRoadRewardDTO: Decodable {
@@ -541,6 +630,8 @@ private extension RemoteConfigRepository {
             return .standart(model: .water(count: 1))
         }
 
+        registerRewardMediaDescriptorIfNeeded(remoteReward)
+
         let type = normalized(remoteReward.type, fallback: "resource")
         let category = normalized(remoteReward.category, fallback: "water")
 
@@ -587,12 +678,74 @@ private extension RemoteConfigRepository {
         }
     }
 
+    func registerRewardMediaDescriptorIfNeeded(_ remoteReward: RemoteRewardModel?) {
+        guard let remoteReward else { return }
+
+        let category = normalized(remoteReward.category, fallback: "")
+        guard ["animal", "plant", "sculpture"].contains(category) else {
+            return
+        }
+
+        let modelKey = safeAssetName(from: remoteReward.imageName, fallback: "")
+        guard !modelKey.isEmpty else {
+            return
+        }
+
+        let rawType = normalized(remoteReward.mediaSourceType, fallback: RewardMediaSourceType.remoteBundle.rawValue)
+        let sourceType = RewardMediaSourceType(rawValue: rawType) ?? .remoteBundle
+        let fileType = resolveFileType(rawValue: remoteReward.mediaFileType, sourceType: sourceType)
+
+        RewardMediaCatalogStore.save(
+            category: category,
+            modelKey: modelKey,
+            descriptor: RewardMediaDescriptor(
+                sourceType: sourceType,
+                fileType: fileType,
+                previewImageURL: trimmed(remoteReward.previewImageURL),
+                sourceFieldKey: trimmed(remoteReward.sourceFieldKey),
+                sourceVersion: trimmed(remoteReward.sourceVersion)
+            )
+        )
+    }
+
+    func resolveFileType(rawValue: String?, sourceType: RewardMediaSourceType) -> RewardMediaFileType {
+        let normalizedValue = normalized(rawValue, fallback: "")
+        if let fileType = RewardMediaFileType(rawValue: normalizedValue) {
+            return fileType
+        }
+
+        switch sourceType {
+        case .remoteBundle:
+            return .zip
+        case .localAsset:
+            return .image
+        }
+    }
+
     func safeUUID(from value: String?) -> UUID {
         guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines),
-              let uuid = UUID(uuidString: value) else {
+              !value.isEmpty else {
             return UUID()
         }
-        return uuid
+
+        if let uuid = UUID(uuidString: value) {
+            return uuid
+        }
+
+        let digest = SHA256.hash(data: Data(value.lowercased().utf8))
+        var bytes = Array(digest.prefix(16))
+        bytes[6] = (bytes[6] & 0x0F) | 0x50
+        bytes[8] = (bytes[8] & 0x3F) | 0x80
+
+        let hex = bytes.map { String(format: "%02x", $0) }.joined()
+        let part1 = String(hex.prefix(8))
+        let part2 = String(hex.dropFirst(8).prefix(4))
+        let part3 = String(hex.dropFirst(12).prefix(4))
+        let part4 = String(hex.dropFirst(16).prefix(4))
+        let part5 = String(hex.dropFirst(20).prefix(12))
+        let uuidString = "\(part1)-\(part2)-\(part3)-\(part4)-\(part5)"
+
+        return UUID(uuidString: uuidString) ?? UUID()
     }
 
     func safeWeight(_ value: Double?) -> Double {

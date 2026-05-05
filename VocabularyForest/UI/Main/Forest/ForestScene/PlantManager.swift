@@ -71,10 +71,18 @@ class PlantManager {
 private extension PlantManager {
     
     func loadTextures(for model: TreeModel) {
-        let atlas = SKTextureAtlas(named: model.assetName)
-        for i in Constants.firstFrameIndex..<atlas.textureNames.count {
-            textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+        textures.removeAll()
+
+        let resolvedPath = model.mediaLocalPath ?? ForestLocalMediaPathResolver.resolvePath(for: model.assetName)
+        textures = LocalMediaBundleLoader.textures(rootPath: resolvedPath, animationKey: .frames)
+
+        if textures.isEmpty {
+            let atlas = SKTextureAtlas(named: model.assetName)
+            for i in Constants.firstFrameIndex..<atlas.textureNames.count {
+                textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+            }
         }
+
         setPlant(model: model)
         plant.zPosition = getZIndex(yPosition: model.yPosition)
     }

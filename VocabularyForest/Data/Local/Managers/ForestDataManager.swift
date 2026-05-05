@@ -327,6 +327,7 @@ extension ForestDataManager {
                 sculpture.characterName = generateRandomName(type: .sculpture)
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
+                sculpture.mediaLocalPath = sculptureModel.mediaLocalPath
                 sculpture.lastUpdatedDate = Date()
                 forest.addToSculptures(sculpture)
             }
@@ -424,7 +425,7 @@ extension ForestDataManager {
             
             switch model {
             case .animal(let name):
-                let animalModel = createSafeAnimal(assetName: name)
+                let animalModel = createSafeAnimal(assetName: name, contextType: contextType)
                 let animal = Animal(context: context)
                 animal.id = animalModel.id
                 animal.characterName = animalModel.characterName
@@ -434,6 +435,7 @@ extension ForestDataManager {
                 animal.isAlive = animalModel.isAlive
                 animal.xPosition = animalModel.xPosition
                 animal.yPosition = animalModel.yPosition
+                animal.mediaLocalPath = animalModel.mediaLocalPath
                 animal.lastUpdatedDate = animalModel.lastUpdatedDate
                 forest.addToAnimals(animal)
                 
@@ -448,6 +450,7 @@ extension ForestDataManager {
                 tree.assetName = treeModel.assetName
                 tree.xPosition = treeModel.xPosition
                 tree.yPosition = treeModel.yPosition
+                tree.mediaLocalPath = treeModel.mediaLocalPath
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
                 forest.addToTrees(tree)
                 
@@ -460,6 +463,7 @@ extension ForestDataManager {
                 sculpture.characterName = sculptureModel.characterName
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
+                sculpture.mediaLocalPath = sculptureModel.mediaLocalPath
                 sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
                 forest.addToSculptures(sculpture)
                 
@@ -520,6 +524,7 @@ extension ForestDataManager {
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
                 tree.xPosition = treeModel.xPosition
                 tree.yPosition = treeModel.yPosition
+                tree.mediaLocalPath = treeModel.mediaLocalPath
                 newForest.addToTrees(tree)
             }
             
@@ -534,6 +539,7 @@ extension ForestDataManager {
                 animal.lastUpdatedDate = animalModel.lastUpdatedDate
                 animal.xPosition = animalModel.xPosition
                 animal.yPosition = animalModel.yPosition
+                animal.mediaLocalPath = animalModel.mediaLocalPath
                 newForest.addToAnimals(animal)
             }
             
@@ -546,6 +552,7 @@ extension ForestDataManager {
                 sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
+                sculpture.mediaLocalPath = sculptureModel.mediaLocalPath
                 newForest.addToSculptures(sculpture)
             }
             
@@ -833,7 +840,7 @@ private extension ForestDataManager {
 }
 
 private extension ForestDataManager {
-    func createSafeAnimal(assetName: String) -> AnimalModel {
+    func createSafeAnimal(assetName: String, contextType _: ContextType) -> AnimalModel {
         return AnimalModel(
             id: UUID(),
             characterName: generateRandomName(type: .animal),
@@ -843,7 +850,8 @@ private extension ForestDataManager {
             isAlive: true,
             xPosition: CGFloat.random(in: -50...50),
             yPosition: CGFloat.random(in: -50...50),
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            mediaLocalPath: resolveMediaLocalPath(for: .animal, assetName: assetName)
         )
     }
     func createSafePlant(assetName: String, contextType: ContextType) -> TreeModel {
@@ -856,7 +864,8 @@ private extension ForestDataManager {
             treeHealthValue: 5,
             xPosition: pos.x,
             yPosition: pos.y,
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            mediaLocalPath: resolveMediaLocalPath(for: .plant, assetName: assetName)
         )
     }
     func createSafeSculpture(assetName: String, contextType: ContextType) -> SculptureModel {
@@ -867,7 +876,35 @@ private extension ForestDataManager {
             characterName: generateRandomName(type: .sculpture), createdDate: Date(),
             xPosition: pos.x,
             yPosition: pos.y,
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            mediaLocalPath: resolveMediaLocalPath(for: .sculpture, assetName: assetName)
         )
+    }
+
+    enum RewardMediaCategory: String {
+        case animal
+        case plant
+        case sculpture
+    }
+
+    func resolveMediaLocalPath(for category: RewardMediaCategory, assetName: String) -> String? {
+        let trimmedAssetName = assetName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedAssetName.isEmpty else {
+            return nil
+        }
+
+        if let descriptor = RewardMediaCatalogStore.descriptor(
+            category: category.rawValue,
+            modelKey: trimmedAssetName
+        ) {
+            switch descriptor.sourceType {
+            case .localAsset:
+                return nil
+            case .remoteBundle:
+                return ForestLocalMediaPathResolver.resolvePath(for: trimmedAssetName)
+            }
+        }
+
+        return ForestLocalMediaPathResolver.resolvePath(for: trimmedAssetName)
     }
 }

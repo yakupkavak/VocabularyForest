@@ -28,6 +28,7 @@ extension Tree {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var mediaLocalPath: String?
     
 }
 
@@ -45,7 +46,8 @@ extension Tree: ConvertSafeModel {
                     treeHealthValue: Int(self.healthValue),
                     xPosition: self.xPosition,
                     yPosition: self.yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    mediaLocalPath: mediaLocalPath
                 )
             }
             throw SafeModelError.emptyValue

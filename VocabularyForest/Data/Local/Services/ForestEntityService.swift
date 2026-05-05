@@ -59,6 +59,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             tree.healthValue = Int16(model.treeHealthValue)
             tree.isAlive = model.isAlive
             tree.assetName = model.assetName
+            tree.mediaLocalPath = model.mediaLocalPath
             tree.xPosition = Double(model.xPosition)
             tree.yPosition = Double(model.yPosition)
             tree.lastUpdatedDate = Date()
@@ -87,6 +88,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             animal.isAlive = model.isAlive
             animal.xPosition = Double(model.xPosition)
             animal.yPosition = Double(model.yPosition)
+            animal.mediaLocalPath = model.mediaLocalPath
             animal.lastUpdatedDate = Date()
             forest.addToAnimals(animal)
             do {
@@ -111,6 +113,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             sculpture.characterName = generateRandomName(type: .sculpture)
             sculpture.xPosition = model.xPosition
             sculpture.yPosition = model.yPosition
+            sculpture.mediaLocalPath = model.mediaLocalPath
             sculpture.lastUpdatedDate = Date()
             forest.addToSculptures(sculpture)
             do {
@@ -139,7 +142,8 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
                     createdDate: sculpture.createdDate ?? Date(),
                     xPosition: sculpture.xPosition,
                     yPosition: sculpture.yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    mediaLocalPath: sculpture.mediaLocalPath
                 )
             }
             return nil
@@ -164,7 +168,8 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
                     isAlive: animal.isAlive,
                     xPosition: animal.xPosition,
                     yPosition: animal.yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    mediaLocalPath: animal.mediaLocalPath
                 )
             }
             return nil

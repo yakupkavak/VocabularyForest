@@ -1178,6 +1178,9 @@
         }
       }
     },
+    "Başlangıç Dostunu Seç" : {
+
+    },
     "Beklenmedik hata" : {
       "localizations" : {
         "en" : {
@@ -1628,6 +1631,9 @@
         }
       }
     },
+    "Bu dost oyuna seninle başlar. İleride görevlerden yenilerini alabilirsin." : {
+
+    },
     "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
       "localizations" : {
         "en" : {
@@ -1838,6 +1844,9 @@
         }
       }
     },
+    "Cat" : {
+
+    },
     "cat_name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2010,6 +2019,9 @@
       }
     },
     "Cloud Forest" : {
+
+    },
+    "Comes from local app assets" : {
 
     },
     "Completed!" : {
@@ -2942,6 +2954,9 @@
           }
         }
       }
+    },
+    "Dog" : {
+
     },
     "dog_name" : {
       "extractionState" : "manual",
@@ -9223,6 +9238,9 @@
     "Start Spin" : {
 
     },
+    "Starter companion could not be added." : {
+
+    },
     "Such peaceful and ancient vibes." : {
 
     },
@@ -10018,6 +10036,9 @@
     "Where did all the water go?" : {
 
     },
+    "White Cat" : {
+
+    },
     "White Shadow ☁️" : {
       "localizations" : {
         "en" : {
@@ -10086,6 +10107,9 @@
           }
         }
       }
+    },
+    "Will use downloaded media bundle" : {
+
     },
     "wrong" : {
       "localizations" : {

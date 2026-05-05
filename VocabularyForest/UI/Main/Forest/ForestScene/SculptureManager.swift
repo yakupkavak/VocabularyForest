@@ -62,7 +62,12 @@ class SculptureManager {
 private extension SculptureManager {
     
     func setModel(model: SculptureModel) {
-        currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        let resolvedPath = model.mediaLocalPath ?? ForestLocalMediaPathResolver.resolvePath(for: model.assetName)
+        if let texture = LocalMediaBundleLoader.posterTexture(rootPath: resolvedPath) {
+            currentSculptureNode = SKSpriteNode(texture: texture)
+        } else {
+            currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        }
         currentSculptureNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
