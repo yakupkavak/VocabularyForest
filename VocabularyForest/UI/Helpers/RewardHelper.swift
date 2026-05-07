@@ -78,18 +78,18 @@ extension RewardHelper {
     enum RandomConfig {
        static let percentScale = 100
        static let goldDiamondChance = 10
-       static let goldWaterChance = 20
-       static let natureAnimalChance = 20
-       static let antiqueAnimalChance = 50
+       static let goldWaterChance = 18
+       static let natureAnimalChance = 30
+       static let antiqueAnimalChance = 80
        
-       static let goldMin = 50
-       static let goldMax = 100
-       static let bonusDiamondMin = 1
-       static let bonusDiamondMax = 3
-       static let bonusWaterMin = 30
-       static let bonusWaterMax = 40
-       static let diamondChestMin = 10
-       static let diamondChestMax = 20
+       static let goldMin = 120
+       static let goldMax = 280
+       static let bonusDiamondMin = 2
+       static let bonusDiamondMax = 6
+       static let bonusWaterMin = 35
+       static let bonusWaterMax = 60
+       static let diamondChestMin = 14
+       static let diamondChestMax = 28
    }
 }
 
@@ -107,6 +107,10 @@ struct RewardHelper {
         let bonusWaterMax: Int
         let diamondChestMin: Int
         let diamondChestMax: Int
+        let natureAnimals: [ChestRewardCandidateModel]
+        let naturePlants: [ChestRewardCandidateModel]
+        let antiqueAnimals: [ChestRewardCandidateModel]
+        let antiqueSculptures: [ChestRewardCandidateModel]
     }
 
     private enum BackgroundGradientConfig {
@@ -205,8 +209,14 @@ struct RewardHelper {
         case .nature:
             let roll = Int.random(in: 0..<RandomConfig.percentScale)
             if roll < config.natureAnimalChance {
+                if let candidate = weightedPick(from: config.natureAnimals) {
+                    return mapCandidateToReward(candidate)
+                }
                 let animal = AnimalReward.allCases.randomElement() ?? .dog
                 return .animal(modelName: animal.name)
+            }
+            if let candidate = weightedPick(from: config.naturePlants) {
+                return mapCandidateToReward(candidate)
             }
             let plant = PlantReward.allCases.randomElement() ?? .sunFlower
             return .plant(modelName: plant.name)
@@ -217,8 +227,14 @@ struct RewardHelper {
         case .antique:
             let roll = Int.random(in: 0..<RandomConfig.percentScale)
             if roll < config.antiqueAnimalChance {
+                if let candidate = weightedPick(from: config.antiqueAnimals) {
+                    return mapCandidateToReward(candidate)
+                }
                 let animal = AnimalReward.allCases.randomElement() ?? .dog
                 return .animal(modelName: animal.name)
+            }
+            if let candidate = weightedPick(from: config.antiqueSculptures) {
+                return mapCandidateToReward(candidate)
             }
             let sculpture = SculptureReward.allCases.randomElement() ?? .deer
             return .sculpture(modelName: sculpture.name)
@@ -252,32 +268,32 @@ struct RewardHelper {
             .map { reward in
                 switch reward {
                 case .goldChest:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .gold))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .gold), presentation: nil)
                 case .antiqueChest:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .antique))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .antique), presentation: nil)
                 case .natureChest:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .nature))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .nature), presentation: nil)
                 case .diamondChest:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .diamond))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .chest(model: .diamond), presentation: nil)
                 case .gold:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .gold(count: reward.rewardCount)))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .gold(count: reward.rewardCount)), presentation: nil)
                 case .water:
-                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .water(count: reward.rewardCount)))
+                    DailySpinModel(weight: reward.probabilityWeight, reward: .standart(model: .water(count: reward.rewardCount)), presentation: nil)
                 }
             }
     }
     
-    static func createDailySpinWheel(from rewards: [DailySpinModel]) -> ([SpinModel], [Int: LocalRewardModel]) {
+    static func createDailySpinWheel(from rewards: [DailySpinModel]) -> ([SpinModel], [Int: DailySpinModel]) {
         let safeRewards = rewards.isEmpty ? defaultDailySpinRewards() : rewards
-        var rewardMap: [Int: LocalRewardModel] = [:]
+        var rewardMap: [Int: DailySpinModel] = [:]
         
         let spinModels = safeRewards.enumerated().map { index, model in
             let id = index + 1
-            rewardMap[id] = model.reward
+            rewardMap[id] = model
             return SpinModel(
                 id: id,
-                text: spinText(for: model.reward),
-                image: Image(model.reward.rewardImage),
+                text: spinText(for: model),
+                image: spinImage(for: model),
                 weight: max(1.0, model.weight),
                 textColor: spinTextColor(for: model.reward),
                 background: spinBackground(for: model.reward)
@@ -289,7 +305,13 @@ struct RewardHelper {
 }
 
 private extension RewardHelper {
-    static func spinText(for reward: LocalRewardModel) -> String {
+    static func spinText(for model: DailySpinModel) -> String {
+        if let displayName = model.presentation?.displayName,
+           !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return displayName
+        }
+
+        let reward = model.reward
         switch reward {
         case .chest(let model):
             return model.rewardName
@@ -305,6 +327,10 @@ private extension RewardHelper {
                 return String(localized: String.LocalizationValue(model.rewardName))
             }
         }
+    }
+
+    static func spinImage(for model: DailySpinModel) -> Image {
+        RewardImageProvider.image(for: model.reward, presentation: model.presentation)
     }
     
     static func spinTextColor(for reward: LocalRewardModel) -> Color {
@@ -376,7 +402,7 @@ private extension RewardHelper {
     }
     
     private static func chestRuntimeConfig() -> ChestRuntimeConfig {
-        guard let economyConfig = GameManager.snapshotEconomyConfig() else {
+        guard let chestConfig = GameManager.snapshotChestRewardsConfig() else {
             return ChestRuntimeConfig(
                 goldDiamondChance: RandomConfig.goldDiamondChance,
                 goldWaterChance: RandomConfig.goldWaterChance,
@@ -389,24 +415,61 @@ private extension RewardHelper {
                 bonusWaterMin: RandomConfig.bonusWaterMin,
                 bonusWaterMax: RandomConfig.bonusWaterMax,
                 diamondChestMin: RandomConfig.diamondChestMin,
-                diamondChestMax: RandomConfig.diamondChestMax
+                diamondChestMax: RandomConfig.diamondChestMax,
+                natureAnimals: [],
+                naturePlants: [],
+                antiqueAnimals: [],
+                antiqueSculptures: []
             )
         }
-        
-        let ranges = economyConfig.chestRewardRanges
+
+        let ranges = chestConfig.ranges
+        let odds = chestConfig.odds
         return ChestRuntimeConfig(
-            goldDiamondChance: economyConfig.chestOdds.goldChestDiamondChance,
-            goldWaterChance: economyConfig.chestOdds.goldChestWaterChance,
-            natureAnimalChance: economyConfig.chestOdds.natureChestAnimalChance,
-            antiqueAnimalChance: economyConfig.chestOdds.antiqueChestAnimalChance,
+            goldDiamondChance: odds.goldChestDiamondChance,
+            goldWaterChance: odds.goldChestWaterChance,
+            natureAnimalChance: odds.natureChestAnimalChance,
+            antiqueAnimalChance: odds.antiqueChestAnimalChance,
             goldMin: ranges.goldChestGoldMin,
             goldMax: ranges.goldChestGoldMax,
             bonusDiamondMin: ranges.goldChestDiamondMin,
             bonusDiamondMax: ranges.goldChestDiamondMax,
-            bonusWaterMin: RandomConfig.bonusWaterMin,
-            bonusWaterMax: RandomConfig.bonusWaterMax,
+            bonusWaterMin: ranges.goldChestWaterMin,
+            bonusWaterMax: ranges.goldChestWaterMax,
             diamondChestMin: ranges.diamondChestDiamondMin,
-            diamondChestMax: ranges.diamondChestDiamondMax
+            diamondChestMax: ranges.diamondChestDiamondMax,
+            natureAnimals: chestConfig.pools.natureAnimals,
+            naturePlants: chestConfig.pools.naturePlants,
+            antiqueAnimals: chestConfig.pools.antiqueAnimals,
+            antiqueSculptures: chestConfig.pools.antiqueSculptures
         )
+    }
+
+    private static func weightedPick(from candidates: [ChestRewardCandidateModel]) -> ChestRewardCandidateModel? {
+        guard !candidates.isEmpty else { return nil }
+        let totalWeight = candidates.reduce(0.0) { $0 + $1.safeProbabilityWeight }
+        guard totalWeight > 0 else { return candidates.randomElement() }
+
+        var roll = Double.random(in: 0..<totalWeight)
+        for candidate in candidates {
+            roll -= candidate.safeProbabilityWeight
+            if roll <= 0 {
+                return candidate
+            }
+        }
+        return candidates.last
+    }
+
+    private static func mapCandidateToReward(_ candidate: ChestRewardCandidateModel) -> QuestRewardModel {
+        switch candidate.category.lowercased() {
+        case "animal":
+            return .animal(modelName: candidate.modelKey)
+        case "plant":
+            return .plant(modelName: candidate.modelKey)
+        case "sculpture":
+            return .sculpture(modelName: candidate.modelKey)
+        default:
+            return .water(count: 1)
+        }
     }
 }

@@ -39,8 +39,13 @@ protocol ForestViewModelProtocol: AnyObject {
     func closeBookError()
     func updateComponentName(name: String)
     func setComponent(uuid: UUID, for componentType: ComponentType)
-    func fetchWeeklyDailyCards()
-    func fetchAdventureRoadData()
+    func fetchWeeklyDailyCards(shouldPresentToast: Bool) async -> Bool
+    func fetchAdventureRoadData(shouldPresentToast: Bool) async -> Bool
+}
+
+enum ForestToastType {
+    case none
+    case internetRequired
 }
 
 // MARK: - VIEW MODEL
@@ -76,6 +81,8 @@ class ForestViewModel: BaseViewModel {
     @Published var dailySpinModelVersion = UUID()
     @Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
     @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
+    @Published var toastMessageModel: ForestToastType = .none
+    @Published var networkErrorAdventure: Bool = false
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -83,7 +90,8 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    private var dailySpinRewardMap: [Int: LocalRewardModel] = ForestViewModel.defaultDailySpinWheel.1
+    private var dailySpinRewardMap: [Int: DailySpinModel] = ForestViewModel.defaultDailySpinWheel.1
+    private var hasResolvedQuestData = false
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
@@ -201,15 +209,27 @@ extension ForestViewModel {
 
 extension ForestViewModel {
     
-    func fetchWeeklyDailyCards() {
-        Task { @MainActor in
-            let result = await adventureService.fetchWeeklyDailyRewards()
-            if result.status == .success, let cards = result.data {
-                self.weeklyDailyCards = cards
-            } else {
-                print("Hata: Haftalık kartlar çekilemedi -> \(result.error?.localizedDescription ?? "")")
+    func fetchWeeklyDailyCards(shouldPresentToast: Bool = true) async -> Bool {
+        let weeklyRewardsResult = await remoteConfigRepository.fetchWeeklyRewards()
+        guard weeklyRewardsResult.status == .success,
+              let rewards = weeklyRewardsResult.data,
+              !rewards.isEmpty else {
+            if shouldPresentToast, shouldPresentInternetRequiredToast(for: weeklyRewardsResult.error) {
+                await presentInternetRequiredToast()
             }
+            networkErrorAdventure = true
+            return false
         }
+
+        let result = await adventureService.fetchWeeklyDailyRewards(rewards: rewards)
+        guard result.status == .success, let cards = result.data, !cards.isEmpty else {
+            return false
+        }
+
+        await MainActor.run {
+            self.weeklyDailyCards = cards
+        }
+        return true
     }
     
     func initalizeForest() {
@@ -220,61 +240,85 @@ extension ForestViewModel {
             treeList.removeAll()
             fetchForest()
             checkDailySpinStatus()
-            refreshDailySpinRewards()
-            fetchWeeklyDailyCards()
-            fetchAdventureRoadData()
+            _ = await refreshChestRewardsConfig(shouldPresentToast: false)
+            _ = await refreshDailySpinRewards(shouldPresentToast: false)
+            _ = await fetchWeeklyDailyCards(shouldPresentToast: false)
+            _ = await fetchAdventureRoadData(shouldPresentToast: false)
         }
     }
     
-    func refreshDailySpinRewards() {
-        Task(priority: .background) { [weak self] in
-            guard let self else { return }
-            let result = await remoteConfigRepository.fetchDailySpinRewards()
-            guard result.status == .success, let rewards = result.data else { return }
-            let (models, rewardMap) = RewardHelper.createDailySpinWheel(from: rewards)
-            
-            await MainActor.run { [weak self] in
-                guard let self else { return }
-                self.dailySpinModels = models
-                self.dailySpinRewardMap = rewardMap
-                self.dailySpinModelVersion = UUID()
+    func refreshDailySpinRewards(shouldPresentToast: Bool) async -> Bool {
+        let result = await remoteConfigRepository.fetchDailySpinRewards()
+        guard result.status == .success, let rewards = result.data, !rewards.isEmpty else {
+            if shouldPresentToast, shouldPresentInternetRequiredToast(for: result.error) {
+                presentInternetRequiredToast()
             }
+            networkErrorAdventure = true
+            return false
         }
+        let (models, rewardMap) = RewardHelper.createDailySpinWheel(from: rewards)
+        
+        await MainActor.run {
+            self.dailySpinModels = models
+            self.dailySpinRewardMap = rewardMap
+            self.dailySpinModelVersion = UUID()
+        }
+        return true
     }
     
-    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel {
-        dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
+    func resolveDailySpinReward(from spinModel: SpinModel) -> DailySpinModel {
+        dailySpinRewardMap[spinModel.id] ?? DailySpinModel(
+            weight: max(1.0, spinModel.weight),
+            reward: RewardHelper.convertDailyRewardModel(from: spinModel),
+            presentation: nil
+        )
     }
     
-    func fetchAdventureRoadData() {
-        Task { @MainActor in
-            let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
-            var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
-            
-            if let config = configResult.data, trueNow >= config.seasonEndDate {
-                configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
+    func fetchAdventureRoadData(shouldPresentToast: Bool) async -> Bool {
+        let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
+        var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
+        
+        if let config = configResult.data, trueNow >= config.seasonEndDate {
+            configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
+        }
+        
+        let progress = playerDataManager.fetchAdventureRoadProgress(contextType: .main) ?? AdventureRoadProgressModel(
+            seasonID: nil,
+            monthlyShortLearnedCount: 0,
+            monthlyLongLearnedCount: 0
+        )
+        
+        guard configResult.status == .success, let config = configResult.data else {
+            if shouldPresentToast, shouldPresentInternetRequiredToast(for: configResult.error) {
+                presentInternetRequiredToast()
             }
-            
-            let progress = playerDataManager.fetchAdventureRoadProgress(contextType: .main) ?? AdventureRoadProgressModel(
-                seasonID: nil,
-                monthlyShortLearnedCount: 0,
-                monthlyLongLearnedCount: 0
-            )
-            
-            guard configResult.status == .success, let config = configResult.data else {
-                adventureRoadScreenModel = AdventureRoadMockData.screenModel()
-                adventureRoadSeasonLeftTime = adventureRoadScreenModel.eventEndDate
-                return
-            }
-            
-            adventureRoadScreenModel = AdventureRoadBuilder.screenModel(
+            networkErrorAdventure = true
+            return false
+        }
+        
+        await MainActor.run {
+            self.adventureRoadScreenModel = AdventureRoadBuilder.screenModel(
                 rewards: config.rewards,
                 progress: progress,
+                title: config.title,
                 eventEndDate: config.seasonEndDate,
                 referenceDate: trueNow
             )
-            adventureRoadSeasonLeftTime = config.seasonEndDate
+            self.adventureRoadSeasonLeftTime = config.seasonEndDate
         }
+        return true
+    }
+
+    func refreshChestRewardsConfig(shouldPresentToast: Bool) async -> Bool {
+        let result = await remoteConfigRepository.fetchChestRewardsConfig()
+        guard result.status == .success else {
+            if shouldPresentToast, shouldPresentInternetRequiredToast(for: result.error) {
+                presentInternetRequiredToast()
+            }
+            networkErrorAdventure = true
+            return false
+        }
+        return true
     }
     
     func fetchForest() {
@@ -335,6 +379,7 @@ extension ForestViewModel {
                 if let quests = questResult.data {
                     self.processQuests(quests: quests)
                 }
+                self.hasResolvedQuestData = true
                 
                 if let forestData = statusResult.data {
                     self.forestStatus = ForestStatusModel(
@@ -343,8 +388,7 @@ extension ForestViewModel {
                         landStatus: forestData.landStatus,
                         gold: forestData.gold
                     )
-                    
-                    if forestData.rainValue >= 50 { self.showRainButton = true }
+                    self.showRainButton = forestData.rainValue >= ForestConstant.rainValue
                     
                     if let landHealthPercentage = self.forestStatus?.landHealthPercentage {
                         if landHealthPercentage == 0 {
@@ -358,6 +402,35 @@ extension ForestViewModel {
                 self.startRandomTalking()
             }
         }
+    }
+
+    func canOpenQuestScreen() -> Bool {
+        guard hasResolvedQuestData else {
+            return false
+        }
+        let hasQuestData = !dailyQuestList.isEmpty || !weeklyQuestList.isEmpty || !monthlyQuestList.isEmpty || !specialQuestList.isEmpty
+        if !hasQuestData {
+            presentInternetRequiredToast()
+        }
+        return hasQuestData
+    }
+
+    private func shouldPresentInternetRequiredToast(for error: Error?) -> Bool {
+        guard let remoteError = error as? RemoteConfigError else {
+            return false
+        }
+        switch remoteError {
+        case .internetRequiredForInitialSetup, .fetchFailed, .dataMissing:
+            return true
+        case .decodeFailed:
+            return false
+        }
+    }
+
+    @MainActor
+    private func presentInternetRequiredToast() {
+        toastMessageModel = .none
+        toastMessageModel = .internetRequired
     }
     
     func startRain() {

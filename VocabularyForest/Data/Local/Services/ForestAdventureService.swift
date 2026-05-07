@@ -32,7 +32,7 @@ enum ForestAdventureError: LocalizedError {
 // MARK: - PROTOCOL
 
 protocol ForestAdventureServiceProtocol {
-    func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]>
+    func fetchWeeklyDailyRewards(rewards: [WeeklyRewardModel]) async -> Resource<[WeeklyDailyCardModel]>
     func fetchDailySpinStatusDate() async -> Resource<Date?>
     func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
     func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
@@ -58,7 +58,11 @@ class ForestAdventureService: ForestAdventureServiceProtocol {
 
 extension ForestAdventureService {
     
-    func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]> {
+    func fetchWeeklyDailyRewards(rewards: [WeeklyRewardModel]) async -> Resource<[WeeklyDailyCardModel]> {
+        let normalizedRewards = rewards.sorted { $0.day < $1.day }
+        guard normalizedRewards.count == 7 else {
+            return .error(error: ForestAdventureError.networkError)
+        }
         guard let uid = Auth.auth().currentUser?.uid else {
             return .error(error: ForestAdventureError.unauthenticated)
         }
@@ -72,7 +76,13 @@ extension ForestAdventureService {
             if let lastFetch = dailyActivities.lastFetchDate, safeCalendar.isDate(lastFetch, inSameDayAs: trueNow) {
                 let currentDay = Int(dailyActivities.weeklyStreakCurrentDay)
                 let lastClaim = dailyActivities.weeklyStreakLastClaimDate
-                let cardList = generateCardList(currentDay: currentDay, lastClaimDate: lastClaim, trueNow: trueNow, calendar: safeCalendar)
+                let cardList = generateCardList(
+                    rewards: normalizedRewards,
+                    currentDay: currentDay,
+                    lastClaimDate: lastClaim,
+                    trueNow: trueNow,
+                    calendar: safeCalendar
+                )
                 return .success(cardList)
             }
         }
@@ -106,7 +116,13 @@ extension ForestAdventureService {
                     coreDataManager.save(in: context)
                 }
             }
-            let cardList = generateCardList(currentDay: currentDay, lastClaimDate: lastClaimDate, trueNow: trueNow, calendar: safeCalendar)
+            let cardList = generateCardList(
+                rewards: normalizedRewards,
+                currentDay: currentDay,
+                lastClaimDate: lastClaimDate,
+                trueNow: trueNow,
+                calendar: safeCalendar
+            )
             return .success(cardList)
         } catch {
             if let forest = localForestRes.data {
@@ -116,7 +132,13 @@ extension ForestAdventureService {
                 safeCalendar.timeZone = TimeZone(identifier: fixedTZStr) ?? TimeZone(identifier: "UTC")!
                 let currentDay = Int(dailyActivities.weeklyStreakCurrentDay)
                 let lastClaim = dailyActivities.weeklyStreakLastClaimDate
-                let cardList = generateCardList(currentDay: currentDay, lastClaimDate: lastClaim, trueNow: trueNow, calendar: safeCalendar)
+                let cardList = generateCardList(
+                    rewards: normalizedRewards,
+                    currentDay: currentDay,
+                    lastClaimDate: lastClaim,
+                    trueNow: trueNow,
+                    calendar: safeCalendar
+                )
                 return .success(cardList)
             }
             return .error(error: ForestAdventureError.networkError)
@@ -210,7 +232,13 @@ extension ForestAdventureService {
 
 private extension ForestAdventureService {
     
-    func generateCardList(currentDay: Int, lastClaimDate: Date?, trueNow: Date, calendar: Calendar) -> [WeeklyDailyCardModel] {
+    func generateCardList(
+        rewards: [WeeklyRewardModel],
+        currentDay: Int,
+        lastClaimDate: Date?,
+        trueNow: Date,
+        calendar: Calendar
+    ) -> [WeeklyDailyCardModel] {
         var list: [WeeklyDailyCardModel] = []
         var activeDay = 1
         var isClaimedToday = false
@@ -224,16 +252,8 @@ private extension ForestAdventureService {
                 activeDay = 1
             }
         }
-        let baseRewards: [LocalRewardModel] = [
-            .standart(model: .gold(count: 100)),
-            .standart(model: .water(count: 50)),
-            .chest(model: .antique),
-            .standart(model: .gold(count: 200)),
-            .chest(model: .gold),
-            .standart(model: .diamond(count: 10)),
-            .chest(model: .gold)
-        ]
-        for dayIndex in 1...7 {
+        for reward in rewards {
+            let dayIndex = reward.day
             let status: BountyStatus
             if dayIndex < activeDay {
                 status = .claimed
@@ -242,7 +262,14 @@ private extension ForestAdventureService {
             } else {
                 status = .locked
             }
-            list.append(WeeklyDailyCardModel(day: dayIndex, bounty: baseRewards[dayIndex - 1], status: status))
+            list.append(
+                WeeklyDailyCardModel(
+                    day: dayIndex,
+                    bounty: reward.reward,
+                    presentation: reward.presentation,
+                    status: status
+                )
+            )
         }
         return list
     }

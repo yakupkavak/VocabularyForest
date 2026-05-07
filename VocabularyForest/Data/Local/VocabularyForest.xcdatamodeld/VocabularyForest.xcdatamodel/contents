@@ -34,6 +34,44 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="bookcase" inverseEntity="Book"/>
     </entity>
+    <entity name="ChestConfig" representedClassName="ChestConfig" syncable="YES">
+        <attribute name="antiqueChestAnimalChance" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="configID" optional="YES" attributeType="String"/>
+        <attribute name="diamondChestDiamondMax" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="diamondChestDiamondMin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestDiamondChance" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestDiamondMax" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestDiamondMin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestGoldMax" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestGoldMin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestWaterChance" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestWaterMax" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="goldChestWaterMin" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="natureChestAnimalChance" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="season" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="ChestRewardItem" representedClassName="ChestRewardItem" syncable="YES">
+        <attribute name="chestType" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="mediaFileType" optional="YES" attributeType="String"/>
+        <attribute name="mediaSourceType" optional="YES" attributeType="String"/>
+        <attribute name="modelKey" optional="YES" attributeType="String"/>
+        <attribute name="previewImageURL" optional="YES" attributeType="String"/>
+        <attribute name="probabilityWeight" optional="YES" attributeType="Double" defaultValueString="1.0" usesScalarValueType="YES"/>
+        <attribute name="rewardCategory" optional="YES" attributeType="String"/>
+        <attribute name="sourceFieldKey" optional="YES" attributeType="String"/>
+        <attribute name="sourceVersion" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="ChestVisualItem" representedClassName="ChestVisualItem" syncable="YES">
+        <attribute name="chestType" optional="YES" attributeType="String"/>
+        <attribute name="closedImagePath" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="openImagePath" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="DailyActivities" representedClassName="DailyActivities" syncable="YES">
         <attribute name="adventureSeasonID" optional="YES" attributeType="String"/>
         <attribute name="claimedLongTiers" optional="YES" attributeType="String"/>
@@ -48,6 +86,7 @@
         <attribute name="weeklyStreakLastClaimDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="dailyActivities" inverseEntity="Forest"/>
     </entity>
+    <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
     <entity name="Forest" representedClassName="Forest" syncable="YES">
         <attribute name="diamondValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="forestId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

@@ -424,7 +424,7 @@ struct QuestRow: View {
 
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(LocalizedStringKey(quest.title))
+            Text(verbatim: quest.title)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
                 .lineLimit(2)
@@ -447,7 +447,7 @@ struct QuestRow: View {
                 Image(systemName: "scroll.fill")
                     .foregroundStyle(statusColor)
 
-                Text(LocalizedStringKey(quest.description))
+                Text(verbatim: quest.description)
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.9))
                     .fixedSize(horizontal: false, vertical: true)

@@ -76,10 +76,19 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
 private extension ForestInitializerService {
     func loadRemoteQuestTemplates() async -> [QuestModel]? {
         let result = await remoteConfigRepository.fetchQuestsConfig()
+        if result.status == .success, let templates = result.data, !templates.isEmpty {
+            ForestGameHelper.updateRemoteQuestTemplates(templates)
+            return templates
+        }
+        let localQuests = forestManager.fetchQuests(contextType: .background).data ?? []
+        if !localQuests.isEmpty {
+            ForestGameHelper.updateRemoteQuestTemplates(localQuests)
+        } else {
+            ForestGameHelper.clearRemoteQuestTemplates()
+        }
         guard result.status == .success, let templates = result.data, !templates.isEmpty else {
             return nil
         }
-        ForestGameHelper.updateRemoteQuestTemplates(templates)
         return templates
     }
 

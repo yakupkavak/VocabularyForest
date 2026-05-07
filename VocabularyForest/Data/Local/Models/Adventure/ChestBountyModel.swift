@@ -38,16 +38,7 @@ extension ChestBountyModel: Rewardable {
     }
     
     var rewardImage: String {
-        return switch self {
-        case .gold:
-            "gold_chest_close"
-        case .nature:
-            "nature_chest_close"
-        case .diamond:
-            "diamond_chest_close"
-        case .antique:
-            "antique_chest_close"
-        }
+        getChestImage(status: .close)
     }
     
     var typeName: String {
@@ -77,6 +68,12 @@ extension ChestBountyModel: Rewardable {
     }
     
     func getChestImage(status: ChestStatus) -> String {
+        if let config = GameManager.snapshotChestRewardsConfig(),
+           let visual = config.visuals.first(where: { $0.chestType == chestTypeKey }) {
+            let path = status == .open ? visual.openImagePath : visual.closedImagePath
+            return resolveRenderableImageName(from: path)
+        }
+
         return switch self {
         case .gold:
             status == .open ? "gold_chest_open" : "gold_chest_close"
@@ -87,5 +84,32 @@ extension ChestBountyModel: Rewardable {
         case .antique:
             status == .open ? "antique_chest_open" : "antique_chest_close"
         }
+    }
+
+    var chestTypeKey: String {
+        switch self {
+        case .gold:
+            return "gold"
+        case .nature:
+            return "nature"
+        case .diamond:
+            return "diamond"
+        case .antique:
+            return "antique"
+        }
+    }
+
+    private func resolveRenderableImageName(from path: String) -> String {
+        let trimmed = path.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return path }
+
+        let lastSegment = trimmed.split(separator: "/").last.map(String.init) ?? trimmed
+        let assetName = lastSegment.replacingOccurrences(of: ".png", with: "")
+
+        // Keep backward compatibility with existing asset catalog names.
+        if assetName.hasPrefix("diamon_") {
+            return assetName.replacingOccurrences(of: "diamon_", with: "diamond_")
+        }
+        return assetName
     }
 }

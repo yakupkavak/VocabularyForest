@@ -102,6 +102,7 @@ struct AdventureMilestoneModel: Identifiable {
     let track: AdventureMemoryTrack
     let wordCount: Int
     let reward: LocalRewardModel
+    let presentation: RewardPresentationModel?
     let isClaimed: Bool
 
     var id: String {
@@ -199,6 +200,7 @@ enum AdventureRoadMockData {
             track: track,
             wordCount: wordCount,
             reward: reward,
+            presentation: nil,
             isClaimed: wordCount <= claimedWordCount
         )
     }
@@ -228,6 +230,7 @@ enum AdventureRoadBuilder {
     static func screenModel(
         rewards: [AdventureRoadRewardModel],
         progress: AdventureRoadProgressModel,
+        title: String,
         eventEndDate: Date,
         referenceDate: Date
     ) -> AdventureRoadScreenModel {
@@ -240,23 +243,21 @@ enum AdventureRoadBuilder {
                     track: .shortTerm,
                     wordCount: reward.wordCount,
                     reward: reward.shortTermReward,
+                    presentation: reward.shortTermPresentation,
                     isClaimed: reward.wordCount <= progress.monthlyShortLearnedCount
                 ),
                 rightMilestone: AdventureMilestoneModel(
                     track: .longTerm,
                     wordCount: reward.wordCount,
                     reward: reward.longTermReward,
+                    presentation: reward.longTermPresentation,
                     isClaimed: reward.wordCount <= progress.monthlyLongLearnedCount
                 )
             )
         }
         
         return AdventureRoadScreenModel(
-            title: String(
-                localized: "adventure_road_title",
-                defaultValue: "Adventure Road",
-                comment: "Main title of the Adventure Road screen"
-            ),
+            title: title,
             eventEndDate: eventEndDate,
             referenceDate: referenceDate,
             shortTermCorrectWords: progress.monthlyShortLearnedCount,

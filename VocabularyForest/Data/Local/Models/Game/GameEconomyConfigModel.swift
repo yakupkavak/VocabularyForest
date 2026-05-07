@@ -13,6 +13,8 @@ struct GameEconomyConfigModel {
     let chestOdds: GameChestOddsModel
     let chestRewardRanges: GameChestRewardRangesModel
     let killCap: GameKillCapModel
+    let marketPrices: GameMarketPricesModel
+    let progressionTargets: GameProgressionTargetsModel
 }
 
 struct GameChestOddsModel {
@@ -35,4 +37,19 @@ struct GameChestRewardRangesModel {
     let goldChestDiamondMax: Int
     let diamondChestDiamondMin: Int
     let diamondChestDiamondMax: Int
+}
+
+struct GameMarketPricesModel {
+    let animalGold: Int
+    let plantGoldMin: Int
+    let plantGoldMax: Int
+    let sculptureGold: Int
+}
+
+struct GameProgressionTargetsModel {
+    let hourlyGoldTarget: Int
+    let adventureRoadTotalGoldTarget: Int
+    let rainCost: Int
+    let rainDecayPerHour: Int
+    let dailyQuestCompletionRateForRain: Double
 }

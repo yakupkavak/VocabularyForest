@@ -25,12 +25,12 @@ struct ForestInfoUI: View {
                             Image(systemName: "drop").resizable().scaledToFit().frame(width: 32).foregroundStyle(.brown700).overlay{
                                 Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.brown700).mask {
                                     GeometryReader { geo in
-                                        Rectangle().frame(height: geo.size.height * CGFloat(forestModel.rainValue) / CGFloat(50)
+                                        Rectangle().frame(height: geo.size.height * CGFloat(forestModel.rainValue) / CGFloat(ForestConstant.rainValue)
                                     )}
                                 }
                             }
                             VStack(alignment: .leading) {
-                                Text("Doluluk oranı \(forestModel.rainValue) / 50").foregroundStyle(.white).font(.system(size: 16))
+                                Text("Doluluk oranı \(forestModel.rainValue) / \(ForestConstant.rainValue)").foregroundStyle(.white).font(.system(size: 16))
                                 Text("Ormanına can vermek için doldurmalısın.").foregroundStyle(.white).font(.system(size: 12))
                             }
                             Spacer()

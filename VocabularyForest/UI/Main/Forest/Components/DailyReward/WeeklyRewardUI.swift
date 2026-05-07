@@ -138,13 +138,13 @@ private extension WeeklyRewardUI {
 // MARK: - PREVIEW
 
 #Preview {
-    let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .claimed)
-    let waterModel = WeeklyDailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), status: .passed)
-    let goldModel1 = WeeklyDailyCardModel(day: 3, bounty: .chest(model: .gold), status: .locked)
-    let waterModel2 = WeeklyDailyCardModel(day: 4, bounty: .standart(model: .gold(count: 200)), status: .locked)
-    let goldModel3 = WeeklyDailyCardModel(day: 5, bounty: .chest(model: .gold), status: .ready)
-    let waterModel3 = WeeklyDailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), status: .locked)
-    let chest1 = WeeklyDailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
+    let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), presentation: nil, status: .claimed)
+    let waterModel = WeeklyDailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), presentation: nil, status: .passed)
+    let goldModel1 = WeeklyDailyCardModel(day: 3, bounty: .chest(model: .gold), presentation: nil, status: .locked)
+    let waterModel2 = WeeklyDailyCardModel(day: 4, bounty: .standart(model: .gold(count: 200)), presentation: nil, status: .locked)
+    let goldModel3 = WeeklyDailyCardModel(day: 5, bounty: .chest(model: .gold), presentation: nil, status: .ready)
+    let waterModel3 = WeeklyDailyCardModel(day: 6, bounty: .standart(model: .gold(count: 200)), presentation: nil, status: .locked)
+    let chest1 = WeeklyDailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), presentation: nil, status: .locked)
     let list = [goldModel,waterModel,goldModel1,waterModel2,goldModel3,waterModel3,chest1]
     
     WeeklyRewardUI(isOpen: .constant(true), cardList: list) { card in

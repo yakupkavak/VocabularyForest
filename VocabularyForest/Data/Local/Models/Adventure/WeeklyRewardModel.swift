@@ -11,4 +11,5 @@ struct WeeklyRewardModel: Encodable {
     let id: UUID
     let day: Int
     let reward: LocalRewardModel
+    let presentation: RewardPresentationModel?
 }

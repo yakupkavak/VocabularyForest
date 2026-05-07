@@ -14,6 +14,7 @@ struct ClaimRewardUI: View {
     // MARK: - PROPERTIES
     
     var reward: LocalRewardModel
+    var rewardPresentation: RewardPresentationModel? = nil
     var onClaim: (QuestRewardModel) -> Void
     @State private var chestStatus: ChestStatus = .close
     @State private var isChestOpened: Bool = false
@@ -86,14 +87,25 @@ private extension ClaimRewardUI {
         let rewardTextSize: CGFloat = isPad ? 40 : 32
         
         return VStack {
-            Image(model.rewardImage)
+            RewardImageProvider.image(
+                for: .standart(model: model),
+                presentation: rewardPresentation
+            )
                 .resizable()
                 .scaledToFit()
                 .frame(width: mainImageWidth)
-            Text(LocalizedStringKey(model.rewardName))
-                .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
-                .foregroundColor(model.theme.textColor)
-                .shadow(color: .black.opacity(0.3), radius: 5)
+            if let remoteName = rewardPresentation?.displayName?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !remoteName.isEmpty {
+                Text(verbatim: remoteName)
+                    .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                    .foregroundColor(model.theme.textColor)
+                    .shadow(color: .black.opacity(0.3), radius: 5)
+            } else {
+                Text(LocalizedStringKey(model.rewardName))
+                    .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                    .foregroundColor(model.theme.textColor)
+                    .shadow(color: .black.opacity(0.3), radius: 5)
+            }
         }
     }
     
@@ -101,7 +113,11 @@ private extension ClaimRewardUI {
         let mainImageWidth = isPad ? min(size.width * 0.35, 450) : size.width * 0.4
         
         return ZStack {
-            Image(chestModel.getChestImage(status: chestStatus))
+            RewardImageProvider.image(
+                for: .chest(model: chestModel),
+                presentation: rewardPresentation,
+                chestStatus: chestStatus
+            )
                 .resizable()
                 .scaledToFit()
                 .frame(width: mainImageWidth)
@@ -120,7 +136,7 @@ private extension ClaimRewardUI {
         let rewardTextSize: CGFloat = isPad ? 40 : 32
         
         return VStack {
-            Image(revealed.rewardImage)
+            RewardImageProvider.image(for: .standart(model: revealed))
                 .resizable()
                 .scaledToFit()
                 .frame(width: revealedImageWidth)

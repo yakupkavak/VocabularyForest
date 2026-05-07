@@ -43,15 +43,14 @@ struct ForestUI: View {
     
     // MARK: - PROPERTIES
     
+    @Environment(\.presentToast) var presentToast
     @EnvironmentObject var tabbarController: TabBarController
     @EnvironmentObject var router: LearningRouter
     @EnvironmentObject var bookcaseRouter: BookcaseRouter
     @ObservedObject var viewModel: ForestViewModel
     @State private var forestScene = ForestScene()
-    
     @State private var uiState: ForestUIState = .empty
     @State private var showStarterCompanionSelection = false
-    
     @State private var componentName = ""
     @State private var selectedQuestForGame: QuestModel? = nil
     
@@ -129,6 +128,14 @@ struct ForestUI: View {
         .onChange(of: isMuted) { newValue in
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: newValue)
         }
+        .onChange(of: viewModel.toastMessageModel) { model in
+            switch model {
+            case .internetRequired:
+                presentToast(ToastValue(message: String(localized: "İnternet hatası oluştu. Lütfen bağlantınızı kontrol edin.")))
+            case .none:
+                break
+            }
+        }
         .fullScreenCover(isPresented: $showStarterCompanionSelection) {
             StarterCompanionSelectionUI {
                 showStarterCompanionSelection = false
@@ -182,7 +189,10 @@ private extension ForestUI {
             ) { rewardModel in
                 let reward = viewModel.resolveDailySpinReward(from: rewardModel)
                 PopupManager.shared.show {
-                    ClaimRewardUI(reward: reward) { reward in
+                    ClaimRewardUI(
+                        reward: reward.reward,
+                        rewardPresentation: reward.presentation
+                    ) { reward in
                         viewModel.claimDailyReward(model: reward)
                         PopupManager.shared.dismiss()
                     }
@@ -198,7 +208,10 @@ private extension ForestUI {
         }), cardList: viewModel.weeklyDailyCards) { dailyModel in
             if dailyModel.status == .ready{
                 PopupManager.shared.show {
-                    ClaimRewardUI(reward: dailyModel.bounty) { reward in
+                    ClaimRewardUI(
+                        reward: dailyModel.bounty,
+                        rewardPresentation: dailyModel.presentation
+                    ) { reward in
                         viewModel.claimWeeklyReward(reward: reward, weeklyModel: dailyModel)
                         PopupManager.shared.dismiss()
                     }
@@ -228,15 +241,54 @@ private extension ForestUI {
         ) { model in
             switch model {
             case .tasks:
-                uiState = .quest
+                if viewModel.canOpenQuestScreen() {
+                    uiState = .quest
+                }
             case .dailyReward:
-                uiState = .dailyTrack
+                Task {
+                    if viewModel.networkErrorAdventure {
+                        let isReady = await viewModel.fetchWeeklyDailyCards(shouldPresentToast: true)
+                        if isReady {
+                            await MainActor.run {
+                                uiState = .dailyTrack
+                            }
+                        }
+                    }else {
+                        await MainActor.run {
+                            uiState = .dailyTrack
+                        }
+                    }
+                }
             case .dailySpin:
-                viewModel.refreshDailySpinRewards()
-                uiState = .dailySpin
+                Task {
+                    if viewModel.networkErrorAdventure {
+                        let isReady = await viewModel.refreshDailySpinRewards(shouldPresentToast: true)
+                        if isReady {
+                            await MainActor.run {
+                                uiState = .dailySpin
+                            }
+                        }
+                    }else {
+                        await MainActor.run {
+                            uiState = .dailySpin
+                        }
+                    }
+                }
             case .adventureRoad:
-                uiState = .userRoad
-                viewModel.fetchAdventureRoadData()
+                Task {
+                    if viewModel.networkErrorAdventure {
+                        let isReady = await viewModel.fetchAdventureRoadData(shouldPresentToast: true)
+                        if isReady {
+                            await MainActor.run {
+                                uiState = .userRoad
+                            }
+                        }
+                    }else {
+                        await MainActor.run {
+                            uiState = .userRoad
+                        }
+                    }
+                }
             }
         }
     }
@@ -451,7 +503,11 @@ extension ForestUI: ForestUIProtocol {
     let mockPlayerManager = PlayerDataManager()
     let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData)
     let mockAdventureRoadStore = AdventureRoadSeasonProgressStore(coreDataManager: mockCoreData, forestDataManager: mockForestData)
-    let mockRemoteConfig = RemoteConfigRepository(adventureRoadSeasonProgressStore: mockAdventureRoadStore)
+    let mockChestConfigStore = ChestRewardsConfigStore(coreDataManager: mockCoreData)
+    let mockRemoteConfig = RemoteConfigRepository(
+        adventureRoadSeasonProgressStore: mockAdventureRoadStore,
+        chestRewardsConfigStore: mockChestConfigStore
+    )
     let viewModel = ForestViewModel(
         audioService: mockAudio,
         coreDataManager: mockCoreData,

@@ -164,17 +164,20 @@ class ForestDataManager: ForestDataManagerProtocol {
             }
             
             let decayInterval: TimeInterval = 3600
-            let decayAmount: Int16 = 4
+            let decayAmount: Int16 = Int16(ForestConstant.rainDecayPerHour)
             let timeElapsed = now.timeIntervalSince(lastUpdate)
             
             if timeElapsed >= decayInterval {
                 let hoursPassed = Int(timeElapsed / decayInterval)
                 if hoursPassed > 0 {
                     let totalDecay = Int16(hoursPassed) * decayAmount
-                    let oldRainValue = forest.landHealthPercent
-                    let newRainValue = max(0, oldRainValue - totalDecay)
-                    
-                    forest.landHealthPercent = newRainValue
+                    let oldLandHealthValue = forest.landHealthPercent
+                    let oldStoredRainValue = forest.rainValue
+                    let newLandHealthValue = max(0, oldLandHealthValue - totalDecay)
+                    let newStoredRainValue = max(0, oldStoredRainValue - totalDecay)
+
+                    forest.landHealthPercent = newLandHealthValue
+                    forest.rainValue = newStoredRainValue
                     forest.lastRainUpdateDate = lastUpdate.addingTimeInterval(TimeInterval(hoursPassed) * decayInterval)
                     do {
                         try save(context: context)
@@ -738,7 +741,7 @@ extension ForestDataManager {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
-            forest.rainValue -= Int16(ForestConstant.rainValue)
+            forest.rainValue = max(0, forest.rainValue - Int16(ForestConstant.rainValue))
             forest.landStatus = true
             forest.landHealthPercent = Int16(ForestConstant.healthyLandHealth)
             forest.lastUpdatedDate = Date()

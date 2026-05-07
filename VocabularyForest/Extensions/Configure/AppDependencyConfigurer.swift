@@ -25,8 +25,10 @@ enum AppDependencyConfigurer {
             coreDataManager: coreData,
             forestDataManager: forestData
         )
+        let chestRewardsConfigStore = ChestRewardsConfigStore(coreDataManager: coreData)
         let remoteConfigRepository = RemoteConfigRepository(
-            adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore
+            adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore,
+            chestRewardsConfigStore: chestRewardsConfigStore
         )
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager

@@ -362,14 +362,14 @@ private struct AdventureRewardCard: View {
 
             VStack(spacing: cardWidth * 0.05) {
                 ZStack {
-                    Image(milestone.reward.iconName)
+                    RewardImageProvider.image(for: milestone.reward, presentation: milestone.presentation)
                         .resizable()
                         .scaledToFit()
                         .frame(height: cardWidth * 0.4)
                         .opacity(milestone.isClaimed ? 0.35 : 1)
                 }
 
-                Text(String(localized: String.LocalizationValue(milestone.reward.amountText)))
+                Text(rewardTitleText)
                     .font(
                         .system(
                             size: milestone.reward.isChestReward ? cardWidth * 0.11 : cardWidth * 0.18,
@@ -572,6 +572,14 @@ private struct AdventureRewardCard: View {
         default:
             return false
         }
+    }
+
+    private var rewardTitleText: String {
+        if let displayName = milestone.presentation?.displayName,
+           !displayName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return displayName
+        }
+        return String(localized: String.LocalizationValue(milestone.reward.amountText))
     }
 
     private var claimedBadge: some View {

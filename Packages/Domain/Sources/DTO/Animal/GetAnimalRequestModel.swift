@@ -2,7 +2,7 @@
 //  GetAnimalRequestModel.swift
 //  Domain
 //
-//  Created by Codex on 4.05.2026.
+//  Created by Yakup Kavak on 4.05.2026.
 //
 
 public struct GetAnimalRequestModel {

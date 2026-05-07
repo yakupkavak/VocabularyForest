@@ -2,7 +2,7 @@
 //  LocalMediaBundleLoader.swift
 //  VocabularyForest
 //
-//  Created by Codex on 3.05.2026.
+//  Created by Yakup Kavak on 3.05.2026.
 //
 
 import Foundation

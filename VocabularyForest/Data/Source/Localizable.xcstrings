@@ -176,6 +176,7 @@
 
     },
     "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -210,6 +211,7 @@
       }
     },
     "A Sip of Water 💧" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -971,6 +973,7 @@
       }
     },
     "Awakening of the Ancient Guardian 🗿" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1564,6 +1567,7 @@
       }
     },
     "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1883,6 +1887,7 @@
       }
     },
     "Chasing the Sunflower 🌻" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2146,6 +2151,7 @@
       }
     },
     "Crystal Reed Quest ✨" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2289,6 +2295,7 @@
 
     },
     "Dance with Fire 🔥" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2429,6 +2436,7 @@
       }
     },
     "Defeat the Fire Elemental 5 times and earn the sacred Emberbud." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2463,6 +2471,7 @@
       }
     },
     "Defeat the Ice Elemental 5 times, grab the Moon Bell!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2497,6 +2506,7 @@
       }
     },
     "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2531,6 +2541,7 @@
       }
     },
     "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2565,6 +2576,7 @@
       }
     },
     "Defeat the Vampire 5 times and add that rare SunFlower to your collection." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3061,7 +3073,18 @@
         }
       }
     },
+    "Doluluk oranı %lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Doluluk oranı %1$lld / %2$lld"
+          }
+        }
+      }
+    },
     "Doluluk oranı %lld / 50" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3369,6 +3392,7 @@
       }
     },
     "Emerald Legend 🐉" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3468,6 +3492,7 @@
       }
     },
     "Endless Water 💧" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3644,6 +3669,7 @@
       }
     },
     "Fiery Friendship 🔥" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3857,6 +3883,7 @@
 
     },
     "Gold Hunt 💰" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3891,6 +3918,7 @@
       }
     },
     "Gold Hunt 2💰" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4761,6 +4789,7 @@
       }
     },
     "Ice Cold Victory ❄️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4829,6 +4858,7 @@
       }
     },
     "Icy Paws ❄️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -5140,6 +5170,9 @@
 
     },
     "Internet connection is required to complete the initial setup." : {
+
+    },
+    "İnternet hatası oluştu. Lütfen bağlantınızı kontrol edin." : {
 
     },
     "İptal" : {
@@ -6701,6 +6734,7 @@
       }
     },
     "Meet 10 new words and learn their meanings." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6735,6 +6769,7 @@
       }
     },
     "Meet 20 new words and learn their meanings." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6931,6 +6966,7 @@
 
     },
     "New Discoveries 🗺️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6965,6 +7001,7 @@
       }
     },
     "New Discoveries 2🗺️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -6999,6 +7036,7 @@
       }
     },
     "New Discoveries 3🗺️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7102,6 +7140,7 @@
       }
     },
     "No hints, only victory! Pass 4 new words on your own merit." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7136,6 +7175,7 @@
       }
     },
     "No hints, only victory! Pass 10 new words on your own merit." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -7442,6 +7482,7 @@
       }
     },
     "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8165,6 +8206,7 @@
       }
     },
     "Quest for the Desert Star 🌵" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8611,6 +8653,7 @@
       }
     },
     "Revive your memory: Repeat 5 old words and master them!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8645,6 +8688,7 @@
       }
     },
     "Revive your memory: Repeat 10 old words and master them!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -8679,6 +8723,7 @@
       }
     },
     "Revive your memory: Repeat 20 old words and master them!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9168,6 +9213,7 @@
       }
     },
     "Spirit of the Forest 🦌" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9395,6 +9441,7 @@
       }
     },
     "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9429,6 +9476,7 @@
       }
     },
     "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9466,6 +9514,7 @@
 
     },
     "The forest is expanding! Meet 5 new words and learn their meanings." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9506,6 +9555,7 @@
 
     },
     "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9540,6 +9590,7 @@
       }
     },
     "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9620,6 +9671,7 @@
       }
     },
     "Trail of the Blue Flame" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -9790,6 +9842,7 @@
       }
     },
     "Two Sips of Water 💧" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -10040,6 +10093,7 @@
 
     },
     "White Shadow ☁️" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

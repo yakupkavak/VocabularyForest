@@ -37,6 +37,8 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel>
     func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
+    func fetchChestRewardsConfig() async -> Resource<ChestRewardsConfigModel>
+    func cachedChestRewardsConfig() -> ChestRewardsConfigModel?
 }
 
 final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
@@ -48,6 +50,7 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         static let starterCompanions = "starter_companions_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
         static let gameEconomyConfig = "game_economy_config"
+        static let chestRewardsConfig = "chest_rewards_config"
     }
     
     private enum DefaultsKeys {
@@ -57,15 +60,24 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     private let remoteConfig: RemoteConfig
     private let userDefaults: UserDefaults
     private let adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
+    private let chestRewardsConfigStore: ChestRewardsConfigStoreProtocol
+    private let chestVisualStorage: ChestVisualStorageProtocol
+    private let rewardImageStorage: RewardImageStorageProtocol
 
     init(
         remoteConfig: RemoteConfig = RemoteConfig.remoteConfig(),
         userDefaults: UserDefaults = .standard,
-        adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
+        adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol,
+        chestRewardsConfigStore: ChestRewardsConfigStoreProtocol,
+        chestVisualStorage: ChestVisualStorageProtocol = ChestVisualStorage(),
+        rewardImageStorage: RewardImageStorageProtocol = RewardImageStorage()
     ) {
         self.remoteConfig = remoteConfig
         self.userDefaults = userDefaults
         self.adventureRoadSeasonProgressStore = adventureRoadSeasonProgressStore
+        self.chestRewardsConfigStore = chestRewardsConfigStore
+        self.chestVisualStorage = chestVisualStorage
+        self.rewardImageStorage = rewardImageStorage
         let settings = RemoteConfigSettings()
         // For development: 0 fetch interval. Increase for production.
         settings.minimumFetchInterval = 0
@@ -82,11 +94,15 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         case .success(let payload):
             _ = persistConfigID(payload.id, forRemoteKey: Keys.dailySpinRewards)
             let safeModels = payload.items.map { dto in
-                DailySpinModel(
+                let mappedReward = mapToRewardPayload(dto.reward)
+                return DailySpinModel(
                     weight: safeWeight(dto.weight ?? dto.reward?.safeProbabilityWeight),
-                    reward: mapToLocalReward(dto.reward)
+                    reward: mappedReward.reward,
+                    presentation: mappedReward.presentation
                 )
             }
+            let imagePaths = Set(safeModels.compactMap { $0.presentation?.imagePath })
+            await rewardImageStorage.syncImagePaths(imagePaths)
             guard !safeModels.isEmpty else {
                 return .error(error: RemoteConfigError.dataMissing)
             }
@@ -120,8 +136,8 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                 let quest = QuestModel(
                     id: safeID,
                     type: type,
-                    title: trimmed(dto.title) ?? "Quest",
-                    description: trimmed(dto.descriptionText) ?? "",
+                    title: resolvedLocalizedText(dto.title, fallback: "Quest") ?? "Quest",
+                    description: resolvedLocalizedText(dto.descriptionText, fallback: "") ?? "",
                     reward: mapToQuestReward(
                         category: normalized(dto.reward?.category, fallback: "water"),
                         rewardCount: dto.reward?.safeRewardCount ?? 1,
@@ -139,6 +155,20 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                 registerRewardMediaDescriptorIfNeeded(dto.reward)
                 safeModels.append(quest)
             }
+
+            let imagePaths = Set(
+                payload.items.compactMap { item in
+                    let directPath = trimmed(item.reward?.imagePath) ?? trimmed(item.reward?.previewImageURL)
+                    if let directPath, !directPath.isEmpty {
+                        return directPath
+                    }
+                    if let imageName = trimmed(item.reward?.imageName), imageName.contains("/") {
+                        return imageName
+                    }
+                    return nil
+                }
+            )
+            await rewardImageStorage.syncImagePaths(imagePaths)
             
             guard !safeModels.isEmpty else {
                 return .error(error: RemoteConfigError.dataMissing)
@@ -175,7 +205,7 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                     id: trimmed(item.id) ?? UUID().uuidString,
                     modelKey: modelKey,
                     category: category,
-                    displayName: trimmed(item.displayName),
+                    displayName: resolvedLocalizedText(item.displayName, fallback: nil),
                     previewImageName: trimmed(item.previewImageName) ?? modelKey,
                     mediaSourceType: sourceType,
                     mediaFileType: fileType,
@@ -232,12 +262,16 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         case .success(let payload):
             _ = persistConfigID(payload.id, forRemoteKey: Keys.weeklyRewards)
             let safeModels = payload.items.enumerated().map { index, dto in
-                WeeklyRewardModel(
+                let mappedReward = mapToRewardPayload(dto.reward)
+                return WeeklyRewardModel(
                     id: safeUUID(from: dto.id),
                     day: safeDay(dto.day, fallback: index + 1),
-                    reward: mapToLocalReward(dto.reward)
+                    reward: mappedReward.reward,
+                    presentation: mappedReward.presentation
                 )
             }
+            let imagePaths = Set(safeModels.compactMap { $0.presentation?.imagePath })
+            await rewardImageStorage.syncImagePaths(imagePaths)
             guard !safeModels.isEmpty else {
                 return .error(error: RemoteConfigError.dataMissing)
             }
@@ -264,18 +298,28 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             }
             
             let safeModels = payload.items.enumerated().map { index, dto in
-                AdventureRoadRewardModel(
+                let shortReward = mapToRewardPayload(dto.shortTermReward)
+                let longReward = mapToRewardPayload(dto.longTermReward)
+                return AdventureRoadRewardModel(
                     wordCount: safeWordCount(dto.wordCount, fallback: (index + 1) * 10),
-                    shortTermReward: mapToLocalReward(dto.shortTermReward),
-                    longTermReward: mapToLocalReward(dto.longTermReward)
+                    shortTermReward: shortReward.reward,
+                    shortTermPresentation: shortReward.presentation,
+                    longTermReward: longReward.reward,
+                    longTermPresentation: longReward.presentation
                 )
             }
+            let imagePaths = Set(
+                safeModels.compactMap { $0.shortTermPresentation?.imagePath } +
+                safeModels.compactMap { $0.longTermPresentation?.imagePath }
+            )
+            await rewardImageStorage.syncImagePaths(imagePaths)
             guard !safeModels.isEmpty else {
                 return .error(error: RemoteConfigError.dataMissing)
             }
             return .success(
                 AdventureRoadConfigModel(
                     id: payload.id,
+                    title: resolvedLocalizedText(payload.title, fallback: "Adventure Road") ?? "Adventure Road",
                     seasonEndDate: seasonEndDate,
                     rewards: safeModels
                 )
@@ -327,6 +371,11 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                 fallbackMin: EconomyDefaults.diamondChestDiamondMin,
                 fallbackMax: EconomyDefaults.diamondChestDiamondMax
             )
+            let plantPriceMin = safePositive(payload.marketPrices?.plantGoldMin, fallback: EconomyDefaults.plantGoldMin)
+            let plantPriceMax = max(
+                plantPriceMin,
+                safePositive(payload.marketPrices?.plantGoldMax, fallback: EconomyDefaults.plantGoldMax)
+            )
             
             let model = GameEconomyConfigModel(
                 id: trimmed(payload.id),
@@ -349,6 +398,25 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
                     minGoldPerKill: minGold,
                     maxGoldPerKill: maxGold,
                     dailyKillCountCap: safePositive(payload.killCap?.dailyKillCountCap, fallback: EconomyDefaults.dailyKillCountCap)
+                ),
+                marketPrices: GameMarketPricesModel(
+                    animalGold: safePositive(payload.marketPrices?.animalGold, fallback: EconomyDefaults.animalGold),
+                    plantGoldMin: plantPriceMin,
+                    plantGoldMax: plantPriceMax,
+                    sculptureGold: safePositive(payload.marketPrices?.sculptureGold, fallback: EconomyDefaults.sculptureGold)
+                ),
+                progressionTargets: GameProgressionTargetsModel(
+                    hourlyGoldTarget: safePositive(payload.progressionTargets?.hourlyGoldTarget, fallback: EconomyDefaults.hourlyGoldTarget),
+                    adventureRoadTotalGoldTarget: safePositive(
+                        payload.progressionTargets?.adventureRoadTotalGoldTarget,
+                        fallback: EconomyDefaults.adventureRoadTotalGoldTarget
+                    ),
+                    rainCost: safePositive(payload.progressionTargets?.rainCost, fallback: EconomyDefaults.rainCost),
+                    rainDecayPerHour: safePositive(payload.progressionTargets?.rainDecayPerHour, fallback: EconomyDefaults.rainDecayPerHour),
+                    dailyQuestCompletionRateForRain: safeRatio(
+                        payload.progressionTargets?.dailyQuestCompletionRateForRain,
+                        fallback: EconomyDefaults.dailyQuestCompletionRateForRain
+                    )
                 )
             )
             
@@ -359,11 +427,107 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             return .error(error: RemoteConfigError.decodeFailed)
         }
     }
+
+    func fetchChestRewardsConfig() async -> Resource<ChestRewardsConfigModel> {
+        do {
+            let jsonString = try await fetchJSONString(forKey: Keys.chestRewardsConfig)
+            let data = Data(jsonString.utf8)
+            let payload = try JSONDecoder().decode(RemoteChestRewardsPayload.self, from: data)
+            let idChange = persistConfigID(payload.id, forRemoteKey: Keys.chestRewardsConfig)
+
+            if idChange == .unchanged, let cached = chestRewardsConfigStore.loadLatest() {
+                await rewardImageStorage.syncImagePaths(rewardPreviewImagePaths(from: cached.pools))
+                await chestVisualStorage.syncVisualImages(cached.visuals)
+                return .success(cached)
+            }
+
+            let odds = ChestRewardOddsModel(
+                goldChestDiamondChance: safePercent(payload.odds?.goldChestDiamondChance, fallback: EconomyDefaults.goldChestDiamondChance),
+                goldChestWaterChance: safePercent(payload.odds?.goldChestWaterChance, fallback: EconomyDefaults.goldChestWaterChance),
+                natureChestAnimalChance: safePercent(payload.odds?.natureChestAnimalChance, fallback: EconomyDefaults.natureChestAnimalChance),
+                antiqueChestAnimalChance: safePercent(payload.odds?.antiqueChestAnimalChance, fallback: EconomyDefaults.antiqueChestAnimalChance)
+            )
+
+            let goldRange = safeRange(
+                min: payload.ranges?.goldChestGoldMin,
+                max: payload.ranges?.goldChestGoldMax,
+                fallbackMin: EconomyDefaults.goldChestGoldMin,
+                fallbackMax: EconomyDefaults.goldChestGoldMax
+            )
+            let goldDiamondRange = safeRange(
+                min: payload.ranges?.goldChestDiamondMin,
+                max: payload.ranges?.goldChestDiamondMax,
+                fallbackMin: EconomyDefaults.goldChestDiamondMin,
+                fallbackMax: EconomyDefaults.goldChestDiamondMax
+            )
+            let goldWaterRange = safeRange(
+                min: payload.ranges?.goldChestWaterMin,
+                max: payload.ranges?.goldChestWaterMax,
+                fallbackMin: EconomyDefaults.goldChestWaterMin,
+                fallbackMax: EconomyDefaults.goldChestWaterMax
+            )
+            let diamondRange = safeRange(
+                min: payload.ranges?.diamondChestDiamondMin,
+                max: payload.ranges?.diamondChestDiamondMax,
+                fallbackMin: EconomyDefaults.diamondChestDiamondMin,
+                fallbackMax: EconomyDefaults.diamondChestDiamondMax
+            )
+
+            let pools = ChestRewardPoolsModel(
+                natureAnimals: mapChestRewardCandidates(payload.pools?.natureAnimals, fallbackCategory: "animal"),
+                naturePlants: mapChestRewardCandidates(payload.pools?.naturePlants, fallbackCategory: "plant"),
+                antiqueAnimals: mapChestRewardCandidates(payload.pools?.antiqueAnimals, fallbackCategory: "animal"),
+                antiqueSculptures: mapChestRewardCandidates(payload.pools?.antiqueSculptures, fallbackCategory: "sculpture")
+            )
+            let visuals = mapChestVisuals(payload.visuals)
+
+            let config = ChestRewardsConfigModel(
+                id: trimmed(payload.id),
+                season: trimmed(payload.season),
+                odds: odds,
+                ranges: ChestRewardRangesModel(
+                    goldChestGoldMin: goldRange.min,
+                    goldChestGoldMax: goldRange.max,
+                    goldChestDiamondMin: goldDiamondRange.min,
+                    goldChestDiamondMax: goldDiamondRange.max,
+                    goldChestWaterMin: goldWaterRange.min,
+                    goldChestWaterMax: goldWaterRange.max,
+                    diamondChestDiamondMin: diamondRange.min,
+                    diamondChestDiamondMax: diamondRange.max
+                ),
+                pools: pools,
+                visuals: visuals
+            )
+
+            chestRewardsConfigStore.sync(config: config)
+            await rewardImageStorage.syncImagePaths(rewardPreviewImagePaths(from: pools))
+            await chestVisualStorage.syncVisualImages(config.visuals)
+            return .success(config)
+        } catch {
+            let normalizedError = error as? RemoteConfigError ?? RemoteConfigError.fetchFailed
+            if let cached = chestRewardsConfigStore.loadLatest() {
+                await rewardImageStorage.syncImagePaths(rewardPreviewImagePaths(from: cached.pools))
+                await chestVisualStorage.syncVisualImages(cached.visuals)
+                return .error(error: normalizedError)
+            }
+            if let fallback = fallbackChestRewardsConfig() {
+                await rewardImageStorage.syncImagePaths(rewardPreviewImagePaths(from: fallback.pools))
+                await chestVisualStorage.syncVisualImages(fallback.visuals)
+                return .error(error: normalizedError)
+            }
+            return .error(error: normalizedError)
+        }
+    }
+
+    func cachedChestRewardsConfig() -> ChestRewardsConfigModel? {
+        chestRewardsConfigStore.loadLatest() ?? fallbackChestRewardsConfig()
+    }
 }
 
 private extension RemoteConfigRepository {
     struct DecodedPayload<Item> {
         let id: String?
+        let title: RemoteLocalizedText?
         let seasonEndDateString: String?
         let items: [Item]
     }
@@ -377,8 +541,8 @@ private extension RemoteConfigRepository {
     struct RemoteQuestItemDTO: Decodable {
         let id: String?
         let type: String?
-        let title: String?
-        let descriptionText: String?
+        let title: RemoteLocalizedText?
+        let descriptionText: RemoteLocalizedText?
         let reward: RemoteRewardModel?
         let targetCount: Int?
         let questionType: String?
@@ -404,13 +568,35 @@ private extension RemoteConfigRepository {
         let id: String?
         let day: Int?
         let reward: RemoteRewardModel?
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case day
+            case reward
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            id = try container.decodeIfPresent(String.self, forKey: .id)
+            if let intValue = try? container.decodeIfPresent(Int.self, forKey: .day) {
+                day = intValue
+            } else if let doubleValue = try? container.decodeIfPresent(Double.self, forKey: .day) {
+                day = Int(doubleValue)
+            } else if let stringValue = try? container.decodeIfPresent(String.self, forKey: .day),
+                      let parsed = Int(stringValue.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                day = parsed
+            } else {
+                day = nil
+            }
+            reward = try? container.decodeIfPresent(RemoteRewardModel.self, forKey: .reward)
+        }
     }
 
     struct RemoteStarterCompanionItemDTO: Decodable {
         let id: String?
         let modelKey: String?
         let category: String?
-        let displayName: String?
+        let displayName: RemoteLocalizedText?
         let previewImageName: String?
         let mediaSourceType: String?
         let mediaFileType: String?
@@ -432,6 +618,8 @@ private extension RemoteConfigRepository {
         let chestOdds: RemoteChestOddsDTO?
         let chestRewardRanges: RemoteChestRewardRangesDTO?
         let killCap: RemoteKillCapDTO?
+        let marketPrices: RemoteMarketPricesDTO?
+        let progressionTargets: RemoteProgressionTargetsDTO?
     }
     
     struct RemoteChestOddsDTO: Decodable {
@@ -452,12 +640,54 @@ private extension RemoteConfigRepository {
         let goldChestGoldMax: Int?
         let goldChestDiamondMin: Int?
         let goldChestDiamondMax: Int?
+        let goldChestWaterMin: Int?
+        let goldChestWaterMax: Int?
         let diamondChestDiamondMin: Int?
         let diamondChestDiamondMax: Int?
     }
 
+    struct RemoteMarketPricesDTO: Decodable {
+        let animalGold: Int?
+        let plantGoldMin: Int?
+        let plantGoldMax: Int?
+        let sculptureGold: Int?
+    }
+
+    struct RemoteProgressionTargetsDTO: Decodable {
+        let hourlyGoldTarget: Int?
+        let adventureRoadTotalGoldTarget: Int?
+        let rainCost: Int?
+        let rainDecayPerHour: Int?
+        let dailyQuestCompletionRateForRain: Double?
+    }
+
+    struct RemoteChestRewardsPayload: Decodable {
+        let id: String?
+        let season: String?
+        let odds: RemoteChestOddsDTO?
+        let ranges: RemoteChestRewardRangesDTO?
+        let pools: RemoteChestRewardPoolsDTO?
+        let visuals: [RemoteChestVisualDTO]?
+    }
+
+    struct RemoteChestRewardPoolsDTO: Decodable {
+        let natureAnimals: [RemoteRewardModel]?
+        let naturePlants: [RemoteRewardModel]?
+        let antiqueAnimals: [RemoteRewardModel]?
+        let antiqueSculptures: [RemoteRewardModel]?
+    }
+
+    struct RemoteChestVisualDTO: Decodable {
+        let id: String?
+        let chestType: String?
+        let closedImagePath: String?
+        let openImagePath: String?
+    }
+
     struct RemoteArrayPayload<Item: Decodable>: Decodable {
         let id: String?
+        let title: RemoteLocalizedText?
+        let seasonTitle: RemoteLocalizedText?
         let seasonEndDate: String?
         let seasonEndDateUTC: String?
         let seasonEndDateUtc: String?
@@ -474,18 +704,29 @@ private extension RemoteConfigRepository {
     
     enum EconomyDefaults {
         static let goldChestDiamondChance = 10
-        static let goldChestWaterChance = 20
-        static let natureChestAnimalChance = 20
-        static let antiqueChestAnimalChance = 50
-        static let goldChestGoldMin = 50
-        static let goldChestGoldMax = 100
-        static let goldChestDiamondMin = 1
-        static let goldChestDiamondMax = 3
-        static let diamondChestDiamondMin = 10
-        static let diamondChestDiamondMax = 20
-        static let minGoldPerKill = 1
-        static let maxGoldPerKill = 3
-        static let dailyKillCountCap = 40
+        static let goldChestWaterChance = 18
+        static let natureChestAnimalChance = 30
+        static let antiqueChestAnimalChance = 80
+        static let goldChestGoldMin = 120
+        static let goldChestGoldMax = 280
+        static let goldChestDiamondMin = 2
+        static let goldChestDiamondMax = 6
+        static let goldChestWaterMin = 35
+        static let goldChestWaterMax = 60
+        static let diamondChestDiamondMin = 14
+        static let diamondChestDiamondMax = 28
+        static let minGoldPerKill = 35
+        static let maxGoldPerKill = 55
+        static let dailyKillCountCap = 60
+        static let animalGold = 5000
+        static let plantGoldMin = 2000
+        static let plantGoldMax = 3000
+        static let sculptureGold = 10000
+        static let hourlyGoldTarget = 2500
+        static let adventureRoadTotalGoldTarget = 10000
+        static let rainCost = 100
+        static let rainDecayPerHour = 4
+        static let dailyQuestCompletionRateForRain = 0.8
     }
 
     func fetchDecodedArray<T: Decodable>(forKey key: String, as _: T.Type) async -> Result<DecodedPayload<T>, RemoteConfigError> {
@@ -542,12 +783,13 @@ private extension RemoteConfigRepository {
         let decoder = JSONDecoder()
 
         if let directArray = try? decoder.decode([T].self, from: data) {
-            return DecodedPayload(id: nil, seasonEndDateString: nil, items: directArray)
+            return DecodedPayload(id: nil, title: nil, seasonEndDateString: nil, items: directArray)
         }
 
         if let payload = try? decoder.decode(RemoteArrayPayload<T>.self, from: data) {
             return DecodedPayload(
                 id: payload.id?.trimmingCharacters(in: .whitespacesAndNewlines),
+                title: payload.title ?? payload.seasonTitle,
                 seasonEndDateString: payload.seasonEndDate ?? payload.seasonEndDateUTC ?? payload.seasonEndDateUtc,
                 items: payload.items ?? payload.data ?? payload.rewards ?? []
             )
@@ -625,6 +867,40 @@ private extension RemoteConfigRepository {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    func mapToRewardPayload(_ remoteReward: RemoteRewardModel?) -> (reward: LocalRewardModel, presentation: RewardPresentationModel?) {
+        let reward = mapToLocalReward(remoteReward)
+        guard let remoteReward else {
+            return (reward, nil)
+        }
+
+        let directPath = trimmed(remoteReward.imagePath) ?? trimmed(remoteReward.previewImageURL)
+        let imageNamePath = trimmed(remoteReward.imageName)
+        let resolvedImagePath: String?
+        if let directPath, !directPath.isEmpty {
+            resolvedImagePath = directPath
+        } else if let imageNamePath, imageNamePath.contains("/") {
+            resolvedImagePath = imageNamePath
+        } else {
+            resolvedImagePath = nil
+        }
+
+        let chestID = trimmed(remoteReward.chestID)
+        let displayName = resolvedLocalizedText(remoteReward.displayName, fallback: nil)
+
+        if resolvedImagePath == nil, chestID == nil, displayName == nil {
+            return (reward, nil)
+        }
+
+        return (
+            reward,
+            RewardPresentationModel(
+                imagePath: resolvedImagePath,
+                chestID: chestID,
+                displayName: displayName
+            )
+        )
+    }
+
     func mapToLocalReward(_ remoteReward: RemoteRewardModel?) -> LocalRewardModel {
         guard let remoteReward else {
             return .standart(model: .water(count: 1))
@@ -636,14 +912,22 @@ private extension RemoteConfigRepository {
         let category = normalized(remoteReward.category, fallback: "water")
 
         if type == "chest" {
-            return .chest(model: mapToChestReward(category: category))
+            return .chest(model: mapToChestReward(category: category, chestID: remoteReward.chestID))
         }
 
         return .standart(model: mapToQuestReward(category: category, rewardCount: remoteReward.safeRewardCount, imageName: remoteReward.imageName))
     }
 
-    func mapToChestReward(category: String) -> ChestBountyModel {
-        switch category {
+    func mapToChestReward(category: String, chestID: String?) -> ChestBountyModel {
+        if let chestID,
+           let resolvedChestType = resolveChestType(forChestID: chestID) {
+            return chestModel(for: resolvedChestType)
+        }
+        return chestModel(for: category)
+    }
+
+    func chestModel(for chestType: String) -> ChestBountyModel {
+        switch chestType {
         case "gold":
             return .gold
         case "nature":
@@ -655,6 +939,21 @@ private extension RemoteConfigRepository {
         default:
             return .gold
         }
+    }
+
+    func resolveChestType(forChestID chestID: String) -> String? {
+        let normalizedID = chestID.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !normalizedID.isEmpty else { return nil }
+
+        if let config = chestRewardsConfigStore.loadLatest(),
+           let visual = config.visuals.first(where: {
+               $0.id.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == normalizedID
+           }) {
+            return visual.chestType.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        }
+
+        let knownTypes = ["gold", "nature", "diamond", "antique"]
+        return knownTypes.first(where: { normalizedID.contains($0) })
     }
 
     func mapToQuestReward(category: String, rewardCount: Int, imageName: String?) -> QuestRewardModel {
@@ -676,6 +975,189 @@ private extension RemoteConfigRepository {
         default:
             return .water(count: 1)
         }
+    }
+
+    func rewardPreviewImagePaths(from pools: ChestRewardPoolsModel) -> Set<String> {
+        let allCandidates = pools.natureAnimals + pools.naturePlants + pools.antiqueAnimals + pools.antiqueSculptures
+        return Set(
+            allCandidates.compactMap { candidate in
+                candidate.descriptor.previewImageURL?.trimmingCharacters(in: .whitespacesAndNewlines)
+            }.filter { !$0.isEmpty }
+        )
+    }
+
+    func mapChestRewardCandidates(
+        _ candidates: [RemoteRewardModel]?,
+        fallbackCategory: String
+    ) -> [ChestRewardCandidateModel] {
+        guard let candidates else { return [] }
+
+        return candidates.compactMap { candidate in
+            let category = normalized(candidate.category, fallback: fallbackCategory)
+            guard ["animal", "plant", "sculpture"].contains(category) else {
+                return nil
+            }
+
+            let modelKey = safeAssetName(from: candidate.imageName, fallback: "")
+            guard !modelKey.isEmpty else {
+                return nil
+            }
+
+            let rawType = normalized(candidate.mediaSourceType, fallback: RewardMediaSourceType.remoteBundle.rawValue)
+            let sourceType = RewardMediaSourceType(rawValue: rawType) ?? .remoteBundle
+            let fileType = resolveFileType(rawValue: candidate.mediaFileType, sourceType: sourceType)
+
+            let model = ChestRewardCandidateModel(
+                id: trimmed(candidate.id) ?? "\(category)-\(modelKey.lowercased())",
+                category: category,
+                modelKey: modelKey,
+                probabilityWeight: safeWeight(candidate.probabilityWeight),
+                descriptor: RewardMediaDescriptor(
+                    sourceType: sourceType,
+                    fileType: fileType,
+                    previewImageURL: trimmed(candidate.previewImageURL),
+                    sourceFieldKey: trimmed(candidate.sourceFieldKey),
+                    sourceVersion: trimmed(candidate.sourceVersion)
+                )
+            )
+
+            RewardMediaCatalogStore.save(category: category, modelKey: modelKey, descriptor: model.descriptor)
+            return model
+        }
+    }
+
+    func mapChestVisuals(_ visuals: [RemoteChestVisualDTO]?) -> [ChestVisualModel] {
+        let mapped = (visuals ?? []).compactMap { visual -> ChestVisualModel? in
+            let chestType = normalized(visual.chestType, fallback: "")
+            let closedImagePath = safeAssetName(from: visual.closedImagePath, fallback: "")
+            let openImagePath = safeAssetName(from: visual.openImagePath, fallback: "")
+            let id = trimmed(visual.id) ?? "chest-\(chestType)"
+
+            guard !chestType.isEmpty, !closedImagePath.isEmpty, !openImagePath.isEmpty else {
+                return nil
+            }
+
+            return ChestVisualModel(
+                id: id,
+                chestType: chestType,
+                closedImagePath: closedImagePath,
+                openImagePath: openImagePath
+            )
+        }
+
+        return mapped.isEmpty ? fallbackChestVisuals() : mapped
+    }
+
+    func fallbackChestRewardsConfig() -> ChestRewardsConfigModel? {
+        let fallbackNatureAnimals = AnimalReward.allCases.map {
+            ChestRewardCandidateModel(
+                id: "nature-animal-\($0.rawValue.lowercased())",
+                category: "animal",
+                modelKey: $0.rawValue,
+                probabilityWeight: 1.0,
+                descriptor: RewardMediaDescriptor(
+                    sourceType: .localAsset,
+                    fileType: .image,
+                    previewImageURL: nil,
+                    sourceFieldKey: nil,
+                    sourceVersion: nil
+                )
+            )
+        }
+
+        let fallbackNaturePlants = PlantReward.allCases.map {
+            ChestRewardCandidateModel(
+                id: "nature-plant-\($0.rawValue.lowercased())",
+                category: "plant",
+                modelKey: $0.rawValue,
+                probabilityWeight: 1.0,
+                descriptor: RewardMediaDescriptor(
+                    sourceType: .remoteBundle,
+                    fileType: .image,
+                    previewImageURL: nil,
+                    sourceFieldKey: nil,
+                    sourceVersion: nil
+                )
+            )
+        }
+
+        let fallbackAntiqueAnimals = AnimalReward.allCases.map {
+            ChestRewardCandidateModel(
+                id: "antique-animal-\($0.rawValue.lowercased())",
+                category: "animal",
+                modelKey: $0.rawValue,
+                probabilityWeight: 1.0,
+                descriptor: RewardMediaDescriptor(
+                    sourceType: .localAsset,
+                    fileType: .image,
+                    previewImageURL: nil,
+                    sourceFieldKey: nil,
+                    sourceVersion: nil
+                )
+            )
+        }
+
+        let fallbackAntiqueSculptures = SculptureReward.allCases.map {
+            ChestRewardCandidateModel(
+                id: "antique-sculpture-\($0.rawValue.lowercased())",
+                category: "sculpture",
+                modelKey: $0.rawValue,
+                probabilityWeight: 1.0,
+                descriptor: RewardMediaDescriptor(
+                    sourceType: .remoteBundle,
+                    fileType: .image,
+                    previewImageURL: nil,
+                    sourceFieldKey: nil,
+                    sourceVersion: nil
+                )
+            )
+        }
+
+        let visuals = fallbackChestVisuals()
+
+        let fallback = ChestRewardsConfigModel(
+            id: "chest_rewards_config_local_fallback",
+            season: nil,
+            odds: ChestRewardOddsModel(
+                goldChestDiamondChance: EconomyDefaults.goldChestDiamondChance,
+                goldChestWaterChance: EconomyDefaults.goldChestWaterChance,
+                natureChestAnimalChance: EconomyDefaults.natureChestAnimalChance,
+                antiqueChestAnimalChance: EconomyDefaults.antiqueChestAnimalChance
+            ),
+            ranges: ChestRewardRangesModel(
+                goldChestGoldMin: EconomyDefaults.goldChestGoldMin,
+                goldChestGoldMax: EconomyDefaults.goldChestGoldMax,
+                goldChestDiamondMin: EconomyDefaults.goldChestDiamondMin,
+                goldChestDiamondMax: EconomyDefaults.goldChestDiamondMax,
+                goldChestWaterMin: EconomyDefaults.goldChestWaterMin,
+                goldChestWaterMax: EconomyDefaults.goldChestWaterMax,
+                diamondChestDiamondMin: EconomyDefaults.diamondChestDiamondMin,
+                diamondChestDiamondMax: EconomyDefaults.diamondChestDiamondMax
+            ),
+            pools: ChestRewardPoolsModel(
+                natureAnimals: fallbackNatureAnimals,
+                naturePlants: fallbackNaturePlants,
+                antiqueAnimals: fallbackAntiqueAnimals,
+                antiqueSculptures: fallbackAntiqueSculptures
+            ),
+            visuals: visuals
+        )
+
+        fallbackNatureAnimals.forEach { RewardMediaCatalogStore.save(category: $0.category, modelKey: $0.modelKey, descriptor: $0.descriptor) }
+        fallbackNaturePlants.forEach { RewardMediaCatalogStore.save(category: $0.category, modelKey: $0.modelKey, descriptor: $0.descriptor) }
+        fallbackAntiqueAnimals.forEach { RewardMediaCatalogStore.save(category: $0.category, modelKey: $0.modelKey, descriptor: $0.descriptor) }
+        fallbackAntiqueSculptures.forEach { RewardMediaCatalogStore.save(category: $0.category, modelKey: $0.modelKey, descriptor: $0.descriptor) }
+
+        return fallback
+    }
+
+    func fallbackChestVisuals() -> [ChestVisualModel] {
+        [
+            ChestVisualModel(id: "chest-gold", chestType: "gold", closedImagePath: "assets/chests/gold_chest_close.png", openImagePath: "assets/chests/gold_chest_open.png"),
+            ChestVisualModel(id: "chest-nature", chestType: "nature", closedImagePath: "assets/chests/nature_chest_close.png", openImagePath: "assets/chests/nature_chest_open.png"),
+            ChestVisualModel(id: "chest-diamond", chestType: "diamond", closedImagePath: "assets/chests/diamond_chest_close.png", openImagePath: "assets/chests/diamond_chest_open.png"),
+            ChestVisualModel(id: "chest-antique", chestType: "antique", closedImagePath: "assets/chests/antique_chest_close.png", openImagePath: "assets/chests/antique_chest_open.png")
+        ]
     }
 
     func registerRewardMediaDescriptorIfNeeded(_ remoteReward: RemoteRewardModel?) {
@@ -783,6 +1265,11 @@ private extension RemoteConfigRepository {
         let safeValue = value ?? fallback
         return min(max(safeValue, 0), 100)
     }
+
+    func safeRatio(_ value: Double?, fallback: Double) -> Double {
+        let safeValue = value ?? fallback
+        return min(max(safeValue, 0), 1)
+    }
     
     func safePositive(_ value: Int?, fallback: Int) -> Int {
         guard let value, value > 0 else {
@@ -821,5 +1308,12 @@ private extension RemoteConfigRepository {
             return nil
         }
         return value
+    }
+
+    func resolvedLocalizedText(_ value: RemoteLocalizedText?, fallback: String?) -> String? {
+        if let localized = trimmed(value?.resolved(locale: .current)) {
+            return localized
+        }
+        return trimmed(fallback)
     }
 }
