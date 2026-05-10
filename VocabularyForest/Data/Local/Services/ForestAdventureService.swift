@@ -38,6 +38,18 @@ protocol ForestAdventureServiceProtocol {
     func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
 }
 
+// MARK: - CONSTANTS
+private extension ForestAdventureService {
+    enum DefaultsKeys {
+        static let dailySpinRewards = "DailySpinConfigID"
+        static let questsConfig = "QuestsConfigID"
+        static let weeklyRewards = "WeeklyRewardConfigID"
+        static let adventureRoadRewards = "AdventureRoadConfigID"
+        static let gameEconomyConfig = "GameEconomyConfigID"
+        static let chestRewardConfig = "ChestRewardConfigID"
+    }
+}
+
 // MARK: - FOREST ADVENTURE SERVICE
 
 class ForestAdventureService: ForestAdventureServiceProtocol {
@@ -45,12 +57,77 @@ class ForestAdventureService: ForestAdventureServiceProtocol {
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol
+    private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let db = Firestore.firestore()
-    
-    init(forestManager: ForestDataManagerProtocol, playerManager: PlayerDataManagerProtocol, coreData: CoreDataManagerProtocol) {
+    private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
+    private var questCacheList: [QuestModel]? = nil
+    private var dailySpinCacheList: [DailySpinModel]? = nil
+    private var adventureCacheList: [AdventureRoadScreenModel]? = nil
+
+    init(forestManager: ForestDataManagerProtocol, playerManager: PlayerDataManagerProtocol, coreData: CoreDataManagerProtocol, remoteConfig: RemoteConfigRepositoryProtocol) {
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.coreDataManager = coreData
+        self.remoteConfigRepository = remoteConfig
+        
+        setupParameters()
+    }
+}
+
+private extension ForestAdventureService {
+    func setupParameters() {
+        let adventureRoadID = UserDefaults.standard.string(forKey: DefaultsKeys.adventureRoadRewards)
+        let dailySpinID = UserDefaults.standard.string(forKey: DefaultsKeys.dailySpinRewards)
+        let questsID = UserDefaults.standard.string(forKey: DefaultsKeys.questsConfig)
+        let weeklyID = UserDefaults.standard.string(forKey: DefaultsKeys.weeklyRewards)
+        let gameEconomyID = UserDefaults.standard.string(forKey: DefaultsKeys.gameEconomyConfig)
+        let chestRewardID = UserDefaults.standard.string(forKey: DefaultsKeys.chestRewardConfig)
+        
+        Task {
+            let parameters = await remoteConfigRepository.fetchConfigParameters().data
+            
+            if adventureRoadID == parameters?.adventureRoadConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let adventureVersion = parameters?.adventureRoadConfigVersion {
+                UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            
+            if dailySpinID == parameters?.dailySpinRewardsConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let dailySpinVersion = parameters?.dailySpinRewardsConfigVersion {
+                UserDefaults.standard.set(dailySpinVersion, forKey: DefaultsKeys.dailySpinRewards)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            
+            if questsID == parameters?.questsConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let questsVersion = parameters?.questsConfigVersion {
+                UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            
+            if weeklyID == parameters?.weeklyRewardsConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let weeklyVersion = parameters?.weeklyRewardsConfigVersion {
+                UserDefaults.standard.set(weeklyVersion, forKey: DefaultsKeys.weeklyRewards)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            
+            if gameEconomyID == parameters?.gameEconomyConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let gameEconomyVersion = parameters?.gameEconomyConfigVersion {
+                UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            
+            if chestRewardID == parameters?.chestRewardsConfigVersion {
+                // TODO: - RETURN FROM LOCAL
+            } else if let chestRewardVersion = parameters?.chestRewardsConfigVersion {
+                UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
+                // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+        }
     }
 }
 

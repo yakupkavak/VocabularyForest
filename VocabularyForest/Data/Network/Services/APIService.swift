@@ -40,7 +40,7 @@ public class APIService: APIServiceProtocol {
         vocabularyBaseURLProvider.resolveVocabURL { [weak self] baseURL in
             guard let self else { return }
 
-            self.bookcaseRequestManager.request(endpoint: .definition(values, baseURL: baseURL), type: BookcaseRequest.self) { result in
+            bookcaseRequestManager.request(endpoint: .definition(values, baseURL: baseURL), type: BookcaseRequest.self) { result in
                 completion(result)
             }
         }
@@ -49,7 +49,7 @@ public class APIService: APIServiceProtocol {
     func fetchLibraries(completion: @escaping (LibrariesResult) -> Void) {
         vocabularyBaseURLProvider.resolveVocabURL { [weak self] baseURL in
             guard let self else { return }
-            self.librariesManager.request(endpoint: .standart(baseURL: baseURL), type: Libraries.self) { result in
+            librariesManager.request(endpoint: .standart(baseURL: baseURL), type: Libraries.self) { result in
                 completion(result)
             }
         }
@@ -58,7 +58,7 @@ public class APIService: APIServiceProtocol {
     func fetchImage(values: GetImageRequestModel, completion: @escaping (ImageResult) -> Void) {
         vocabularyBaseURLProvider.resolveImageURL { [weak self] baseURL in
             guard let self else { return }
-            self.imageManager.requestData(endpoint: .image(values, baseURL: baseURL)) { result in
+            imageManager.requestData(endpoint: .image(values, baseURL: baseURL)) { result in
                 completion(result)
             }
         }

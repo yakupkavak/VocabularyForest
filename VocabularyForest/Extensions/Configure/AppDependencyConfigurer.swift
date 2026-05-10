@@ -20,7 +20,6 @@ enum AppDependencyConfigurer {
         let authManager = AuthManager()
         let cloudSyncManager = ForestSyncManager()
         let playerDataManager = PlayerDataManager()
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData)
         let adventureRoadSeasonProgressStore = AdventureRoadSeasonProgressStore(
             coreDataManager: coreData,
             forestDataManager: forestData
@@ -28,6 +27,7 @@ enum AppDependencyConfigurer {
         let remoteConfigRepository = RemoteConfigRepository(
             adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore
         )
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository)
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData

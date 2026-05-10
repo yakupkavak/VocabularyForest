@@ -440,9 +440,9 @@ extension ForestUI: ForestUIProtocol {
     let mockForestData = ForestDataManager()
     let mockForestEntityService: ForestEntityServiceProtocol = ForestEntityServiceAdapter(coreDataManager: mockCoreData)
     let mockPlayerManager = PlayerDataManager()
-    let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData)
     let mockAdventureRoadStore = AdventureRoadSeasonProgressStore(coreDataManager: mockCoreData, forestDataManager: mockForestData)
     let mockRemoteConfig = RemoteConfigRepository(adventureRoadSeasonProgressStore: mockAdventureRoadStore)
+    let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData, remoteConfig: mockRemoteConfig)
     let viewModel = ForestViewModel(
         audioService: mockAudio,
         coreDataManager: mockCoreData,

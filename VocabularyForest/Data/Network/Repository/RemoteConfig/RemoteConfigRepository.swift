@@ -29,28 +29,33 @@ enum RemoteConfigError: Error, LocalizedError {
 }
 
 protocol RemoteConfigRepositoryProtocol {
-    func fetchDailySpinRewards() async -> Resource<[DailySpinModel]>
-    func fetchQuestsConfig() async -> Resource<[QuestModel]>
-    func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]>
-    func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel>
-    func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
+    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel>
+    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel>
+    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel>
+    func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
+    //func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
+    func fetchConfigParameters() async -> Resource<ConfigParametersList>
 }
 
-final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
-
-    private enum Keys {
+private extension RemoteConfigRepository {
+    enum Keys {
         static let dailySpinRewards = "daily_spin_rewards_config"
         static let questsConfig = "quests_config"
         static let weeklyRewards = "weekly_rewards_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
         static let gameEconomyConfig = "game_economy_config"
+        static let chestRewardConfig = "chest_rewards_config"
+        static let configParameters = "config_list"
     }
     
     private enum DefaultsKeys {
         static let remoteConfigIDPrefix = "remote_config.last_id."
     }
+}
 
+final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
+    
     private let remoteConfig: RemoteConfig
     private let userDefaults: UserDefaults
     private let adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
@@ -64,12 +69,27 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         self.userDefaults = userDefaults
         self.adventureRoadSeasonProgressStore = adventureRoadSeasonProgressStore
         let settings = RemoteConfigSettings()
-        // For development: 0 fetch interval. Increase for production.
         settings.minimumFetchInterval = 0
         remoteConfig.configSettings = settings
     }
+    
+    func fetchConfigParameters() async -> Resource<ConfigParametersList> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.configParameters).decoded(asType: ConfigParametersList.self)
+            return Resource.success(listValue)
+        }catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+    }
 
-    func fetchDailySpinRewards() async -> Resource<[DailySpinModel]> {
+    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.dailySpinRewards).decoded(asType: RemoteDailySpinListModel.self)
+            return Resource.success(listValue)
+        }catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+        /*
         let decodedResult: Result<DecodedPayload<RemoteDailySpinItemDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.dailySpinRewards,
             as: RemoteDailySpinItemDTO.self
@@ -92,9 +112,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         case .failure(let error):
             return .error(error: error)
         }
+         */
     }
     
-    func fetchQuestsConfig() async -> Resource<[QuestModel]> {
+    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.questsConfig).decoded(asType: RemoteQuestListModel.self)
+            return Resource.success(listValue)
+        }catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+        /*
         let decodedResult: Result<DecodedPayload<RemoteQuestItemDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.questsConfig,
             as: RemoteQuestItemDTO.self
@@ -143,9 +171,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         case .failure(let error):
             return .error(error: error)
         }
+         */
     }
 
-    func fetchWeeklyRewards() async -> Resource<[WeeklyRewardModel]> {
+    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.weeklyRewards).decoded(asType: RemoteWeeklyListModel.self)
+            return Resource.success(listValue)
+        }catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+        /*
         let decodedResult: Result<DecodedPayload<RemoteWeeklyRewardItemDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.weeklyRewards,
             as: RemoteWeeklyRewardItemDTO.self
@@ -168,10 +204,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
 
         case .failure(let error):
             return .error(error: error)
-        }
+        }*/
     }
 
-    func fetchAdventureRoadConfig() async -> Resource<AdventureRoadConfigModel> {
+    func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.adventureRoadRewards).decoded(asType: RemoteAdventureRoadListModel.self)
+            return Resource.success(listValue)
+        }catch {
+            return .error(error: RemoteConfigError.decodeFailed)
+        }
+        /*
         let decodedResult: Result<DecodedPayload<RemoteAdventureRoadRewardDTO>, RemoteConfigError> = await fetchDecodedArray(
             forKey: Keys.adventureRoadRewards,
             as: RemoteAdventureRoadRewardDTO.self
@@ -207,8 +250,10 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         case .failure(let error):
             return .error(error: error)
         }
+         */
     }
     
+    /*
     func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]> {
         let configResult = await fetchAdventureRoadConfig()
         switch configResult.status {
@@ -220,72 +265,81 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
             return .error(error: configResult.error)
         }
     }
+    */
     
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel> {
         do {
-            let jsonString = try await fetchJSONString(forKey: Keys.gameEconomyConfig)
-            let data = Data(jsonString.utf8)
-            let payload = try JSONDecoder().decode(RemoteGameEconomyPayload.self, from: data)
-            _ = persistConfigID(payload.id, forRemoteKey: Keys.gameEconomyConfig)
-            
-            let minGold = safePositive(payload.killCap?.minGoldPerKill, fallback: EconomyDefaults.minGoldPerKill)
-            let maxGoldCandidate = safePositive(payload.killCap?.maxGoldPerKill, fallback: EconomyDefaults.maxGoldPerKill)
-            let maxGold = max(minGold, maxGoldCandidate)
-            
-            let goldChestGoldRange = safeRange(
-                min: payload.chestRewardRanges?.goldChestGoldMin,
-                max: payload.chestRewardRanges?.goldChestGoldMax,
-                fallbackMin: EconomyDefaults.goldChestGoldMin,
-                fallbackMax: EconomyDefaults.goldChestGoldMax
-            )
-            let goldChestDiamondRange = safeRange(
-                min: payload.chestRewardRanges?.goldChestDiamondMin,
-                max: payload.chestRewardRanges?.goldChestDiamondMax,
-                fallbackMin: EconomyDefaults.goldChestDiamondMin,
-                fallbackMax: EconomyDefaults.goldChestDiamondMax
-            )
-            let diamondChestDiamondRange = safeRange(
-                min: payload.chestRewardRanges?.diamondChestDiamondMin,
-                max: payload.chestRewardRanges?.diamondChestDiamondMax,
-                fallbackMin: EconomyDefaults.diamondChestDiamondMin,
-                fallbackMax: EconomyDefaults.diamondChestDiamondMax
-            )
-            
-            let model = GameEconomyConfigModel(
-                id: trimmed(payload.id),
-                season: trimmed(payload.season) ?? trimmed(payload.seasonID) ?? trimmed(payload.seasonId),
-                chestOdds: GameChestOddsModel(
-                    goldChestDiamondChance: safePercent(payload.chestOdds?.goldChestDiamondChance, fallback: EconomyDefaults.goldChestDiamondChance),
-                    goldChestWaterChance: safePercent(payload.chestOdds?.goldChestWaterChance, fallback: EconomyDefaults.goldChestWaterChance),
-                    natureChestAnimalChance: safePercent(payload.chestOdds?.natureChestAnimalChance, fallback: EconomyDefaults.natureChestAnimalChance),
-                    antiqueChestAnimalChance: safePercent(payload.chestOdds?.antiqueChestAnimalChance, fallback: EconomyDefaults.antiqueChestAnimalChance)
-                ),
-                chestRewardRanges: GameChestRewardRangesModel(
-                    goldChestGoldMin: goldChestGoldRange.min,
-                    goldChestGoldMax: goldChestGoldRange.max,
-                    goldChestDiamondMin: goldChestDiamondRange.min,
-                    goldChestDiamondMax: goldChestDiamondRange.max,
-                    diamondChestDiamondMin: diamondChestDiamondRange.min,
-                    diamondChestDiamondMax: diamondChestDiamondRange.max
-                ),
-                killCap: GameKillCapModel(
-                    minGoldPerKill: minGold,
-                    maxGoldPerKill: maxGold,
-                    dailyKillCountCap: safePositive(payload.killCap?.dailyKillCountCap, fallback: EconomyDefaults.dailyKillCountCap)
-                )
-            )
-            
-            return .success(model)
-        } catch let error as RemoteConfigError {
-            return .error(error: error)
-        } catch {
+            let listValue = try remoteConfig.configValue(forKey: Keys.gameEconomyConfig).decoded(asType: GameEconomyConfigModel.self)
+            return Resource.success(listValue)
+        }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
+        /*
+         do {
+         let jsonString = try await fetchJSONString(forKey: Keys.gameEconomyConfig)
+         let data = Data(jsonString.utf8)
+         let payload = try JSONDecoder().decode(RemoteGameEconomyPayload.self, from: data)
+         _ = persistConfigID(payload.id, forRemoteKey: Keys.gameEconomyConfig)
+         
+         let minGold = safePositive(payload.killCap?.minGoldPerKill, fallback: EconomyDefaults.minGoldPerKill)
+         let maxGoldCandidate = safePositive(payload.killCap?.maxGoldPerKill, fallback: EconomyDefaults.maxGoldPerKill)
+         let maxGold = max(minGold, maxGoldCandidate)
+         
+         let goldChestGoldRange = safeRange(
+         min: payload.chestRewardRanges?.goldChestGoldMin,
+         max: payload.chestRewardRanges?.goldChestGoldMax,
+         fallbackMin: EconomyDefaults.goldChestGoldMin,
+         fallbackMax: EconomyDefaults.goldChestGoldMax
+         )
+         let goldChestDiamondRange = safeRange(
+         min: payload.chestRewardRanges?.goldChestDiamondMin,
+         max: payload.chestRewardRanges?.goldChestDiamondMax,
+         fallbackMin: EconomyDefaults.goldChestDiamondMin,
+         fallbackMax: EconomyDefaults.goldChestDiamondMax
+         )
+         let diamondChestDiamondRange = safeRange(
+         min: payload.chestRewardRanges?.diamondChestDiamondMin,
+         max: payload.chestRewardRanges?.diamondChestDiamondMax,
+         fallbackMin: EconomyDefaults.diamondChestDiamondMin,
+         fallbackMax: EconomyDefaults.diamondChestDiamondMax
+         )
+         
+         let model = GameEconomyConfigModel(
+         id: trimmed(payload.id),
+         season: trimmed(payload.season) ?? trimmed(payload.seasonID) ?? trimmed(payload.seasonId),
+         chestOdds: GameChestOddsModel(
+         goldChestDiamondChance: safePercent(payload.chestOdds?.goldChestDiamondChance, fallback: EconomyDefaults.goldChestDiamondChance),
+         goldChestWaterChance: safePercent(payload.chestOdds?.goldChestWaterChance, fallback: EconomyDefaults.goldChestWaterChance),
+         natureChestAnimalChance: safePercent(payload.chestOdds?.natureChestAnimalChance, fallback: EconomyDefaults.natureChestAnimalChance),
+         antiqueChestAnimalChance: safePercent(payload.chestOdds?.antiqueChestAnimalChance, fallback: EconomyDefaults.antiqueChestAnimalChance)
+         ),
+         chestRewardRanges: GameChestRewardRangesModel(
+         goldChestGoldMin: goldChestGoldRange.min,
+         goldChestGoldMax: goldChestGoldRange.max,
+         goldChestDiamondMin: goldChestDiamondRange.min,
+         goldChestDiamondMax: goldChestDiamondRange.max,
+         diamondChestDiamondMin: diamondChestDiamondRange.min,
+         diamondChestDiamondMax: diamondChestDiamondRange.max
+         ),
+         killCap: GameKillCapModel(
+         minGoldPerKill: minGold,
+         maxGoldPerKill: maxGold,
+         dailyKillCountCap: safePositive(payload.killCap?.dailyKillCountCap, fallback: EconomyDefaults.dailyKillCountCap)
+         )
+         )
+         
+         return .success(model)
+         } catch let error as RemoteConfigError {
+         return .error(error: error)
+         } catch {
+         return .error(error: RemoteConfigError.decodeFailed)
+         }
+         */
     }
 }
 
 private extension RemoteConfigRepository {
-    struct DecodedPayload<Item> {
+    struct DecodedPayload<Item: Decodable>: Decodable{
         let id: String?
         let seasonEndDateString: String?
         let items: [Item]

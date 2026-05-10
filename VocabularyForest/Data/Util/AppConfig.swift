@@ -14,4 +14,10 @@ struct AppConfig {
         }
         return urlString.replacingOccurrences(of: "\\", with: "")
     }
+    static var imageURL: String {
+        guard let urlString = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String else {
+            fatalError("ApiBaseURL not found in Info.plist")
+        }
+        return urlString.replacingOccurrences(of: "\\", with: "")
+    }
 }
