@@ -9,7 +9,7 @@ protocol Rewardable {
     var typeName: String { get }
     var coreDataValueString: String { get }
     var rewardName: String { get }
-    var rewardImage: String { get }
+    var rewardImage: RewardImageInfo { get }
     var rewardCount: Int? { get }
 }
 

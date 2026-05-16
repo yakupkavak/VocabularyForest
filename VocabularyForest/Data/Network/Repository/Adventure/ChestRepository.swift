@@ -54,10 +54,7 @@ final class ChestRepository {
             }else {
                 return Resource.error(error: ChestRepositoryError.decodingError)
             }
-            
-            
         }
-        
         return Resource.success(localChests)
     }
     

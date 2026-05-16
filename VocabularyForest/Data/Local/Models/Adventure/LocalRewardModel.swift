@@ -7,9 +7,19 @@
 
 import Foundation
 
-enum LocalRewardModel: Encodable {
+enum LocalRewardModel {
     case standart(model: QuestRewardModel)
-    case chest(model: ChestBountyModel)
+    case chest(model: LocalChestModel)
+}
+
+enum ImageSourceType {
+    case appAssets
+    case offlineStorage
+}
+
+struct RewardImageInfo {
+    let key: String
+    let source: ImageSourceType
 }
 
 extension LocalRewardModel: Rewardable {
@@ -22,42 +32,38 @@ extension LocalRewardModel: Rewardable {
         }
     }
 
-    var rewardImage: String {
+    var rewardImage: RewardImageInfo {
         switch self {
         case .standart(let model):
-            return model.rewardImage
+            return RewardImageInfo(key: model.rewardImage, source: .appAssets)
         case .chest(let model):
-            return model.rewardImage
+            return RewardImageInfo(key: model.closeLocalImagePath, source: .offlineStorage)
         }
     }
-    
+    ///Animal, plant vs bilgisi, chest mi gibi bilgiler
     var typeName: String {
         switch self {
         case .standart(let model): return model.typeName
-        case .chest(let model): return model.typeName
+        case .chest(let model): return "chest"
         }
     }
-    
+    ///Ödülün ismini, altın sayısını vs tutmak için
     var coreDataValueString: String {
         switch self {
         case .standart(let model): return model.coreDataValueString
-        case .chest(let model): return model.coreDataValueString
+        case .chest(let model): return "chest_core_data_TODO"
         }
     }
     
     var rewardName: String {
         switch self {
         case .standart(let model): return model.rewardName
-        case .chest(let model): return model.rewardName
+        case .chest(let model): return model.displayName.localized
         }
     }
 }
 
 extension LocalRewardModel {
-    var iconName: String {
-        rewardImage
-    }
-
     var amountText: String {
         switch self {
         case .standart(let model):
@@ -66,7 +72,7 @@ extension LocalRewardModel {
             }
             return model.rewardName
         case .chest(let model):
-            return model.rewardName
+            return "1"
         }
     }
 
