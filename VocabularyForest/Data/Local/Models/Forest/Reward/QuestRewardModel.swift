@@ -9,19 +9,41 @@ protocol Rewardable {
     var typeName: String { get }
     var coreDataValueString: String { get }
     var rewardName: String { get }
-    var rewardImage: RewardImageInfo { get }
+    var rewardImage: RewardPosterInfo { get }
     var rewardCount: Int? { get }
 }
 
 enum QuestRewardModel: Hashable, Encodable {
-    case animal(modelName: String)
-    case plant(modelName: String)
-    case gold(count: Int)
-    case water(count: Int)
-    case diamond(count: Int)
-    case sculpture(modelName: String)
+    case animal//(modelName: String)
+    case plant//(modelName: String)
+    case gold//(count: Int)
+    case water//(count: Int)
+    case diamond//(count: Int)
+    case sculpture//(modelName: String)
 }
 
+extension QuestRewardModel {
+    static func convertQuestReward(value: String) -> Self? {
+        return switch value {
+            case "animal":
+                    .animal
+            case "plant":
+                    .plant
+            case "gold":
+                    .gold
+            case "water":
+                    .water
+            case "diamond":
+                    .diamond
+            case "sculpture":
+                    .sculpture
+            default:
+                nil
+        }
+    }
+}
+
+/*
 extension QuestRewardModel: Rewardable {
     var rewardCount: Int? {
         return switch self {
@@ -120,3 +142,4 @@ extension QuestRewardModel: Rewardable {
         }
     }
 }
+*/

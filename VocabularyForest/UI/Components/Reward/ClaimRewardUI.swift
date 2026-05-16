@@ -13,7 +13,7 @@ struct ClaimRewardUI: View {
     
     // MARK: - PROPERTIES
     
-    var reward: LocalRewardModel
+    var reward: LocalRewardType
     var onClaim: (QuestRewardModel) -> Void
     @State private var chestStatus: ChestStatus = .close
     @State private var isChestOpened: Bool = false

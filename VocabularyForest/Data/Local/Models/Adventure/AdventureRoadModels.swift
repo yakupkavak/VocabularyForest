@@ -101,7 +101,7 @@ enum AdventureMemoryTrack: String, CaseIterable {
 struct AdventureMilestoneModel: Identifiable {
     let track: AdventureMemoryTrack
     let wordCount: Int
-    let reward: LocalRewardModel
+    let reward: LocalRewardType
     let isClaimed: Bool
 
     var id: String {
@@ -186,7 +186,7 @@ enum AdventureRoadMockData {
         let chestCycle: [ChestBountyModel] = track == .shortTerm
             ? [.gold, .diamond, .gold]
             : [.nature, .gold, .nature]
-        let reward: LocalRewardModel
+        let reward: LocalRewardType
 
         if isChest {
             reward = .chest(model: chestCycle[milestoneStep % chestCycle.count])

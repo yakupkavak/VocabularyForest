@@ -142,7 +142,7 @@ struct RewardHelper {
     
     // MARK: - BACKGROUND GRADIENT
     
-    static func getBackgroundGradient(reward: LocalRewardModel) -> RadialGradient {
+    static func getBackgroundGradient(reward: LocalRewardType) -> RadialGradient {
         let palette: [Color]
         switch reward {
         case .standart(let model):
@@ -225,7 +225,7 @@ struct RewardHelper {
         }
     }
     
-    static func convertDailyRewardModel(from rewardModel: SpinModel) -> LocalRewardModel {
+    static func convertDailyRewardModel(from rewardModel: SpinModel) -> LocalRewardType {
         let spinRewards = AdventureReward.allCases.filter { $0 != .diamondChest }
         let safeIndex = max(0, min(rewardModel.id - 1, spinRewards.count - 1))
         let spinReward = spinRewards[safeIndex]
@@ -267,9 +267,9 @@ struct RewardHelper {
             }
     }
     
-    static func createDailySpinWheel(from rewards: [DailySpinModel]) -> ([SpinModel], [Int: LocalRewardModel]) {
+    static func createDailySpinWheel(from rewards: [DailySpinModel]) -> ([SpinModel], [Int: LocalRewardType]) {
         let safeRewards = rewards.isEmpty ? defaultDailySpinRewards() : rewards
-        var rewardMap: [Int: LocalRewardModel] = [:]
+        var rewardMap: [Int: LocalRewardType] = [:]
         
         let spinModels = safeRewards.enumerated().map { index, model in
             let id = index + 1
@@ -289,7 +289,7 @@ struct RewardHelper {
 }
 
 private extension RewardHelper {
-    static func spinText(for reward: LocalRewardModel) -> String {
+    static func spinText(for reward: LocalRewardType) -> String {
         switch reward {
         case .chest(let model):
             return model.rewardName
@@ -307,7 +307,7 @@ private extension RewardHelper {
         }
     }
     
-    static func spinTextColor(for reward: LocalRewardModel) -> Color {
+    static func spinTextColor(for reward: LocalRewardType) -> Color {
         switch reward {
         case .chest(let model):
             switch model {
@@ -336,7 +336,7 @@ private extension RewardHelper {
         }
     }
     
-    static func spinBackground(for reward: LocalRewardModel) -> AnyView {
+    static func spinBackground(for reward: LocalRewardType) -> AnyView {
         let colors: [Color]
         
         switch reward {

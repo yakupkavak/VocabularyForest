@@ -13,17 +13,59 @@ enum ChestRepositoryError: Error {
     case downloadImageError
 }
 
+protocol ChestRepositoryProtocol {
+    func getLocalChest(chestId: String) -> LocalChestModel?
+    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async -> Resource<Bool>
+}
+
 final class ChestRepository {
     
     private let offlineAssetManager: OfflineAssetManagerProtocol
     private let networkManager: APIServiceProtocol
+    private var localChestModels: [LocalChestModel]?
     
     init(assetManager: OfflineAssetManagerProtocol, apiService: APIServiceProtocol) {
         self.offlineAssetManager = assetManager
         self.networkManager = apiService
     }
+    
+    // MARK: - Private Downloader TODO: - static yapılacak
+    
+    private func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
         
-    func processAndGetLocalChests(from remoteChests: [RemoteChestModel]) async -> Resource<[LocalChestModel]> {
+        if offlineAssetManager.isAssetUpToDate(imageName: localKey, expectedVersion: version) {
+            return true
+        }
+        
+        let getImageModel = GetImageRequestModel(imagePath: remotePath)
+        networkManager.fetchImage(values: getImageModel) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let imageData):
+                let saveResult = offlineAssetManager.saveImageToAssets(
+                    data: imageData,
+                    imageName: localKey,
+                    version: version
+                )
+                if saveResult.status == .error {
+                    print(saveResult.error ?? "Save error")
+                }
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+        return true
+    }
+}
+
+extension ChestRepository: ChestRepositoryProtocol {
+    func getLocalChest(chestId: String) -> LocalChestModel? {
+        guard let localChestModels else { return nil }
+        return localChestModels.first { $0.id == chestId }
+    }
+        
+    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async -> Resource<Bool> {
         var localChests: [LocalChestModel] = []
         
         for remoteChest in remoteChests {
@@ -55,35 +97,7 @@ final class ChestRepository {
                 return Resource.error(error: ChestRepositoryError.decodingError)
             }
         }
-        return Resource.success(localChests)
-    }
-    
-    // MARK: - Private Downloader
-    
-    private func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
-        
-        if offlineAssetManager.isAssetUpToDate(imageName: localKey, expectedVersion: version) {
-            return true
-        }
-        
-        let getImageModel = GetImageRequestModel(imagePath: remotePath)
-        networkManager.fetchImage(values: getImageModel) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let imageData):
-                let saveResult = offlineAssetManager.saveImageToAssets(
-                    data: imageData,
-                    imageName: localKey,
-                    version: version
-                )
-                if saveResult.status == .error {
-                    print(saveResult.error ?? "Save error")
-                }
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
-        return true
+        localChestModels = localChests
+        return Resource.success(true)
     }
 }

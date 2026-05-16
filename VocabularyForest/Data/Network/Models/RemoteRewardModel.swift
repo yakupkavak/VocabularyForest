@@ -7,17 +7,21 @@
 
 import SwiftUI
 
+// TODO: VERSION CONTROL WILL ADD INTO RESOURCE
 // MARK: - REMOTE REWARD MODEL
 
 /// The raw data model that strictly mirrors the remote JSON structure.
 /// Everything is optional to prevent decoding failures if the backend sends incomplete data.
-struct RemoteRewardModel: Codable, Identifiable {
+struct RemoteRewardModel: Decodable, Identifiable {
     let id: String?
     let type: String?             // e.g., "chest" or "resource"
     let category: String?         // e.g., "gold", "nature", "water", "diamond"
     let rewardCount: Int?
-    let nameKey: String?          // Localization key instead of raw text
-    let imageName: String?
+    let displayName: RemoteLocalizedText? // Localization key instead of raw text
+    let imageSource: String? // local, remote, zip
+    let localImageName: String?
+    let remotePath: String?
+    let posterIconPath: String? // remote den poster pathi
     let textColorHex: String?
     let gradientHexes: [String]?
 }
@@ -41,12 +45,12 @@ extension RemoteRewardModel {
     }
     
     var safeName: String {
-        let key = nameKey ?? "reward_unknown"
+        let key = displayName?.localized ?? "reward_unknown"
         return String(localized: String.LocalizationValue(key))
     }
     
     var safeImageName: String {
-        return imageName ?? "questionmark.circle.fill"
+        return localImageName ?? "questionmark.circle.fill"
     }
     
     // MARK: Styling Properties

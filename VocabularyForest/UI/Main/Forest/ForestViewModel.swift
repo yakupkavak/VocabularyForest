@@ -83,7 +83,7 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    private var dailySpinRewardMap: [Int: LocalRewardModel] = ForestViewModel.defaultDailySpinWheel.1
+    private var dailySpinRewardMap: [Int: LocalRewardType] = ForestViewModel.defaultDailySpinWheel.1
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
@@ -242,7 +242,7 @@ extension ForestViewModel {
         }
     }
     
-    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel {
+    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardType {
         dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
     }
     

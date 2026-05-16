@@ -9,5 +9,5 @@ import Foundation
 
 struct DailySpinModel: Encodable {
     let weight: Double
-    let reward: LocalRewardModel
+    let reward: LocalRewardType
 }

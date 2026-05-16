@@ -9,8 +9,8 @@ import Foundation
 
 struct AdventureRoadRewardModel: Encodable {
     let wordCount: Int
-    let shortTermReward: LocalRewardModel
-    let longTermReward: LocalRewardModel
+    let shortTermReward: LocalRewardType
+    let longTermReward: LocalRewardType
 }
 
 struct AdventureRoadConfigModel {

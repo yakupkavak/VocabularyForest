@@ -349,7 +349,7 @@ private extension ForestAdventureService {
                 activeDay = 1
             }
         }
-        let baseRewards: [LocalRewardModel] = [
+        let baseRewards: [LocalRewardType] = [
             .standart(model: .gold(count: 100)),
             .standart(model: .water(count: 50)),
             .chest(model: .antique),
