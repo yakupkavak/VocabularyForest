@@ -18,7 +18,6 @@ struct RemoteRewardModel: Codable, Identifiable {
     let rewardCount: Int?
     let nameKey: String?          // Localization key instead of raw text
     let imageName: String?
-    let probabilityWeight: Double?
     let textColorHex: String?
     let gradientHexes: [String]?
 }
@@ -48,10 +47,6 @@ extension RemoteRewardModel {
     
     var safeImageName: String {
         return imageName ?? "questionmark.circle.fill"
-    }
-    
-    var safeProbabilityWeight: Double {
-        return probabilityWeight ?? 1.0
     }
     
     // MARK: Styling Properties

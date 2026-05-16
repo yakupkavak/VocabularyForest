@@ -7,7 +7,6 @@
 
 struct RemoteDailySpinListModel: Decodable {
     let id: String?
-    let seasonEndDateString: String?
     let items: [RemoteDailySpinModel]
 }
 

@@ -7,6 +7,21 @@
 
 import Foundation
 
+struct LocalChestModel {
+    let id: String
+    let version: Int
+    let displayName: RemoteLocalizedText
+    let closeLocalImagePath: String
+    let openLocalImagePath: String
+    let textHexColor: String?
+    let backgroundGradientColors: [String]?
+}
+
+/*
+struct DailySpinProbabilities {
+    
+}
+
 enum ChestBountyModel: Encodable {
     case gold
     case nature
@@ -89,3 +104,4 @@ extension ChestBountyModel: Rewardable {
         }
     }
 }
+*/

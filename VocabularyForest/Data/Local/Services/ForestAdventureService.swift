@@ -58,17 +58,25 @@ class ForestAdventureService: ForestAdventureServiceProtocol {
     private let playerManager: PlayerDataManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
+    private let documentRepository: DocumentaryRepositoryProtocol
     private let db = Firestore.firestore()
     private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
-    private var adventureCacheList: [AdventureRoadScreenModel]? = nil
+    private var adventureCacheList: AdventureRoadScreenModel? = nil
 
-    init(forestManager: ForestDataManagerProtocol, playerManager: PlayerDataManagerProtocol, coreData: CoreDataManagerProtocol, remoteConfig: RemoteConfigRepositoryProtocol) {
+    init(
+        forestManager: ForestDataManagerProtocol,
+        playerManager: PlayerDataManagerProtocol,
+        coreData: CoreDataManagerProtocol,
+        remoteConfig: RemoteConfigRepositoryProtocol,
+        documentRepository: DocumentaryRepositoryProtocol
+    ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.coreDataManager = coreData
         self.remoteConfigRepository = remoteConfig
+        self.documentRepository = documentRepository
         
         setupParameters()
     }
@@ -86,48 +94,88 @@ private extension ForestAdventureService {
         Task {
             let parameters = await remoteConfigRepository.fetchConfigParameters().data
             
-            if adventureRoadID == parameters?.adventureRoadConfigVersion {
+            if adventureRoadID == parameters?.model.adventureRoadConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let adventureVersion = parameters?.adventureRoadConfigVersion {
+                let response = await documentRepository.fetchAdventureRoadConfig()
+                if let list = response.data {
+                    convertRemoteToCacheAdventure(list: list)
+                }
+            } else if let adventureVersion = parameters?.model.adventureRoadConfigVersion {
                 UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
+                let config = await remoteConfigRepository.fetchAdventureRoadConfig()
+                let saveLocalResult = await documentRepository.saveAdventureRoadConfig(data: config.data?.rawData)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
             
-            if dailySpinID == parameters?.dailySpinRewardsConfigVersion {
+            if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let dailySpinVersion = parameters?.dailySpinRewardsConfigVersion {
+            } else if let dailySpinVersion = parameters?.model.dailySpinRewardsConfigVersion {
                 UserDefaults.standard.set(dailySpinVersion, forKey: DefaultsKeys.dailySpinRewards)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
             
-            if questsID == parameters?.questsConfigVersion {
+            if questsID == parameters?.model.questsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let questsVersion = parameters?.questsConfigVersion {
+            } else if let questsVersion = parameters?.model.questsConfigVersion {
                 UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
             
-            if weeklyID == parameters?.weeklyRewardsConfigVersion {
+            if weeklyID == parameters?.model.weeklyRewardsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let weeklyVersion = parameters?.weeklyRewardsConfigVersion {
+            } else if let weeklyVersion = parameters?.model.weeklyRewardsConfigVersion {
                 UserDefaults.standard.set(weeklyVersion, forKey: DefaultsKeys.weeklyRewards)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
             
-            if gameEconomyID == parameters?.gameEconomyConfigVersion {
+            if gameEconomyID == parameters?.model.gameEconomyConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let gameEconomyVersion = parameters?.gameEconomyConfigVersion {
+            } else if let gameEconomyVersion = parameters?.model.gameEconomyConfigVersion {
                 UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
             
-            if chestRewardID == parameters?.chestRewardsConfigVersion {
+            if chestRewardID == parameters?.model.chestRewardsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
-            } else if let chestRewardVersion = parameters?.chestRewardsConfigVersion {
+            } else if let chestRewardVersion = parameters?.model.chestRewardsConfigVersion {
                 UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
         }
+    }
+}
+
+// MARK: PRIVATE STORAGE HELPERS
+
+private extension ForestAdventureService {
+    func convertRemoteToCacheAdventure(list: RemoteAdventureRoadListModel) -> Resource<Bool> {
+        
+        if let remoteItems = list.items, let title = list.title, let endDate = list.seasonEndDate, let progress = playerManager.fetchAdventureRoadProgress(contextType: .background) {
+            let sortedReward = remoteItems.sorted { $0.wordCount ?? 0 < $1.wordCount ?? 0 }
+            let maxWordCount = sortedReward.map { $0.wordCount ?? 0 }.max() ?? 0
+            let rows = sortedReward.map { reward in
+                
+                guard let wordCount = reward.wordCount, let shortTermReward = reward.shortTermReward, let longTermReward = reward.longTermReward else { return }
+                
+                AdventureRoadRowModel(
+                    wordCount: wordCount,
+                    leftMilestone: AdventureMilestoneModel(
+                        track: .shortTerm,
+                        wordCount: wordCount,
+                        reward: shortTermReward,
+                        isClaimed: wordCount <= progress.monthlyShortLearnedCount
+                    ),
+                    rightMilestone: AdventureMilestoneModel(
+                        track: .longTerm,
+                        wordCount: wordCount,
+                        reward: longTermReward,
+                        isClaimed: wordCount <= progress.monthlyLongLearnedCount
+                    )
+                )
+            }
+        }
+                
+        return Resource.success(true)
     }
 }
 

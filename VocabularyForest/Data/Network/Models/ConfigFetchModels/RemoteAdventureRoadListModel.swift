@@ -35,3 +35,17 @@ struct RemoteTermReward: Decodable {
         case chestID = "chestId"
     }
 }
+
+extension RemoteTermReward {
+    func convertLocalReward() -> LocalRewardModel? {
+        return switch self.rewardType {
+            case "chest":
+                let chest = ChestBountyModel
+                LocalRewardModel.chest(model: ChestBountyModel)
+            case "resource":
+                LocalRewardModel.standart(model: QuestRewardModel)
+            default:
+                return nil
+        }
+    }
+}

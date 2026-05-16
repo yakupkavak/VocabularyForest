@@ -29,13 +29,12 @@ enum RemoteConfigError: Error, LocalizedError {
 }
 
 protocol RemoteConfigRepositoryProtocol {
-    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel>
-    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel>
-    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel>
-    func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
-    //func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]>
-    func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
-    func fetchConfigParameters() async -> Resource<ConfigParametersList>
+    func fetchDailySpinRewards() async -> Resource<RemoteConfigResponse<RemoteDailySpinListModel>>
+    func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
+    func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>>
+    func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>
+    func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>>
+    func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
 }
 
 private extension RemoteConfigRepository {
@@ -73,19 +72,23 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         remoteConfig.configSettings = settings
     }
     
-    func fetchConfigParameters() async -> Resource<ConfigParametersList> {
+    func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.configParameters).decoded(asType: ConfigParametersList.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.configParameters).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
     }
 
-    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel> {
+    func fetchDailySpinRewards() async -> Resource<RemoteConfigResponse<RemoteDailySpinListModel>> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.dailySpinRewards).decoded(asType: RemoteDailySpinListModel.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.dailySpinRewards).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
@@ -115,10 +118,12 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
          */
     }
     
-    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel> {
+    func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.questsConfig).decoded(asType: RemoteQuestListModel.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.questsConfig).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
@@ -174,10 +179,12 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
          */
     }
 
-    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel> {
+    func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.weeklyRewards).decoded(asType: RemoteWeeklyListModel.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.weeklyRewards).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
@@ -207,10 +214,12 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         }*/
     }
 
-    func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel> {
+    func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>{
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.adventureRoadRewards).decoded(asType: RemoteAdventureRoadListModel.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.adventureRoadRewards).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
@@ -267,10 +276,12 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     }
     */
     
-    func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel> {
+    func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.gameEconomyConfig).decoded(asType: GameEconomyConfigModel.self)
-            return Resource.success(listValue)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.gameEconomyConfig).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return Resource.success(response)
         }catch {
             return .error(error: RemoteConfigError.decodeFailed)
         }
@@ -590,6 +601,7 @@ private extension RemoteConfigRepository {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /*
     func mapToLocalReward(_ remoteReward: RemoteRewardModel?) -> LocalRewardModel {
         guard let remoteReward else {
             return .standart(model: .water(count: 1))
@@ -604,7 +616,7 @@ private extension RemoteConfigRepository {
 
         return .standart(model: mapToQuestReward(category: category, rewardCount: remoteReward.safeRewardCount, imageName: remoteReward.imageName))
     }
-
+    
     func mapToChestReward(category: String) -> ChestBountyModel {
         switch category {
         case "gold":
@@ -618,7 +630,7 @@ private extension RemoteConfigRepository {
         default:
             return .gold
         }
-    }
+    }*/
 
     func mapToQuestReward(category: String, rewardCount: Int, imageName: String?) -> QuestRewardModel {
         let safeCount = max(rewardCount, 1)

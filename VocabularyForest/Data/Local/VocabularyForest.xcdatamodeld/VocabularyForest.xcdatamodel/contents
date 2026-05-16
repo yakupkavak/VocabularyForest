@@ -47,6 +47,7 @@
         <attribute name="weeklyStreakLastClaimDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="dailyActivities" inverseEntity="Forest"/>
     </entity>
+    <entity name="DailySpin" representedClassName="DailySpin" syncable="YES" codeGenerationType="class"/>
     <entity name="Forest" representedClassName="Forest" syncable="YES">
         <attribute name="diamondValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="forestId" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
