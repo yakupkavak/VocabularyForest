@@ -630,7 +630,7 @@ private extension RemoteConfigRepository {
         default:
             return .gold
         }
-    }*/
+    }
 
     func mapToQuestReward(category: String, rewardCount: Int, imageName: String?) -> QuestRewardModel {
         let safeCount = max(rewardCount, 1)
@@ -652,7 +652,7 @@ private extension RemoteConfigRepository {
             return .water(count: 1)
         }
     }
-
+     */
     func safeUUID(from value: String?) -> UUID {
         guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines),
               let uuid = UUID(uuidString: value) else {

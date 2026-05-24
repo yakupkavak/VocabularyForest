@@ -134,7 +134,7 @@ struct QuestModel: Identifiable, Hashable {
     
     // MARK: - PROPERTIES
     
-    let id: UUID
+    let id: String
     let type: QuestType
     let title: String
     let description: String

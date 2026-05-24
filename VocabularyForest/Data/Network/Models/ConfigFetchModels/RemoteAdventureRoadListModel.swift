@@ -17,25 +17,10 @@ struct RemoteAdventureRoadListModel: Decodable {
 struct RemoteAdventureRoadModel: Decodable {
     let id: String?
     let wordCount: Int?
-    let shortTermReward, longTermReward: RemoteTermReward?
+    let shortTermReward, longTermReward: RemoteRewardModel?
 }
 
-struct RemoteTermReward: Decodable {
-    let id: String?
-    let rewardType: String? // chest or resource
-    let rewardCategory: String? // water, gold, antiqueChest
-    let rewardCount: Int?
-    let localImageName: String?
-    let remoteImagePath: String?
-    let displayName: RemoteLocalizedText?
-    let chestID: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id, rewardType, rewardCategory, rewardCount, localImageName, remoteImagePath, displayName
-        case chestID = "chestId"
-    }
-}
-
+/*
 extension RemoteTermReward {
     func convertLocalReward() -> LocalRewardType? {
         return switch self.rewardType {
@@ -49,3 +34,4 @@ extension RemoteTermReward {
         }
     }
 }
+*/

@@ -62,7 +62,8 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     func getCurrentForest(context: NSManagedObjectContext) -> Forest?
     func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
-    func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestModel]>
+    func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
+    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel>
     func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel>
     
     // MARK: Update Helpers
@@ -270,17 +271,8 @@ private extension ForestDataManager {
             for model in questList {
                 let quest = Quest(context: context)
                 quest.id = model.id
-                quest.type = model.type.valueForCoreData
-                quest.title = model.title
-                quest.description_quest = model.description
-                quest.rewardType = model.reward.typeName
-                quest.rewardValue = model.reward.coreDataValueString
                 quest.status = model.status.valueForCoreData
-                quest.targetCount = Int16(model.targetCount)
                 quest.currentProgressCount = 0
-                quest.gameLevel = model.gameLevel.valueForCoreData
-                quest.battleEnemyModel = model.battleEnemyModel.valueForCoreData
-                quest.questType = model.questionType.valueForCoreData
                 quest.lastUpdatedDate = model.lastUpdatedDate
                 forest.addToQuests(quest)
             }
@@ -344,6 +336,25 @@ extension ForestDataManager {
 
 extension ForestDataManager {
     
+    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel> {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.emptyForest)
+            }
+            if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == id }) {
+                do {
+                    let questTrack = try coreDataQuest.safeObject(context: contextType.context)
+                    return Resource.success(questTrack)
+                }catch {
+                    print("\(error.localizedDescription)")
+                }
+            } else {
+                return .error(error: ForestError.emptyForest)
+            }
+        }
+    }
+    
     func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel> {
         contextType.context.performAndWait {
             let context = contextType.context
@@ -384,12 +395,12 @@ extension ForestDataManager {
         }
     }
     
-    func fetchQuests(contextType: ContextType) -> Resource<[QuestModel]> {
+    func fetchQuests(contextType: ContextType) -> Resource<[QuestTrackModel]> {
         contextType.context.performAndWait {
             guard let forest = getCurrentForest(context: contextType.context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
-            var questList: [QuestModel] = []
+            var questList: [QuestTrackModel] = []
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest] {
                 for quest in quests {
                     do {
@@ -552,18 +563,9 @@ extension ForestDataManager {
             for questModel in safeForest.quests {
                 let quest = Quest(context: context)
                 quest.id = questModel.id
-                quest.battleEnemyModel = questModel.battleEnemyModel.valueForCoreData
                 quest.currentProgressCount = Int16(questModel.currentProgressCount)
-                quest.description_quest = questModel.description
-                quest.gameLevel = questModel.gameLevel.valueForCoreData
                 quest.lastUpdatedDate = questModel.lastUpdatedDate
-                quest.questType = questModel.questionType.valueForCoreData
-                quest.rewardType = questModel.reward.typeName
-                quest.rewardValue = questModel.reward.coreDataValueString
                 quest.status = questModel.status.valueForCoreData
-                quest.targetCount = Int16(questModel.targetCount)
-                quest.title = questModel.title
-                quest.type = questModel.type.valueForCoreData
                 newForest.addToQuests(quest)
             }
             

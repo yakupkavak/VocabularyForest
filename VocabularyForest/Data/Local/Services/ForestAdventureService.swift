@@ -17,6 +17,7 @@ enum ForestAdventureError: LocalizedError {
     case networkError
     case unauthenticated
     case emptyForestData
+    case emptyValueFromConfig
     var errorDescription: String? {
         switch self {
         case .networkError:
@@ -25,6 +26,8 @@ enum ForestAdventureError: LocalizedError {
             return String(localized: "You must be authenticated to use the reward system.")
         case .emptyForestData:
             return String(localized: "Local forest data is not available.")
+        case .emptyValueFromConfig:
+            return String(localized: "Unexpected error.")
         }
     }
 }
@@ -32,10 +35,11 @@ enum ForestAdventureError: LocalizedError {
 // MARK: - PROTOCOL
 
 protocol ForestAdventureServiceProtocol {
-    func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]>
-    func fetchDailySpinStatusDate() async -> Resource<Date?>
-    func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
-    func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
+    //func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]>
+    //func fetchDailySpinStatusDate() async -> Resource<Date?>
+    //func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
+    //func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
+    func fetchQuestList() async -> Resource<[QuestModel]>
 }
 
 // MARK: - CONSTANTS
@@ -52,13 +56,14 @@ private extension ForestAdventureService {
 
 // MARK: - FOREST ADVENTURE SERVICE
 
-class ForestAdventureService: ForestAdventureServiceProtocol {
+class ForestAdventureService {
 
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let coreDataManager: CoreDataManagerProtocol
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let documentRepository: DocumentaryRepositoryProtocol
+    private let rewardRepository: RewardRepositoryProtocol
     private let db = Firestore.firestore()
     private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
     private var questCacheList: [QuestModel]? = nil
@@ -70,15 +75,26 @@ class ForestAdventureService: ForestAdventureServiceProtocol {
         playerManager: PlayerDataManagerProtocol,
         coreData: CoreDataManagerProtocol,
         remoteConfig: RemoteConfigRepositoryProtocol,
-        documentRepository: DocumentaryRepositoryProtocol
+        documentRepository: DocumentaryRepositoryProtocol,
+        rewardRepository: RewardRepositoryProtocol
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.coreDataManager = coreData
         self.remoteConfigRepository = remoteConfig
         self.documentRepository = documentRepository
-        
+        self.rewardRepository = rewardRepository
         setupParameters()
+    }
+}
+
+extension ForestAdventureService: ForestAdventureServiceProtocol {
+    func fetchQuestList() async -> Resource<[QuestModel]> {
+        if let questCacheList {
+            return Resource.success(questCacheList)
+        }else {
+            return Resource.error(error: ForestAdventureError.emptyForestData)
+        }
     }
 }
 
@@ -98,7 +114,7 @@ private extension ForestAdventureService {
                 // TODO: - RETURN FROM LOCAL
                 let response = await documentRepository.fetchAdventureRoadConfig()
                 if let list = response.data {
-                    convertRemoteToCacheAdventure(list: list)
+                    //convertRemoteToCacheAdventure(list: list)
                 }
             } else if let adventureVersion = parameters?.model.adventureRoadConfigVersion {
                 UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
@@ -116,6 +132,10 @@ private extension ForestAdventureService {
             
             if questsID == parameters?.model.questsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
+                let response = await documentRepository.fetchQuestsConfig()
+                if let list = response.data {
+                    convertRemoteToCacheQuest(list: list)
+                }
             } else if let questsVersion = parameters?.model.questsConfigVersion {
                 UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
@@ -148,8 +168,8 @@ private extension ForestAdventureService {
 // MARK: PRIVATE STORAGE HELPERS
 
 private extension ForestAdventureService {
+    /*
     func convertRemoteToCacheAdventure(list: RemoteAdventureRoadListModel) -> Resource<Bool> {
-        
         if let remoteItems = list.items, let title = list.title, let endDate = list.seasonEndDate, let progress = playerManager.fetchAdventureRoadProgress(contextType: .background) {
             let sortedReward = remoteItems.sorted { $0.wordCount ?? 0 < $1.wordCount ?? 0 }
             let maxWordCount = sortedReward.map { $0.wordCount ?? 0 }.max() ?? 0
@@ -177,12 +197,47 @@ private extension ForestAdventureService {
                 
         return Resource.success(true)
     }
+     */
+    
+    func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool> {
+        Task {
+            for remoteQuest in list.items {
+                if let id = remoteQuest.id, let type = remoteQuest.type,
+                    let title = remoteQuest.title, let descriptionText = remoteQuest.descriptionText,
+                    let reward = remoteQuest.reward, let targetCount = remoteQuest.targetCount,
+                    let questionType = remoteQuest.questionType,
+                    let battleEnemyModel = remoteQuest.battleEnemyModel,
+                    let gameLevel = remoteQuest.gameLevel, let status = remoteQuest.status {
+                    if let localReward = await rewardRepository.processAndGetLocalReward(from: reward).data {
+                        let localQuest = coreDataManager
+                        let quest = QuestModel(
+                            id: id,
+                            type: QuestType.convertFromCoreData(string: type),
+                            title: title.localized,
+                            description: descriptionText.localized,
+                            reward: localReward,
+                            lastUpdatedDate: <#T##Date#>,
+                            status: <#T##QuestStatus#>,
+                            targetCount: <#T##Int#>,
+                            currentProgressCount: <#T##Int#>,
+                            questionType: <#T##BattleQuestionType#>,
+                            battleEnemyModel: <#T##BattleEnemyModel#>,
+                            gameLevel: <#T##GameLevel#>
+                        )
+                    }
+                }else {
+                    return Resource.error(error: ForestAdventureError.emptyValueFromConfig)
+                }
+            }
+        }
+        return Resource.success(true)
+    }
 }
 
 // MARK: - WEEKLY REWARDS
 
 extension ForestAdventureService {
-    
+    /*
     func fetchWeeklyDailyRewards() async -> Resource<[WeeklyDailyCardModel]> {
         guard let uid = Auth.auth().currentUser?.uid else {
             return .error(error: ForestAdventureError.unauthenticated)
@@ -277,6 +332,7 @@ extension ForestAdventureService {
             }
             return .success(true)
         }
+     */
 }
 
 // MARK: - DAILY SPIN REWARDS
@@ -334,7 +390,7 @@ extension ForestAdventureService {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestAdventureService {
-    
+    /*
     func generateCardList(currentDay: Int, lastClaimDate: Date?, trueNow: Date, calendar: Calendar) -> [WeeklyDailyCardModel] {
         var list: [WeeklyDailyCardModel] = []
         var activeDay = 1
@@ -371,4 +427,5 @@ private extension ForestAdventureService {
         }
         return list
     }
+     */
 }

@@ -19,6 +19,10 @@ enum RewardRepositoryError: Error {
     case downloadImageError
 }
 
+protocol RewardRepositoryProtocol {
+    func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async -> Resource<LocalRewardModel>
+}
+
 final class RewardRepository {
     
     private let offlineAssetManager: OfflineAssetManagerProtocol
@@ -30,7 +34,9 @@ final class RewardRepository {
         self.networkManager = apiService
         self.chestRepository = chestRepository
     }
-        
+}
+
+extension RewardRepository: RewardRepositoryProtocol {
     func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async -> Resource<LocalRewardModel> {
         
         var localReward: LocalRewardModel
@@ -81,10 +87,10 @@ final class RewardRepository {
         }
         
     }
-    
-    // MARK: - Private Downloader
-    
-    private func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
+}
+
+private extension RewardRepository {
+    func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
         
         if offlineAssetManager.isAssetUpToDate(imageName: localKey, expectedVersion: version) {
             return true
@@ -111,7 +117,7 @@ final class RewardRepository {
         return true
     }
     
-    private func posterName(id: String) -> String {
+    func posterName(id: String) -> String {
         "\(id)_poster"
     }
 }

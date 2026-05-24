@@ -101,7 +101,7 @@ enum AdventureMemoryTrack: String, CaseIterable {
 struct AdventureMilestoneModel: Identifiable {
     let track: AdventureMemoryTrack
     let wordCount: Int
-    let reward: LocalRewardType
+    let reward: LocalRewardModel
     let isClaimed: Bool
 
     var id: String {
@@ -120,6 +120,7 @@ struct AdventureRoadRowModel: Identifiable {
 }
 
 enum AdventureRoadMockData {
+    /*
     static func screenModel() -> AdventureRoadScreenModel {
         let maxWordCount = 500
         let shortWords = 340
@@ -168,7 +169,7 @@ enum AdventureRoadMockData {
             )
         }
     }
-
+    
     private static func milestone(
         for track: AdventureMemoryTrack,
         wordCount: Int,
@@ -222,9 +223,11 @@ enum AdventureRoadMockData {
             return .gold(count: 0)
         }
     }
+     */
 }
 
 enum AdventureRoadBuilder {
+    /*
     static func screenModel(
         rewards: [AdventureRoadRewardModel],
         progress: AdventureRoadProgressModel,
@@ -265,4 +268,5 @@ enum AdventureRoadBuilder {
             rows: rows
         )
     }
+     */
 }

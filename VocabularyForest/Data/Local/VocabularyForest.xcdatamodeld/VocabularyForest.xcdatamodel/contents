@@ -77,19 +77,10 @@
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="player" inverseEntity="Forest"/>
     </entity>
     <entity name="Quest" representedClassName="Quest" syncable="YES">
-        <attribute name="battleEnemyModel" optional="YES" attributeType="String"/>
         <attribute name="currentProgressCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="description_quest" optional="YES" attributeType="String"/>
-        <attribute name="gameLevel" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="questType" optional="YES" attributeType="String"/>
-        <attribute name="rewardType" optional="YES" attributeType="String"/>
-        <attribute name="rewardValue" optional="YES" attributeType="String"/>
         <attribute name="status" optional="YES" attributeType="String"/>
-        <attribute name="targetCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="quests" inverseEntity="Forest"/>
     </entity>
     <entity name="Sculpture" representedClassName="Sculpture" syncable="YES">

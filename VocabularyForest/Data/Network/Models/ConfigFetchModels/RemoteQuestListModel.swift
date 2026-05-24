@@ -5,17 +5,18 @@
 //  Created by Yakup Kavak on 10.05.2026.
 //
 
+import Foundation
+
 struct RemoteQuestListModel: Decodable {
     let id: String?
-    let seasonEndDateString: String?
     let items: [RemoteQuestModel]
 }
 
 struct RemoteQuestModel: Decodable {
-    let id: String?
+    let id: UUID?
     let type: String?
-    let title: String?
-    let descriptionText: String?
+    let title: RemoteLocalizedText?
+    let descriptionText: RemoteLocalizedText?
     let reward: RemoteRewardModel?
     let targetCount: Int?
     let questionType: String?

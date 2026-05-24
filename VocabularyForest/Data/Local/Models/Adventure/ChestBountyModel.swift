@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LocalChestModel {
+struct LocalChestModel: Hashable {
     let id: String
     let version: Int
     let displayName: RemoteLocalizedText

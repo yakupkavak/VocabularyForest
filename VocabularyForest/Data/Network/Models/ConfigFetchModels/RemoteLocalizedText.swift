@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RemoteLocalizedText: Decodable {
+struct RemoteLocalizedText: Decodable, Hashable {
     let tr, en, es, fr: String?
     let de, pt: String?
     

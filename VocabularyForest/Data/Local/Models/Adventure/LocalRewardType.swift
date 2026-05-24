@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct LocalRewardModel {
+struct LocalRewardModel: Hashable {
     let rewardCount: Int
     let reward: LocalRewardType
 }
 
-struct LocalQuestRewardModel {
+struct LocalQuestRewardModel: Hashable {
     let id: String
     let category: QuestRewardModel
     let displayName: RemoteLocalizedText
@@ -23,7 +23,7 @@ struct LocalQuestRewardModel {
     let gradientHexes: [String]?
 }
 
-enum ImageSource {
+enum ImageSource: Hashable {
     case local
     case remote
     case zip
@@ -44,21 +44,22 @@ extension ImageSource {
     }
 }
 
-enum LocalRewardType {
+enum LocalRewardType: Hashable {
     case standart(model: LocalQuestRewardModel)
     case chest(model: LocalChestModel)
 }
 
-enum ImageSourceType {
+enum ImageSourceType: Hashable {
     case appAssets
     case offlineStorage
 }
 
-struct RewardPosterInfo {
+struct RewardPosterInfo: Hashable {
     let key: String
     let source: ImageSourceType
 }
 
+/*
 extension LocalRewardType: Rewardable {
     var rewardCount: Int? {
         switch self {
@@ -120,3 +121,4 @@ extension LocalRewardType {
         return false
     }
 }
+*/
