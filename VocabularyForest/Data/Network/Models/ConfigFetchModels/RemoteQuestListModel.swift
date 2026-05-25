@@ -13,7 +13,7 @@ struct RemoteQuestListModel: Decodable {
 }
 
 struct RemoteQuestModel: Decodable {
-    let id: UUID?
+    let id: String?
     let type: String?
     let title: RemoteLocalizedText?
     let descriptionText: RemoteLocalizedText?

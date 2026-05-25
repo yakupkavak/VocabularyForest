@@ -17,6 +17,7 @@ enum ForestError: Error {
     case error(error: Error)
     case emptyUUID
     case emptyLastDate
+    case alreadyExistQuest
 }
 
 // MARK: - CONTEXT ENUM
@@ -62,9 +63,13 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     func getCurrentForest(context: NSManagedObjectContext) -> Forest?
     func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
+    func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel>
+    
+    // MARK: - QUEST HELPERS
+    
     func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
     func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel>
-    func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel>
+    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     
     // MARK: Update Helpers
     
@@ -193,98 +198,6 @@ class ForestDataManager: ForestDataManagerProtocol {
     
 }
 
-// MARK: - PRIVATE HELPERS
-
-private extension ForestDataManager {
-    
-    func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: contextType.context) else { return }
-            if let currentQuests = forest.quests?.allObjects as? [Quest] {
-                let oldQuests = currentQuests.filter {
-                    $0.type == type.valueForCoreData
-                }
-                for oldQuest in oldQuests {
-                    context.delete(oldQuest)
-                }
-            }
-            
-            var newQuestsModels: [QuestModel] = []
-            switch type {
-            case .daily:
-                newQuestsModels = helper.initalizeDailyQuests()
-            case .weekly:
-                newQuestsModels = helper.initalizeWeeklyQuests()
-            case .monthly:
-                newQuestsModels = helper.initalizeMonthlyQuests()
-            case .special:
-                break
-            }
-            setupQuests(questList: newQuestsModels, contextType: contextType)
-        }
-    }
-    
-    func scheduleHealthNotifications(contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else { return }
-            
-            Task { @MainActor [weak self] in
-                self?.notificationManager?.cancelHealthNotifications()
-            }
-            
-            let currentHealth = Int(forest.landHealthPercent)
-            let decayPerHour: Double = 4.0
-            
-            let targets = [50, 20, 10, 0]
-            for target in targets {
-                if currentHealth > target {
-                    let diff = currentHealth - target
-                    let hoursUntilDrop = Double(diff) / decayPerHour
-                    let secondsUntilDrop = hoursUntilDrop * 3600
-                    Task { @MainActor in
-                        notificationManager?.scheduleHealthNotification(
-                            targetValue: target,
-                            timeInterval: secondsUntilDrop
-                        )
-                    }
-                }
-            }
-        }
-    }
-    
-    func save(context: NSManagedObjectContext) throws {
-        guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            print("Core data couldn't saved -> \(error.localizedDescription)")
-            throw error
-        }
-    }
-        
-    func setupQuests(questList: [QuestModel], contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: context) else { return }
-            for model in questList {
-                let quest = Quest(context: context)
-                quest.id = model.id
-                quest.status = model.status.valueForCoreData
-                quest.currentProgressCount = 0
-                quest.lastUpdatedDate = model.lastUpdatedDate
-                forest.addToQuests(quest)
-            }
-            do {
-                try save(context: context)
-            } catch {
-                print("Setup quest error -> \(error.localizedDescription)")
-            }
-        }
-    }
-}
-
 // MARK: - CREATE HELPERS
 
 extension ForestDataManager {
@@ -327,6 +240,34 @@ extension ForestDataManager {
                 return Resource.success(forest)
             } catch {
                 return Resource.error(error: ForestError.saveError)
+            }
+        }
+    }
+}
+
+// MARK: - QUEST HELPERS
+
+extension ForestDataManager {
+    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
+        let context = contextType.context
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.emptyForest)
+            }
+            if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == track.id }) {
+                return Resource.error(error: ForestError.alreadyExistQuest)
+            } else {
+                let quest = Quest(context: context)
+                quest.currentProgressCount = Int16(track.currentProgressCount)
+                quest.id = track.id
+                quest.status = track.status.valueForCoreData
+                quest.lastUpdatedDate = track.lastUpdateDate
+                forest.addToQuests(quest)
+                do {
+                    try save(context: context)
+                } catch {
+                    return .error(error: ForestError.saveError)
+                }
             }
         }
     }
@@ -780,6 +721,98 @@ extension ForestDataManager {
                 return Resource.error(error: error)
             }
             return Resource.success(true)
+        }
+    }
+}
+
+// MARK: - PRIVATE HELPERS
+
+private extension ForestDataManager {
+    
+    func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, contextType: ContextType) {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: contextType.context) else { return }
+            if let currentQuests = forest.quests?.allObjects as? [Quest] {
+                let oldQuests = currentQuests.filter {
+                    $0.type == type.valueForCoreData
+                }
+                for oldQuest in oldQuests {
+                    context.delete(oldQuest)
+                }
+            }
+            
+            var newQuestsModels: [QuestModel] = []
+            switch type {
+            case .daily:
+                newQuestsModels = helper.initalizeDailyQuests()
+            case .weekly:
+                newQuestsModels = helper.initalizeWeeklyQuests()
+            case .monthly:
+                newQuestsModels = helper.initalizeMonthlyQuests()
+            case .special:
+                break
+            }
+            setupQuests(questList: newQuestsModels, contextType: contextType)
+        }
+    }
+    
+    func scheduleHealthNotifications(contextType: ContextType) {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else { return }
+            
+            Task { @MainActor [weak self] in
+                self?.notificationManager?.cancelHealthNotifications()
+            }
+            
+            let currentHealth = Int(forest.landHealthPercent)
+            let decayPerHour: Double = 4.0
+            
+            let targets = [50, 20, 10, 0]
+            for target in targets {
+                if currentHealth > target {
+                    let diff = currentHealth - target
+                    let hoursUntilDrop = Double(diff) / decayPerHour
+                    let secondsUntilDrop = hoursUntilDrop * 3600
+                    Task { @MainActor in
+                        notificationManager?.scheduleHealthNotification(
+                            targetValue: target,
+                            timeInterval: secondsUntilDrop
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
+    func save(context: NSManagedObjectContext) throws {
+        guard context.hasChanges else { return }
+        do {
+            try context.save()
+        } catch {
+            print("Core data couldn't saved -> \(error.localizedDescription)")
+            throw error
+        }
+    }
+        
+    func setupQuests(questList: [QuestModel], contextType: ContextType) {
+        contextType.context.performAndWait {
+            let context = contextType.context
+            guard let forest = getCurrentForest(context: context) else { return }
+            for model in questList {
+                let quest = Quest(context: context)
+                quest.id = model.id
+                quest.status = model.status.valueForCoreData
+                quest.currentProgressCount = 0
+                quest.lastUpdatedDate = model.lastUpdatedDate
+                forest.addToQuests(quest)
+            }
+            do {
+                try save(context: context)
+            } catch {
+                print("Setup quest error -> \(error.localizedDescription)")
+            }
         }
     }
 }

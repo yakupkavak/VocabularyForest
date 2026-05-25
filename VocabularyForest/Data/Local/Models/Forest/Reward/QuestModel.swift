@@ -138,7 +138,7 @@ struct QuestModel: Identifiable, Hashable {
     let type: QuestType
     let title: String
     let description: String
-    let reward: QuestRewardModel
+    let reward: LocalRewardModel
     let lastUpdatedDate: Date
     var status: QuestStatus
     var targetCount: Int

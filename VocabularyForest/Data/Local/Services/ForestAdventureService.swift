@@ -64,19 +64,21 @@ class ForestAdventureService {
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let documentRepository: DocumentaryRepositoryProtocol
     private let rewardRepository: RewardRepositoryProtocol
+    private let questService: QuestServiceProtocol
     private let db = Firestore.firestore()
     private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
     private var adventureCacheList: AdventureRoadScreenModel? = nil
-
+    
     init(
         forestManager: ForestDataManagerProtocol,
         playerManager: PlayerDataManagerProtocol,
         coreData: CoreDataManagerProtocol,
         remoteConfig: RemoteConfigRepositoryProtocol,
         documentRepository: DocumentaryRepositoryProtocol,
-        rewardRepository: RewardRepositoryProtocol
+        rewardRepository: RewardRepositoryProtocol,
+        questService: QuestServiceProtocol
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -84,17 +86,8 @@ class ForestAdventureService {
         self.remoteConfigRepository = remoteConfig
         self.documentRepository = documentRepository
         self.rewardRepository = rewardRepository
+        self.questService = questService
         setupParameters()
-    }
-}
-
-extension ForestAdventureService: ForestAdventureServiceProtocol {
-    func fetchQuestList() async -> Resource<[QuestModel]> {
-        if let questCacheList {
-            return Resource.success(questCacheList)
-        }else {
-            return Resource.error(error: ForestAdventureError.emptyForestData)
-        }
     }
 }
 
@@ -131,14 +124,17 @@ private extension ForestAdventureService {
             }
             
             if questsID == parameters?.model.questsConfigVersion {
-                // TODO: - RETURN FROM LOCAL
+                /// Return from local
                 let response = await documentRepository.fetchQuestsConfig()
                 if let list = response.data {
-                    convertRemoteToCacheQuest(list: list)
+                    await questService.convertRemoteToCacheQuest(list: list)
                 }
             } else if let questsVersion = parameters?.model.questsConfigVersion {
                 UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
-                // TODO: - FETCH NEW VERSION FROM REMOTE
+                if let remoteResponse = await remoteConfigRepository.fetchQuestsConfig().data {
+                    await questService.convertRemoteToCacheQuest(list: remoteResponse.model)
+                    await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
+                }
             }
             
             if weeklyID == parameters?.model.weeklyRewardsConfigVersion {
@@ -199,39 +195,6 @@ private extension ForestAdventureService {
     }
      */
     
-    func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool> {
-        Task {
-            for remoteQuest in list.items {
-                if let id = remoteQuest.id, let type = remoteQuest.type,
-                    let title = remoteQuest.title, let descriptionText = remoteQuest.descriptionText,
-                    let reward = remoteQuest.reward, let targetCount = remoteQuest.targetCount,
-                    let questionType = remoteQuest.questionType,
-                    let battleEnemyModel = remoteQuest.battleEnemyModel,
-                    let gameLevel = remoteQuest.gameLevel, let status = remoteQuest.status {
-                    if let localReward = await rewardRepository.processAndGetLocalReward(from: reward).data {
-                        let localQuest = coreDataManager
-                        let quest = QuestModel(
-                            id: id,
-                            type: QuestType.convertFromCoreData(string: type),
-                            title: title.localized,
-                            description: descriptionText.localized,
-                            reward: localReward,
-                            lastUpdatedDate: <#T##Date#>,
-                            status: <#T##QuestStatus#>,
-                            targetCount: <#T##Int#>,
-                            currentProgressCount: <#T##Int#>,
-                            questionType: <#T##BattleQuestionType#>,
-                            battleEnemyModel: <#T##BattleEnemyModel#>,
-                            gameLevel: <#T##GameLevel#>
-                        )
-                    }
-                }else {
-                    return Resource.error(error: ForestAdventureError.emptyValueFromConfig)
-                }
-            }
-        }
-        return Resource.success(true)
-    }
 }
 
 // MARK: - WEEKLY REWARDS
