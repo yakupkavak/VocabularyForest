@@ -139,13 +139,13 @@ struct QuestModel: Identifiable, Hashable {
     let title: String
     let description: String
     let reward: LocalRewardModel
-    let lastUpdatedDate: Date
+    var lastUpdatedDate: Date
     var status: QuestStatus
     var targetCount: Int
     var currentProgressCount: Int
     var questionType: BattleQuestionType
-    var battleEnemyModel: BattleEnemyModel
-    var gameLevel: GameLevel
+    let battleEnemyModel: BattleEnemyModel
+    let gameLevel: GameLevel
 
     // MARK: - COMPUTED PROPERTIES
 

@@ -70,6 +70,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
     func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel>
     func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateQuest(questTrack: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     
     // MARK: Update Helpers
     
@@ -616,6 +617,29 @@ extension ForestDataManager {
                 }
             }
             return Resource.success(true)
+        }
+    }
+    
+    func updateQuest(questTrack: QuestTrackModel, contextType: ContextType) -> Resource<Bool> {
+        let context = contextType.context
+        guard let forest = getCurrentForest(context: context) else {
+            return Resource.error(error: ForestError.saveError)
+        }
+        return context.performAndWait {
+            if let questList = forest.quests, let quests = questList.allObjects as? [Quest] {
+                guard let quest = quests.first(where: { $0.id == questTrack.id }) else { return Resource.error(error: nil)
+                }
+                quest.currentProgressCount = Int16(questTrack.currentProgressCount)
+                quest.status = questTrack.status.valueForCoreData
+                quest.lastUpdatedDate = questTrack.lastUpdateDate
+                do {
+                    try save(context: context)
+                } catch {
+                    return Resource.error(error: ForestError.saveError)
+                }
+                return Resource.success(true)
+            }
+            return Resource.error(error: ForestError.emptyList)
         }
     }
     
