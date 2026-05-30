@@ -17,9 +17,11 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let type: String?             // e.g., "chest" or "resource"
     let category: String?         // e.g., "gold", "nature", "water", "diamond"
     let rewardCount: Int?
+    let assetName: String? // Name of the source
     let displayName: RemoteLocalizedText? // Localization key instead of raw text
     let imageSource: String? // local, remote, zip
     let localImageName: String?
+    let remoteAssetVersion: Int?
     let remotePath: String?
     let posterIconPath: String? // remote den poster pathi
     let textColorHex: String?

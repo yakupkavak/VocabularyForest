@@ -17,10 +17,11 @@ enum RewardRepositoryError: Error {
     case emptyLocalImageError
     case emptyChest
     case downloadImageError
+    case invalidArgument
 }
 
 protocol RewardRepositoryProtocol {
-    func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async -> Resource<LocalRewardModel>
+    func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async throws -> LocalRewardModel
 }
 
 final class RewardRepository {
@@ -28,75 +29,113 @@ final class RewardRepository {
     private let offlineAssetManager: OfflineAssetManagerProtocol
     private let networkManager: APIServiceProtocol
     private let chestRepository: ChestRepositoryProtocol
+    private let forestRepository: ForestDataManagerProtocol
     
-    init(assetManager: OfflineAssetManagerProtocol, apiService: APIServiceProtocol, chestRepository: ChestRepositoryProtocol) {
+    init(assetManager: OfflineAssetManagerProtocol, apiService: APIServiceProtocol, chestRepository: ChestRepositoryProtocol, forestManager: ForestDataManagerProtocol) {
         self.offlineAssetManager = assetManager
         self.networkManager = apiService
         self.chestRepository = chestRepository
+        self.forestRepository = forestManager
     }
 }
 
 extension RewardRepository: RewardRepositoryProtocol {
-    func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async -> Resource<LocalRewardModel> {
+    func claimLocalReward(reward: LocalRewardModel) async throws {
+        switch reward.reward {
+            case .standart(model: let model):
+            switch model.imageSource {
+            case .local:
+                let rewardModel = ReadyRewardModel(id: model.id, category: model.category, rewardCount: reward.rewardCount, displayName: model.displayName, assetSource: RewardAssetReference(key: model.assetName, source: .appAssets), posterImage: model.posterImage)
+                try forestRepository.claimReward(model: rewardModel, contextType: .background)
+            case .remote:
+                
+            case .zip:
+                <#code#>
+            }
+            case .chest(model: let model):
+        }
+    }
+    
+    func processAndGetLocalReward(from remoteReward: RemoteRewardModel) async throws -> LocalRewardModel {
         
         var localReward: LocalRewardModel
         
-        if let id = remoteReward.id, let type = remoteReward.type, let rewardCount = remoteReward.rewardCount, let displayName = remoteReward.displayName, let imageSource = remoteReward.imageSource {
+        if let id = remoteReward.id, let type = remoteReward.type, let rewardCount = remoteReward.rewardCount, let displayName = remoteReward.displayName, let imageSource = remoteReward.imageSource, let assetName = remoteReward.assetName {
             
-            guard let imageSource = ImageSource.convertImageSource(value: imageSource) else { return Resource.error(error: RewardRepositoryError.emptySourceError) }
+            guard let imageSource = ImageSource.convertImageSource(value: imageSource) else { throw RewardRepositoryError.emptySourceError }
             var localRewardType: LocalRewardType
-            var posterImage: RewardPosterInfo
+            var posterImage: RewardAssetReference
             let posterName = posterName(id: id)
             
             switch imageSource {
             case .local:
-                guard let localImageName = remoteReward.localImageName else { return Resource.error(error: RewardRepositoryError.emptyLocalImageError)}
-                posterImage = RewardPosterInfo(key: localImageName, source: .appAssets)
+                guard let localImageName = remoteReward.localImageName else { throw RewardRepositoryError.emptyLocalImageError }
+                posterImage = RewardAssetReference(key: localImageName, source: .appAssets)
             default:
-                posterImage = RewardPosterInfo(key: posterName, source: .offlineStorage)
+                posterImage = RewardAssetReference(key: posterName, source: .offlineStorage)
             }
             
             switch type {
                 case "standart":
-                    guard let safeCategory = remoteReward.category, let category = QuestRewardModel.convertQuestReward(value: safeCategory) else { return Resource.error(error: RewardRepositoryError.emptyCategoryError)}
+                    guard let safeCategory = remoteReward.category, let category = QuestRewardModel.convertQuestReward(value: safeCategory) else { throw RewardRepositoryError.emptyCategoryError }
                     localRewardType = LocalRewardType.standart(
                         model: LocalQuestRewardModel(
                             id: id,
                             category: category,
                             displayName: displayName,
+                            assetName: assetName,
                             imageSource: imageSource,
                             posterImage: posterImage,
                             remotePath: remoteReward.remotePath,
+                            remoteAssetVersion: remoteReward.remoteAssetVersion,
                             textColorHex: remoteReward.textColorHex,
                             gradientHexes: remoteReward.gradientHexes
                         )
                     )
                 case "chest":
-                guard let chest = chestRepository.getLocalChest(chestId: id) else { return Resource.error(error: RewardRepositoryError.emptyChest) }
+                guard let chest = chestRepository.getLocalChest(chestId: id) else { throw RewardRepositoryError.emptyChest }
                 localRewardType = LocalRewardType.chest(model: chest)
             default:
-                return Resource.error(error: RewardRepositoryError.emptyTypeError)
+                throw RewardRepositoryError.emptyTypeError
             }
             localReward = LocalRewardModel(
                 rewardCount: rewardCount,
                 reward: localRewardType
             )
-            return Resource.success(localReward)
+            return localReward
         } else {
-            return Resource.error(error: RewardRepositoryError.decodingError)
+            throw RewardRepositoryError.decodingError
         }
         
     }
 }
 
 private extension RewardRepository {
-    func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
+    
+    func getReadyReward(localReward: LocalQuestRewardModel, count: Int) async throws -> ReadyRewardModel {
+        switch localReward.imageSource {
+        case .local:
+            throw RewardRepositoryError.invalidArgument
+        case .remote:
+            guard let remotePath = localReward.remotePath, let remoteAssetVersion = localReward.remoteAssetVersion else { throw RewardRepositoryError.emptySourceError }
+            
+            try await downloadAndSaveImageIfNeeded(remotePath: remotePath, localKey: localReward.assetName, version: remoteAssetVersion)
+            let model = ReadyRewardModel(id: localReward.id, category: localReward.category, rewardCount: count, displayName: localReward.displayName, assetSource: RewardAssetReference(key: localReward.assetName, source: .offlineStorage), posterImage: localReward.posterImage)
+            return model
+        case .zip:
+            <#code#>
+        }
+        
+    }
+    
+    func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async throws {
         
         if offlineAssetManager.isAssetUpToDate(imageName: localKey, expectedVersion: version) {
-            return true
+            return
         }
         
         let getImageModel = GetImageRequestModel(imagePath: remotePath)
+        var networkError: Error?
         networkManager.fetchImage(values: getImageModel) { [weak self] result in
             guard let self else { return }
             switch result {
@@ -107,14 +146,17 @@ private extension RewardRepository {
                     version: version
                 )
                 if saveResult.status == .error {
-                    print(saveResult.error ?? "Save error")
+                    networkError = saveResult.error ?? RewardRepositoryError.downloadImageError
                 }
                 
             case .failure(let error):
-                print(error)
+                networkError = error
             }
         }
-        return true
+        if let networkError {
+            throw networkError
+        }
+        return
     }
     
     func posterName(id: String) -> String {

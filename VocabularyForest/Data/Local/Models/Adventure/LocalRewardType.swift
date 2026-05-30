@@ -16,9 +16,11 @@ struct LocalQuestRewardModel: Hashable {
     let id: String
     let category: QuestRewardModel
     let displayName: RemoteLocalizedText
+    let assetName: String
     let imageSource: ImageSource
-    let posterImage: RewardPosterInfo
+    let posterImage: RewardAssetReference
     let remotePath: String?
+    let remoteAssetVersion: Int?
     let textColorHex: String?
     let gradientHexes: [String]?
 }
@@ -54,7 +56,7 @@ enum ImageSourceType: Hashable {
     case offlineStorage
 }
 
-struct RewardPosterInfo: Hashable {
+struct RewardAssetReference: Hashable {
     let key: String
     let source: ImageSourceType
 }

@@ -11,6 +11,8 @@ struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var id: UUID
     var type: ComponentType = .animal
     var characterName: String
+    var assetSource: ImageSourceType
+    var poster: RewardAssetReference
     let assetName: String
     let createdDate: Date
     let healthValue: Int

@@ -17,6 +17,7 @@ protocol QuestServiceProtocol {
     func updateQuest(track: QuestTrackModel) -> Resource<Bool>
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool>
     func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>
+    func claimQuestReward(quest: QuestModel) -> Resource<Bool>
 }
 
 final class QuestService {
@@ -38,6 +39,31 @@ extension QuestService: QuestServiceProtocol {
         $activeQuests.eraseToAnyPublisher()
     }
     
+    func claimQuestReward(quest: QuestModel) -> Resource<Bool> {
+        if activeQuests.isEmpty {
+            return .error(error: QuestServiceError.emptyQuestList)
+        }
+        activeQuests = activeQuests.map { quest in
+            var updatedQuest = quest
+            if updatedQuest.id == quest.id {
+                updatedQuest.status = .completed
+                updatedQuest.lastUpdatedDate = Date()
+                let questTrack = QuestTrackModel(
+                    id: updatedQuest.id,
+                    lastUpdateDate: updatedQuest.lastUpdatedDate,
+                    status: updatedQuest.status,
+                    currentProgressCount: updatedQuest.currentProgressCount
+                )
+                if forestManager.updateQuest(questTrack: questTrack, contextType: .background).status == .error {
+                    print("Update quest error")
+                    return quest
+                }
+            }
+            return updatedQuest
+        }
+        return Resource.success(true)
+    }
+    
     ///It increases due to specific quests such as Dragons.
     func winGame(
         gameLevel: GameLevel,
@@ -55,6 +81,7 @@ extension QuestService: QuestServiceProtocol {
                 updatedQuest.lastUpdatedDate = Date()
                 if updatedQuest.currentProgressCount >= updatedQuest.targetCount {
                     updatedQuest.status = .completed
+                    //Todo: Download reward
                 }
                 let questTrack = QuestTrackModel(
                     id: updatedQuest.id,

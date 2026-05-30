@@ -197,6 +197,15 @@ private extension ForestAdventureService {
     
 }
 
+// MARK: - QUEST HELPERS
+
+extension ForestAdventureService {
+    func claimQuestReward(quest: QuestModel) -> Resource<Bool> {
+        questService.claimQuestReward(quest: quest)
+        rewardRepository.processAndGetLocalReward(from: quest.reward)
+    }
+}
+
 // MARK: - WEEKLY REWARDS
 
 extension ForestAdventureService {

@@ -10,6 +10,8 @@ import Foundation
 struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
     var id: UUID
     var type: ComponentType = .plant
+    var assetSource: ImageSourceType
+    var poster: RewardAssetReference
     let assetName: String
     var characterName: String
     let isAlive: Bool
@@ -28,4 +30,6 @@ protocol ComponentModelProtocol {
     var yPosition: CGFloat { get set }
     var type: ComponentType { get }
     var lastUpdatedDate: Date { get }
+    var assetSource: ImageSourceType { get }
+    var poster: RewardAssetReference { get }
 }
