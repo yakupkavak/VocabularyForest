@@ -18,6 +18,7 @@ enum ChestRepositoryError: Error {
 protocol ChestRepositoryProtocol {
     func getLocalChest(chestId: String) -> LocalChestModel?
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async -> Resource<Bool>
+    func openChest(chestId: String) async throws -> [LocalRewardModel]
 }
 
 final class ChestRepository {

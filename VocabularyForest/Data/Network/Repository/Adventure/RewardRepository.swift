@@ -78,7 +78,14 @@ extension RewardRepository: RewardRepositoryProtocol {
                 }
             }
             case .chest(model: let model):
-            chestRepository.openChest(chestId: model.id)
+            do {
+                let rewards = try await chestRepository.openChest(chestId: model.id)
+                for reward in rewards {
+                    try await claimLocalReward(reward: reward)
+                }
+            }catch {
+                throw error
+            }
         }
     }
     
