@@ -136,7 +136,7 @@ extension QuestService: QuestServiceProtocol {
                 let battleEnemyModel = remoteQuest.battleEnemyModel,
                 let gameLevel = remoteQuest.gameLevel, let status = remoteQuest.status {
                 
-                guard let localReward = await rewardRepository.processAndGetLocalReward(from: reward).data else {
+                guard let localReward = try? await rewardRepository.processAndGetLocalReward(from: reward) else {
                     return Resource<Bool>.error(error: RewardRepositoryError.decodingError)
                 }
                 

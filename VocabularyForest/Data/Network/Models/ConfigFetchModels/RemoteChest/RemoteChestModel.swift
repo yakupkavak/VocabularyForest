@@ -8,7 +8,6 @@
 struct RemoteChestModel: Decodable {
     let id: String?
     let chestName: RemoteLocalizedText?
-    //let chestType: String?
     let version: Int?
     let visuals: RemoteChestVisuals?
     let economy: RemoteChestEconomy?

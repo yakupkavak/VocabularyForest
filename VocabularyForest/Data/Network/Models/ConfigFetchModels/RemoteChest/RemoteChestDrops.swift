@@ -11,18 +11,8 @@ struct RemoteChestEconomy: Decodable {
 }
 
 struct RemoteLootDrop: Decodable {
-    let dropType: String?
-    let itemId: String?
+    let reward: RemoteRewardModel?
     let dropChance: Int?
     let minAmount: Int?
     let maxAmount: Int?
-}
-
-struct RemoteRewardItem: Decodable {
-    let id: String?
-    let category: String?
-    let posterPath: String?
-    let downloadPath: String?
-    let probabilityWeight: Double?
-    let displayName: RemoteLocalizedText?
 }

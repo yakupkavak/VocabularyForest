@@ -6,9 +6,7 @@
 //
 
 struct RemoteChestConfigResponse: Decodable {
-    let id: String
-    let season: String
-    let chests: [RemoteChestModel]
-    let pools: [String: [RemoteRewardItem]]
-    let specificItems: [String: RemoteRewardItem]
+    let id: String?
+    let season: String?
+    let chests: [RemoteChestModel]?
 }

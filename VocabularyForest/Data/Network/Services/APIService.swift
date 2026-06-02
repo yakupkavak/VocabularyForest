@@ -12,11 +12,13 @@ import Foundation
 typealias BookcaseRequestResult = Result<BookcaseRequest, APIClientError>
 typealias LibrariesResult = Result<Libraries, APIClientError>
 typealias ImageResult = Result<Data, APIClientError>
+typealias ZipResult = Result<Data, APIClientError>
 
 protocol APIServiceProtocol: AnyObject {
     func fetchBookcaseRequest(values: GetBookcaseRequestModel, completion: @escaping (BookcaseRequestResult) -> Void)
     func fetchLibraries(completion: @escaping (LibrariesResult) -> Void)
     func fetchImage(values: GetImageRequestModel,completion: @escaping (ImageResult) -> Void)
+    func fetchZip(values: GetZipRequestModel, completion: @escaping(ZipResult) -> Void)
 }
 
 public class APIService: APIServiceProtocol {
@@ -26,6 +28,7 @@ public class APIService: APIServiceProtocol {
     let bookcaseRequestManager = NetworkManager<GetBookcase>()
     let librariesManager = NetworkManager<GetLibraries>()
     let imageManager = NetworkManager<GetImage>()
+    let zipManager = NetworkManager<GetZip>()
     private let vocabularyBaseURLProvider: VocabularyBaseURLProviderProtocol
     
     // MARK: - INIT
@@ -59,6 +62,15 @@ public class APIService: APIServiceProtocol {
         vocabularyBaseURLProvider.resolveImageURL { [weak self] baseURL in
             guard let self else { return }
             imageManager.requestData(endpoint: .image(values, baseURL: baseURL)) { result in
+                completion(result)
+            }
+        }
+    }
+    
+    func fetchZip(values: GetZipRequestModel, completion: @escaping(ZipResult) -> Void) {
+        vocabularyBaseURLProvider.resolveImageURL { [weak self] baseURL in
+            guard let self else { return }
+            zipManager.requestData(endpoint: .zip(values, baseURL: baseURL)) { result in
                 completion(result)
             }
         }

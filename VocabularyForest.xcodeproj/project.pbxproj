@@ -12,6 +12,7 @@
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
 		375FE1A92F7005F200765018 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1A82F7005F200765018 /* CoreAPI */; };
 		375FE1B82F704F7200765018 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1B72F704F7200765018 /* Router */; };
+		376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 376DE2F62FCABB3E00305BAB /* ZIPFoundation */; };
 		377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B12F854D8E008A13CC /* FirebaseAnalytics */; };
 		377BE2B42F854D8E008A13CC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B32F854D8E008A13CC /* FirebaseAppCheck */; };
 		377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */; };
@@ -149,6 +150,7 @@
 				377BE2C42F854D8E008A13CC /* FirebaseRemoteConfig in Frameworks */,
 				377BE2CC2F868777008A13CC /* GoogleSignIn in Frameworks */,
 				377BE2CE2F868777008A13CC /* GoogleSignInSwift in Frameworks */,
+				376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +266,7 @@
 				377BE2C32F854D8E008A13CC /* FirebaseRemoteConfig */,
 				377BE2CB2F868777008A13CC /* GoogleSignIn */,
 				377BE2CD2F868777008A13CC /* GoogleSignInSwift */,
+				376DE2F62FCABB3E00305BAB /* ZIPFoundation */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -358,6 +361,7 @@
 				37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				377BE2CA2F868777008A13CC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -787,6 +791,14 @@
 				minimumVersion = 8.5.0;
 			};
 		};
+		376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
 		377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -842,6 +854,11 @@
 		375FE1B72F704F7200765018 /* Router */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Router;
+		};
+		376DE2F62FCABB3E00305BAB /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 		377BE2B12F854D8E008A13CC /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -49,9 +49,6 @@ extension ForestDataManager {
 
 protocol ForestDataManagerProtocol: AnyObject {
     
-    // MARK: Update Quests & Game State
-    
-    func checkAndResetTimeBasedQuests(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func checkGame(contextType: ForestDataManager.ContextType)
     func checkAndUpdateRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
     
@@ -95,7 +92,7 @@ class ForestDataManager: ForestDataManagerProtocol {
     init() { }
     
     // MARK: - UPDATE QUESTS
-        
+        /*
     func checkAndResetTimeBasedQuests(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Bool> {
         contextType.context.performAndWait {
             let context = contextType.context
@@ -146,10 +143,11 @@ class ForestDataManager: ForestDataManagerProtocol {
             return .success(false)
         }
     }
+    */
     
     func checkGame(contextType: ContextType) {
         checkAndUpdateRain(contextType: contextType)
-        checkAndResetTimeBasedQuests(helper: ForestGameHelper(), contextType: contextType)
+        //checkAndResetTimeBasedQuests(helper: ForestGameHelper(), contextType: contextType)
     }
     
     func checkAndUpdateRain(contextType: ContextType) -> Resource<Bool> {
@@ -664,34 +662,6 @@ extension ForestDataManager {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestDataManager {
-    
-    func resetQuests(type: QuestType, helper: ForestGameHelperProtocol, contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
-            guard let forest = getCurrentForest(context: contextType.context) else { return }
-            if let currentQuests = forest.quests?.allObjects as? [Quest] {
-                let oldQuests = currentQuests.filter {
-                    $0.type == type.valueForCoreData
-                }
-                for oldQuest in oldQuests {
-                    context.delete(oldQuest)
-                }
-            }
-            
-            var newQuestsModels: [QuestModel] = []
-            switch type {
-            case .daily:
-                newQuestsModels = helper.initalizeDailyQuests()
-            case .weekly:
-                newQuestsModels = helper.initalizeWeeklyQuests()
-            case .monthly:
-                newQuestsModels = helper.initalizeMonthlyQuests()
-            case .special:
-                break
-            }
-            setupQuests(questList: newQuestsModels, contextType: contextType)
-        }
-    }
     
     func scheduleHealthNotifications(contextType: ContextType) {
         contextType.context.performAndWait {

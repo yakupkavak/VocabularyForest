@@ -7,18 +7,24 @@
 
 import Foundation
 import SwiftUI
+import ZIPFoundation
 
 enum AssetManagerError: Error {
     case saveError
     case fetchError
     case emptyAsset
+    case zipExtractionError
 }
 
 protocol OfflineAssetManagerProtocol {
     func saveImageToAssets(data: Data, imageName: String, version: Int) -> Resource<Bool>
-    func loadImageFromAssets(imageName: String) -> Resource<UIImage>
+    func saveAndExtractZip(zipData: Data) throws
+    func loadImageFromAssets(imageName: String) throws -> UIImage
+    func isAssetReady(assetName: String) throws -> Bool
     func fileExists(fileName: String) -> Bool
     func isAssetUpToDate(imageName: String, expectedVersion: Int) -> Bool
+    func isZipAssetReady(bundleId: String) -> Bool
+    func isZipAssetUpToDate(bundleId: String, expectedVersion: Int) -> Bool
 }
 
 final class OfflineAssetManager {
@@ -37,6 +43,49 @@ final class OfflineAssetManager {
 }
 
 extension OfflineAssetManager: OfflineAssetManagerProtocol {
+    
+    func isZipAssetReady(bundleId: String) -> Bool {
+        let folderURL = getAssetDirectory().appendingPathComponent(bundleId)
+        return fileManager.fileExists(atPath: folderURL.path)
+    }
+        
+    func isZipAssetUpToDate(bundleId: String, expectedVersion: Int) -> Bool {
+        guard isZipAssetReady(bundleId: bundleId) else { return false }
+        let savedVersion = userDefaults.integer(forKey: "version_\(bundleId)")
+        return savedVersion >= expectedVersion
+    }
+    
+    func saveAndExtractZip(zipData: Data) throws {
+        let baseAssetDirectory = getAssetDirectory()
+        let tempProcessFolderURL = baseAssetDirectory.appendingPathComponent("Temp_\(UUID().uuidString)")
+        try fileManager.createDirectory(at: tempProcessFolderURL, withIntermediateDirectories: true, attributes: nil)
+        let tempZipURL = tempProcessFolderURL.appendingPathComponent("downloaded.zip")
+        do {
+            try zipData.write(to: tempZipURL, options: .atomic)
+            try fileManager.unzipItem(at: tempZipURL, to: tempProcessFolderURL)
+            try fileManager.removeItem(at: tempZipURL)
+            let contents = try fileManager.contentsOfDirectory(atPath: tempProcessFolderURL.path)
+            guard let bundleFolderName = contents.first(where: { !$0.hasPrefix(".") && !$0.hasPrefix("__") }) else {
+                throw AssetManagerError.zipExtractionError
+            }
+            let extractedBundleURL = tempProcessFolderURL.appendingPathComponent(bundleFolderName)
+            
+            let manifestURL = extractedBundleURL.appendingPathComponent("manifest.json")
+            let manifestData = try Data(contentsOf: manifestURL)
+            let manifest = try JSONDecoder().decode(ManifestModel.self, from: manifestData)
+            let finalDestinationURL = baseAssetDirectory.appendingPathComponent(bundleFolderName)
+            
+            if fileManager.fileExists(atPath: finalDestinationURL.path) {
+                try fileManager.removeItem(at: finalDestinationURL)
+            }
+            try fileManager.moveItem(at: extractedBundleURL, to: finalDestinationURL)
+            userDefaults.set(manifest.version, forKey: "version_\(manifest.bundleId)")
+            try fileManager.removeItem(at: tempProcessFolderURL)
+        } catch {
+            try? fileManager.removeItem(at: tempProcessFolderURL)
+            throw error
+        }
+    }
     
     func isAssetUpToDate(imageName: String, expectedVersion: Int) -> Bool {
         let filePath = getLocalFileURL(for: imageName)
@@ -61,16 +110,31 @@ extension OfflineAssetManager: OfflineAssetManagerProtocol {
         return Resource.success(true)
     }
     
-    func loadImageFromAssets(imageName: String) -> Resource<UIImage> {
+    func loadImageFromAssets(imageName: String) throws -> UIImage {
         let fileURL = getLocalFileURL(for: imageName)
         guard fileManager.fileExists(atPath: fileURL.path) else {
-            return Resource.error(error: AssetManagerError.emptyAsset)
+            throw AssetManagerError.emptyAsset
         }
         do {
             let data = try Data(contentsOf: fileURL)
-            return Resource.success(UIImage(data: data))
+            guard let image = UIImage(data: data) else { throw AssetManagerError.fetchError }
+            return image
         } catch {
-            return Resource.error(error: AssetManagerError.fetchError)
+            throw AssetManagerError.fetchError
+        }
+    }
+    
+    func isAssetReady(assetName: String) throws -> Bool {
+        let fileURL = getLocalFileURL(for: assetName)
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            throw AssetManagerError.emptyAsset
+        }
+        do {
+            let data = try Data(contentsOf: fileURL)
+            guard let image = UIImage(data: data) else { throw AssetManagerError.fetchError }
+            return true
+        } catch {
+            throw AssetManagerError.fetchError
         }
     }
 }

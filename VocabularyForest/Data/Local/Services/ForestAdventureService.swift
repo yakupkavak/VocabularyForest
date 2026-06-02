@@ -201,8 +201,10 @@ private extension ForestAdventureService {
 
 extension ForestAdventureService {
     func claimQuestReward(quest: QuestModel) -> Resource<Bool> {
+        Task {
+            try? await rewardRepository.claimLocalReward(reward: quest.reward)
+        }
         questService.claimQuestReward(quest: quest)
-        rewardRepository.processAndGetLocalReward(from: quest.reward)
     }
 }
 
@@ -339,7 +341,7 @@ extension ForestAdventureService {
         guard let uid = Auth.auth().currentUser?.uid else {
             return .error(error: ForestAdventureError.unauthenticated)
         }
-        _ = forestManager.claimReward(model: reward, contextType: contextType)
+       // _ = forestManager.claimReward(model: reward, contextType: contextType)
         let context = contextType.context
         context.performAndWait {
             if let forest = forestManager.getCurrentForest(context: context), let dailyActivities = forest.dailyActivities {
