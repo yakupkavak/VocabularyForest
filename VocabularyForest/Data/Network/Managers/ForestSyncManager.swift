@@ -189,7 +189,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         guard let forestDoc = forestDocument else {
             return .error(error: ForestSyncError.unauthenticated)
         }
+        // TODO: USER HAVE FORESET TAMAMLANICAK
         
+        return .error(error: nil)
+
+        /*
         do {
             let docSnapshot = try await forestDoc.getDocument()
             guard docSnapshot.exists, let forestData = docSnapshot.data() else {
@@ -339,6 +343,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         } catch {
             return .error(error: ForestSyncError.firestoreError(error))
         }
+         */
     }
     
     func downloadAndOverwriteLocal(with safeForest: SafeForestModel) async -> Resource<Bool> {
@@ -476,7 +481,7 @@ private extension ForestSyncManager {
         
         let updatedQuests = forest.quests.filter { $0.lastUpdatedDate > lastSyncDate }
         for quest in updatedQuests {
-            let docRef = forestDoc.collection(ForestSyncConstants.questsCollection).document(quest.id.uuidString)
+            let docRef = forestDoc.collection(ForestSyncConstants.questsCollection).document(quest.id)
             batch.setData(questPayload(quest), forDocument: docRef, merge: true)
             totalOperations += 1
         }
@@ -558,18 +563,9 @@ private extension ForestSyncManager {
     
     func questPayload(_ quest: QuestModel) -> [String: Any] {
         [
-            ForestSyncConstants.idField: quest.id.uuidString,
-            ForestSyncConstants.typeField: quest.type.valueForCoreData,
-            ForestSyncConstants.titleField: quest.title,
-            ForestSyncConstants.descriptionField: quest.description,
-            ForestSyncConstants.rewardTypeField: quest.reward.typeName,
-            ForestSyncConstants.rewardValueField: quest.reward.coreDataValueString,
+            ForestSyncConstants.idField: quest.id,
             ForestSyncConstants.statusField: quest.status.valueForCoreData,
-            ForestSyncConstants.targetCountField: quest.targetCount,
             ForestSyncConstants.currentProgressCountField: quest.currentProgressCount,
-            ForestSyncConstants.questionTypeField: quest.questionType.valueForCoreData,
-            ForestSyncConstants.battleEnemyModelField: quest.battleEnemyModel.valueForCoreData,
-            ForestSyncConstants.gameLevelField: quest.gameLevel.valueForCoreData,
             ForestSyncConstants.lastUpdatedDateField: quest.lastUpdatedDate
         ]
     }

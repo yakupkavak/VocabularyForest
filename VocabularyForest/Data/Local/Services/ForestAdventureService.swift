@@ -204,7 +204,7 @@ extension ForestAdventureService {
         Task {
             try? await rewardRepository.claimLocalReward(reward: quest.reward)
         }
-        questService.claimQuestReward(quest: quest)
+        return questService.claimQuestReward(quest: quest)
     }
 }
 

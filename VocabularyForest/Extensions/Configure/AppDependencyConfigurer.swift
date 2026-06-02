@@ -27,7 +27,12 @@ enum AppDependencyConfigurer {
         let remoteConfigRepository = RemoteConfigRepository(
             adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore
         )
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository)
+        let documentRepository = DocumentaryRepository()
+        let offlineAssetManager = OfflineAssetManager()
+        let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
+        let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
+        let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService)
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
@@ -45,6 +50,12 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(adventureRoadSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
         DC.shared.register(type: .singleInstance(remoteConfigRepository), for: RemoteConfigRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(gameManager), for: GameManagerProtocol.self)
+        DC.shared.register(type: .singleInstance(documentRepository), for: DocumentaryRepositoryProtocol.self)
+        DC.shared.register(type: .singleInstance(offlineAssetManager), for: OfflineAssetManagerProtocol.self)
+        DC.shared.register(type: .singleInstance(chestRepository), for: ChestRepositoryProtocol.self)
+        DC.shared.register(type: .singleInstance(rewardRepository), for: RewardRepositoryProtocol.self)
+        DC.shared.register(type: .singleInstance(questService), for: QuestServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }
