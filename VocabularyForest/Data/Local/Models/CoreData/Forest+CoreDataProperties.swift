@@ -45,7 +45,7 @@ extension Forest: ConvertSafeModel {
     typealias SafeModel = SafeForestModel
     func safeObject(context: NSManagedObjectContext) throws -> SafeForestModel {
         try context.performAndWait {
-            let safeQuests: [QuestModel]
+            let safeQuests: [QuestTrackModel]
             if let questSet = self.quests as? Set<Quest> {
                 safeQuests = try questSet.map { try $0.safeObject(context: context) }
             } else {

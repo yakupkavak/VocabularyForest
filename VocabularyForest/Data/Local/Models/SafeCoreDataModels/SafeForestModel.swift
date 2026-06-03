@@ -20,7 +20,7 @@ struct SafeForestModel: Sendable {
     let lastDailyResetDate: Date?
     let lastWeeklyResetDate: Date?
     let lastMonthlyResetDate: Date?
-    let quests: [QuestModel]
+    let quests: [QuestTrackModel]
     let sculptures: [SculptureModel]
     let trees: [TreeModel]
     let animals: [AnimalModel]

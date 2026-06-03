@@ -7,16 +7,16 @@
 
 import Foundation
 
-struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol{
-    var id: UUID
-    var type: ComponentType = .plant
+struct TreeModel: Equatable, ComponentNameable, ComponentModelProtocol {
+    let id: UUID
+    let type: ComponentType = .plant
+    let assetName: String
+    let createdDate: Date
+    var characterName: String
     var assetSource: ImageSourceType
     var poster: RewardAssetReference
-    let assetName: String
-    var characterName: String
-    let isAlive: Bool
-    let createdDate: Date
-    let treeHealthValue: Int
+    var isAlive: Bool
+    var treeHealthValue: Int
     var xPosition: CGFloat
     var yPosition: CGFloat
     var lastUpdatedDate: Date
