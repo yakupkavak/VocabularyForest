@@ -21,6 +21,9 @@ extension Animal {
     @NSManaged public var id: UUID?
     @NSManaged public var createdDate: Date?
     @NSManaged public var assetName: String?
+    @NSManaged public var assetSourceString: String?
+    @NSManaged public var posterKey: String?
+    @NSManaged public var posterSourceString: String?
     @NSManaged public var isAlive: Bool
     @NSManaged public var healtValue: Int16
     @NSManaged public var xPosition: Double
@@ -36,12 +39,17 @@ extension Animal: ConvertSafeModel {
     
     func safeObject(context: NSManagedObjectContext) throws -> AnimalModel {
         try context.performAndWait {
-            if let id, let createdDate, let assetName, let characterName, let lastUpdatedDate {
+            if let id, let createdDate, let assetName, let characterName, let lastUpdatedDate, let posterKey, let assetSourceString, let posterSourceString {
+                let mainAssetSource = ImageSourceType(rawValue: assetSourceString) ?? .offlineStorage
+                let posterSource = ImageSourceType(rawValue: posterSourceString) ?? .offlineStorage
+                let posterReference = RewardAssetReference(key: posterKey, source: posterSource)
                 return AnimalModel(
                     id: id,
-                    characterName: characterName,
                     assetName: assetName,
                     createdDate: createdDate,
+                    characterName: characterName,
+                    assetSource: mainAssetSource,
+                    poster: posterReference,
                     healthValue: Int(healtValue),
                     isAlive: isAlive,
                     xPosition: xPosition,

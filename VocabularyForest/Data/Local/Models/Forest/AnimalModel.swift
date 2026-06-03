@@ -8,18 +8,17 @@
 import Foundation
 
 struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
-    var id: UUID
-    var type: ComponentType = .animal
+    let id: UUID
+    let type: ComponentType = .animal
+    let assetName: String
+    let createdDate: Date
     var characterName: String
     var assetSource: ImageSourceType
     var poster: RewardAssetReference
-    let assetName: String
-    let createdDate: Date
-    let healthValue: Int
-    let isAlive: Bool
+    var healthValue: Int
+    var isAlive: Bool
     var xPosition: CGFloat
     var yPosition: CGFloat
     var lastUpdatedDate: Date
-
 }
 

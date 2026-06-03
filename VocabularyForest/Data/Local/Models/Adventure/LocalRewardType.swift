@@ -22,6 +22,7 @@ struct LocalQuestRewardModel: Hashable {
     let remotePath: String?
     let remoteAssetVersion: Int?
     let textColorHex: String?
+    let textStrokeColorHex: String?
     let gradientHexes: [String]?
 }
 
@@ -51,7 +52,7 @@ enum LocalRewardType: Hashable {
     case chest(model: LocalChestModel)
 }
 
-enum ImageSourceType: Hashable {
+enum ImageSourceType: String, Hashable {
     case appAssets
     case offlineStorage
 }
