@@ -55,7 +55,6 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(chestRepository), for: ChestRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(rewardRepository), for: RewardRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(questService), for: QuestServiceProtocol.self)
-        DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }
