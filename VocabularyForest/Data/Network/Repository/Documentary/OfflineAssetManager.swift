@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ZIPFoundation
+import DTO
 
 enum AssetManagerError: Error {
     case saveError

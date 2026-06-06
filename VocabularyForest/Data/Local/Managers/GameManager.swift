@@ -37,12 +37,15 @@ final class GameManager {
 
 extension GameManager: GameManagerProtocol {
     func refreshEconomyConfig() async -> Resource<GameEconomyConfigModel> {
+        /* // TODO: - BURAYA BAKILCAK.
         let result = await remoteConfigRepository.fetchGameEconomyConfig()
         if result.status == .success, let config = result.data {
             cachedEconomyConfig = config
             Self.setSnapshotEconomyConfig(config)
         }
         return result
+         */
+        return .error(error: nil)
     }
     
     func currentEconomyConfig() -> GameEconomyConfigModel? {

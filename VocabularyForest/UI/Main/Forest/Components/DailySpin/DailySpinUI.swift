@@ -159,7 +159,7 @@ private extension DailySpinUI {
 }
 
 // MARK: - PREVIEW
-
+/*
 #Preview {
     struct DailySpinPreviewWrapper: View {
         @State private var isVisible = true
@@ -186,3 +186,4 @@ private extension DailySpinUI {
     }
     return DailySpinPreviewWrapper()
 }
+*/

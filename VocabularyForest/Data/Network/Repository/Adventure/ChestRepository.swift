@@ -133,8 +133,8 @@ extension ChestRepository: ChestRepositoryProtocol {
                         id: id,
                         version: version,
                         displayName: chestName,
-                        closeLocalImagePath: closedChestKey,
-                        openLocalImagePath: openChestKey,
+                        closeLocalImagePath: RewardAssetReference(key: closedChestKey, source: .offlineStorage),
+                        openLocalImagePath: RewardAssetReference(key: openChestKey, source: .offlineStorage),
                         textHexColor: remoteChest.textHexColor,
                         backgroundGradientColors: remoteChest.gradientHexBackgroundColors
                     )
@@ -184,6 +184,7 @@ private extension ChestRepository {
                             remotePath: remoteReward.remotePath,
                             remoteAssetVersion: remoteReward.remoteAssetVersion,
                             textColorHex: remoteReward.textColorHex,
+                            textStrokeColorHex: remoteReward.textStrokeColorHex,
                             gradientHexes: remoteReward.gradientHexes
                         )
                     )

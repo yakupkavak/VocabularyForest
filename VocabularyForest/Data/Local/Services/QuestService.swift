@@ -10,6 +10,7 @@ import Foundation
 
 enum QuestServiceError: Error {
     case emptyQuestList
+    case emptyQuestTracks
 }
 
 protocol QuestServiceProtocol {
@@ -18,6 +19,12 @@ protocol QuestServiceProtocol {
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool>
     func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>
     func claimQuestReward(quest: QuestModel) -> Resource<Bool>
+    func fetchCurrentQuestTracks() async throws -> [QuestTrackModel]
+    func winGame(
+        gameLevel: GameLevel,
+        battleEnemyMode: BattleEnemyModel,
+        questionType: BattleQuestionType
+    ) -> Resource<Bool>
 }
 
 final class QuestService {
@@ -25,7 +32,8 @@ final class QuestService {
     private let forestManager: ForestDataManagerProtocol
     private let rewardRepository: RewardRepositoryProtocol
     @Published private var activeQuests: [QuestModel] = []
-    
+    private var activeQuestTracks: [QuestTrackModel] = []
+
     init(forestManager: ForestDataManagerProtocol, rewardRepository: RewardRepositoryProtocol) {
         self.forestManager = forestManager
         self.rewardRepository = rewardRepository
@@ -34,6 +42,13 @@ final class QuestService {
 }
 
 extension QuestService: QuestServiceProtocol {
+    func fetchCurrentQuestTracks() async throws -> [QuestTrackModel] {
+        if let tracks = forestManager.fetchQuestTracks(contextType: .background).data {
+            return tracks
+        }else {
+            throw QuestServiceError.emptyQuestTracks
+        }
+    }
     
     var questListPublisher: AnyPublisher<[QuestModel], Never> {
         $activeQuests.eraseToAnyPublisher()
@@ -50,7 +65,7 @@ extension QuestService: QuestServiceProtocol {
                 updatedQuest.lastUpdatedDate = Date()
                 let questTrack = QuestTrackModel(
                     id: updatedQuest.id,
-                    lastUpdateDate: updatedQuest.lastUpdatedDate,
+                    lastUpdatedDate: updatedQuest.lastUpdatedDate,
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
@@ -85,7 +100,7 @@ extension QuestService: QuestServiceProtocol {
                 }
                 let questTrack = QuestTrackModel(
                     id: updatedQuest.id,
-                    lastUpdateDate: updatedQuest.lastUpdatedDate,
+                    lastUpdatedDate: updatedQuest.lastUpdatedDate,
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
@@ -113,7 +128,7 @@ extension QuestService: QuestServiceProtocol {
                 }
                 let questTrack = QuestTrackModel(
                     id: updatedQuest.id,
-                    lastUpdateDate: updatedQuest.lastUpdatedDate,
+                    lastUpdatedDate: updatedQuest.lastUpdatedDate,
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
@@ -148,7 +163,7 @@ extension QuestService: QuestServiceProtocol {
                         title: title.localized,
                         description: descriptionText.localized,
                         reward: localReward,
-                        lastUpdatedDate: questTrack.lastUpdateDate,
+                        lastUpdatedDate: questTrack.lastUpdatedDate,
                         status: questTrack.status,
                         targetCount: targetCount,
                         currentProgressCount: questTrack.currentProgressCount,
@@ -161,7 +176,7 @@ extension QuestService: QuestServiceProtocol {
                     ///First time to create quest
                     let track = QuestTrackModel(
                         id: id,
-                        lastUpdateDate: Date(),
+                        lastUpdatedDate: Date(),
                         status: .active,
                         currentProgressCount: 0
                     )
@@ -171,7 +186,7 @@ extension QuestService: QuestServiceProtocol {
                         title: title.localized,
                         description: descriptionText.localized,
                         reward: localReward,
-                        lastUpdatedDate: track.lastUpdateDate,
+                        lastUpdatedDate: track.lastUpdatedDate,
                         status: track.status,
                         targetCount: targetCount,
                         currentProgressCount: track.currentProgressCount,

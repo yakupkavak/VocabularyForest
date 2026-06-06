@@ -19,6 +19,8 @@ struct AdventureRoadUI: View {
     // MARK: - UI
     
     var body: some View {
+        Text("adventure")
+        /*
         GeometryReader { geometry in
             let w = geometry.size.width
             let safeBottomInset = geometry.safeAreaInsets.bottom
@@ -86,9 +88,11 @@ struct AdventureRoadUI: View {
             }
             .padding(.top, globalSafeArea.top > 0 ? globalSafeArea.top : w * 0.04)        .background(backgroundGradient)
         }
+         */
     }
 }
 
+/*
 private extension AdventureRoadUI {
     
     var backgroundGradient: LinearGradient {
@@ -592,3 +596,4 @@ private struct AdventureRewardCard: View {
         seasonLeftTime: .constant(Date())
     )
 }
+*/

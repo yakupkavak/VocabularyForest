@@ -122,6 +122,7 @@ extension RewardRepository: RewardRepositoryProtocol {
                             remotePath: remoteReward.remotePath,
                             remoteAssetVersion: remoteReward.remoteAssetVersion,
                             textColorHex: remoteReward.textColorHex,
+                            textStrokeColorHex: remoteReward.textStrokeColorHex,
                             gradientHexes: remoteReward.gradientHexes
                         )
                     )

@@ -46,11 +46,6 @@ protocol ForestViewModelProtocol: AnyObject {
 // MARK: - VIEW MODEL
 
 class ForestViewModel: BaseViewModel {
-    private static let defaultDailySpinWheel = RewardHelper.createDailySpinWheel(
-        from: RewardHelper.defaultDailySpinRewards()
-    )
-    
-    // MARK: - DEPENDENCIES
     
     private let coreDataManager: CoreDataManagerProtocol
     private let audioService: AudioServiceProtocol
@@ -59,7 +54,8 @@ class ForestViewModel: BaseViewModel {
     private let adventureService: ForestAdventureServiceProtocol
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let playerDataManager: PlayerDataManagerProtocol
-    
+    private let questService: QuestServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var dailyQuestList: [QuestModel] = []
@@ -72,9 +68,9 @@ class ForestViewModel: BaseViewModel {
     @Published var showBookThreshold = false
     @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
     @Published var dailySpinTime: Date? = nil
-    @Published var dailySpinModels: [SpinModel] = ForestViewModel.defaultDailySpinWheel.0
+    @Published var dailySpinModels: [SpinModel] = []
     @Published var dailySpinModelVersion = UUID()
-    @Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
+    //@Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
     @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
@@ -83,12 +79,13 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    private var dailySpinRewardMap: [Int: LocalRewardType] = ForestViewModel.defaultDailySpinWheel.1
+    private var dailySpinRewardMap: [Int: LocalRewardType] = [:]
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
     private var dailyTimeCancellable: AnyCancellable?
     private var rainTimeCancellable: AnyCancellable?
+    private var questCancellable = Set<AnyCancellable>()
 
     // MARK: - INIT
     
@@ -99,7 +96,8 @@ class ForestViewModel: BaseViewModel {
         forestEntityService: ForestEntityServiceProtocol,
         forestAdventureService: ForestAdventureServiceProtocol,
         remoteConfigRepository: RemoteConfigRepositoryProtocol,
-        playerDataManager: PlayerDataManagerProtocol
+        playerDataManager: PlayerDataManagerProtocol,
+        questService: QuestServiceProtocol,
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -108,8 +106,9 @@ class ForestViewModel: BaseViewModel {
         self.adventureService = forestAdventureService
         self.remoteConfigRepository = remoteConfigRepository
         self.playerDataManager = playerDataManager
+        self.questService = questService
         super.init()
-        
+        bindQuests()
     }
 }
 
@@ -202,6 +201,7 @@ extension ForestViewModel {
 extension ForestViewModel {
     
     func fetchWeeklyDailyCards() {
+        /*
         Task { @MainActor in
             let result = await adventureService.fetchWeeklyDailyRewards()
             if result.status == .success, let cards = result.data {
@@ -210,6 +210,7 @@ extension ForestViewModel {
                 print("Hata: Haftalık kartlar çekilemedi -> \(result.error?.localizedDescription ?? "")")
             }
         }
+         */
     }
     
     func initalizeForest() {
@@ -227,6 +228,7 @@ extension ForestViewModel {
     }
     
     func refreshDailySpinRewards() {
+        /*
         Task(priority: .background) { [weak self] in
             guard let self else { return }
             let result = await remoteConfigRepository.fetchDailySpinRewards()
@@ -240,13 +242,15 @@ extension ForestViewModel {
                 self.dailySpinModelVersion = UUID()
             }
         }
+         */
     }
-    
+    /*
     func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardType {
         dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
     }
-    
+    */
     func fetchAdventureRoadData() {
+        /*
         Task { @MainActor in
             let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
             var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
@@ -275,6 +279,7 @@ extension ForestViewModel {
             )
             adventureRoadSeasonLeftTime = config.seasonEndDate
         }
+         */
     }
     
     func fetchForest() {
@@ -295,49 +300,44 @@ extension ForestViewModel {
                 contextType: .background
             )
             let statusResult = forestDataManager.fetchForestStatus(contextType: .background)
-            let questResult = forestDataManager.fetchQuests(contextType: .background)
-            
+
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
                 
                 let newAnimals = fetchedAnimals.filter { newItem in
-                    !self.animalList.contains(where: { $0 == newItem })
+                    !animalList.contains(where: { $0 == newItem })
                 }
                 
                 let newSculptures = fetchedSculptures.filter { newItem in
-                    !self.sculptureList.contains(where: { $0 == newItem })
+                    !sculptureList.contains(where: { $0 == newItem })
                 }
                 
                 let newTrees = fetchedTrees.filter { newItem in
-                    !self.treeList.contains(where: { $0 == newItem })
+                    !treeList.contains(where: { $0 == newItem })
                 }
                 
                 if let cases = fetchedBookcases {
-                    self.bookcaseList = cases
+                    bookcaseList = cases
                 }
 
-                if !newAnimals.isEmpty { self.animalList.append(contentsOf: newAnimals) }
-                if !newSculptures.isEmpty { self.sculptureList.append(contentsOf: newSculptures) }
-                if !newTrees.isEmpty { self.treeList.append(contentsOf: newTrees) }
+                if !newAnimals.isEmpty { animalList.append(contentsOf: newAnimals) }
+                if !newSculptures.isEmpty { sculptureList.append(contentsOf: newSculptures) }
+                if !newTrees.isEmpty { treeList.append(contentsOf: newTrees) }
 
                 for animal in newAnimals {
-                    self.output?.setupAnimal(animal: animal)
+                    output?.setupAnimal(animal: animal)
                 }
                 
                 for sculpture in newSculptures {
-                    self.output?.setupSculpture(sculpture: sculpture)
+                    output?.setupSculpture(sculpture: sculpture)
                 }
                 
                 for tree in newTrees {
-                    self.output?.setupPlant(plant: tree)
-                }
-                
-                if let quests = questResult.data {
-                    self.processQuests(quests: quests)
+                    output?.setupPlant(plant: tree)
                 }
                 
                 if let forestData = statusResult.data {
-                    self.forestStatus = ForestStatusModel(
+                    forestStatus = ForestStatusModel(
                         rainValue: forestData.rainValue,
                         landHealthPercentage: forestData.landHealthPercentage,
                         landStatus: forestData.landStatus,
@@ -346,16 +346,16 @@ extension ForestViewModel {
                     
                     if forestData.rainValue >= 50 { self.showRainButton = true }
                     
-                    if let landHealthPercentage = self.forestStatus?.landHealthPercentage {
+                    if let landHealthPercentage = forestStatus?.landHealthPercentage {
                         if landHealthPercentage == 0 {
-                            self.output?.startDrought()
+                            output?.startDrought()
                         } else if landHealthPercentage <= 50 {
-                            self.output?.startFade()
+                            output?.startFade()
                         }
                     }
                 }
                 
-                self.startRandomTalking()
+                startRandomTalking()
             }
         }
     }
@@ -373,8 +373,8 @@ extension ForestViewModel {
                 guard let self = self else { return }
                 time += 1
                 if time == 40 {
-                    self.output?.stopRain()
-                    self.rainTimeCancellable?.cancel()
+                    output?.stopRain()
+                    rainTimeCancellable?.cancel()
                 }
             }
     }
@@ -447,13 +447,16 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
+        /*
         let result = forestDataManager.claimQuestReward(quest: quest, contextType: .background)
         if result.status == .success {
             fetchForest()
         }
+         */
     }
     
     func claimDailyReward(model: QuestRewardModel) {
+        /*
         Task { @MainActor in
             let result = await adventureService.claimDailySpinReward(reward: model, contextType: .main)
             if result.status == .success {
@@ -463,9 +466,11 @@ extension ForestViewModel: ForestViewModelProtocol {
                 self.startDailySpinTimer()
             }
         }
+        */
     }
     
-    func claimWeeklyReward(reward: QuestRewardModel, weeklyModel:  WeeklyDailyCardModel) {
+    func claimWeeklyReward(reward: LocalQuestRewardModel, weeklyModel:  WeeklyDailyCardModel) {
+        /*
         Task { @MainActor in
             let result = await adventureService.saveWeeklyReward(weeklyModel: weeklyModel, contextType: .main)
             let _ = forestDataManager.claimReward(model: reward, contextType: .main)
@@ -475,6 +480,7 @@ extension ForestViewModel: ForestViewModelProtocol {
                 }
             }
         }
+         */
     }
 }
 
@@ -570,7 +576,21 @@ private extension ForestViewModel {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestViewModel {
+    
+    func bindQuests() {
+        questService.questListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] updatedQuests in
+                guard let self else { return }
+                dailyQuestList = updatedQuests.filter {  $0.type == .daily }
+                weeklyQuestList = updatedQuests.filter {  $0.type == .weekly }
+                monthlyQuestList = updatedQuests.filter {  $0.type == .monthly }
+                specialQuestList = updatedQuests.filter {  $0.type == .special }
+            }.store(in: &questCancellable)
+
+    }
+    
     func checkDailySpinStatus() {
+        /*
         Task { @MainActor in
             let result = await adventureService.fetchDailySpinStatusDate()
             
@@ -580,6 +600,7 @@ private extension ForestViewModel {
                 self.startDailySpinTimer()
             }
         }
+         */
     }
     
     func startDailySpinTimer() {

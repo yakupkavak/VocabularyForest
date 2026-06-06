@@ -53,7 +53,8 @@ class BattleViewModel: ObservableObject {
     private let audioService: any AudioServiceProtocol
     private let forestDataManager: any ForestDataManagerProtocol
     private let playerDataManager: any PlayerDataManagerProtocol
-
+    private let questService: any QuestServiceProtocol
+    
     // MARK: - PROPERTIES
     
     private var questionList: [QuestionModel] = []
@@ -87,12 +88,14 @@ class BattleViewModel: ObservableObject {
         coreDataManager: (CoreDataManagerProtocol),
         audioService: (AudioServiceProtocol),
         forestDataManager: (ForestDataManagerProtocol),
-        playerDataManager: PlayerDataManagerProtocol
+        playerDataManager: PlayerDataManagerProtocol,
+        questService: QuestServiceProtocol,
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
         self.playerDataManager = playerDataManager
+        self.questService = questService
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
@@ -350,7 +353,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                         coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .background)
                         _ = playerDataManager.increaseMonthlyLearnedCount(for: questionType, contextType: .background)
                         // TODO: SHOW SAVE ERROR
-                        let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .background)
+                        let saveResult = questService.correctAnswer(questionType: questionType)
                     }
                     output?.correctAnswer()
                 }else {
@@ -419,12 +422,7 @@ extension BattleViewModel: BattleSceneProtocol {
     }
     func playerWon() {
         if let gameLevel, let questionType, let battleMode {
-            let result = forestDataManager.winGame(
-                gameLevel: gameLevel,
-                battleEnemyMode: battleMode,
-                gameType: questionType,
-                contextType: .background
-            )
+            let result = questService.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, questionType: questionType)
             switch result.status {
             case .success:
                 print("player won saved")

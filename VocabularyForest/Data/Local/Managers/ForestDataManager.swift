@@ -54,7 +54,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     // MARK: Create Helpers
     
-    func createForest(helper: ForestGameHelperProtocol, contextType: ForestDataManager.ContextType) -> Resource<Forest>
+    func createForest(contextType: ForestDataManager.ContextType) -> Resource<Forest>
     
     // MARK: Fetch Helpers
     
@@ -64,7 +64,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     
     // MARK: - QUEST HELPERS
     
-    func fetchQuests(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
+    func fetchQuestTracks(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
     func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel>
     func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateQuest(questTrack: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
@@ -198,18 +198,10 @@ class ForestDataManager: ForestDataManagerProtocol {
 
 extension ForestDataManager {
     
-    func createForest(helper: ForestGameHelperProtocol, contextType: ContextType) -> Resource<Forest> {
+    func createForest(contextType: ContextType) -> Resource<Forest> {
         contextType.context.performAndWait {
             let context = contextType.context
-            let dailyQuests = helper.initalizeDailyQuests()
-            let weeklyQuests = helper.initalizeWeeklyQuests()
-            let monthlyQuests = helper.initalizeMonthlyQuests()
-            let specialQuests = helper.initalizeSpecialQuests()
             let forest = Forest(context: context)
-            setupQuests(questList: dailyQuests, contextType: contextType)
-            setupQuests(questList: weeklyQuests, contextType: contextType)
-            setupQuests(questList: monthlyQuests, contextType: contextType)
-            setupQuests(questList: specialQuests, contextType: contextType)
             forest.rainValue = ForestConstants.initialRainValue
             forest.isRaining = false
             forest.landHealthPercent = ForestConstants.initialLandHealthPercent
@@ -250,17 +242,18 @@ extension ForestDataManager {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
-            if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == track.id }) {
+            if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let _ = quests.first(where: { $0.id == track.id }) {
                 return Resource.error(error: ForestError.alreadyExistQuest)
             } else {
                 let quest = Quest(context: context)
                 quest.currentProgressCount = Int16(track.currentProgressCount)
                 quest.id = track.id
                 quest.status = track.status.valueForCoreData
-                quest.lastUpdatedDate = track.lastUpdateDate
+                quest.lastUpdatedDate = track.lastUpdatedDate
                 forest.addToQuests(quest)
                 do {
                     try save(context: context)
+                    return .success(true)
                 } catch {
                     return .error(error: ForestError.saveError)
                 }
@@ -274,7 +267,7 @@ extension ForestDataManager {
 extension ForestDataManager {
     
     func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel> {
-        contextType.context.performAndWait {
+        return contextType.context.performAndWait {
             let context = contextType.context
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
@@ -285,6 +278,7 @@ extension ForestDataManager {
                     return Resource.success(questTrack)
                 }catch {
                     print("\(error.localizedDescription)")
+                    return .error(error: error)
                 }
             } else {
                 return .error(error: ForestError.emptyForest)
@@ -332,7 +326,7 @@ extension ForestDataManager {
         }
     }
     
-    func fetchQuests(contextType: ContextType) -> Resource<[QuestTrackModel]> {
+    func fetchQuestTracks(contextType: ContextType) -> Resource<[QuestTrackModel]> {
         contextType.context.performAndWait {
             guard let forest = getCurrentForest(context: contextType.context) else {
                 return Resource.error(error: ForestError.emptyForest)
@@ -367,7 +361,6 @@ struct ReadyRewardModel {
     let displayName: RemoteLocalizedText
     let assetSource: RewardAssetReference
     let posterImage: RewardAssetReference
-    
 }
 
 // MARK: - UPDATE HELPERS
@@ -572,7 +565,7 @@ extension ForestDataManager {
                 }
                 quest.currentProgressCount = Int16(questTrack.currentProgressCount)
                 quest.status = questTrack.status.valueForCoreData
-                quest.lastUpdatedDate = questTrack.lastUpdateDate
+                quest.lastUpdatedDate = questTrack.lastUpdatedDate
                 do {
                     try save(context: context)
                 } catch {
@@ -777,11 +770,11 @@ private extension ForestDataManager {
     func createSafeAnimal(model: ReadyRewardModel) -> AnimalModel {
         return AnimalModel(
             id: UUID(),
+            assetName: model.assetSource.key,
+            createdDate: Date(),
             characterName: generateRandomName(type: .animal),
             assetSource: model.assetSource.source,
             poster: model.posterImage,
-            assetName: model.assetSource.key,
-            createdDate: Date(),
             healthValue: 10,
             isAlive: true,
             xPosition: CGFloat.random(in: -50...50),
@@ -790,30 +783,32 @@ private extension ForestDataManager {
         )
     }
     func createSafePlant(model: ReadyRewardModel, contextType: ContextType) -> TreeModel {
-        let pos = generateValidPosition(for: .tree, contextType: contextType)
+        let position = generateValidPosition(for: .tree, contextType: contextType)
         return TreeModel(
             id: UUID(),
+            assetName: model.assetSource.key,
+            createdDate: Date(),
+            characterName: generateRandomName(type: .plant),
             assetSource: model.assetSource.source,
             poster: model.posterImage,
-            assetName: model.assetSource.key,
-            characterName: generateRandomName(type: .plant), isAlive: true,
-            createdDate: Date(),
+            isAlive: true,
             treeHealthValue: 5,
-            xPosition: pos.x,
-            yPosition: pos.y,
+            xPosition: CGFloat(position.x),
+            yPosition: CGFloat(position.y),
             lastUpdatedDate: Date()
         )
     }
     func createSafeSculpture(model: ReadyRewardModel, contextType: ContextType) -> SculptureModel {
-        let pos = generateValidPosition(for: .sculpture, contextType: contextType)
+        let position = generateValidPosition(for: .sculpture, contextType: contextType)
         return SculptureModel(
             id: UUID(),
+            assetName: model.assetSource.key,
+            createdDate: Date(),
+            characterName: generateRandomName(type: .sculpture),
             assetSource: model.assetSource.source,
             poster: model.posterImage,
-            assetName: model.assetSource.key,
-            characterName: generateRandomName(type: .sculpture), createdDate: Date(),
-            xPosition: pos.x,
-            yPosition: pos.y,
+            xPosition: CGFloat(position.x),
+            yPosition: CGFloat(position.y),
             lastUpdatedDate: Date()
         )
     }

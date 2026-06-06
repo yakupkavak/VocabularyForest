@@ -7,6 +7,6 @@
 
 struct WeeklyDailyCardModel {
     var day: Int
-    var bounty: LocalRewardType
+    var bounty: LocalRewardModel
     var status: BountyStatus
 }

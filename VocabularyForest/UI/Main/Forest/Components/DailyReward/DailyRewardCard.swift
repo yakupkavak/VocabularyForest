@@ -22,10 +22,8 @@ struct DailyCard: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Image(model.bounty.rewardImage).resizable().scaledToFit().frame(width: parentWidth * 0.12, height: parentWidth * 0.12)
-            if let rewardCount = model.bounty.rewardCount {
-                Text("x\(rewardCount)").outlinedLargeTitle().offset(x: 15, y: 5)
-            }
+            RewardImageView(asset: model.bounty.reward.posterImage).scaledToFit().frame(width: parentWidth * 0.12, height: parentWidth * 0.12)
+            Text("x\(model.bounty.rewardCount)").outlinedLargeTitle().offset(x: 15, y: 5)
         }
         .compositingGroup()
         .padding(8)
@@ -92,6 +90,7 @@ struct DailyHeader: View {
 }
 
 #Preview {
+    /*
     let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .ready)
     let waterModel = WeeklyDailyCardModel(day: 1, bounty: .standart(model: .water(count: 200)), status: .passed)
     HStack {
@@ -110,4 +109,7 @@ struct DailyHeader: View {
         Spacer()
     }
     .background(.blue)
+     */
 }
+
+

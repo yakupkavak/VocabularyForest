@@ -52,8 +52,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let forestControllerService = ForestInitializerService(
             forestManager: forestData,
             playerManager: playerManager,
-            coreData: coreData,
-            remoteConfigRepository: remoteConfigRepository
+            coreData: coreData
         )
         let viewModel = SplashViewModel(forestController: forestControllerService)
         self.cachedSplashViewModel = viewModel
@@ -74,6 +73,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let adventureService = resolver.resolve(type: .singleInstance, for: ForestAdventureServiceProtocol.self)
         let remoteConfigRepository = resolver.resolve(type: .singleInstance, for: RemoteConfigRepositoryProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+        let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
             coreDataManager: coreData,
@@ -81,7 +81,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestEntityService: forestEntityService,
             forestAdventureService: adventureService,
             remoteConfigRepository: remoteConfigRepository,
-            playerDataManager: playerManager
+            playerDataManager: playerManager,
+            questService: questService
         )
         
         self.cachedForestViewModel = viewModel
@@ -99,12 +100,13 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
-
+        let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
             forestDataManager: forestData,
-            playerDataManager: playerManager
+            playerDataManager: playerManager,
+            questService: questService,
         )
         
         self.cachedBattleViewModel = viewModel

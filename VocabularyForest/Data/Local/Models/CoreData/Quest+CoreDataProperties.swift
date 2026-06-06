@@ -35,7 +35,7 @@ extension Quest: ConvertSafeModel {
             if let questId = self.id, let status, let lastUpdatedDate {
                 return QuestTrackModel(
                     id: questId,
-                    lastUpdateDate: lastUpdatedDate,
+                    lastUpdatedDate: lastUpdatedDate,
                     status: QuestStatus.convertFromCoreData(string: status),
                     currentProgressCount: Int(currentProgressCount)
                 )

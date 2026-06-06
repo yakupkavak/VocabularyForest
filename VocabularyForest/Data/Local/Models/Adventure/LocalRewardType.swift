@@ -62,6 +62,17 @@ struct RewardAssetReference: Hashable {
     let source: ImageSourceType
 }
 
+extension LocalRewardType {
+    var posterImage: RewardAssetReference {
+        switch self {
+        case .standart(let model):
+            model.posterImage
+        case .chest(let model):
+            model.closeLocalImagePath
+        }
+    }
+}
+
 /*
 extension LocalRewardType: Rewardable {
     var rewardCount: Int? {

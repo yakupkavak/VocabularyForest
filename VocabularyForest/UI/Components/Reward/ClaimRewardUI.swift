@@ -13,7 +13,7 @@ struct ClaimRewardUI: View {
     
     // MARK: - PROPERTIES
     
-    var reward: LocalRewardType
+    var claimReward: LocalRewardModel
     var onClaim: (LocalQuestRewardModel) -> Void
     @State private var chestStatus: ChestStatus = .close
     @State private var isChestOpened: Bool = false
@@ -72,7 +72,7 @@ private extension ClaimRewardUI {
     
     @ViewBuilder
     func mainContentSection(size: CGSize) -> some View {
-        switch reward {
+        switch claimReward.reward {
         case .standart(let model):
             standartRewardView(model: model, size: size)
         case .chest(let chestModel):
@@ -174,7 +174,7 @@ private extension ClaimRewardUI {
 private extension ClaimRewardUI {
     
     func rewardIsReadyToClaim() -> Bool {
-        switch reward {
+        switch claimReward.reward {
         case .standart:
             return true
         case .chest:
@@ -183,7 +183,7 @@ private extension ClaimRewardUI {
     }
     
     func handleClaim() {
-        switch reward {
+        switch claimReward.reward {
         case .standart(let model):
             onClaim(model)
         case .chest:
@@ -194,6 +194,7 @@ private extension ClaimRewardUI {
     }
     
     func handleTap() {
+        /*
         if case .chest(let chestModel) = reward, !isChestOpened {
             let newReward = RewardHelper.generateRandomReward(from: chestModel)
             withAnimation(.spring(response: 0.6, dampingFraction: 0.6)) {
@@ -201,11 +202,11 @@ private extension ClaimRewardUI {
                 revealedReward = newReward
                 isChestOpened = true
             }
-        }
+        }*/
     }
     
     func triggerShake() {
-        if case .chest = reward, !isChestOpened {
+        if case .chest = claimReward.reward, !isChestOpened {
             withAnimation(.easeInOut(duration: 0.12).repeatCount(5, autoreverses: true)) {
                 shakeOffset = 2
             }
@@ -241,7 +242,7 @@ private extension ClaimRewardUI {
     }
     */
     func currentClaimReward() -> LocalQuestRewardModel? {
-        switch reward {
+        switch claimReward.reward {
         case .standart(let model):
             return model
         case .chest:

@@ -166,6 +166,7 @@ private extension ForestUI {
     
     var dailySpinView: some View {
         VStack {
+            /*
             DailySpinUI(
                 models: viewModel.dailySpinModels,
                 isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}),
@@ -180,7 +181,9 @@ private extension ForestUI {
                 }
             }
             .id(viewModel.dailySpinModelVersion)
+             */
         }
+             
     }
     
     var dailyTrackView: some View {
@@ -189,7 +192,7 @@ private extension ForestUI {
         }), cardList: viewModel.weeklyDailyCards) { dailyModel in
             if dailyModel.status == .ready{
                 PopupManager.shared.show {
-                    ClaimRewardUI(reward: dailyModel.bounty) { reward in
+                    ClaimRewardUI(claimReward: dailyModel.bounty) { reward in
                         viewModel.claimWeeklyReward(reward: reward, weeklyModel: dailyModel)
                         PopupManager.shared.dismiss()
                     }
@@ -199,11 +202,14 @@ private extension ForestUI {
     }
     
     var userRoadView: some View {
+        Text("todo")
+        /*
         AdventureRoadUI(
             screenModel: viewModel.adventureRoadScreenModel,
             isVisible: Binding(get: { uiState == .userRoad }, set: { if !$0 { uiState = .empty } }),
             seasonLeftTime: $viewModel.adventureRoadSeasonLeftTime
         )
+         */
     }
     
     var announcementView: some View {
@@ -433,6 +439,7 @@ extension ForestUI: ForestUIProtocol {
 }
 
 #Preview {
+    /*
     @State var tabbar = BaseTabTypes.bookcases
     let bookcaseRouter = BookcaseRouter()
     let mockCoreData = CoreDataManager.preview
@@ -454,4 +461,5 @@ extension ForestUI: ForestUIProtocol {
     )
      
     ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
+     */
 }

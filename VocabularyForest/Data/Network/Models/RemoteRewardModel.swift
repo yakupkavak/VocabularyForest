@@ -26,6 +26,7 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let posterIconPath: String? // remote den poster pathi
     let textColorHex: String?
     let gradientHexes: [String]?
+    let textStrokeColorHex: String?
 }
 /*
 extension RemoteRewardModel {

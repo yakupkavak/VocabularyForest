@@ -561,7 +561,7 @@ private extension ForestSyncManager {
         ]
     }
     
-    func questPayload(_ quest: QuestModel) -> [String: Any] {
+    func questPayload(_ quest: QuestTrackModel) -> [String: Any] {
         [
             ForestSyncConstants.idField: quest.id,
             ForestSyncConstants.statusField: quest.status.valueForCoreData,

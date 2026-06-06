@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AdventureRoadRewardModel: Encodable {
+struct AdventureRoadRewardModel {
     let wordCount: Int
     let shortTermReward: LocalRewardType
     let longTermReward: LocalRewardType

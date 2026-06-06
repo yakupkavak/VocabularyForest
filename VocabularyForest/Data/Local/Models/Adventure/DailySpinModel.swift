@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailySpinModel: Encodable {
+struct DailySpinModel {
     let weight: Double
     let reward: LocalRewardType
 }

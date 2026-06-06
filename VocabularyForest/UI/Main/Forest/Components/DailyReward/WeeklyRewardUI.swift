@@ -138,6 +138,7 @@ private extension WeeklyRewardUI {
 // MARK: - PREVIEW
 
 #Preview {
+    /*
     let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .claimed)
     let waterModel = WeeklyDailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), status: .passed)
     let goldModel1 = WeeklyDailyCardModel(day: 3, bounty: .chest(model: .gold), status: .locked)
@@ -150,4 +151,5 @@ private extension WeeklyRewardUI {
     WeeklyRewardUI(isOpen: .constant(true), cardList: list) { card in
         print("\(card)")
     }
+     */
 }

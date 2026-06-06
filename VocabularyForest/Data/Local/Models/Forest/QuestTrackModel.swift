@@ -9,7 +9,7 @@ import Foundation
 
 struct QuestTrackModel {
     let id: String
-    let lastUpdateDate: Date
+    let lastUpdatedDate: Date
     let status: QuestStatus
     let currentProgressCount: Int
 }
