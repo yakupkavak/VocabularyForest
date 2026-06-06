@@ -74,7 +74,10 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>> {
         do {
-            let listValue = try remoteConfig.configValue(forKey: Keys.configParameters).decoded(asType: ConfigParametersList.self)
+            let remoteJson = try await fetchJSONString(forKey: Keys.configParameters)
+            let data = Data(remoteJson.utf8)
+            let listValue = try JSONDecoder().decode(ConfigParametersList.self, from: data)
+
             let jsonValue = remoteConfig.configValue(forKey: Keys.configParameters).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
             return Resource.success(response)

@@ -44,6 +44,10 @@ final class RewardRepository {
     static func posterName(id: String) -> String {
         "\(id)_poster"
     }
+    
+    static func posterName(assetName: String) -> String {
+        "\(assetName)_poster"
+    }
 }
 
 extension RewardRepository: RewardRepositoryProtocol {
@@ -95,18 +99,11 @@ extension RewardRepository: RewardRepositoryProtocol {
         
         if let id = remoteReward.id, let type = remoteReward.type, let rewardCount = remoteReward.rewardCount, let displayName = remoteReward.displayName, let imageSource = remoteReward.imageSource, let assetName = remoteReward.assetName {
             
-            guard let imageSource = ImageSource.convertImageSource(value: imageSource) else { throw RewardRepositoryError.emptySourceError }
-            var localRewardType: LocalRewardType
-            var posterImage: RewardAssetReference
-            let posterName = RewardRepository.posterName(id: id)
-            
-            switch imageSource {
-            case .local:
-                guard let localImageName = remoteReward.localImageName else { throw RewardRepositoryError.emptyLocalImageError }
-                posterImage = RewardAssetReference(key: localImageName, source: .appAssets)
-            default:
-                posterImage = RewardAssetReference(key: posterName, source: .offlineStorage)
+            guard let imageSource = ImageSource.convertImageSource(value: imageSource) else
+            { throw RewardRepositoryError.emptySourceError
             }
+            var localRewardType: LocalRewardType
+            let posterImage = try await posterReference(for: remoteReward, imageSource: imageSource, assetName: assetName)
             
             switch type {
                 case "standart":
@@ -127,7 +124,9 @@ extension RewardRepository: RewardRepositoryProtocol {
                         )
                     )
                 case "chest":
-                guard let chest = chestRepository.getLocalChest(chestId: id) else { throw RewardRepositoryError.emptyChest }
+                guard let chest = chestRepository.getLocalChest(chestId: id) else {
+                    throw RewardRepositoryError.emptyChest
+                }
                 localRewardType = LocalRewardType.chest(model: chest)
             default:
                 throw RewardRepositoryError.emptyTypeError
@@ -144,6 +143,32 @@ extension RewardRepository: RewardRepositoryProtocol {
 }
 
 private extension RewardRepository {
+    func posterReference(
+        for remoteReward: RemoteRewardModel,
+        imageSource: ImageSource,
+        assetName: String
+    ) async throws -> RewardAssetReference {
+        switch imageSource {
+        case .local:
+            guard let localImageName = remoteReward.localImageName else {
+                throw RewardRepositoryError.emptyLocalImageError
+            }
+            return RewardAssetReference(key: localImageName, source: .appAssets)
+            
+        case .remote, .zip:
+            let posterName = RewardRepository.posterName(assetName: assetName)
+            guard let posterIconPath = remoteReward.posterIconPath,
+                  let version = remoteReward.remoteAssetVersion else {
+                return RewardAssetReference(key: posterName, source: .offlineStorage)
+            }
+            try await downloadAndSaveImageIfNeeded(
+                remotePath: posterIconPath,
+                localKey: posterName,
+                version: version
+            )
+            return RewardAssetReference(key: posterName, source: .offlineStorage)
+        }
+    }
     
     func getReadyReward(localReward: LocalQuestRewardModel, count: Int) async throws -> ReadyRewardModel {
         switch localReward.imageSource {
@@ -200,27 +225,30 @@ private extension RewardRepository {
         }
         
         let getImageModel = GetImageRequestModel(imagePath: remotePath)
-        var networkError: Error?
-        networkManager.fetchImage(values: getImageModel) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let imageData):
-                let saveResult = offlineAssetManager.saveImageToAssets(
-                    data: imageData,
-                    imageName: localKey,
-                    version: version
-                )
-                if saveResult.status == .error {
-                    networkError = saveResult.error ?? RewardRepositoryError.downloadImageError
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            networkManager.fetchImage(values: getImageModel) { [weak self] result in
+                guard let self else {
+                    continuation.resume(throwing: RewardRepositoryError.invalidArgument)
+                    return
                 }
-                
-            case .failure(let error):
-                networkError = error
+                switch result {
+                case .success(let imageData):
+                    let saveResult = offlineAssetManager.saveImageToAssets(
+                        data: imageData,
+                        imageName: localKey,
+                        version: version
+                    )
+                    if saveResult.status == .error {
+                        continuation.resume(throwing: saveResult.error ?? RewardRepositoryError.downloadImageError)
+                    } else {
+                        continuation.resume()
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
-        if let networkError {
-            throw networkError
-        }
-        return
     }
 }

@@ -22,7 +22,6 @@ struct RemoteQuestModel: Decodable {
     let questionType: String?
     let battleEnemyModel: String?
     let gameLevel: String?
-    let status: String?
     
     private enum CodingKeys: String, CodingKey {
         case id
@@ -34,6 +33,5 @@ struct RemoteQuestModel: Decodable {
         case questionType
         case battleEnemyModel
         case gameLevel
-        case status
     }
 }

@@ -15,11 +15,12 @@ enum QuestServiceError: Error {
 
 protocol QuestServiceProtocol {
     var questListPublisher: AnyPublisher<[QuestModel], Never> { get }
+    var questList: [QuestModel] { get }
     func updateQuest(track: QuestTrackModel) -> Resource<Bool>
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool>
     func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>
     func claimQuestReward(quest: QuestModel) -> Resource<Bool>
-    func fetchCurrentQuestTracks() async throws -> [QuestTrackModel]
+    func fetchCurrentQuestTracks() throws -> [QuestTrackModel]
     func winGame(
         gameLevel: GameLevel,
         battleEnemyMode: BattleEnemyModel,
@@ -42,12 +43,16 @@ final class QuestService {
 }
 
 extension QuestService: QuestServiceProtocol {
-    func fetchCurrentQuestTracks() async throws -> [QuestTrackModel] {
+    func fetchCurrentQuestTracks() throws -> [QuestTrackModel] {
         if let tracks = forestManager.fetchQuestTracks(contextType: .background).data {
             return tracks
         }else {
             throw QuestServiceError.emptyQuestTracks
         }
+    }
+    
+    var questList: [QuestModel] {
+        activeQuests
     }
     
     var questListPublisher: AnyPublisher<[QuestModel], Never> {
@@ -58,10 +63,10 @@ extension QuestService: QuestServiceProtocol {
         if activeQuests.isEmpty {
             return .error(error: QuestServiceError.emptyQuestList)
         }
-        activeQuests = activeQuests.map { quest in
-            var updatedQuest = quest
+        activeQuests = activeQuests.map { active in
+            var updatedQuest = active
             if updatedQuest.id == quest.id {
-                updatedQuest.status = .completed
+                updatedQuest.status = .claimed
                 updatedQuest.lastUpdatedDate = Date()
                 let questTrack = QuestTrackModel(
                     id: updatedQuest.id,
@@ -71,7 +76,7 @@ extension QuestService: QuestServiceProtocol {
                 )
                 if forestManager.updateQuest(questTrack: questTrack, contextType: .background).status == .error {
                     print("Update quest error")
-                    return quest
+                    return active
                 }
             }
             return updatedQuest
@@ -149,9 +154,11 @@ extension QuestService: QuestServiceProtocol {
                 let reward = remoteQuest.reward, let targetCount = remoteQuest.targetCount,
                 let questionType = remoteQuest.questionType,
                 let battleEnemyModel = remoteQuest.battleEnemyModel,
-                let gameLevel = remoteQuest.gameLevel, let status = remoteQuest.status {
-                
-                guard let localReward = try? await rewardRepository.processAndGetLocalReward(from: reward) else {
+                let gameLevel = remoteQuest.gameLevel {
+                var localReward: LocalRewardModel
+                do {
+                    localReward = try await rewardRepository.processAndGetLocalReward(from: reward)
+                } catch {
                     return Resource<Bool>.error(error: RewardRepositoryError.decodingError)
                 }
                 

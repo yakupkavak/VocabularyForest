@@ -108,5 +108,473 @@
             endingLineNumber = "896">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DA55E721-6A98-4F83-8586-06BDBEDCB8A7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "fetchCurrentQuestTracks()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "53129A5C-448D-46B6-8048-1BC8AD0C7BB7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "fetchCurrentQuestTracks()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "53129A5C-448D-46B6-8048-1BC8AD0C7BB7 - 163f9a32ae371515"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VocabularyForest.QuestService.fetchCurrentQuestTracks() throws -&gt; Swift.Array&lt;VocabularyForest.QuestTrackModel&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+               <Location
+                  uuid = "53129A5C-448D-46B6-8048-1BC8AD0C7BB7 - 163f9a32ae371515"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "VocabularyForest.QuestService.fetchCurrentQuestTracks() throws -&gt; Swift.Array&lt;VocabularyForest.QuestTrackModel&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6421C8CC-4CB4-479D-A1D5-361209F4C38F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "setupParameters()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6421C8CC-4CB4-479D-A1D5-361209F4C38F - ac4df1efff2f2d59"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(15) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135">
+               </Location>
+               <Location
+                  uuid = "6421C8CC-4CB4-479D-A1D5-361209F4C38F - 79ebc7ca9e517e40"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(16) await resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "135"
+                  endingLineNumber = "135">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "552BE174-09CF-433D-9386-4D2B381DE7AB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
+            landmarkName = "setupParameters()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "552BE174-09CF-433D-9386-4D2B381DE7AB - 161064f3622b2784"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(17) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "136"
+                  endingLineNumber = "136">
+               </Location>
+               <Location
+                  uuid = "552BE174-09CF-433D-9386-4D2B381DE7AB - a74ccfe1c703c07d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(18) await resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "136"
+                  endingLineNumber = "136">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FE35A208-6E8F-4A2F-9CE0-F0A20883975B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
+            landmarkName = "convertRemoteToCacheQuest(list:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "FE35A208-6E8F-4A2F-9CE0-F0A20883975B - 724c2a01c0766ccc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VocabularyForest.QuestService.convertRemoteToCacheQuest(list: VocabularyForest.RemoteQuestListModel) async -&gt; VocabularyForest.Resource&lt;Swift.Bool&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "212"
+                  endingLineNumber = "212">
+               </Location>
+               <Location
+                  uuid = "FE35A208-6E8F-4A2F-9CE0-F0A20883975B - 3f29f43d760fa8ca"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for VocabularyForest.QuestService.convertRemoteToCacheQuest(list: VocabularyForest.RemoteQuestListModel) async -&gt; VocabularyForest.Resource&lt;Swift.Bool&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "212"
+                  endingLineNumber = "212">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38396D00-AA72-4386-A30C-818B732A7B0F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "fetchConfigParameters()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "38396D00-AA72-4386-A30C-818B732A7B0F - 2bc4370858b4735c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VocabularyForest.RemoteConfigRepository.fetchConfigParameters() async -&gt; VocabularyForest.Resource&lt;VocabularyForest.RemoteConfigResponse&lt;VocabularyForest.ConfigParametersList&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85">
+               </Location>
+               <Location
+                  uuid = "38396D00-AA72-4386-A30C-818B732A7B0F - ce2aa8998a98dd53"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for VocabularyForest.RemoteConfigRepository.fetchConfigParameters() async -&gt; VocabularyForest.Resource&lt;VocabularyForest.RemoteConfigResponse&lt;VocabularyForest.ConfigParametersList&gt;&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0C96063E-C990-41F2-83A1-A86FE49FBB35"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "convertRemoteToCacheQuest(list:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "91D4DE51-071B-4328-B582-971C3E02C96B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
+            landmarkName = "convertRemoteToCacheQuest(list:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "91D4DE51-071B-4328-B582-971C3E02C96B - 724c2a01c0766c40"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for VocabularyForest.QuestService.convertRemoteToCacheQuest(list: VocabularyForest.RemoteQuestListModel) async -&gt; VocabularyForest.Resource&lt;Swift.Bool&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "216"
+                  endingLineNumber = "216">
+               </Location>
+               <Location
+                  uuid = "91D4DE51-071B-4328-B582-971C3E02C96B - 3f29f43d760fa846"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for VocabularyForest.QuestService.convertRemoteToCacheQuest(list: VocabularyForest.RemoteQuestListModel) async -&gt; VocabularyForest.Resource&lt;Swift.Bool&gt;"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/QuestService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "216"
+                  endingLineNumber = "216">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "51A81331-6B68-4DB1-9E6D-C2FB7A73380A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "processAndGetLocalReward(from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A1EC4AF5-5D5F-4532-B8AC-FE03B7FEBE40"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "processAndGetLocalReward(from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E78E2E2B-5F89-45B7-A038-762D9C57B190"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "posterReference(for:imageSource:assetName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "03C47A6B-0A18-4CB3-AD63-E327535878B0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "processAndGetLocalReward(from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E8D0725F-9026-4B9E-9C7E-E7102F9018A4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "processAndGetLocalReward(from:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4D8EE068-2B4D-4BC2-B16E-AED19D81FC51"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "convertRemoteToCacheQuest(list:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "11E4C035-0EF4-414B-9488-A3A631C9AB55"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Packages/CoreAPI/Sources/CoreAPI/NetworkManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "request(endpoint:type:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E79AE936-990C-4A16-9DCA-7E353F0931BA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Packages/CoreAPI/Sources/CoreAPI/NetworkManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "request(endpoint:type:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D5FCFAE4-3364-4F5F-BE47-02D9B12355F9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Adventure/RewardRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
+            landmarkName = "downloadAndSaveImageIfNeeded(remotePath:localKey:version:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F74A3887-B451-411A-A5F7-8BB22C54A771"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Network/Repository/Documentary/OfflineAssetManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "saveImageToAssets(data:imageName:version:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
