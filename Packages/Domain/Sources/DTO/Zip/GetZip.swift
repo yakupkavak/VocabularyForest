@@ -7,9 +7,7 @@
 
 import Alamofire
 import CoreAPI
-import YakoSwift
 
-@DefaultInit
 public enum GetZip: EndPoint {
     
     case zip(_ value: GetZipRequestModel, baseURL: String)

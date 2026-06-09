@@ -1,5 +1,5 @@
 {
-  "originHash" : "f6609a391c3c43bf109c80b76905e15b08c326812e83e2f2c70caca289b3bbf6",
+  "originHash" : "01b7baade8957f86cb2bc3789e4d870de2ba86fc48bb207bcc1637540bdd0288",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -179,6 +179,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "yakoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yakupkavak/YakoSwift",
+      "state" : {
+        "revision" : "281a29d69f9a10c70b4f235b665e558cc13684d3",
+        "version" : "1.0.0"
       }
     },
     {

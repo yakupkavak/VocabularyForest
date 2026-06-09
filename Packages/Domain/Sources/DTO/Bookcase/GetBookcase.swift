@@ -7,7 +7,6 @@
 
 import Alamofire
 import CoreAPI
-import YakoSwift
 
 public enum GetBookcase: EndPoint {
     

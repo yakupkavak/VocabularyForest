@@ -51,7 +51,6 @@
 
 /* Begin PBXFileReference section */
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3739F3382F71C38C00D3013D /* YakoSwift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YakoSwift; sourceTree = "<group>"; };
 		375FE02D2F7005E700765018 /* CoreAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreAPI; sourceTree = "<group>"; };
 		375FE02E2F7005E700765018 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		375FE1AA2F70071100765018 /* Router */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Router; sourceTree = "<group>"; };
@@ -205,7 +204,6 @@
 		37BFA0632F6E6778007C20E7 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				3739F3382F71C38C00D3013D /* YakoSwift */,
 				375FE1AA2F70071100765018 /* Router */,
 				3791D1A12F6EBC0A002D219E /* DependencyContainer */,
 				375FE02D2F7005E700765018 /* CoreAPI */,

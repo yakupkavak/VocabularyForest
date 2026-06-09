@@ -26,16 +26,6 @@ extension ForestDataManager {
     enum ContextType {
         case main
         case background
-        
-        var context: NSManagedObjectContext {
-            let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-            return switch self {
-            case .main:
-                coreDataManager.viewContext
-            case .background:
-                coreDataManager.backgroundContext
-            }
-        }
     }
     enum ForestConstants {
         static let initialLandHealthPercent = Int16(100)
@@ -85,11 +75,14 @@ class ForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - PROPERTIES
     
+    private let coreDataManager: CoreDataManagerProtocol
     weak var notificationManager: (any NotificationManagerProtocol)?
     
     // MARK: - INIT
     
-    init() { }
+    init(coreDataManager: CoreDataManagerProtocol) {
+        self.coreDataManager = coreDataManager
+    }
     
     // MARK: - UPDATE QUESTS
         /*
@@ -151,8 +144,8 @@ class ForestDataManager: ForestDataManagerProtocol {
     }
     
     func checkAndUpdateRain(contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return .error(error: ForestError.emptyForest)
             }
@@ -199,8 +192,8 @@ class ForestDataManager: ForestDataManagerProtocol {
 extension ForestDataManager {
     
     func createForest(contextType: ContextType) -> Resource<Forest> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             let forest = Forest(context: context)
             forest.rainValue = ForestConstants.initialRainValue
             forest.isRaining = false
@@ -237,7 +230,7 @@ extension ForestDataManager {
 
 extension ForestDataManager {
     func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
-        let context = contextType.context
+        let context = getContext(for: contextType)
         return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
@@ -267,14 +260,14 @@ extension ForestDataManager {
 extension ForestDataManager {
     
     func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel> {
-        return contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == id }) {
                 do {
-                    let questTrack = try coreDataQuest.safeObject(context: contextType.context)
+                    let questTrack = try coreDataQuest.safeObject(context: context)
                     return Resource.success(questTrack)
                 }catch {
                     print("\(error.localizedDescription)")
@@ -287,8 +280,8 @@ extension ForestDataManager {
     }
     
     func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
@@ -312,8 +305,9 @@ extension ForestDataManager {
     }
     
     func fetchForestStatus(contextType: ContextType) -> Resource<ForestStatusModel> {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
             let model = ForestStatusModel(
@@ -327,15 +321,16 @@ extension ForestDataManager {
     }
     
     func fetchQuestTracks(contextType: ContextType) -> Resource<[QuestTrackModel]> {
-        contextType.context.performAndWait {
-            guard let forest = getCurrentForest(context: contextType.context) else {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.emptyForest)
             }
             var questList: [QuestTrackModel] = []
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest] {
                 for quest in quests {
                     do {
-                        let questModel = try quest.safeObject(context: contextType.context)
+                        let questModel = try quest.safeObject(context: context)
                         questList.append(questModel)
                     } catch {
                         print(SafeModelError.invalidMapping.localizedDescription)
@@ -353,23 +348,12 @@ extension ForestDataManager {
     
 }
 
-/// If the resource downloaded successfully, then we will import core data via this struct.
-struct ReadyRewardModel {
-    let id: String
-    let category: QuestRewardModel
-    let rewardCount: Int
-    let displayName: RemoteLocalizedText
-    let assetSource: RewardAssetReference
-    let posterImage: RewardAssetReference
-}
-
 // MARK: - UPDATE HELPERS
 
 extension ForestDataManager {
     
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws {
-        let context = contextType.context
-        
+        let context = getContext(for: contextType)
         return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 throw ForestError.emptyForest
@@ -441,8 +425,8 @@ extension ForestDataManager {
         ownerId: String,
         contextType: ContextType
     ) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             if let oldForest = getCurrentForest(context: context) {
                 context.delete(oldForest)
             }
@@ -520,8 +504,8 @@ extension ForestDataManager {
     }
     
     func bindForestToUser(uid: String, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return .error(error: ForestError.emptyForest)
             }
@@ -536,8 +520,8 @@ extension ForestDataManager {
     }
     
     func updateLastSyncCloudTime(date: Date, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return .error(error: ForestError.emptyForest)
             }
@@ -555,7 +539,7 @@ extension ForestDataManager {
     }
     
     func updateQuest(questTrack: QuestTrackModel, contextType: ContextType) -> Resource<Bool> {
-        let context = contextType.context
+        let context = getContext(for: contextType)
         guard let forest = getCurrentForest(context: context) else {
             return Resource.error(error: ForestError.saveError)
         }
@@ -578,8 +562,8 @@ extension ForestDataManager {
     }
         
     func updateRainValue(rain: Int, contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
@@ -596,8 +580,8 @@ extension ForestDataManager {
     }
     
     func startRain(contextType: ContextType) -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
@@ -616,8 +600,8 @@ extension ForestDataManager {
     }
     
     func updateMoneyValue(money: Int, contextType: ContextType)  -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
@@ -634,8 +618,8 @@ extension ForestDataManager {
     }
     
     func updateDiamondValue(diamond: Int, contextType: ContextType)  -> Resource<Bool> {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
@@ -656,9 +640,18 @@ extension ForestDataManager {
 
 private extension ForestDataManager {
     
+    private func getContext(for type: ContextType) -> NSManagedObjectContext {
+        switch type {
+        case .main:
+            return coreDataManager.viewContext
+        case .background:
+            return coreDataManager.backgroundContext
+        }
+    }
+    
     func scheduleHealthNotifications(contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else { return }
             
             Task { @MainActor [weak self] in
@@ -696,8 +689,8 @@ private extension ForestDataManager {
     }
         
     func setupQuests(questList: [QuestModel], contextType: ContextType) {
-        contextType.context.performAndWait {
-            let context = contextType.context
+        let context = getContext(for: contextType)
+        return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else { return }
             for model in questList {
                 let quest = Quest(context: context)
@@ -726,6 +719,7 @@ private extension ForestDataManager {
     }
     
     private func generateValidPosition(for type: ForestObjectType, contextType: ContextType) -> (x: Double, y: Double) {
+        let context = getContext(for: contextType)
         let xRange = -0.33...0.56
         let yRange = 0.18...0.5
         
@@ -735,7 +729,7 @@ private extension ForestDataManager {
         
         var existingPositions: [(Double, Double)] = []
         
-        if let forest = getCurrentForest(context: contextType.context) {
+        if let forest = getCurrentForest(context: context) {
             if let trees = forest.trees?.allObjects as? [Tree] {
                 existingPositions.append(contentsOf: trees.map { ($0.xPosition, $0.yPosition) })
             }
