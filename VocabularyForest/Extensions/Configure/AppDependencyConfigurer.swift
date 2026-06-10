@@ -13,7 +13,7 @@ enum AppDependencyConfigurer {
         let vocabularyBaseURLProvider = VocabularyBaseURLProvider()
         let networkManager = APIService(vocabularyBaseURLProvider: vocabularyBaseURLProvider)
         let coreData = CoreDataManager()
-        let forestData = ForestDataManager()
+        let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
         let forestEntityService = ForestEntityServiceAdapter(coreDataManager: coreData)
         let audioManager = ForestAudioService()
         let notificationManager = NotificationManager()

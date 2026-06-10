@@ -336,29 +336,6 @@ extension ForestAdventureService {
             return .success(nil)
         }
     }
-    
-    func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool> {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return .error(error: ForestAdventureError.unauthenticated)
-        }
-       // _ = forestManager.claimReward(model: reward, contextType: contextType)
-        let context = contextType.context
-        context.performAndWait {
-            if let forest = forestManager.getCurrentForest(context: context), let dailyActivities = forest.dailyActivities {
-                dailyActivities.dailySpinLastUsedDate = Date()
-                coreDataManager.save(in: context)
-            }
-        }
-        let docRef = db.collection(ForestSyncConstants.usersCollection).document(uid).collection(ForestSyncConstants.dailyRewardsCollection).document(ForestSyncConstants.metadataDocument)
-        docRef.setData([
-            ForestSyncConstants.dailySpinLastUsedDateField: FieldValue.serverTimestamp()
-        ], merge: true) { error in
-            if let error = error {
-                print("Background Firebase write error: \(error.localizedDescription)")
-            }
-        }
-        return .success(true)
-    }
 }
 
 // MARK: - PRIVATE HELPERS

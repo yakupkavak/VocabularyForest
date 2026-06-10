@@ -75,13 +75,15 @@ class ForestDataManager: ForestDataManagerProtocol {
     
     // MARK: - PROPERTIES
     
-    private let coreDataManager: CoreDataManagerProtocol
+    private let mainContext: NSManagedObjectContext
+    private let backgroundContext: NSManagedObjectContext
     weak var notificationManager: (any NotificationManagerProtocol)?
     
     // MARK: - INIT
     
-    init(coreDataManager: CoreDataManagerProtocol) {
-        self.coreDataManager = coreDataManager
+    init(mainContext: NSManagedObjectContext, backgroundContext: NSManagedObjectContext) {
+        self.mainContext = mainContext
+        self.backgroundContext = backgroundContext
     }
     
     // MARK: - UPDATE QUESTS
@@ -643,9 +645,9 @@ private extension ForestDataManager {
     private func getContext(for type: ContextType) -> NSManagedObjectContext {
         switch type {
         case .main:
-            return coreDataManager.viewContext
+            return mainContext
         case .background:
-            return coreDataManager.backgroundContext
+            return backgroundContext
         }
     }
     

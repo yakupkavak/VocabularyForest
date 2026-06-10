@@ -327,13 +327,15 @@ private struct PolicySheetView: View {
 }
 
 #Preview {
+    let coreData = CoreDataManager()
+    let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
     SettingsUI(
         viewModel: SettingsViewModel(
             notificationManager: NotificationManager(),
-            coreDataManager: CoreDataManager(),
+            coreDataManager: coreData,
             authManager: AuthManager(),
             syncManager: ForestSyncManager(),
-            forestManager: ForestDataManager(),
+            forestManager: forestData,
             playerManager: PlayerDataManager()
         )
     )

@@ -14,11 +14,13 @@ import Combine
 struct QuestServiceTests {
     
     var sut: QuestServiceProtocol
-    var mockForestData: MockForestDataManager
+    var mockForestData: ForestDataManagerProtocol
     var mockRewardRepository: MockRewardRepository
     
     init( ) {
-        mockForestData = ForestDataManager()
+        let coreData = CoreDataManager()
+        let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
+        mockForestData = forestData
         mockRewardRepository = MockRewardRepository()
         sut = QuestService(forestManager: mockForestData, rewardRepository: mockRewardRepository)
     }
