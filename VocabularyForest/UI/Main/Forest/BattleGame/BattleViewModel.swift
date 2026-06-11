@@ -353,7 +353,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                         coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .background)
                         _ = playerDataManager.increaseMonthlyLearnedCount(for: questionType, contextType: .background)
                         // TODO: SHOW SAVE ERROR
-                        let saveResult = questService.correctAnswer(questionType: questionType)
+                        try? questService.correctAnswer(questionType: questionType)
                     }
                     output?.correctAnswer()
                 }else {
@@ -422,15 +422,7 @@ extension BattleViewModel: BattleSceneProtocol {
     }
     func playerWon() {
         if let gameLevel, let questionType, let battleMode {
-            let result = questService.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, questionType: questionType)
-            switch result.status {
-            case .success:
-                print("player won saved")
-            case .loading:
-                print("")
-            case .error:
-                print("couldn't save progress")
-            }
+            try? questService.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, questionType: questionType)
         }
         gameStatus.userWon = true
         uiStation = .gameOver

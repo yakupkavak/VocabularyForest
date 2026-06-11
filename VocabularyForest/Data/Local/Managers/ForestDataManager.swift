@@ -80,7 +80,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     // MARK: Fetch Helpers
     
     func getCurrentForest(context: NSManagedObjectContext) -> Forest?
-    func fetchForestStatus(contextType: ForestDataManager.ContextType) -> Resource<ForestStatusModel>
+    func fetchForestStatus(contextType: ForestDataManager.ContextType) throws -> ForestStatusModel
     func fetchSafeForest(contextType: ForestDataManager.ContextType) -> Resource<SafeForestModel>
     
     // MARK: - QUEST HELPERS
@@ -95,8 +95,8 @@ protocol ForestDataManagerProtocol: AnyObject {
     func overwriteLocalForest(with safeForest: SafeForestModel, ownerId: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func bindForestToUser(uid: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateLastSyncCloudTime(date: Date, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) throws
-    func startRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func addRainValue(rain: Int, contextType: ForestDataManager.ContextType) throws
+    func startRain(contextType: ForestDataManager.ContextType) throws
     func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws
@@ -276,11 +276,7 @@ extension ForestDataManager {
                 quest.status = track.status.valueForCoreData
                 quest.lastUpdatedDate = track.lastUpdatedDate
                 forest.addToQuests(quest)
-                do {
-                    try save(context: context)
-                } catch {
-                    throw ForestError.saveError
-                }
+                try save(context: context)
             }
         }
     }
@@ -334,11 +330,11 @@ extension ForestDataManager {
         }
     }
     
-    func fetchForestStatus(contextType: ContextType) -> Resource<ForestStatusModel> {
+    func fetchForestStatus(contextType: ContextType) throws -> ForestStatusModel {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
+                throw ForestError.emptyForest
             }
             let model = ForestStatusModel(
                 rainValue: Int(forest.rainValue),
@@ -346,7 +342,7 @@ extension ForestDataManager {
                 landStatus: forest.landStatus,
                 gold: Int(forest.moneyValue)
             )
-            return Resource.success(model)
+            return model
         }
     }
     
@@ -581,12 +577,13 @@ extension ForestDataManager {
                 quest.status = questTrack.status.valueForCoreData
                 quest.lastUpdatedDate = questTrack.lastUpdatedDate
                 try save(context: context)
+            }else {
+                throw ForestError.emptyList
             }
-            throw ForestError.emptyList
         }
     }
         
-    func updateRainValue(rain: Int, contextType: ContextType) throws {
+    func addRainValue(rain: Int, contextType: ContextType) throws {
         let context = getContext(for: contextType)
         return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
@@ -598,23 +595,17 @@ extension ForestDataManager {
         }
     }
     
-    func startRain(contextType: ContextType) -> Resource<Bool> {
+    func startRain(contextType: ContextType) throws {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.saveError)
+                throw ForestError.saveError
             }
-            forest.rainValue -= Int16(ForestConstant.rainValue)
+            forest.rainValue -= Int16(ForestConstant.rainCostValue)
             forest.landStatus = true
             forest.landHealthPercent = Int16(ForestConstant.healthyLandHealth)
             forest.lastUpdatedDate = Date()
-            do {
-                try save(context: context)
-            }
-            catch {
-                return Resource.error(error: error)
-            }
-            return Resource.success(true)
+            try save(context: context)
         }
     }
     

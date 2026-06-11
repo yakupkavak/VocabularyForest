@@ -39,7 +39,7 @@ protocol ForestAdventureServiceProtocol {
     //func fetchDailySpinStatusDate() async -> Resource<Date?>
     //func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
     //func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
-    func claimQuestReward(quest: QuestModel) -> Resource<Bool>
+    func claimQuestReward(quest: QuestModel) throws
 }
 
 // MARK: - CONSTANTS
@@ -200,11 +200,11 @@ private extension ForestAdventureService {
 // MARK: - QUEST HELPERS
 
 extension ForestAdventureService: ForestAdventureServiceProtocol {
-    func claimQuestReward(quest: QuestModel) -> Resource<Bool> {
+    func claimQuestReward(quest: QuestModel) throws{
         Task {
-            try? await rewardRepository.claimLocalReward(reward: quest.reward)
+            try await rewardRepository.claimLocalReward(reward: quest.reward)
         }
-        return questService.claimQuestReward(quest: quest)
+        try questService.claimQuestReward(quest: quest)
     }
 }
 

@@ -18,14 +18,14 @@ protocol QuestServiceProtocol {
     var questList: [QuestModel] { get }
     func updateQuest(track: QuestTrackModel) -> Resource<Bool>
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool>
-    func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool>
-    func claimQuestReward(quest: QuestModel) -> Resource<Bool>
+    func correctAnswer(questionType: BattleQuestionType) throws
+    func claimQuestReward(quest: QuestModel) throws
     func fetchCurrentQuestTracks() throws -> [QuestTrackModel]
     func winGame(
         gameLevel: GameLevel,
         battleEnemyMode: BattleEnemyModel,
         questionType: BattleQuestionType
-    ) -> Resource<Bool>
+    ) throws
 }
 
 final class QuestService {
@@ -59,11 +59,11 @@ extension QuestService: QuestServiceProtocol {
         $activeQuests.eraseToAnyPublisher()
     }
     
-    func claimQuestReward(quest: QuestModel) -> Resource<Bool> {
+    func claimQuestReward(quest: QuestModel) throws {
         if activeQuests.isEmpty {
-            return .error(error: QuestServiceError.emptyQuestList)
+            throw QuestServiceError.emptyQuestList
         }
-        activeQuests = activeQuests.map { active in
+        activeQuests = try activeQuests.map { active in
             var updatedQuest = active
             if updatedQuest.id == quest.id {
                 updatedQuest.status = .claimed
@@ -74,14 +74,10 @@ extension QuestService: QuestServiceProtocol {
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
-                if forestManager.updateQuest(questTrack: questTrack, contextType: .background).status == .error {
-                    print("Update quest error")
-                    return active
-                }
+                try forestManager.updateQuest(questTrack: questTrack, contextType: .background)
             }
             return updatedQuest
         }
-        return Resource.success(true)
     }
     
     ///It increases due to specific quests such as Dragons.
@@ -89,11 +85,11 @@ extension QuestService: QuestServiceProtocol {
         gameLevel: GameLevel,
         battleEnemyMode: BattleEnemyModel,
         questionType: BattleQuestionType
-    ) -> Resource<Bool> {
+    ) throws {
         if activeQuests.isEmpty {
-            return .error(error: QuestServiceError.emptyQuestList)
+            throw QuestServiceError.emptyQuestList
         }
-        activeQuests = activeQuests.map { quest in
+        activeQuests = try activeQuests.map { quest in
             var updatedQuest = quest
             if updatedQuest.questionType == questionType && updatedQuest.battleEnemyModel == battleEnemyMode && updatedQuest.gameLevel == gameLevel {
                 
@@ -109,21 +105,18 @@ extension QuestService: QuestServiceProtocol {
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
-                if forestManager.updateQuest(questTrack: questTrack, contextType: .background).status == .error {
-                    print("Update quest error")
-                }
+                try forestManager.updateQuest(questTrack: questTrack, contextType: .background)
             }
             return updatedQuest
         }
-        return Resource.success(true)
     }
     
     ///It only increases daily quest because it's only counts the correct word amount, not how many enemy defeated.
-    func correctAnswer(questionType: BattleQuestionType) -> Resource<Bool> {
+    func correctAnswer(questionType: BattleQuestionType) throws {
         if activeQuests.isEmpty {
-            return .error(error: QuestServiceError.emptyQuestList)
+            throw QuestServiceError.emptyQuestList
         }
-        activeQuests = activeQuests.map { quest in
+        activeQuests = try activeQuests.map { quest in
             var updatedQuest = quest
             if updatedQuest.questionType == questionType && updatedQuest.type == .daily {
                 updatedQuest.currentProgressCount += 1
@@ -137,13 +130,10 @@ extension QuestService: QuestServiceProtocol {
                     status: updatedQuest.status,
                     currentProgressCount: updatedQuest.currentProgressCount
                 )
-                if forestManager.updateQuest(questTrack: questTrack, contextType: .background).status == .error {
-                    print("Update quest error")
-                }
+                try forestManager.updateQuest(questTrack: questTrack, contextType: .background)
             }
             return updatedQuest
         }
-        return Resource.success(true)
     }
     
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool> {

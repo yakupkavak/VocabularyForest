@@ -299,7 +299,9 @@ extension ForestViewModel {
                 sortDescriptors: nil,
                 contextType: .background
             )
-            let statusResult = forestDataManager.fetchForestStatus(contextType: .background)
+            guard let forestData = try? forestDataManager.fetchForestStatus(contextType: .background) else {
+                return
+            }
 
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
@@ -336,22 +338,20 @@ extension ForestViewModel {
                     output?.setupPlant(plant: tree)
                 }
                 
-                if let forestData = statusResult.data {
-                    forestStatus = ForestStatusModel(
-                        rainValue: forestData.rainValue,
-                        landHealthPercentage: forestData.landHealthPercentage,
-                        landStatus: forestData.landStatus,
-                        gold: forestData.gold
-                    )
-                    
-                    if forestData.rainValue >= 50 { self.showRainButton = true }
-                    
-                    if let landHealthPercentage = forestStatus?.landHealthPercentage {
-                        if landHealthPercentage == 0 {
-                            output?.startDrought()
-                        } else if landHealthPercentage <= 50 {
-                            output?.startFade()
-                        }
+                forestStatus = ForestStatusModel(
+                    rainValue: forestData.rainValue,
+                    landHealthPercentage: forestData.landHealthPercentage,
+                    landStatus: forestData.landStatus,
+                    gold: forestData.gold
+                )
+                
+                if forestData.rainValue >= 50 { self.showRainButton = true }
+                
+                if let landHealthPercentage = forestStatus?.landHealthPercentage {
+                    if landHealthPercentage == 0 {
+                        output?.startDrought()
+                    } else if landHealthPercentage <= 50 {
+                        output?.startFade()
                     }
                 }
                 
@@ -363,7 +363,7 @@ extension ForestViewModel {
     func startRain() {
         showRainButton = false
         output?.startRain()
-        forestDataManager.startRain(contextType: .background)
+        try? forestDataManager.startRain(contextType: .background)
         var time = 0
         
         rainTimeCancellable?.cancel()
