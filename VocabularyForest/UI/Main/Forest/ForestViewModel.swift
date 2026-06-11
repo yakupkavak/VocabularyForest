@@ -292,8 +292,8 @@ extension ForestViewModel {
                 // TODO: - CREATE FOREST IF NOT CREATED
             }
             
-            let fetchedAnimals = forestEntityService.fetchAnimals(contextType: .background).data ?? []
-            let fetchedSculptures = forestEntityService.fetchSculptures(contextType: .background).data ?? []
+            let fetchedAnimals = try forestEntityService.fetchAnimals(contextType: .background)
+            let fetchedSculptures = try forestEntityService.fetchSculptures(contextType: .background)
             let fetchedTrees = forestEntityService.fetchTrees(contextType: .background).data ?? []
             let fetchedBookcases = coreDataManager.fetchSafeBookcases(
                 sortDescriptors: nil,

@@ -246,6 +246,9 @@ extension ForestDataManager {
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
                 sculpture.lastUpdatedDate = Date()
+                sculpture.assetSourceString = ImageSourceType.appAssets.rawValue
+                sculpture.posterKey = sculptureModel.assetName
+                sculpture.posterSourceString = ImageSourceType.appAssets.rawValue
                 forest.addToSculptures(sculpture)
             }
             do {
