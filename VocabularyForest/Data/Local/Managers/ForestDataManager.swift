@@ -9,15 +9,46 @@ import CoreData
 import UserNotifications
 import DependencyContainer
 
-enum ForestError: Error {
+// MARK: - FOREST ERROR
+
+enum ForestError: Error, Equatable {
     case emptyList
     case emptyForest
     case saveError
     case safeObject
-    case error(error: Error)
     case emptyUUID
     case emptyLastDate
     case alreadyExistQuest
+    case invalidQuestID
+}
+
+extension ForestError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .emptyList:
+            return "The list is empty or the expected data could not be found."
+            
+        case .emptyForest:
+            return "Forest data not found. Please create a forest first."
+            
+        case .saveError:
+            return "An error occurred while saving data to the database."
+            
+        case .safeObject:
+            return "Failed to convert the data into a safe object."
+            
+        case .emptyUUID:
+            return "A valid object identifier (UUID) could not be found."
+            
+        case .emptyLastDate:
+            return "The last updated date could not be found."
+            
+        case .alreadyExistQuest:
+            return "This quest already exists in the forest."
+        case .invalidQuestID:
+            return "This quest haven't been initalized."
+        }
+    }
 }
 
 // MARK: - CONTEXT ENUM
@@ -40,7 +71,7 @@ extension ForestDataManager {
 protocol ForestDataManagerProtocol: AnyObject {
     
     func checkGame(contextType: ForestDataManager.ContextType)
-    func checkAndUpdateRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func checkAndUpdateRain(contextType: ForestDataManager.ContextType) throws
     
     // MARK: Create Helpers
     
@@ -55,16 +86,16 @@ protocol ForestDataManagerProtocol: AnyObject {
     // MARK: - QUEST HELPERS
     
     func fetchQuestTracks(contextType: ForestDataManager.ContextType) -> Resource<[QuestTrackModel]>
-    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel>
-    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func updateQuest(questTrack: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) throws -> QuestTrackModel
+    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) throws
+    func updateQuest(questTrack: QuestTrackModel, contextType: ForestDataManager.ContextType) throws
     
     // MARK: Update Helpers
     
     func overwriteLocalForest(with safeForest: SafeForestModel, ownerId: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func bindForestToUser(uid: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateLastSyncCloudTime(date: Date, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func updateRainValue(rain: Int, contextType: ForestDataManager.ContextType) throws
     func startRain(contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
@@ -141,23 +172,23 @@ class ForestDataManager: ForestDataManagerProtocol {
     */
     
     func checkGame(contextType: ContextType) {
-        checkAndUpdateRain(contextType: contextType)
+        try? checkAndUpdateRain(contextType: contextType)
         //checkAndResetTimeBasedQuests(helper: ForestGameHelper(), contextType: contextType)
     }
     
-    func checkAndUpdateRain(contextType: ContextType) -> Resource<Bool> {
+    func checkAndUpdateRain(contextType: ContextType) throws {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return .error(error: ForestError.emptyForest)
+                throw ForestError.emptyForest
             }
             
             let now = Date()
             
             guard let lastUpdate = forest.lastRainUpdateDate else {
                 forest.lastRainUpdateDate = now
-                try? save(context: context)
-                return .success(true)
+                try save(context: context)
+                return
             }
             
             let decayInterval: TimeInterval = 3600
@@ -177,13 +208,12 @@ class ForestDataManager: ForestDataManagerProtocol {
                         try save(context: context)
                         scheduleHealthNotifications(contextType: contextType)
                     } catch {
-                        return .error(error: ForestError.saveError)
+                        throw ForestError.saveError
                     }
                 }
             }
             
             scheduleHealthNotifications(contextType: contextType)
-            return .success(true)
         }
     }
     
@@ -231,14 +261,14 @@ extension ForestDataManager {
 // MARK: - QUEST HELPERS
 
 extension ForestDataManager {
-    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
+    func importQuest(track: QuestTrackModel, contextType: ForestDataManager.ContextType) throws {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
+                throw ForestError.emptyForest
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let _ = quests.first(where: { $0.id == track.id }) {
-                return Resource.error(error: ForestError.alreadyExistQuest)
+                throw ForestError.alreadyExistQuest
             } else {
                 let quest = Quest(context: context)
                 quest.currentProgressCount = Int16(track.currentProgressCount)
@@ -248,9 +278,8 @@ extension ForestDataManager {
                 forest.addToQuests(quest)
                 do {
                     try save(context: context)
-                    return .success(true)
                 } catch {
-                    return .error(error: ForestError.saveError)
+                    throw ForestError.saveError
                 }
             }
         }
@@ -261,22 +290,21 @@ extension ForestDataManager {
 
 extension ForestDataManager {
     
-    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) -> Resource<QuestTrackModel> {
+    func fetchQuestTrack(id: String, contextType: ForestDataManager.ContextType) throws -> QuestTrackModel {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.emptyForest)
+                throw ForestError.emptyForest
             }
             if let questSet = forest.quests, let quests = questSet.allObjects as? [Quest], let coreDataQuest = quests.first(where: { $0.id == id }) {
                 do {
                     let questTrack = try coreDataQuest.safeObject(context: context)
-                    return Resource.success(questTrack)
+                    return questTrack
                 }catch {
-                    print("\(error.localizedDescription)")
-                    return .error(error: error)
+                    throw error
                 }
             } else {
-                return .error(error: ForestError.emptyForest)
+                throw ForestError.emptyForest
             }
         }
     }
@@ -540,44 +568,33 @@ extension ForestDataManager {
         }
     }
     
-    func updateQuest(questTrack: QuestTrackModel, contextType: ContextType) -> Resource<Bool> {
+    func updateQuest(questTrack: QuestTrackModel, contextType: ContextType) throws {
         let context = getContext(for: contextType)
         guard let forest = getCurrentForest(context: context) else {
-            return Resource.error(error: ForestError.saveError)
+            throw ForestError.saveError
         }
-        return context.performAndWait {
+        try context.performAndWait {
             if let questList = forest.quests, let quests = questList.allObjects as? [Quest] {
-                guard let quest = quests.first(where: { $0.id == questTrack.id }) else { return Resource.error(error: nil)
+                guard let quest = quests.first(where: { $0.id == questTrack.id }) else { throw ForestError.invalidQuestID
                 }
                 quest.currentProgressCount = Int16(questTrack.currentProgressCount)
                 quest.status = questTrack.status.valueForCoreData
                 quest.lastUpdatedDate = questTrack.lastUpdatedDate
-                do {
-                    try save(context: context)
-                } catch {
-                    return Resource.error(error: ForestError.saveError)
-                }
-                return Resource.success(true)
+                try save(context: context)
             }
-            return Resource.error(error: ForestError.emptyList)
+            throw ForestError.emptyList
         }
     }
         
-    func updateRainValue(rain: Int, contextType: ContextType) -> Resource<Bool> {
+    func updateRainValue(rain: Int, contextType: ContextType) throws {
         let context = getContext(for: contextType)
-        return context.performAndWait {
+        return try context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
-                return Resource.error(error: ForestError.saveError)
+                throw ForestError.saveError
             }
             forest.rainValue += Int16(rain)
             forest.lastUpdatedDate = Date()
-            do {
-                try save(context: context)
-            }
-            catch {
-                return Resource.error(error: error)
-            }
-            return Resource.success(true)
+            try save(context: context)
         }
     }
     

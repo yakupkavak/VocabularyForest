@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct QuestTrackModel {
+struct QuestTrackModel: Equatable {
     let id: String
     let lastUpdatedDate: Date
     let status: QuestStatus

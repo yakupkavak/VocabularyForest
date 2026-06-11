@@ -162,7 +162,7 @@ extension QuestService: QuestServiceProtocol {
                     return Resource<Bool>.error(error: RewardRepositoryError.decodingError)
                 }
                 
-                if let questTrack = forestManager.fetchQuestTrack(id: id, contextType: .background).data {
+                if let questTrack = try? forestManager.fetchQuestTrack(id: id, contextType: .background) {
                     ///Already fetched quest
                     let quest = QuestModel(
                         id: id,
@@ -201,12 +201,14 @@ extension QuestService: QuestServiceProtocol {
                         battleEnemyModel: BattleEnemyModel.convertFromCoreData(string: battleEnemyModel),
                         gameLevel: GameLevel.convertFromCoreData(value: gameLevel)
                     )
-                    let importResult = forestManager.importQuest(track: track, contextType: .background)
-                    if importResult.status == .success {
+                    do {
+                        try forestManager.importQuest(track: track, contextType: .background)
                         questList.append(quest)
-                    }else {
-                        return importResult
+                    }catch {
+                        print(error.localizedDescription)
+                        return .error(error: error)
                     }
+                    return .success(true)
                 }
             }else {
                 return Resource.error(error: ForestAdventureError.emptyValueFromConfig)
