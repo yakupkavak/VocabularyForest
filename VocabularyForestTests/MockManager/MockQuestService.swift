@@ -14,27 +14,49 @@ import Combine
 struct QuestServiceTests {
     
     var sut: QuestServiceProtocol
-    var mockForestData: ForestDataManagerProtocol
+    var forestDataManager: ForestDataManagerProtocol
     var mockRewardRepository: MockRewardRepository
     
     init( ) {
         let coreData = CoreDataManager(inMemory: true)
         let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
-        mockForestData = forestData
+        forestDataManager = forestData
         mockRewardRepository = MockRewardRepository()
-        sut = QuestService(forestManager: mockForestData, rewardRepository: mockRewardRepository)
+        mockRewardRepository.processReturnValue = LocalRewardModel(rewardCount: 2, reward: LocalRewardType.mock())
+        sut = QuestService(forestManager: forestDataManager, rewardRepository: mockRewardRepository)
     }
     
-    @Test("Quest tamamlandığında doğru reward claim ediliyor mu?")
-    func testClaimQuestReward() async throws {
-        /*
-        let dummyModel = LocalQuestRewardModel.mock()
+    @Test("Can service convert remote config file")
+    func convertRemoteData() async throws {
+        await forestDataManager.createForest(contextType: .main)
+        let questData = try await TestBundleHelper.loadMockJSON(filename: "mock_quests_config", model: RemoteQuestListModel.self)
+        await sut.convertRemoteToCacheQuest(list: questData)
+        #expect(sut.questList.contains { $0.id == "daily_nature_elemental_competitive_gold_target4_reward4" }, "Quest List added")
+    }
+    
+    @Test("Could convert remote rewards")
+    @MainActor
+    func testAllRewardsConvertedSuccessfully() async throws {
         
-        mockRewardRepository.processReturnValue = LocalRewardModel(rewardCount: 10, reward: .standart(model: dummyModel))
-     
-        let result = await sut.claimQuestReward(quest: QuestModel.mock())
+        forestDataManager.createForest(contextType: .main)
+        let questData = try await TestBundleHelper.loadMockJSON(filename: "mock_quests_config", model: RemoteQuestListModel.self)
         
-        #expect(mockRewardRepository.claimCallCount == 1, "Ödül veritabanına eklenmedi!")
-         */
+        await sut.convertRemoteToCacheQuest(list: questData)
+        let expectedCount = questData.items.count
+        let actualCount = sut.questList.count
+        #expect(
+            actualCount == expectedCount,
+            " expected \(expectedCount) and actual \(actualCount) are not equal!"
+        )
+       
+        for quest in sut.questList {
+            #expect(quest.reward.rewardCount > 0, "\(quest.id) in this quest id reward nil!")
+            switch quest.reward.reward {
+            case .standart(let model):
+                #expect(!model.assetName.isEmpty, "\(quest.id) in this quest asset name empty")
+            case .chest(let model):
+                #expect(!model.id.isEmpty, "\(quest.id) in this quest chesd id nil!")
+            }
+        }
     }
 }

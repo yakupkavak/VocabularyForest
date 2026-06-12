@@ -198,7 +198,7 @@ extension QuestService: QuestServiceProtocol {
                         print(error.localizedDescription)
                         return .error(error: error)
                     }
-                    return .success(true)
+                    continue
                 }
             }else {
                 return Resource.error(error: ForestAdventureError.emptyValueFromConfig)

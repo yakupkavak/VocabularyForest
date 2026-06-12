@@ -12,3 +12,9 @@ extension LocalRewardModel {
         LocalRewardModel(rewardCount: rewardCount, reward: reward)
     }
 }
+
+extension LocalRewardType {
+    static func mock() -> LocalRewardType {
+        LocalRewardType.standart(model: LocalQuestRewardModel.mock())
+    }
+}
