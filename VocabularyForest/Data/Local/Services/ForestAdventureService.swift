@@ -101,6 +101,7 @@ private extension ForestAdventureService {
         let chestRewardID = UserDefaults.standard.string(forKey: DefaultsKeys.chestRewardConfig)
         
         Task {
+            do {
             let parameters = await remoteConfigRepository.fetchConfigParameters().data
             
             if adventureRoadID == parameters?.model.adventureRoadConfigVersion {
@@ -125,15 +126,14 @@ private extension ForestAdventureService {
             
             if questsID == parameters?.model.questsConfigVersion {
                 /// Return from local
-                let response = await documentRepository.fetchQuestsConfig()
-                if let list = response.data {
-                    await questService.convertRemoteToCacheQuest(list: list)
-                }
-            } else if let questsVersion = parameters?.model.questsConfigVersion {
+                let response = try await documentRepository.fetchQuestsConfig()
+                await questService.convertRemoteToCacheQuest(list: response)
+                
+            }else if let questsVersion = parameters?.model.questsConfigVersion {
                 UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
                 if let remoteResponse = await remoteConfigRepository.fetchQuestsConfig().data {
                     await questService.convertRemoteToCacheQuest(list: remoteResponse.model)
-                    await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
+                    try await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
                 }
             }
             
@@ -156,6 +156,9 @@ private extension ForestAdventureService {
             } else if let chestRewardVersion = parameters?.model.chestRewardsConfigVersion {
                 UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
+            }
+            }catch {
+                print(error)
             }
         }
     }

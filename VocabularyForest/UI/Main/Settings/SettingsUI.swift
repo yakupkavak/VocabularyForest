@@ -60,6 +60,7 @@ struct SettingsUI: View {
             .padding(.horizontal)
             .tint(.red)
             .cornerRadius(10)
+            .accessibilityIdentifier("reset_all_data_button")
             
             Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
                 .font(.caption)
@@ -240,7 +241,7 @@ private extension SettingsUI {
                             showNameEditAlert = true
                         } label: {
                             Image(systemName: "pencil")
-                        }
+                        }.accessibilityIdentifier("edit_username_button")
 
                     }
                     HStack(spacing: 4) {

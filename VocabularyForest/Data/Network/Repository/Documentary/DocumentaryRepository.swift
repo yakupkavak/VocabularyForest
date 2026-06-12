@@ -18,13 +18,13 @@ enum DocumentaryError: Error {
 
 protocol DocumentaryRepositoryProtocol {
     func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel>
-    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel>
+    func fetchQuestsConfig() async throws -> RemoteQuestListModel
     func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel>
     func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<(ConfigParametersList)>
     func saveDailySpinRewards(data: Any?) async -> Resource<Bool>
-    func saveQuestsConfig(data: Any?) async -> Resource<Bool>
+    func saveQuestsConfig(data: Any?) async throws
     func saveWeeklyRewards(data: Any?) async -> Resource<Bool>
     func saveAdventureRoadConfig(data: Any?) async -> Resource<Bool>
     func saveGameEconomyConfig(data: Any?) async -> Resource<Bool>
@@ -47,17 +47,24 @@ final class DocumentaryRepository {
     // MARK: - PROPERTIES
     
     private let fileManager = FileManager.default
+    private let baseDirectoryURL: URL
     
     // MARK: - INIT
     
-    init() {}
+    init(directoryURL: URL? = nil) {
+        if let directoryURL = directoryURL {
+            self.baseDirectoryURL = directoryURL
+        } else {
+            self.baseDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        }
+    }
 }
 
 // MARK: - PRIVATE HELPERS
 
 private extension DocumentaryRepository {
     func getDocumentDirectory() -> URL {
-        return fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        return baseDirectoryURL
     }
     
     func saveToDisk(data: Any?, fileName: String) throws {
@@ -69,9 +76,11 @@ private extension DocumentaryRepository {
         
         if JSONSerialization.isValidJSONObject(data) {
             jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-        } else if let stringData = data as? String, let parsedData = stringData.data(using: .utf8) {
+        }else if let stringData = data as? String, let parsedData = stringData.data(using: .utf8) {
             jsonData = parsedData
-        } else {
+        }else if let rawData = data as? Data {
+            jsonData = rawData
+        }else {
             throw DocumentaryError.encodingFailed
         }
         
@@ -106,13 +115,8 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
         }
     }
     
-    func fetchQuestsConfig() async -> Resource<RemoteQuestListModel> {
-        do {
-            let model = try fetchFromDisk(fileName: FileName.questsConfig, as: RemoteQuestListModel.self)
-            return .success(model)
-        } catch {
-            return .error(error: error)
-        }
+    func fetchQuestsConfig() async throws -> RemoteQuestListModel {
+        try fetchFromDisk(fileName: FileName.questsConfig, as: RemoteQuestListModel.self)
     }
     
     func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel> {
@@ -162,13 +166,8 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
         }
     }
     
-    func saveQuestsConfig(data: Any?) async -> Resource<Bool> {
-        do {
-            try saveToDisk(data: data, fileName: FileName.questsConfig)
-            return .success(true)
-        } catch {
-            return .error(error: error)
-        }
+    func saveQuestsConfig(data: Any?) async throws {
+        try saveToDisk(data: data, fileName: FileName.questsConfig)
     }
     
     func saveWeeklyRewards(data: Any?) async -> Resource<Bool> {

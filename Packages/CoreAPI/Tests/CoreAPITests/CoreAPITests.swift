@@ -3,7 +3,7 @@ import Testing
 import Foundation
 import Alamofire
 
-@Suite("NetworkManager Testleri")
+@Suite("NetworkManager Tests")
 @MainActor
 struct NetworkManagerTests {
     
