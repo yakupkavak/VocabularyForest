@@ -1,5 +1,5 @@
 {
-  "originHash" : "01b7baade8957f86cb2bc3789e4d870de2ba86fc48bb207bcc1637540bdd0288",
+  "originHash" : "fb83904b54380078f61594642c9eb85d5568d24aafefe1f4bf84311d967bd421",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -188,6 +188,15 @@
       "state" : {
         "revision" : "281a29d69f9a10c70b4f235b665e558cc13684d3",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "ykspinwheel",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yakupkavak/YKSpinWheel",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e5d6d6c580edb74240a8b6022965eb3c6590e1ac"
       }
     },
     {

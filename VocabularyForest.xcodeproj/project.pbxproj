@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6CB02FDBD93C00225FE5 /* YKSpinWheel */; };
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
@@ -54,7 +55,6 @@
 		375FE02D2F7005E700765018 /* CoreAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreAPI; sourceTree = "<group>"; };
 		375FE02E2F7005E700765018 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		375FE1AA2F70071100765018 /* Router */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Router; sourceTree = "<group>"; };
-		378816322F83AD6600C2BB52 /* YKSpinWheel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YKSpinWheel; sourceTree = "<group>"; };
 		3791D1A12F6EBC0A002D219E /* DependencyContainer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DependencyContainer; sourceTree = "<group>"; };
 		3791D1A22F6EBDE5002D219E /* VocabularyForest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = VocabularyForest.xctestplan; sourceTree = "<group>"; };
 		37B28C502F74FE75008A7591 /* VocabularyForestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabularyForestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +133,7 @@
 				377BE2C02F854D8E008A13CC /* FirebaseFunctions in Frameworks */,
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
 				377BE2BE2F854D8E008A13CC /* FirebaseFirestore in Frameworks */,
+				371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */,
 				377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */,
 				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */,
@@ -208,7 +209,6 @@
 				3791D1A12F6EBC0A002D219E /* DependencyContainer */,
 				375FE02D2F7005E700765018 /* CoreAPI */,
 				375FE02E2F7005E700765018 /* Domain */,
-				378816322F83AD6600C2BB52 /* YKSpinWheel */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
@@ -265,6 +265,7 @@
 				377BE2CB2F868777008A13CC /* GoogleSignIn */,
 				377BE2CD2F868777008A13CC /* GoogleSignInSwift */,
 				376DE2F62FCABB3E00305BAB /* ZIPFoundation */,
+				371C6CB02FDBD93C00225FE5 /* YKSpinWheel */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -360,6 +361,7 @@
 				377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				377BE2CA2F868777008A13CC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -781,6 +783,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yakupkavak/YKSpinWheel";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -832,6 +842,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		371C6CB02FDBD93C00225FE5 /* YKSpinWheel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */;
+			productName = YKSpinWheel;
+		};
 		37267F0D2E927B8E0019D139 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */;
