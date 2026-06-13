@@ -16,12 +16,8 @@ struct DocumentRepositoryTest {
     var tempTestDirectory: URL
     
     init() {
-        // /dev/null veya In-Memory mantığının dosya sistemindeki karşılığı:
-        // Her test koşumu için benzersiz bir geçici klasör yaratıyoruz.
         self.tempTestDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try? FileManager.default.createDirectory(at: tempTestDirectory, withIntermediateDirectories: true)
-        
-        // Gerçek app verisi güvende! Bütün işlemler bu geçici UUID klasöründe olacak.
         self.sut = DocumentaryRepository(directoryURL: tempTestDirectory)
     }
     

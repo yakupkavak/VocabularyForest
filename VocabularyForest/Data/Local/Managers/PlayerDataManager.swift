@@ -19,16 +19,6 @@ extension PlayerDataManager {
     enum ContextType {
         case main
         case background
-        
-        var context: NSManagedObjectContext {
-            let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-            return switch self {
-            case .main:
-                coreDataManager.viewContext
-            case .background:
-                coreDataManager.backgroundContext
-            }
-        }
     }
 }
 
@@ -45,11 +35,19 @@ protocol PlayerDataManagerProtocol {
 
 class PlayerDataManager {
     
+    let backgroundContext: NSManagedObjectContext
+    let viewContext: NSManagedObjectContext
+    
+    init(backgroundContext: NSManagedObjectContext, viewContext: NSManagedObjectContext) {
+        self.backgroundContext = backgroundContext
+        self.viewContext = viewContext
+    }
+    
 }
 
 extension PlayerDataManager: PlayerDataManagerProtocol {
     func fetchAdventureRoadProgress(contextType: ContextType) -> AdventureRoadProgressModel? {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             guard let forest = getCurrentForest(context: context),
                   let daily = forest.dailyActivities else {
@@ -64,7 +62,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
     }
     
     func increaseMonthlyLearnedCount(for questionType: BattleQuestionType, contextType: ContextType) -> Resource<Bool> {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             guard let forest = getCurrentForest(context: context),
                   let daily = forest.dailyActivities else {
@@ -85,7 +83,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
     }
     
     func updatePlayerName(contextType: ContextType, name: String) -> Resource<Bool> {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             guard let player = getCurrentPlayer(context: context) else { return Resource.error(error: PlayerDataError.emptyPlayer)}
             player.name = name
@@ -95,7 +93,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
     }
     
     func bindForest(contextType: ContextType, forest: Forest) -> Resource<Bool> {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             guard let player = getCurrentPlayer(context: context) else { return Resource.error(error: PlayerDataError.emptyPlayer)}
             forest.player = player
@@ -104,7 +102,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
     }
     
     func createInitialPlayer(contextType: ContextType) -> Resource<Player> {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             let player = Player(context: context)
             let safePlayer = PlayerHelper.createDefaultPlayer()
@@ -115,7 +113,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
     }
     
     func fetchSafePlayer(contextType: ContextType) -> PlayerModel? {
-        let context = contextType.context
+        let context = getContext(context: contextType)
         return context.performAndWait {
             let player = getCurrentPlayer(context: context)
             if let name = player?.name, let date = player?.lastUpdatedDate {
@@ -127,6 +125,16 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
 }
 
 private extension PlayerDataManager {
+    
+    func getContext(context: PlayerDataManager.ContextType) -> NSManagedObjectContext {
+        return switch context {
+        case .main:
+            viewContext
+        case .background:
+            backgroundContext
+        }
+    }
+    
     func getCurrentForest(context: NSManagedObjectContext) -> Forest? {
         let request: NSFetchRequest<Forest> = Forest.fetchRequest()
         request.fetchLimit = 1
