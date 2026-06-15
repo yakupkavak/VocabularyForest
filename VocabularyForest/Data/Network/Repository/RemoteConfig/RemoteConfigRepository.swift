@@ -57,16 +57,13 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     
     private let remoteConfig: RemoteConfig
     private let userDefaults: UserDefaults
-    private let adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
 
     init(
         remoteConfig: RemoteConfig = RemoteConfig.remoteConfig(),
         userDefaults: UserDefaults = .standard,
-        adventureRoadSeasonProgressStore: AdventureRoadSeasonProgressStoreProtocol
     ) {
         self.remoteConfig = remoteConfig
         self.userDefaults = userDefaults
-        self.adventureRoadSeasonProgressStore = adventureRoadSeasonProgressStore
         let settings = RemoteConfigSettings()
         settings.minimumFetchInterval = 0
         remoteConfig.configSettings = settings
@@ -555,29 +552,6 @@ private extension RemoteConfigRepository {
         
         defaults.set(configID, forKey: key)
         return .updated
-    }
-    
-    func applyAdventureRoadSeasonChangeIfNeeded(change: RemoteConfigIDChange, seasonID: String?) {
-        guard let seasonID = seasonID?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !seasonID.isEmpty else {
-            return
-        }
-        
-        switch change {
-        case .firstStored:
-            updateAdventureRoadProgress(seasonID: seasonID, resetProgress: false)
-        case .updated:
-            updateAdventureRoadProgress(seasonID: seasonID, resetProgress: true)
-        case .unchanged:
-            break
-        }
-    }
-    
-    func updateAdventureRoadProgress(seasonID: String, resetProgress: Bool) {
-        adventureRoadSeasonProgressStore.applySeasonUpdate(
-            seasonID: seasonID,
-            resetProgress: resetProgress
-        )
     }
     
     func parseSeasonEndDate(_ value: String?) -> Date? {

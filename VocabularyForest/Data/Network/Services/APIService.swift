@@ -8,6 +8,7 @@
 import CoreAPI
 import DTO
 import Foundation
+import Alamofire
 
 typealias BookcaseRequestResult = Result<BookcaseRequest, APIClientError>
 typealias LibrariesResult = Result<Libraries, APIClientError>
@@ -33,7 +34,10 @@ public class APIService: APIServiceProtocol {
     
     // MARK: - INIT
 
-    init(vocabularyBaseURLProvider: VocabularyBaseURLProviderProtocol = VocabularyBaseURLProvider()) {
+    init(
+        vocabularyBaseURLProvider: VocabularyBaseURLProviderProtocol = VocabularyBaseURLProvider(),
+        session: Alamofire.Session = .default
+    ) {
         self.vocabularyBaseURLProvider = vocabularyBaseURLProvider
     }
     

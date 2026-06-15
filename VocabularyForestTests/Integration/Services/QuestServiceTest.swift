@@ -11,6 +11,7 @@ import Testing
 import Combine
 
 @Suite("Quest Service Tests", .tags(.system))
+@MainActor
 struct QuestServiceTests {
     
     var sut: QuestServiceProtocol
@@ -28,10 +29,18 @@ struct QuestServiceTests {
     
     @Test("Can service convert remote config file")
     func convertRemoteData() async throws {
-        await forestDataManager.createForest(contextType: .main)
+        forestDataManager.createForest(contextType: .main)
         let questData = try await TestBundleHelper.loadMockJSON(filename: "mock_quests_config", model: RemoteQuestListModel.self)
         await sut.convertRemoteToCacheQuest(list: questData)
         #expect(sut.questList.contains { $0.id == "daily_nature_elemental_competitive_gold_target4_reward4" }, "Quest List added")
+    }
+    
+    @Test
+    func testUserClaimRewards() async throws {
+        let mockQuest = QuestTrackModel(id: "1", lastUpdatedDate: Date(), status: .completed, currentProgressCount: 10)
+        forestDataManager.createForest(contextType: .main)
+        try forestDataManager.importQuest(track: mockQuest, contextType: .main)
+        
     }
     
     @Test("Could convert remote rewards")

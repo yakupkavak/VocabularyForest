@@ -33,12 +33,19 @@ final class OfflineAssetManager {
     // MARK: - PROPERTIES
     
     private let fileManager = FileManager.default
-    private let userDefaults = UserDefaults.standard
-    private let assetFolderName = "OfflineGameAssets"
+    private let userDefaults: UserDefaults
+    private let baseDirectoryURL: URL
     
     // MARK: - INIT
     
-    init() {
+    init(directoryURL: URL? = nil, userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+        if let directoryURL = directoryURL {
+            self.baseDirectoryURL = directoryURL
+        } else {
+            let appSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            self.baseDirectoryURL = appSupportDirectory.appendingPathComponent("OfflineGameAssets")
+        }
         createAssetFolderIfNeeded()
     }
 }
@@ -142,8 +149,7 @@ extension OfflineAssetManager: OfflineAssetManagerProtocol {
 
 private extension OfflineAssetManager {
     func getAssetDirectory() -> URL {
-        let appSupportDirectory = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        return appSupportDirectory.appendingPathComponent(assetFolderName)
+        baseDirectoryURL
     }
     
     func createAssetFolderIfNeeded() {

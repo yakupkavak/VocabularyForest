@@ -447,12 +447,12 @@ extension ForestViewModel: ForestViewModelProtocol {
     }
     
     func claimReward(quest: QuestModel) {
-        /*
-        let result = forestDataManager.claimQuestReward(quest: quest, contextType: .background)
-        if result.status == .success {
+        do {
+            try adventureService.claimQuestReward(quest: quest)
             fetchForest()
+        }catch {
+            print("\(error.localizedDescription)")
         }
-         */
     }
     
     func claimDailyReward(model: QuestRewardModel) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6CB02FDBD93C00225FE5 /* YKSpinWheel */; };
+		371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6F4D2FDD714A00225FE5 /* Alamofire */; };
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
@@ -165,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +314,7 @@
 			);
 			name = VocabularyForestTests;
 			packageProductDependencies = (
+				371C6F4D2FDD714A00225FE5 /* Alamofire */,
 			);
 			productName = VocabularyForestTests;
 			productReference = 37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */;
@@ -846,6 +849,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */;
 			productName = YKSpinWheel;
+		};
+		371C6F4D2FDD714A00225FE5 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 		37267F0D2E927B8E0019D139 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

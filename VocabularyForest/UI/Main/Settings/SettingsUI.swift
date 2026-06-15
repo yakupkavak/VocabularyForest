@@ -337,7 +337,7 @@ private struct PolicySheetView: View {
             authManager: AuthManager(),
             syncManager: ForestSyncManager(),
             forestManager: forestData,
-            playerManager: PlayerDataManager()
+            playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext)
         )
     )
 }

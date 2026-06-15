@@ -19,14 +19,8 @@ enum AppDependencyConfigurer {
         let notificationManager = NotificationManager()
         let authManager = AuthManager()
         let cloudSyncManager = ForestSyncManager()
-        let playerDataManager = PlayerDataManager()
-        let adventureRoadSeasonProgressStore = AdventureRoadSeasonProgressStore(
-            coreDataManager: coreData,
-            forestDataManager: forestData
-        )
-        let remoteConfigRepository = RemoteConfigRepository(
-            adventureRoadSeasonProgressStore: adventureRoadSeasonProgressStore
-        )
+        let playerDataManager = PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext)
+        let remoteConfigRepository = RemoteConfigRepository()
         let documentRepository = DocumentaryRepository()
         let offlineAssetManager = OfflineAssetManager()
         let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
@@ -47,7 +41,6 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(cloudSyncManager), for: ForestSyncManager.self)
         DC.shared.register(type: .singleInstance(playerDataManager), for: PlayerDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
-        DC.shared.register(type: .singleInstance(adventureRoadSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
         DC.shared.register(type: .singleInstance(remoteConfigRepository), for: RemoteConfigRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(gameManager), for: GameManagerProtocol.self)
         DC.shared.register(type: .singleInstance(documentRepository), for: DocumentaryRepositoryProtocol.self)
