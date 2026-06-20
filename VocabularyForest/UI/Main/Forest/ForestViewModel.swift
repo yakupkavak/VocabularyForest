@@ -30,7 +30,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func didTapTree(id: UUID)
     func didCollectWater(amount: Int)
     func fetchForest()
-    func claimReward(quest: QuestModel)
+    func claimQuestReward(quest: QuestModel)
     func startRain()
     func checkBookCount(type: BattleQuestionType,
                         battleMode: BattleEnemyModel,
@@ -109,6 +109,7 @@ class ForestViewModel: BaseViewModel {
         self.questService = questService
         super.init()
         bindQuests()
+        fetchForest()
     }
 }
 
@@ -446,12 +447,32 @@ extension ForestViewModel: ForestViewModelProtocol {
         self.componentUUID = nil
     }
     
-    func claimReward(quest: QuestModel) {
-        do {
-            try adventureService.claimQuestReward(quest: quest)
-            fetchForest()
-        }catch {
-            print("\(error.localizedDescription)")
+    func claimQuestReward(quest: QuestModel) {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await adventureService.claimQuestReward(quest: quest)
+                await MainActor.run {
+                    self.fetchForest()
+                }
+            } catch {
+                print("\(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func claimLocalReward(model: LocalRewardModel, onSuccess: (() -> Void)? = nil) {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await adventureService.claimLocalReward(model: model)
+                await MainActor.run {
+                    onSuccess?()
+                    self.fetchForest()
+                }
+            } catch {
+                print("\(error.localizedDescription)")
+            }
         }
     }
     

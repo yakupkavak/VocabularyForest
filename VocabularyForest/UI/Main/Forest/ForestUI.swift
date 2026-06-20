@@ -60,6 +60,7 @@ struct ForestUI: View {
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     @AppStorage(AppStorageNames.shownForestInfo.rawValue) private var forestSeen: Bool = false
+    @AppStorage(AppStorageNames.userClaimedFirtReward.rawValue) private var userClaimedFirtReward: Bool = false
     
     // MARK: - UI
     
@@ -70,7 +71,14 @@ struct ForestUI: View {
                 .navigationBarBackButtonHidden()
                 .zIndex(1.0)
             
-            if !forestSeen {
+            if !userClaimedFirtReward {
+                ForestFirstRewardUI(rewards: ForestConstant.firstForestRewards) { selectedReward in
+                    viewModel.claimLocalReward(model: selectedReward) {
+                        userClaimedFirtReward = true
+                    }
+                }.zIndex(1.2)
+                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+            }else if !forestSeen {
                 GameInfoUI(showForestPopUp: Binding(
                     get: { !forestSeen },
                     set: { if !$0 { forestSeen = true } }
@@ -254,7 +262,7 @@ private extension ForestUI {
             monthlyQuests: viewModel.monthlyQuestList,
             specialQuests: viewModel.specialQuestList
         ) { model in
-            viewModel.claimReward(quest: model)
+            viewModel.claimQuestReward(quest: model)
         }
     }
     

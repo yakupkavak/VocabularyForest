@@ -29,7 +29,8 @@ struct ForestFirstRewardUI: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.darkGren)
                 .fontWeight(.heavy)
-                .padding(.bottom, 4)
+                .padding(.vertical, 4)
+                .font(.system(size: 20))
             Text("Chose your best friend to start the adventure!")
                 .minimumScaleFactor(0.8)
                 .multilineTextAlignment(.center)
@@ -44,8 +45,8 @@ struct ForestFirstRewardUI: View {
             }
             .padding()
         }
-        .padding()
-        .background(.white.opacity(0.5))
+        .padding(8)
+        .background(.white.opacity(0.4))
         .borderShape(radius: 20)
         .padding(.horizontal)
 
@@ -63,7 +64,7 @@ private extension ForestFirstRewardUI {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)
                 .fontWeight(.heavy)
-        }.padding()
+        }.padding().padding(.top, -8)
             .background(AnimatedGradientView(colors: [.forestText.opacity(0.6), .forestText.opacity(0.7), .forestText.opacity(0.8), .forestText.opacity(0.6)]))
             .clipShape(RoundedRectangle(cornerRadius: 16)
             )
@@ -72,9 +73,9 @@ private extension ForestFirstRewardUI {
 
 #Preview("Standart") {
     let rewards: [LocalRewardModel] = [
-        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "", category: .animal, displayName: RemoteLocalizedText.mock(en: "Dog"), assetName: "Dog", imageSource: .local, posterImage: RewardAssetReference(key: "Dog", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))),
-        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "", category: .animal, displayName: RemoteLocalizedText.mock(en: "WhiteCat"), assetName: "WhiteCat", imageSource: .local, posterImage: RewardAssetReference(key: "WhiteCat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))),
-        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "", category: .animal, displayName: RemoteLocalizedText.mock(en: "Cat"), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil)))
+        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "initalize_dog_id", category: .animal, displayName: RemoteLocalizedText.mock(en: "Dog"), assetName: "Dog", imageSource: .local, posterImage: RewardAssetReference(key: "Dog", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))),
+        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "initalize_whitecat_id", category: .animal, displayName: RemoteLocalizedText.mock(en: "WhiteCat"), assetName: "WhiteCat", imageSource: .local, posterImage: RewardAssetReference(key: "WhiteCat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))),
+        LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "initalize_cat_id", category: .animal, displayName: RemoteLocalizedText.mock(en: "Cat"), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil)))
     ]
     ForestFirstRewardUI(rewards: rewards, selectedReward: { model in
         print(model)

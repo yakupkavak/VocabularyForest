@@ -85,7 +85,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             animal.assetSourceString = model.assetSource.rawValue
             animal.posterKey = model.poster.key
             animal.posterSourceString = model.poster.source.rawValue
-            animal.healtValue = Int16(model.healthValue)
+            animal.healthValue = Int16(model.healthValue)
             animal.isAlive = model.isAlive
             animal.xPosition = Double(model.xPosition)
             animal.yPosition = Double(model.yPosition)

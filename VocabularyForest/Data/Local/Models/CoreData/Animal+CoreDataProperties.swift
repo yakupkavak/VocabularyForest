@@ -25,7 +25,7 @@ extension Animal {
     @NSManaged public var posterKey: String?
     @NSManaged public var posterSourceString: String?
     @NSManaged public var isAlive: Bool
-    @NSManaged public var healtValue: Int16
+    @NSManaged public var healthValue: Int16
     @NSManaged public var xPosition: Double
     @NSManaged public var yPosition: Double
     @NSManaged public var forest: Forest?
@@ -50,7 +50,7 @@ extension Animal: ConvertSafeModel {
                     characterName: characterName,
                     assetSource: mainAssetSource,
                     poster: posterReference,
-                    healthValue: Int(healtValue),
+                    healthValue: Int(healthValue),
                     isAlive: isAlive,
                     xPosition: xPosition,
                     yPosition: yPosition,

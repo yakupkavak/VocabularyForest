@@ -396,11 +396,14 @@ extension ForestDataManager {
                 animal.characterName = animalModel.characterName
                 animal.createdDate = animalModel.createdDate
                 animal.assetName = animalModel.assetName
-                animal.healtValue = Int16(animalModel.healthValue)
+                animal.healthValue = Int16(animalModel.healthValue)
                 animal.isAlive = animalModel.isAlive
                 animal.xPosition = animalModel.xPosition
                 animal.yPosition = animalModel.yPosition
                 animal.lastUpdatedDate = animalModel.lastUpdatedDate
+                animal.assetSourceString = animalModel.assetSource.rawValue
+                animal.posterKey = animalModel.poster.key
+                animal.posterSourceString = animalModel.poster.source.rawValue
                 forest.addToAnimals(animal)
                 
             case .plant:
@@ -414,6 +417,9 @@ extension ForestDataManager {
                 tree.assetName = treeModel.assetName
                 tree.xPosition = treeModel.xPosition
                 tree.yPosition = treeModel.yPosition
+                tree.assetSourceString = treeModel.assetSource.rawValue
+                tree.posterKey = treeModel.poster.key
+                tree.posterSourceString = treeModel.poster.source.rawValue
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
                 forest.addToTrees(tree)
                 
@@ -427,6 +433,9 @@ extension ForestDataManager {
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
                 sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
+                sculpture.assetSourceString = sculptureModel.assetSource.rawValue
+                sculpture.posterKey = sculptureModel.poster.key
+                sculpture.posterSourceString = sculptureModel.poster.source.rawValue
                 forest.addToSculptures(sculpture)
                 
             case .gold:
@@ -494,7 +503,7 @@ extension ForestDataManager {
                 animal.assetName = animalModel.assetName
                 animal.characterName = animalModel.characterName
                 animal.createdDate = animalModel.createdDate
-                animal.healtValue = Int16(animalModel.healthValue)
+                animal.healthValue = Int16(animalModel.healthValue)
                 animal.isAlive = animalModel.isAlive
                 animal.lastUpdatedDate = animalModel.lastUpdatedDate
                 animal.xPosition = animalModel.xPosition

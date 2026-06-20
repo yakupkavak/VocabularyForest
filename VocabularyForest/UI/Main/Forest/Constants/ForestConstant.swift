@@ -25,7 +25,77 @@ enum ForestConstant {
     static let healthyLandHealth = 100
     static let menu_ballon_name = ""
     static let talk_ballon_name = ""
-
+    static let firstForestRewards: [LocalRewardModel] = [
+        LocalRewardModel(
+            rewardCount: 1,
+            reward: .standart(model: .init(
+                id: "initalize_dog_id",
+                category: .animal,
+                displayName: RemoteLocalizedText(
+                    tr: "Köpek",
+                    en: "Dog",
+                    es: "Perro",
+                    fr: "Chien",
+                    de: "Hund",
+                    pt: "Cachorro"
+                ),
+                assetName: "Dog",
+                imageSource: .local,
+                posterImage: RewardAssetReference(key: "Dog", source: .appAssets),
+                remotePath: nil,
+                remoteAssetVersion: nil,
+                textColorHex: nil,
+                textStrokeColorHex: nil,
+                gradientHexes: nil
+            ))
+        ),
+        LocalRewardModel(
+            rewardCount: 1,
+            reward: .standart(model: .init(
+                id: "initalize_whitecat_id",
+                category: .animal,
+                displayName: RemoteLocalizedText(
+                    tr: "Beyaz Kedi",
+                    en: "White Cat",
+                    es: "Gato Blanco",
+                    fr: "Chat Blanc",
+                    de: "Weiße Katze",
+                    pt: "Gato Branco"
+                ),
+                assetName: "WhiteCat",
+                imageSource: .local,
+                posterImage: RewardAssetReference(key: "WhiteCat", source: .appAssets),
+                remotePath: nil,
+                remoteAssetVersion: nil,
+                textColorHex: nil,
+                textStrokeColorHex: nil,
+                gradientHexes: nil
+            ))
+        ),
+        LocalRewardModel(
+            rewardCount: 1,
+            reward: .standart(model: .init(
+                id: "initalize_cat_id",
+                category: .animal,
+                displayName: RemoteLocalizedText(
+                    tr: "Kedi",
+                    en: "Cat",
+                    es: "Gato",
+                    fr: "Chat",
+                    de: "Katze",
+                    pt: "Gato"
+                ),
+                assetName: "Cat",
+                imageSource: .local,
+                posterImage: RewardAssetReference(key: "Cat", source: .appAssets),
+                remotePath: nil,
+                remoteAssetVersion: nil,
+                textColorHex: nil,
+                textStrokeColorHex: nil,
+                gradientHexes: nil
+            ))
+        )
+    ]
 }
 
 
