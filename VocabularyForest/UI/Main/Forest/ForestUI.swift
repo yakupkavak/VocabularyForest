@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SpriteKit
+import DependencyContainer
 
 protocol ForestUIProtocol {
     func showOptions()
@@ -439,27 +440,7 @@ extension ForestUI: ForestUIProtocol {
 }
 
 #Preview {
-    /*
-    @State var tabbar = BaseTabTypes.bookcases
-    let bookcaseRouter = BookcaseRouter()
-    let mockCoreData = CoreDataManager.preview
-    let mockAudio = ForestAudioService()
-    let mockForestData = ForestDataManager()
-    let mockForestEntityService: ForestEntityServiceProtocol = ForestEntityServiceAdapter(coreDataManager: mockCoreData)
-    let mockPlayerManager = PlayerDataManager()
-    let mockAdventureRoadStore = AdventureRoadSeasonProgressStore(coreDataManager: mockCoreData, forestDataManager: mockForestData)
-    let mockRemoteConfig = RemoteConfigRepository(adventureRoadSeasonProgressStore: mockAdventureRoadStore)
-    let mockAdventureService = ForestAdventureService(forestManager: mockForestData, playerManager: mockPlayerManager, coreData: mockCoreData, remoteConfig: mockRemoteConfig)
-    let viewModel = ForestViewModel(
-        audioService: mockAudio,
-        coreDataManager: mockCoreData,
-        forestDataManager: mockForestData,
-        forestEntityService: mockForestEntityService,
-        forestAdventureService: mockAdventureService,
-        remoteConfigRepository: mockRemoteConfig,
-        playerDataManager: mockPlayerManager
-    )
-     
-    ForestUI(viewModel: viewModel).environmentObject(LearningRouter())
-     */
+    let resolver = DC.shared
+    let coordinator = VocabularyForestCoordinator(resolver: resolver)
+    coordinator.startForestUI()
 }

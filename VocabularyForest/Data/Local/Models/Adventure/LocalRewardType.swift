@@ -71,6 +71,14 @@ extension LocalRewardType {
             model.closeLocalImagePath
         }
     }
+    var displayName: RemoteLocalizedText {
+        switch self {
+        case .standart(let model):
+            model.displayName
+        case .chest(let model):
+            model.displayName
+        }
+    }
 }
 
 /*

@@ -24,4 +24,8 @@ struct RemoteLocalizedText: Decodable, Hashable {
         default:   return en ?? tr ?? ""
         }
     }
+    
+    static func mock(en: String = "test") -> RemoteLocalizedText {
+        RemoteLocalizedText(tr: en, en: en, es: en, fr: en, de: en, pt: en)
+    }
 }
