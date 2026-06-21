@@ -16,7 +16,6 @@ enum QuestServiceError: Error {
 protocol QuestServiceProtocol {
     var questListPublisher: AnyPublisher<[QuestModel], Never> { get }
     var questList: [QuestModel] { get }
-    func updateQuest(track: QuestTrackModel) -> Resource<Bool>
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool>
     func correctAnswer(questionType: BattleQuestionType) throws
     func claimQuestReward(quest: QuestModel) throws
@@ -206,9 +205,5 @@ extension QuestService: QuestServiceProtocol {
         }
         activeQuests = questList
         return Resource.success(true)
-    }
-    
-    func updateQuest(track: QuestTrackModel) -> Resource<Bool> {
-        return .success(true)
     }
 }

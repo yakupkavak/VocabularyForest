@@ -100,6 +100,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws
+    func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -654,6 +655,17 @@ extension ForestDataManager {
                 return Resource.error(error: error)
             }
             return Resource.success(true)
+        }
+    }
+    
+    func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws {
+        let context = getContext(for: contextType)
+        return try context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else { throw ForestError.emptyForest }
+            guard let activities = forest.dailyActivities else {
+                throw ForestAdventureError.emptyForestActivities
+            }
+            activities.lastUpdatedDate = time
         }
     }
 }

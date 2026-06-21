@@ -8,6 +8,7 @@
 import Foundation
 
 struct DailySpinModel {
+    let id: String
     let weight: Double
-    let reward: LocalRewardType
+    let reward: LocalRewardModel
 }

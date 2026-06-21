@@ -229,27 +229,25 @@ extension ForestViewModel {
     }
     
     func refreshDailySpinRewards() {
-        /*
         Task(priority: .background) { [weak self] in
             guard let self else { return }
-            let result = await remoteConfigRepository.fetchDailySpinRewards()
-            guard result.status == .success, let rewards = result.data else { return }
-            let (models, rewardMap) = RewardHelper.createDailySpinWheel(from: rewards)
-            
+            /*
             await MainActor.run { [weak self] in
                 guard let self else { return }
                 self.dailySpinModels = models
                 self.dailySpinRewardMap = rewardMap
                 self.dailySpinModelVersion = UUID()
             }
+             */
         }
-         */
     }
+    
     /*
     func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardType {
-        dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
+        dailySpinRewardMap[spinModel.id]
     }
     */
+    
     func fetchAdventureRoadData() {
         /*
         Task { @MainActor in

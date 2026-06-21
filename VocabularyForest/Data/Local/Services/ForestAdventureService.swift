@@ -17,6 +17,7 @@ enum ForestAdventureError: LocalizedError {
     case networkError
     case unauthenticated
     case emptyForestData
+    case emptyForestActivities
     case emptyValueFromConfig
     var errorDescription: String? {
         switch self {
@@ -28,6 +29,8 @@ enum ForestAdventureError: LocalizedError {
             return String(localized: "Local forest data is not available.")
         case .emptyValueFromConfig:
             return String(localized: "Unexpected error.")
+        case .emptyForestActivities:
+            return String(localized: "Unexpected error. Error Code: 1001")
         }
     }
 }

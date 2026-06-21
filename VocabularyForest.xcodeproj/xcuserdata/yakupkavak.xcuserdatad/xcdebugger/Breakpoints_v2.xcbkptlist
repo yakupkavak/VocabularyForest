@@ -118,8 +118,8 @@
             filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "fetchCurrentQuestTracks()"
             landmarkType = "7">
          </BreakpointContent>
@@ -134,8 +134,8 @@
             filePath = "VocabularyForest/Data/Local/Services/QuestService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
+            startingLineNumber = "49"
+            endingLineNumber = "49"
             landmarkName = "fetchCurrentQuestTracks()"
             landmarkType = "7">
             <Locations>
@@ -166,52 +166,6 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "50"
                   endingLineNumber = "50">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "38396D00-AA72-4386-A30C-818B732A7B0F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "fetchConfigParameters()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "38396D00-AA72-4386-A30C-818B732A7B0F - 2bc4370858b472fb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for VocabularyForest.RemoteConfigRepository.fetchConfigParameters() async -&gt; VocabularyForest.Resource&lt;VocabularyForest.RemoteConfigResponse&lt;VocabularyForest.ConfigParametersList&gt;&gt;"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
-               </Location>
-               <Location
-                  uuid = "38396D00-AA72-4386-A30C-818B732A7B0F - ce2aa8998a98dcf4"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for VocabularyForest.RemoteConfigRepository.fetchConfigParameters() async -&gt; VocabularyForest.Resource&lt;VocabularyForest.RemoteConfigResponse&lt;VocabularyForest.ConfigParametersList&gt;&gt;"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/RemoteConfig/RemoteConfigRepository.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -448,8 +402,8 @@
             filePath = "VocabularyForest/Data/Local/Managers/ForestDataManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "424"
-            endingLineNumber = "424"
+            startingLineNumber = "425"
+            endingLineNumber = "425"
             landmarkName = "claimReward(model:contextType:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -464,8 +418,8 @@
             filePath = "VocabularyForest/UI/Main/Forest/ForestViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "304"
-            endingLineNumber = "304"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
             landmarkName = "fetchForest()"
             landmarkType = "7">
          </BreakpointContent>

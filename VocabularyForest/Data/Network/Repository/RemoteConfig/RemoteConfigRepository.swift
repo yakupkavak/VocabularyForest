@@ -29,7 +29,7 @@ enum RemoteConfigError: Error, LocalizedError {
 }
 
 protocol RemoteConfigRepositoryProtocol {
-    func fetchDailySpinRewards() async -> Resource<RemoteConfigResponse<RemoteDailySpinListModel>>
+    func fetchDailySpinRewards() async throws -> RemoteConfigResponse<RemoteDailySpinListModel>
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
     func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>>
     func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>
@@ -83,39 +83,15 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         }
     }
 
-    func fetchDailySpinRewards() async -> Resource<RemoteConfigResponse<RemoteDailySpinListModel>> {
+    func fetchDailySpinRewards() async throws -> RemoteConfigResponse<RemoteDailySpinListModel> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.dailySpinRewards).decoded(asType: RemoteDailySpinListModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.dailySpinRewards).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
-            return Resource.success(response)
+            return response
         }catch {
-            return .error(error: RemoteConfigError.decodeFailed)
+            throw error
         }
-        /*
-        let decodedResult: Result<DecodedPayload<RemoteDailySpinItemDTO>, RemoteConfigError> = await fetchDecodedArray(
-            forKey: Keys.dailySpinRewards,
-            as: RemoteDailySpinItemDTO.self
-        )
-
-        switch decodedResult {
-        case .success(let payload):
-            _ = persistConfigID(payload.id, forRemoteKey: Keys.dailySpinRewards)
-            let safeModels = payload.items.map { dto in
-                DailySpinModel(
-                    weight: safeWeight(dto.weight ?? dto.reward?.safeProbabilityWeight),
-                    reward: mapToLocalReward(dto.reward)
-                )
-            }
-            guard !safeModels.isEmpty else {
-                return .error(error: RemoteConfigError.dataMissing)
-            }
-            return .success(safeModels)
-
-        case .failure(let error):
-            return .error(error: error)
-        }
-         */
     }
     
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>> {
