@@ -17,7 +17,8 @@ enum DocumentaryError: Error {
 }
 
 protocol DocumentaryRepositoryProtocol {
-    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel>
+    func fetchChestConfig() async throws -> RemoteChestConfigResponse
+    func fetchDailySpinModels() async throws -> RemoteDailySpinListModel
     func fetchQuestsConfig() async throws -> RemoteQuestListModel
     func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel>
     func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
@@ -36,6 +37,7 @@ final class DocumentaryRepository {
     // MARK: - CONSTANTS
     
     private enum FileName {
+        static let chestConfig = "ChestConfig"
         static let dailySpinRewards = "DailySpinRewards"
         static let questsConfig = "QuestsConfig"
         static let weeklyRewards = "WeeklyRewards"
@@ -106,13 +108,12 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
     
     // MARK: - FETCH METHODS
     
-    func fetchDailySpinRewards() async -> Resource<RemoteDailySpinListModel> {
-        do {
-            let model = try fetchFromDisk(fileName: FileName.dailySpinRewards, as: RemoteDailySpinListModel.self)
-            return .success(model)
-        } catch {
-            return .error(error: error)
-        }
+    func fetchChestConfig() async throws -> RemoteChestConfigResponse {
+        try fetchFromDisk(fileName: FileName.chestConfig, as: RemoteChestConfigResponse.self)
+    }
+
+    func fetchDailySpinModels() async throws -> RemoteDailySpinListModel {
+        try fetchFromDisk(fileName: FileName.dailySpinRewards, as: RemoteDailySpinListModel.self)
     }
     
     func fetchQuestsConfig() async throws -> RemoteQuestListModel {

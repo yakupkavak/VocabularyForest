@@ -7,10 +7,13 @@
 
 import Combine
 import Foundation
+import YKSpinWheel
+import SwiftUI
 
 enum DailySpinServiceError: Error {
     case emptySpinList
     case emptySpinTrakcs
+    case invalidSpinID
 }
 
 enum DailySpinReadyState {
@@ -19,14 +22,15 @@ enum DailySpinReadyState {
 }
 
 protocol DailySpinServiceProtocol {
-    var dailySpinListPublisher: AnyPublisher<[DailySpinModel], Never> { get }
+    var dailySpinListPublisher: AnyPublisher<[SpinModel], Never> { get }
     var dailySpinStatePublisher: AnyPublisher<DailySpinReadyState, Never> { get }
-    var dailySpinList: [DailySpinModel] { get }
+    var dailySpinList: [SpinModel] { get }
     var currentSpinState: DailySpinReadyState { get }
     
     func convertRemoteToDailySpinList(list: RemoteDailySpinListModel) async throws
     func checkAndUpdateSpinState() async
-    func claimDailySpinReward(spinModel: DailySpinModel) async throws
+    func claimDailySpinReward() async throws
+    func convertLocalReward(model: SpinModel) throws -> LocalRewardModel
 }
 
 final class DailySpinService {
@@ -35,24 +39,24 @@ final class DailySpinService {
     
     private let forestManager: ForestDataManagerProtocol
     private let rewardRepository: RewardRepositoryProtocol
-    @Published private var activeSpinList: [DailySpinModel] = []
+    private var activeSpinRewardList: [Int: LocalRewardModel] = [:]
+    @Published private var activeSpinList: [SpinModel] = []
     @Published private var dailySpinState: DailySpinReadyState = .claimable
     
     private var stateUpdateTask: Task<Void, Never>?
     
     // MARK: - INIT
     
-    init(forestManager: ForestDataManagerProtocol, rewardRepository: RewardRepositoryProtocol, activeSpinList: [DailySpinModel]) {
+    init(forestManager: ForestDataManagerProtocol, rewardRepository: RewardRepositoryProtocol) {
         self.forestManager = forestManager
         self.rewardRepository = rewardRepository
-        self.activeSpinList = activeSpinList
     }
     
 }
 
 extension DailySpinService: DailySpinServiceProtocol {
     
-    var dailySpinListPublisher: AnyPublisher<[DailySpinModel], Never> {
+    var dailySpinListPublisher: AnyPublisher<[SpinModel], Never> {
         $activeSpinList.eraseToAnyPublisher()
     }
     
@@ -60,7 +64,7 @@ extension DailySpinService: DailySpinServiceProtocol {
         $dailySpinState.eraseToAnyPublisher()
     }
     
-    var dailySpinList: [DailySpinModel] {
+    var dailySpinList: [SpinModel] {
         activeSpinList
     }
     
@@ -68,8 +72,15 @@ extension DailySpinService: DailySpinServiceProtocol {
         dailySpinState
     }
     
+    func convertLocalReward(model: SpinModel) throws -> LocalRewardModel {
+        guard let reward = activeSpinRewardList[model.id] else { throw DailySpinServiceError.invalidSpinID }
+        return reward
+    }
+     
     func convertRemoteToDailySpinList(list: RemoteDailySpinListModel) async throws {
-        for model in list.items {
+        guard let models = list.items else { throw DailySpinServiceError.emptySpinList }
+        
+        for model in models {
             guard let id = model.id, let weight = model.weight, let reward = model.reward else { return }
             var localReward: LocalRewardModel
             do {
@@ -77,9 +88,14 @@ extension DailySpinService: DailySpinServiceProtocol {
             } catch {
                 throw RewardRepositoryError.decodingError
             }
-            let dailyModel = DailySpinModel(id: id, weight: weight, reward: localReward)
-            activeSpinList.append(dailyModel)
+            //let dailyModel = DailySpinModel(id: id, weight: weight, reward: localReward, textColorHex: model.textColorHex, backgroundHexes: model.backgroundHexes)
+            let customImage = RewardImageView(asset: localReward.reward.posterImage)
+            let spinModel = SpinModel(id: id, text: model.text?.localized ?? "", customImage: customImage)
+            
+            activeSpinList.append(spinModel)
+            activeSpinRewardList[id] = localReward
         }
+         
     }
     
     func checkAndUpdateSpinState() async {
@@ -110,8 +126,8 @@ extension DailySpinService: DailySpinServiceProtocol {
         }
     }
     
-    func claimDailySpinReward(spinModel: DailySpinModel) async throws {
-        
+    func claimDailySpinReward() async throws {
+        try forestManager.updateDailySpinTime(time: Date(), contextType: .main)
         await checkAndUpdateSpinState()
     }
 }
@@ -123,9 +139,8 @@ private extension DailySpinService {
             let trueNow = try await NetworkTimeHelper.getTrueTime()
             let localForestRes = forestManager.fetchSafeForest(contextType: .main)
             if let forest = localForestRes.data, let lastUsed = forest.dailyActivities.dailySpinLastUsedDate {
-                let localNow = Date()
                 let targetTime = lastUsed.addingTimeInterval(86400)
-                return targetTime > localNow ? targetTime : nil
+                return targetTime > trueNow ? targetTime : nil
             } else {
                 return nil
             }

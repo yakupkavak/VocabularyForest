@@ -25,8 +25,9 @@ enum AppDependencyConfigurer {
         let offlineAssetManager = OfflineAssetManager()
         let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
         let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
+        let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService)
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService)
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
@@ -48,6 +49,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(chestRepository), for: ChestRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(rewardRepository), for: RewardRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(questService), for: QuestServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(dailySpinService), for: DailySpinServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

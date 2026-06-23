@@ -8,7 +8,9 @@
 import Foundation
 
 struct DailySpinModel {
-    let id: String
+    let id: Int
     let weight: Double
     let reward: LocalRewardModel
+    let textColorHex: String?
+    let backgroundHexes: [String]?
 }

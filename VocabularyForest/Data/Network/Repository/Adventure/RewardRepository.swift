@@ -97,17 +97,18 @@ extension RewardRepository: RewardRepositoryProtocol {
         
         var localReward: LocalRewardModel
         
-        if let id = remoteReward.id, let type = remoteReward.type, let rewardCount = remoteReward.rewardCount, let displayName = remoteReward.displayName, let imageSource = remoteReward.imageSource, let assetName = remoteReward.assetName {
+        if let id = remoteReward.id, let type = remoteReward.type, let rewardCount = remoteReward.rewardCount, let displayName = remoteReward.displayName  {
             
-            guard let imageSource = ImageSource.convertImageSource(value: imageSource) else
-            { throw RewardRepositoryError.emptySourceError
-            }
             var localRewardType: LocalRewardType
-            let posterImage = try await posterReference(for: remoteReward, imageSource: imageSource, assetName: assetName)
             
             switch type {
                 case "standart":
-                    guard let safeCategory = remoteReward.category, let category = QuestRewardModel.convertQuestReward(value: safeCategory) else { throw RewardRepositoryError.emptyCategoryError }
+                    guard let safeCategory = remoteReward.category, let category = QuestRewardModel.convertQuestReward(value: safeCategory),let imageSource = remoteReward.imageSource, let assetName = remoteReward.assetName else { throw RewardRepositoryError.emptyCategoryError }
+                    guard let imageSource = ImageSource.convertImageSource(value: imageSource) else
+                    { throw RewardRepositoryError.emptySourceError
+                    }
+                    let posterImage = try await posterReference(for: remoteReward, imageSource: imageSource, assetName: assetName)
+
                     localRewardType = LocalRewardType.standart(
                         model: LocalQuestRewardModel(
                             id: id,

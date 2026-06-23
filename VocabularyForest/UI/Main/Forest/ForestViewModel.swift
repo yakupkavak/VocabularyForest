@@ -55,6 +55,7 @@ class ForestViewModel: BaseViewModel {
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let playerDataManager: PlayerDataManagerProtocol
     private let questService: QuestServiceProtocol
+    private let dailySpinService: DailySpinServiceProtocol
 
     // MARK: - PROPERTIES
     
@@ -86,6 +87,7 @@ class ForestViewModel: BaseViewModel {
     private var dailyTimeCancellable: AnyCancellable?
     private var rainTimeCancellable: AnyCancellable?
     private var questCancellable = Set<AnyCancellable>()
+    private var adventureCancellable = Set<AnyCancellable>()
 
     // MARK: - INIT
     
@@ -98,6 +100,7 @@ class ForestViewModel: BaseViewModel {
         remoteConfigRepository: RemoteConfigRepositoryProtocol,
         playerDataManager: PlayerDataManagerProtocol,
         questService: QuestServiceProtocol,
+        dailySpinService: DailySpinServiceProtocol,
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -107,8 +110,10 @@ class ForestViewModel: BaseViewModel {
         self.remoteConfigRepository = remoteConfigRepository
         self.playerDataManager = playerDataManager
         self.questService = questService
+        self.dailySpinService = dailySpinService
         super.init()
         bindQuests()
+        bindDailySpin()
         fetchForest()
     }
 }
@@ -221,7 +226,7 @@ extension ForestViewModel {
             sculptureList.removeAll()
             treeList.removeAll()
             fetchForest()
-            checkDailySpinStatus()
+            //checkDailySpinStatus()
             refreshDailySpinRewards()
             fetchWeeklyDailyCards()
             fetchAdventureRoadData()
@@ -242,11 +247,14 @@ extension ForestViewModel {
         }
     }
     
-    /*
-    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardType {
-        dailySpinRewardMap[spinModel.id]
+    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel? {
+        do {
+            return try dailySpinService.convertLocalReward(model: spinModel)
+        }catch {
+            print(error.localizedDescription)
+        }
+        return nil
     }
-    */
     
     func fetchAdventureRoadData() {
         /*
@@ -474,21 +482,13 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
-    func claimDailyReward(model: QuestRewardModel) {
-        /*
+    func claimDailyReward(model: LocalRewardModel) {
         Task { @MainActor in
-            let result = await adventureService.claimDailySpinReward(reward: model, contextType: .main)
-            if result.status == .success {
-                let target = Date().addingTimeInterval(86400)
-                self.nextDailySpinTime = target
-                self.dailySpinTime = target
-                self.startDailySpinTimer()
-            }
+            let result: () = try await adventureService.claimDailySpinReward(model: model)
         }
-        */
     }
     
-    func claimWeeklyReward(reward: LocalQuestRewardModel, weeklyModel:  WeeklyDailyCardModel) {
+    func claimWeeklyReward(reward: LocalRewardModel, weeklyModel:  WeeklyDailyCardModel) {
         /*
         Task { @MainActor in
             let result = await adventureService.saveWeeklyReward(weeklyModel: weeklyModel, contextType: .main)
@@ -608,18 +608,12 @@ private extension ForestViewModel {
 
     }
     
-    func checkDailySpinStatus() {
-        /*
-        Task { @MainActor in
-            let result = await adventureService.fetchDailySpinStatusDate()
-            
-            if let targetTime = result.data {
-                self.nextDailySpinTime = targetTime
-                self.dailySpinTime = targetTime
-                self.startDailySpinTimer()
-            }
-        }
-         */
+    func bindDailySpin() {
+        dailySpinService.dailySpinListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] models in
+                guard let self else { return }
+                dailySpinModels = models
+            }.store(in: &adventureCancellable)
     }
     
     func startDailySpinTimer() {

@@ -28,36 +28,6 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let gradientHexes: [String]?
     let textStrokeColorHex: String?
 }
-/*
-extension RemoteRewardModel {
-    func convertLocalReward() -> LocalRewardModel? {
-        if let id = self.id, let type = self.type, let category = self.category, let rewardCount = self.rewardCount, let displayName = self.displayName, let imageSource = self.imageSource {
-            var localRewardType: LocalRewardType
-            switch type {
-                case "standart":
-                    localRewardType = LocalRewardType.standart(
-                        model: LocalQuestRewardModel(
-                            id: id,
-                            category: QuestRewardModel.convertQuestReward(value: category),
-                            displayName: displayName,
-                            imageSource: imageSource,
-                            posterImage: posterImage,
-                            remotePath: remoteReward.remotePath,
-                            textColorHex: remoteReward.textColorHex,
-                            gradientHexes: remoteReward.gradientHexes
-                        )
-                    )
-                case "chest":
-                guard let chest = chestRepository.getLocalChest(chestId: id) else { return Resource.error(error: RewardRepositoryError.emptyChest) }
-                localRewardType = LocalRewardType.chest(model: chest)
-            default:
-                return Resource.error(error: RewardRepositoryError.emptyTypeError)
-            }
-            let model = LocalRewardModel(rewardCount: rewardCount, reward: LocalRewardType.)
-        }
-    }
-}
-*/
 
 // MARK: - SAFE COMPUTED PROPERTIES (UI HELPERS)
 

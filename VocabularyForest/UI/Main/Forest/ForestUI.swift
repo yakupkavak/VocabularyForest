@@ -175,22 +175,23 @@ private extension ForestUI {
     
     var dailySpinView: some View {
         VStack {
-            /*
             DailySpinUI(
                 models: viewModel.dailySpinModels,
                 isVisible: Binding (get: { uiState == .dailySpin }, set: { if !$0 { uiState = .empty }}),
                 nextSpinTime: $viewModel.dailySpinTime
             ) { rewardModel in
-                let reward = viewModel.resolveDailySpinReward(from: rewardModel)
-                PopupManager.shared.show {
-                    ClaimRewardUI(reward: reward) { reward in
-                        viewModel.claimDailyReward(model: reward)
-                        PopupManager.shared.dismiss()
+                if let reward = viewModel.resolveDailySpinReward(from: rewardModel) {
+                    PopupManager.shared.show {
+                        ClaimRewardUI(claimReward: reward) { reward in
+                            viewModel.claimDailyReward(model: reward)
+                            PopupManager.shared.dismiss()
+                        }
                     }
+                }else {
+                    // TODO: SHOW ERROR
                 }
             }
             .id(viewModel.dailySpinModelVersion)
-             */
         }
              
     }

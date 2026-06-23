@@ -42,6 +42,7 @@ protocol ForestAdventureServiceProtocol {
     //func fetchDailySpinStatusDate() async -> Resource<Date?>
     //func claimDailySpinReward(reward: QuestRewardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
     //func saveWeeklyReward(weeklyModel: WeeklyDailyCardModel, contextType: ForestDataManager.ContextType) async -> Resource<Bool>
+    func claimDailySpinReward(model: LocalRewardModel) async throws
     func claimQuestReward(quest: QuestModel) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
 }
@@ -69,6 +70,7 @@ class ForestAdventureService {
     private let documentRepository: DocumentaryRepositoryProtocol
     private let rewardRepository: RewardRepositoryProtocol
     private let questService: QuestServiceProtocol
+    private let dailySpinService: DailySpinService
     private let db = Firestore.firestore()
     private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
     private var questCacheList: [QuestModel]? = nil
@@ -82,7 +84,8 @@ class ForestAdventureService {
         remoteConfig: RemoteConfigRepositoryProtocol,
         documentRepository: DocumentaryRepositoryProtocol,
         rewardRepository: RewardRepositoryProtocol,
-        questService: QuestServiceProtocol
+        questService: QuestServiceProtocol,
+        dailySpinService: DailySpinService,
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -91,6 +94,7 @@ class ForestAdventureService {
         self.documentRepository = documentRepository
         self.rewardRepository = rewardRepository
         self.questService = questService
+        self.dailySpinService = dailySpinService
         setupParameters()
     }
 }
@@ -207,6 +211,11 @@ private extension ForestAdventureService {
 // MARK: - QUEST HELPERS
 
 extension ForestAdventureService: ForestAdventureServiceProtocol {
+    func claimDailySpinReward(model: LocalRewardModel) async throws {
+        try await rewardRepository.claimLocalReward(reward: model)
+        try await dailySpinService.claimDailySpinReward()
+    }
+    
     func claimLocalReward(model: LocalRewardModel) async throws {
         try await rewardRepository.claimLocalReward(reward: model)
     }

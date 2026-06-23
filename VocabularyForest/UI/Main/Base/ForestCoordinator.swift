@@ -74,6 +74,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let remoteConfigRepository = resolver.resolve(type: .singleInstance, for: RemoteConfigRepositoryProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
+        let dailySpinService = resolver.resolve(type: .singleInstance, for: DailySpinServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
             coreDataManager: coreData,
@@ -82,7 +83,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestAdventureService: adventureService,
             remoteConfigRepository: remoteConfigRepository,
             playerDataManager: playerManager,
-            questService: questService
+            questService: questService,
+            dailySpinService: dailySpinService
         )
         
         self.cachedForestViewModel = viewModel
