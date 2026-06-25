@@ -24,7 +24,8 @@ protocol DocumentaryRepositoryProtocol {
     func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<(ConfigParametersList)>
-    func saveDailySpinRewards(data: Any?) async -> Resource<Bool>
+    func saveChestConfig(data: Any?) async throws
+    func saveDailySpinRewards(data: Any?) async throws
     func saveQuestsConfig(data: Any?) async throws
     func saveWeeklyRewards(data: Any?) async -> Resource<Bool>
     func saveAdventureRoadConfig(data: Any?) async -> Resource<Bool>
@@ -158,13 +159,12 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
     
     // MARK: - SAVE METHODS
     
-    func saveDailySpinRewards(data: Any?) async -> Resource<Bool> {
-        do {
-            try saveToDisk(data: data, fileName: FileName.dailySpinRewards)
-            return .success(true)
-        } catch {
-            return .error(error: error)
-        }
+    func saveChestConfig(data: Any?) async throws {
+        try saveToDisk(data: data, fileName: FileName.chestConfig)
+    }
+    
+    func saveDailySpinRewards(data: Any?) async throws {
+        try saveToDisk(data: data, fileName: FileName.dailySpinRewards)
     }
     
     func saveQuestsConfig(data: Any?) async throws {

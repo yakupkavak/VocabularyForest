@@ -17,7 +17,7 @@ enum ChestRepositoryError: Error {
 
 protocol ChestRepositoryProtocol {
     func getLocalChest(chestId: String) -> LocalChestModel?
-    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async -> Resource<Bool>
+    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws
     func openChest(chestId: String) async throws -> [LocalRewardModel]
 }
 
@@ -114,7 +114,7 @@ extension ChestRepository: ChestRepositoryProtocol {
         }
     }
         
-    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async -> Resource<Bool> {
+    func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws {
         var localChests: [LocalChestModel] = []
         
         for remoteChest in remoteChests {
@@ -140,14 +140,13 @@ extension ChestRepository: ChestRepositoryProtocol {
                     )
                     localChests.append(localChest)
                 }else {
-                    return Resource.error(error: ChestRepositoryError.downloadImageError)
+                    throw ChestRepositoryError.downloadImageError
                 }
             }else {
-                return Resource.error(error: ChestRepositoryError.decodingError)
+                throw ChestRepositoryError.decodingError
             }
         }
         localChestModels = localChests
-        return Resource.success(true)
     }
 }
 

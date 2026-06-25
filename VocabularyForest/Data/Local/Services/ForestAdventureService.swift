@@ -70,7 +70,8 @@ class ForestAdventureService {
     private let documentRepository: DocumentaryRepositoryProtocol
     private let rewardRepository: RewardRepositoryProtocol
     private let questService: QuestServiceProtocol
-    private let dailySpinService: DailySpinService
+    private let dailySpinService: DailySpinServiceProtocol
+    private let chestService: ChestRepositoryProtocol
     private let db = Firestore.firestore()
     private var weeklyCacheList: [WeeklyDailyCardModel]? = nil
     private var questCacheList: [QuestModel]? = nil
@@ -85,7 +86,8 @@ class ForestAdventureService {
         documentRepository: DocumentaryRepositoryProtocol,
         rewardRepository: RewardRepositoryProtocol,
         questService: QuestServiceProtocol,
-        dailySpinService: DailySpinService,
+        dailySpinService: DailySpinServiceProtocol,
+        chestService: ChestRepositoryProtocol,
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -95,6 +97,7 @@ class ForestAdventureService {
         self.rewardRepository = rewardRepository
         self.questService = questService
         self.dailySpinService = dailySpinService
+        self.chestService = chestService
         setupParameters()
     }
 }
@@ -111,7 +114,20 @@ private extension ForestAdventureService {
         Task {
             do {
             let parameters = await remoteConfigRepository.fetchConfigParameters().data
-            
+                
+            if chestRewardID == parameters?.model.chestRewardsConfigVersion {
+                if let chests = try await documentRepository.fetchChestConfig().chests {
+                    try await chestService.processAndSaveChests(from: chests)
+                }
+            } else if let chestRewardVersion = parameters?.model.chestRewardsConfigVersion {
+                UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
+                let config = try await remoteConfigRepository.fetchChestConfig()
+                if let chests = config.model.chests {
+                    try await chestService.processAndSaveChests(from: chests)
+                    try await documentRepository.saveChestConfig(data: config.rawData)
+                }
+            }
+            /*
             if adventureRoadID == parameters?.model.adventureRoadConfigVersion {
                 // TODO: - RETURN FROM LOCAL
                 let response = await documentRepository.fetchAdventureRoadConfig()
@@ -126,10 +142,13 @@ private extension ForestAdventureService {
             }
             
             if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
-                // TODO: - RETURN FROM LOCAL
+                let response = try await documentRepository.fetchDailySpinModels()
+                try await dailySpinService.convertRemoteToDailySpinList(list: response)
             } else if let dailySpinVersion = parameters?.model.dailySpinRewardsConfigVersion {
                 UserDefaults.standard.set(dailySpinVersion, forKey: DefaultsKeys.dailySpinRewards)
-                // TODO: - FETCH NEW VERSION FROM REMOTE
+                let spinRewards = try await remoteConfigRepository.fetchDailySpinRewards()
+                try await dailySpinService.convertRemoteToDailySpinList(list: spinRewards.model)
+                try await documentRepository.saveDailySpinRewards(data: spinRewards.rawData)
             }
             
             if questsID == parameters?.model.questsConfigVersion {
@@ -157,15 +176,10 @@ private extension ForestAdventureService {
             } else if let gameEconomyVersion = parameters?.model.gameEconomyConfigVersion {
                 UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
+            }*/
             }
-            
-            if chestRewardID == parameters?.model.chestRewardsConfigVersion {
-                // TODO: - RETURN FROM LOCAL
-            } else if let chestRewardVersion = parameters?.model.chestRewardsConfigVersion {
-                UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
-                // TODO: - FETCH NEW VERSION FROM REMOTE
-            }
-            }catch {
+            catch {
+                print("hata geldi")
                 print(error)
             }
         }

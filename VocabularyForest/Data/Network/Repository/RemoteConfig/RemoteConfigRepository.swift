@@ -29,6 +29,7 @@ enum RemoteConfigError: Error, LocalizedError {
 }
 
 protocol RemoteConfigRepositoryProtocol {
+    func fetchChestConfig() async throws -> RemoteConfigResponse<RemoteChestConfigResponse>
     func fetchDailySpinRewards() async throws -> RemoteConfigResponse<RemoteDailySpinListModel>
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
     func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>>
@@ -87,6 +88,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.dailySpinRewards).decoded(asType: RemoteDailySpinListModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.dailySpinRewards).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return response
+        }catch {
+            throw error
+        }
+    }
+    
+    func fetchChestConfig() async throws -> RemoteConfigResponse<RemoteChestConfigResponse> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.chestRewardConfig).decoded(asType: RemoteChestConfigResponse.self)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.chestRewardConfig).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
             return response
         }catch {

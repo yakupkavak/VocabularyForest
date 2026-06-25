@@ -1828,6 +1828,9 @@
         }
       }
     },
+    "Çark Yükleniyor..." : {
+
+    },
     "cat_name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -9846,6 +9849,9 @@
 
     },
     "Unexpected error." : {
+
+    },
+    "Unexpected error. Error Code: 1001" : {
 
     },
     "unexpectedError" : {

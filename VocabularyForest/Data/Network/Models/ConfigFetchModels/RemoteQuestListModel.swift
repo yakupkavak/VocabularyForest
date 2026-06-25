@@ -9,7 +9,7 @@ import Foundation
 
 struct RemoteQuestListModel: Decodable {
     let id: String?
-    let items: [RemoteQuestModel]
+    let items: [RemoteQuestModel]?
 }
 
 struct RemoteQuestModel: Decodable {

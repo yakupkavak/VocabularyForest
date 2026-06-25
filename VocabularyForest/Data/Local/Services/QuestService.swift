@@ -137,7 +137,8 @@ extension QuestService: QuestServiceProtocol {
     
     func convertRemoteToCacheQuest(list: RemoteQuestListModel) async -> Resource<Bool> {
         var questList: [QuestModel] = []
-        for remoteQuest in list.items {
+        guard let items = list.items else { return Resource.error(error: QuestServiceError.emptyQuestList) }
+        for remoteQuest in items {
             if let id = remoteQuest.id, let type = remoteQuest.type,
                 let title = remoteQuest.title, let descriptionText = remoteQuest.descriptionText,
                 let reward = remoteQuest.reward, let targetCount = remoteQuest.targetCount,
