@@ -443,38 +443,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "860F3F3B-9535-4A22-957A-420D04BDFAB8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/Services/DailySpinService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "convertRemoteToDailySpinList(list:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2F2AE08E-CB6E-4FC2-B1E3-0DBCDF2ED6EA"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/Services/DailySpinService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
-            landmarkName = "convertRemoteToDailySpinList(list:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C6EB1431-C858-4827-AB98-E81B436A9A28"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -498,27 +466,13 @@
             filePath = "VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "processAndSaveChests(from:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "9EA89626-6704-4695-AC61-E6DB61E1CC15 - f4c98616613cf9aa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
-                  moduleName = "VocabularyForest.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
-               </Location>
-               <Location
-                  uuid = "9EA89626-6704-4695-AC61-E6DB61E1CC15 - b0e9e32cce3af12"
+                  uuid = "9EA89626-6704-4695-AC61-E6DB61E1CC15 - b0e9e32cce3aedc"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -528,8 +482,36 @@
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
+                  startingLineNumber = "148"
+                  endingLineNumber = "148">
+               </Location>
+               <Location
+                  uuid = "9EA89626-6704-4695-AC61-E6DB61E1CC15 - f4c98616613cf845"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "147"
+                  endingLineNumber = "147">
+               </Location>
+               <Location
+                  uuid = "9EA89626-6704-4695-AC61-E6DB61E1CC15 - b0e9e32cce3aefd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(12) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "147"
+                  endingLineNumber = "147">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -544,13 +526,55 @@
             filePath = "VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
             landmarkName = "processAndSaveChests(from:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - 5f058f9d4afc568c"
+                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - c2e9ba0e90978f83"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(9) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "145"
+                  endingLineNumber = "145">
+               </Location>
+               <Location
+                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - 28c7fc156320000b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(10) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - 44bb8fab1f1e8cb2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(11) suspend resume partial function for VocabularyForest.ChestRepository.processAndSaveChests(from: Swift.Array&lt;VocabularyForest.RemoteChestModel&gt;) async throws -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "145"
+                  endingLineNumber = "145">
+               </Location>
+               <Location
+                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - 5f058f9d4afc56ad"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -560,11 +584,11 @@
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "143"
-                  endingLineNumber = "143">
+                  startingLineNumber = "144"
+                  endingLineNumber = "144">
                </Location>
                <Location
-                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - a035b9818288ed80"
+                  uuid = "AEE0C642-E29D-4199-9441-796C1A75C3F9 - a035b9818288eda1"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -574,8 +598,8 @@
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "143"
-                  endingLineNumber = "143">
+                  startingLineNumber = "144"
+                  endingLineNumber = "144">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -590,10 +614,40 @@
             filePath = "VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
             landmarkName = "downloadAndSaveImageIfNeeded(remotePath:localKey:version:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AE8A5BD3-84D6-4B06-B087-6561CDD1F508 - 85d48cf903ef618f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Foundation.Data, CoreAPI.APIClientError&gt;) -&gt; () in VocabularyForest.ChestRepository.downloadAndSaveImageIfNeeded(remotePath: Swift.String, localKey: Swift.String, version: Swift.Int) async -&gt; Swift.Bool"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "61"
+                  endingLineNumber = "61">
+               </Location>
+               <Location
+                  uuid = "AE8A5BD3-84D6-4B06-B087-6561CDD1F508 - 85d48cf903ef7e6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Foundation.Data, CoreAPI.APIClientError&gt;) -&gt; () in VocabularyForest.ChestRepository.downloadAndSaveImageIfNeeded(remotePath: Swift.String, localKey: Swift.String, version: Swift.Int) async -&gt; Swift.Bool"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -606,24 +660,8 @@
             filePath = "VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "downloadAndSaveImageIfNeeded(remotePath:localKey:version:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EF3E2BF5-2B48-4AD4-88A0-612098673A29"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VocabularyForest/Data/Network/Repository/Adventure/ChestRepository.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
             landmarkName = "downloadAndSaveImageIfNeeded(remotePath:localKey:version:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -704,11 +742,11 @@
                   endingLineNumber = "127">
                </Location>
                <Location
-                  uuid = "06D2AF85-A2A9-4D21-BF28-8E5358DA094B - ad065d7d50a525ce"
+                  uuid = "06D2AF85-A2A9-4D21-BF28-8E5358DA094B - 7abfddebf7ab180c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(18) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  symbolName = "(38) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
                   moduleName = "VocabularyForest.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
@@ -764,11 +802,11 @@
                   endingLineNumber = "126">
                </Location>
                <Location
-                  uuid = "FBBED866-70F5-4AEE-8B9E-D878224D9550 - 161064f3622b214e"
+                  uuid = "FBBED866-70F5-4AEE-8B9E-D878224D9550 - 2789e76001291d0c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(17) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  symbolName = "(37) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
                   moduleName = "VocabularyForest.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
@@ -783,59 +821,305 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CB0136D1-9C1F-4A08-9BD6-D478B815D20E"
+            uuid = "10C40B45-FF1B-48F8-889E-5C7429CD90A4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
             landmarkName = "setupParameters()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "CB0136D1-9C1F-4A08-9BD6-D478B815D20E - 5bdbdbc92efa4605"
+                  uuid = "10C40B45-FF1B-48F8-889E-5C7429CD90A4 - c0349b0705275bf4"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(5) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  symbolName = "(19) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
                   moduleName = "VocabularyForest.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120">
+                  startingLineNumber = "150"
+                  endingLineNumber = "150">
                </Location>
                <Location
-                  uuid = "CB0136D1-9C1F-4A08-9BD6-D478B815D20E - 1ea00d14934aa1"
+                  uuid = "10C40B45-FF1B-48F8-889E-5C7429CD90A4 - 36687cdb929fac0c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(6) await resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  symbolName = "(20) await resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
                   moduleName = "VocabularyForest.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120">
+                  startingLineNumber = "150"
+                  endingLineNumber = "150">
                </Location>
                <Location
-                  uuid = "CB0136D1-9C1F-4A08-9BD6-D478B815D20E - ac4df1efff2f2b6a"
+                  uuid = "10C40B45-FF1B-48F8-889E-5C7429CD90A4 - e59844867534ca48"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(15) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  symbolName = "(42) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
                   moduleName = "VocabularyForest.debug.dylib"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120">
+                  startingLineNumber = "150"
+                  endingLineNumber = "150">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1EE366D5-E802-41E4-B3AF-A8B27B6DDEE9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "setupParameters()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1EE366D5-E802-41E4-B3AF-A8B27B6DDEE9 - 81728f8fe1b414cc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(21) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "151"
+                  endingLineNumber = "151">
+               </Location>
+               <Location
+                  uuid = "1EE366D5-E802-41E4-B3AF-A8B27B6DDEE9 - 67f144fefa48321b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(22) await resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "151"
+                  endingLineNumber = "151">
+               </Location>
+               <Location
+                  uuid = "1EE366D5-E802-41E4-B3AF-A8B27B6DDEE9 - 388ebd002bb6cf48"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(43) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "151"
+                  endingLineNumber = "151">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "setupParameters()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 26f73bd2a9b3f20b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(34) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 7de5705c9e2dffd4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(35) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 909baee64caff8b5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(36) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 2789e76001290596"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(37) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 7abfddebf7ab0777"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(38) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 91ac1a75a4250050"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(39) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 3bf5d072d238c868"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(40) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 4eea0efc80bad549"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(41) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - e59844867534d62a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(42) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 388ebd002bb6d30b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(43) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - 4fbcfb8a1830dcd4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(44) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
+               </Location>
+               <Location
+                  uuid = "CB880F69-FEC0-476B-880F-6A336DE62DE6 - e2513015ceb2d9b5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(45) suspend resume partial function for closure #1 () async -&gt; () in VocabularyForest.ForestAdventureService.setupParameters() -&gt; ()"
+                  moduleName = "VocabularyForest.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yakupkavak/Desktop/Desktop%20-%20Yakup%20MacBook%20Pro/SwiftProjects/VocabularyForest/VocabularyForest/Data/Local/Services/ForestAdventureService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184">
                </Location>
             </Locations>
          </BreakpointContent>

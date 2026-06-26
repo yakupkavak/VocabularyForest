@@ -42,6 +42,7 @@ final class ChestRepository {
         }
         
         let getImageModel = GetImageRequestModel(imagePath: remotePath)
+        print(getImageModel)
         networkManager.fetchImage(values: getImageModel) { [weak self] result in
             guard let self else { return }
             switch result {

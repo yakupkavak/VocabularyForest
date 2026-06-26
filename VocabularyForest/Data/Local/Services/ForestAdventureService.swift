@@ -140,7 +140,7 @@ private extension ForestAdventureService {
                 let saveLocalResult = await documentRepository.saveAdventureRoadConfig(data: config.data?.rawData)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
             }
-            
+            */
             if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
                 let response = try await documentRepository.fetchDailySpinModels()
                 try await dailySpinService.convertRemoteToDailySpinList(list: response)
@@ -163,7 +163,7 @@ private extension ForestAdventureService {
                     try await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
                 }
             }
-            
+            /*
             if weeklyID == parameters?.model.weeklyRewardsConfigVersion {
                 // TODO: - RETURN FROM LOCAL
             } else if let weeklyVersion = parameters?.model.weeklyRewardsConfigVersion {
@@ -176,7 +176,8 @@ private extension ForestAdventureService {
             } else if let gameEconomyVersion = parameters?.model.gameEconomyConfigVersion {
                 UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
                 // TODO: - FETCH NEW VERSION FROM REMOTE
-            }*/
+            }
+             */
             }
             catch {
                 print("hata geldi")

@@ -125,7 +125,7 @@ extension RewardRepository: RewardRepositoryProtocol {
                         )
                     )
                 case "chest":
-                guard let chest = chestRepository.getLocalChest(chestId: id) else {
+                guard let chestID = remoteReward.chestId , let chest = chestRepository.getLocalChest(chestId: chestID) else {
                     throw RewardRepositoryError.emptyChest
                 }
                 localRewardType = LocalRewardType.chest(model: chest)
