@@ -79,6 +79,15 @@ extension LocalRewardType {
             model.displayName
         }
     }
+    
+    var textColorHex: String? {
+        switch self {
+        case .standart(let model):
+            model.textColorHex
+        case .chest(let model):
+            model.textHexColor
+        }
+    }
 }
 
 /*

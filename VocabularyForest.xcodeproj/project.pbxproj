@@ -63,6 +63,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3710E1BA2FF2A0180068731C /* Exceptions for "Data" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				TestAssets.xcassets,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
 		37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -87,6 +94,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		3710E1B72FF29FFB0068731C /* Data */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3710E1BA2FF2A0180068731C /* Exceptions for "Data" folder in "VocabularyForest" target */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		37267D222E90E9D90019D139 /* VocabularyForest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -218,6 +233,7 @@
 		37D8A8AF2EF959E500E59CA9 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				3710E1B72FF29FFB0068731C /* Data */,
 				37D8A8B12EF95A2600E59CA9 /* Models */,
 				37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */,
 			);

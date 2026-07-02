@@ -5516,6 +5516,9 @@
     "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin." : {
 
     },
+    "Kazanılan Ödüller" : {
+
+    },
     "Kelime" : {
       "localizations" : {
         "en" : {
@@ -7029,6 +7032,9 @@
           }
         }
       }
+    },
+    "Next" : {
+
     },
     "Nice to meet you!" : {
       "extractionState" : "manual",

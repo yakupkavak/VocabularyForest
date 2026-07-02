@@ -482,9 +482,11 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
-    func claimDailyReward(model: LocalRewardModel) {
+    func claimDailyRewards(models: [LocalRewardModel]) {
         Task { @MainActor in
-            let result: () = try await adventureService.claimDailySpinReward(model: model)
+            for model in models {
+                let result: () = try await adventureService.claimDailySpinReward(model: model)
+            }
         }
     }
     
@@ -605,7 +607,6 @@ private extension ForestViewModel {
                 monthlyQuestList = updatedQuests.filter {  $0.type == .monthly }
                 specialQuestList = updatedQuests.filter {  $0.type == .special }
             }.store(in: &questCancellable)
-
     }
     
     func bindDailySpin() {
@@ -613,6 +614,7 @@ private extension ForestViewModel {
             .sink { [weak self] models in
                 guard let self else { return }
                 dailySpinModels = models
+                dailySpinModelVersion = UUID()
             }.store(in: &adventureCancellable)
     }
     

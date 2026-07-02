@@ -19,6 +19,7 @@ protocol VocabularyForestCoordinatorProtocol {
     func startBookcasePacketsUI() -> AnyView
     func startCreateBookUI() -> AnyView
     func startCreateBookcaseUI() -> AnyView
+    func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView
 }
 
 final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, ObservableObject{
@@ -36,7 +37,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     private var cachedBookcasePacketsViewModel: BookcasePacketsViewModel?
     private var cachedCreateBookViewModel: CreateBookViewModel?
     private var cachedCreateBookcaseViewModel: CreateBookcaseViewModel?
-    
+    private var cachedClaimRewardViewModel: ClaimRewardViewModel?
+
     init(resolver: DCResolve) {
         self.resolver = resolver
     }
@@ -231,6 +233,16 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         return AnyView(
             CreateBookcaseUI(viewModel: viewModel)
         )
+    }
+    
+    func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView {
+        if let cachedVM = cachedCreateBookcaseViewModel {
+            return AnyView(CreateBookcaseUI(viewModel: cachedVM))
+        }
+        let chestRepository = resolver.resolve(type: .singleInstance, for: ChestRepositoryProtocol.self)
+        let viewModel = ClaimRewardViewModel(chestManager: chestRepository)
+        self.cachedClaimRewardViewModel = viewModel
+        return AnyView(ClaimRewardUI(viewModel: viewModel, claimReward: claimReward, onClaim: onClaim))
     }
     
 }

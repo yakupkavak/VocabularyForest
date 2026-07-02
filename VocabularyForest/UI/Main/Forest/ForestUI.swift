@@ -47,6 +47,7 @@ struct ForestUI: View {
     @EnvironmentObject var tabbarController: TabBarController
     @EnvironmentObject var router: LearningRouter
     @EnvironmentObject var bookcaseRouter: BookcaseRouter
+    @EnvironmentObject private var coordinator: VocabularyForestCoordinator
     @ObservedObject var viewModel: ForestViewModel
     @State private var forestScene = ForestScene()
     
@@ -182,8 +183,8 @@ private extension ForestUI {
             ) { rewardModel in
                 if let reward = viewModel.resolveDailySpinReward(from: rewardModel) {
                     PopupManager.shared.show {
-                        ClaimRewardUI(claimReward: reward) { reward in
-                            viewModel.claimDailyReward(model: reward)
+                        coordinator.startClaimRewardUI(claimReward: reward) { rewards in
+                            viewModel.claimDailyRewards(models: rewards)
                             PopupManager.shared.dismiss()
                         }
                     }
@@ -202,10 +203,12 @@ private extension ForestUI {
         }), cardList: viewModel.weeklyDailyCards) { dailyModel in
             if dailyModel.status == .ready{
                 PopupManager.shared.show {
-                    ClaimRewardUI(claimReward: dailyModel.bounty) { reward in
-                        viewModel.claimWeeklyReward(reward: reward, weeklyModel: dailyModel)
+                    /*
+                    coordinator.startClaimRewardUI(claimReward: dailyModel) { rewards in
+                        viewModel.claimDailyRewards(models: rewards)
                         PopupManager.shared.dismiss()
                     }
+                     */
                 }
             }
         }

@@ -89,7 +89,7 @@ extension DailySpinService: DailySpinServiceProtocol {
                 throw RewardRepositoryError.decodingError
             }
             //let dailyModel = DailySpinModel(id: id, weight: weight, reward: localReward, textColorHex: model.textColorHex, backgroundHexes: model.backgroundHexes)
-            let customImage = RewardImageView(asset: localReward.reward.posterImage)
+            let customImage = RewardImageView(asset: localReward.reward.posterImage).frame(width: UIScreen.main.bounds.height * 0.05, height: UIScreen.main.bounds.height * 0.05 )
             let spinModel = SpinModel(id: id, text: model.text?.localized ?? "", customImage: customImage)
             
             activeSpinList.append(spinModel)

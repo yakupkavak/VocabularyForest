@@ -50,9 +50,14 @@ struct GlobalPopupModifier: ViewModifier {
                 .disabled(manager.isPresented)
             
             if manager.isPresented, let popup = manager.currentPopup {
+                Color.black
+                    .opacity(0.6)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .zIndex(1)
                 popup
                     .ignoresSafeArea()
-                    .zIndex(1)
+                    .zIndex(2)
                     .transition(.move(edge: .bottom))
             }
         }
