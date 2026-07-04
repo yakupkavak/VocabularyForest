@@ -13,6 +13,7 @@ class ClaimRewardViewModel: ObservableObject {
     // MARK: - DEPENDENCIES
     
     private let chestManager: ChestRepositoryProtocol
+    private let rewardRepository: RewardRepositoryProtocol
     
     // MARK: - PROPERTIES
     
@@ -21,8 +22,9 @@ class ClaimRewardViewModel: ObservableObject {
     
     // MARK: INIT
     
-    init(chestManager: ChestRepositoryProtocol) {
+    init(chestManager: ChestRepositoryProtocol, rewardRepository: RewardRepositoryProtocol) {
         self.chestManager = chestManager
+        self.rewardRepository = rewardRepository
     }
 
     func openChest(chestID: String){
@@ -30,6 +32,20 @@ class ClaimRewardViewModel: ObservableObject {
             do {
                 let rewards = try await chestManager.openChest(chestId: chestID)
                 chestRewards = rewards
+            }catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    func claimRewards() {
+        Task {
+            do {
+                if let chestRewards {
+                    for reward in chestRewards {
+                        try await rewardRepository.claimLocalReward(reward: reward)
+                    }
+                }
             }catch {
                 errorMessage = error.localizedDescription
             }

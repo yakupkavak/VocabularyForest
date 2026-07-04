@@ -30,10 +30,17 @@ struct RewardImageView: View {
     }
     
     private func loadOfflineImage(named imageName: String) -> UIImage? {
-        let fileManager = FileManager.default
-        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
-        
-        let fileURL = appSupport.appendingPathComponent("OfflineGameAssets").appendingPathComponent("\(imageName).png")
-        return UIImage(contentsOfFile: fileURL.path)
-    }
+            let fileManager = FileManager.default
+            guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
+            let cleanName = imageName.replacingOccurrences(of: ".png", with: "")
+            let fileURL = appSupport.appendingPathComponent("OfflineGameAssets").appendingPathComponent("\(cleanName).png")
+            
+            do {
+                let data = try Data(contentsOf: fileURL)
+                return UIImage(data: data)
+            } catch {
+                print("Aranan yol: \(fileURL.path)")
+                return nil
+            }
+        }
 }

@@ -93,7 +93,7 @@ private extension ClaimRewardUI {
                 .frame(width: mainImageWidth)
             Text(LocalizedStringKey(model.displayName.localized))
                 .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
-                .foregroundColor(model.textColorHex?.color)
+                .foregroundColor(model.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
         }
     }
@@ -105,18 +105,15 @@ private extension ClaimRewardUI {
         VStack {
             if chestStation == .open, let chestRewards = viewModel.chestRewards {
                 if chestRewardIndex < chestRewards.count {
-                    // 1. Durum: Ödülleri tek tek göster
                     let currentReward = chestRewards[chestRewardIndex]
                     chestRewardUI(model: currentReward, size: size)
                         .transition(.scale.combined(with: .opacity))
-                        .id(chestRewardIndex) // Animasyonun tetiklenmesi için
+                        .id(chestRewardIndex)
                 } else {
-                    // 2. Durum: Tüm ödüllerin özeti
                     chestSummaryView(rewards: chestRewards, size: size)
                         .transition(.opacity)
                 }
             } else {
-                // 0. Durum: Kasa Kapalı
                 RewardImageView(asset: chestModel.closeLocalImagePath)
                     .scaledToFit()
                     .frame(width: mainImageWidth)
@@ -164,7 +161,7 @@ private extension ClaimRewardUI {
                 .frame(width: mainImageWidth)
             Text(LocalizedStringKey(model.reward.displayName.localized))
                 .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
-                .foregroundColor(model.reward.textColorHex?.color)
+                .foregroundColor(model.reward.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
         }
     }
@@ -172,7 +169,6 @@ private extension ClaimRewardUI {
     func actionButton(size: CGSize) -> some View {
         let buttonMaxWidth = isPad ? CGFloat(400) : .infinity
         
-        // Değişkeni doğrudan LocalizedStringKey olarak tanımlıyoruz
         var buttonTitleKey: LocalizedStringKey = "Claim reward"
         
         if case .chest = claimReward.reward, let chestRewards = viewModel.chestRewards, chestStation == .open {
@@ -184,7 +180,6 @@ private extension ClaimRewardUI {
         return Button(action: {
             handleClaim()
         }) {
-            // Text içine doğrudan LocalizedStringKey veriyoruz
             Text(buttonTitleKey)
                 .font(.system(size: isPad ? 38 : 28, weight: .black, design: .rounded))
                 .foregroundColor(.white)
@@ -213,19 +208,16 @@ private extension ClaimRewardUI {
         if case .chest = claimReward.reward {
             if let chestRewards = viewModel.chestRewards {
                 if chestRewardIndex < chestRewards.count {
-                    // Sıradaki ödüle veya özet ekranına yumuşak geçiş yap
                     withAnimation(.spring()) {
                         chestRewardIndex += 1
                     }
                 } else {
-                    // Özet ekranındayız, tüm kasa ödüllerini topla
                     onClaim(chestRewards)
                 }
             } else {
                 onClaim(claimedRewards)
             }
         } else {
-            // Standart tekli ödül
             onClaim([claimReward])
         }
     }
@@ -287,13 +279,28 @@ private extension ClaimRewardUI {
 // MARK: - PREVIEW
 
 #Preview("Chest") {
-    ClaimRewardUI(viewModel: ClaimRewardViewModel(chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())),claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))) { reward in
+    ClaimRewardUI(
+        viewModel: ClaimRewardViewModel(
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()),
+            rewardRepository: RewardRepository(assetManager: OfflineAssetManager(), apiService: APIService(), chestRepository: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()), forestManager: ForestDataManager(mainContext: CoreDataManager().viewContext, backgroundContext: CoreDataManager().backgroundContext))
+        ),
+        claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))
+    ) { reward in
         print("Reward claimed: \(reward)")
     }
 }
 
 #Preview("Cat") {
-    ClaimRewardUI(viewModel: ClaimRewardViewModel(chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())), claimReward: LocalRewardModel(rewardCount: 1, reward: .standart(model: LocalQuestRewardModel(id: "1", category: .animal, displayName: .mock(), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil)))) { reward in
+    ClaimRewardUI(
+        viewModel: ClaimRewardViewModel(
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()),
+            rewardRepository: RewardRepository(assetManager: OfflineAssetManager(), apiService: APIService(), chestRepository: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()), forestManager: ForestDataManager(mainContext: CoreDataManager().viewContext, backgroundContext: CoreDataManager().backgroundContext))
+        ),
+        claimReward: LocalRewardModel(
+            rewardCount: 1,
+            reward: .standart(model: LocalQuestRewardModel(id: "1", category: .animal, displayName: .mock(), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))
+        )
+    ) { reward in
         print("Reward claimed: \(reward)")
     }
 }

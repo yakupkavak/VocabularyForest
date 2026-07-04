@@ -240,7 +240,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             return AnyView(CreateBookcaseUI(viewModel: cachedVM))
         }
         let chestRepository = resolver.resolve(type: .singleInstance, for: ChestRepositoryProtocol.self)
-        let viewModel = ClaimRewardViewModel(chestManager: chestRepository)
+        let rewardRepository = resolver.resolve(type: .singleInstance, for: RewardRepositoryProtocol.self)
+        let viewModel = ClaimRewardViewModel(chestManager: chestRepository,rewardRepository: rewardRepository)
         self.cachedClaimRewardViewModel = viewModel
         return AnyView(ClaimRewardUI(viewModel: viewModel, claimReward: claimReward, onClaim: onClaim))
     }

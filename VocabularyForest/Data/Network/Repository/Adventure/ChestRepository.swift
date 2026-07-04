@@ -33,34 +33,39 @@ final class ChestRepository {
         self.networkManager = apiService
     }
     
-    // MARK: - Private Downloader TODO: - static yapılacak
+    // MARK: - Private Downloader
     
-    private func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async -> Bool {
-        
+    private func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async throws {
         if offlineAssetManager.isAssetUpToDate(imageName: localKey, expectedVersion: version) {
-            return true
+            return
         }
         
         let getImageModel = GetImageRequestModel(imagePath: remotePath)
-        print(getImageModel)
-        networkManager.fetchImage(values: getImageModel) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let imageData):
-                let saveResult = offlineAssetManager.saveImageToAssets(
-                    data: imageData,
-                    imageName: localKey,
-                    version: version
-                )
-                if saveResult.status == .error {
-                    print(saveResult.error ?? "Save error")
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            networkManager.fetchImage(values: getImageModel) { [weak self] result in
+                guard let self else {
+                    continuation.resume(throwing: ChestRepositoryError.downloadImageError)
+                    return
                 }
-                
-            case .failure(let error):
-                print(error)
+                switch result {
+                case .success(let imageData):
+                    let saveResult = offlineAssetManager.saveImageToAssets(
+                        data: imageData,
+                        imageName: localKey,
+                        version: version
+                    )
+                    if saveResult.status == .error {
+                        continuation.resume(throwing: saveResult.error ?? ChestRepositoryError.downloadImageError)
+                    } else {
+                        continuation.resume()
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
-        return true
     }
 }
 
@@ -124,25 +129,19 @@ extension ChestRepository: ChestRepositoryProtocol {
                 let closedChestKey = "\(id)_closed"
                 let openChestKey = "\(id)_open"
                 
-                async let closedSuccess = downloadAndSaveImageIfNeeded(remotePath: closedImagePath, localKey: closedChestKey, version: version)
-                async let openSuccess = downloadAndSaveImageIfNeeded(remotePath: openImagePath, localKey: openChestKey, version: version)
+                try await downloadAndSaveImageIfNeeded(remotePath: closedImagePath, localKey: closedChestKey, version: version)
+                try await downloadAndSaveImageIfNeeded(remotePath: openImagePath, localKey: openChestKey, version: version)
                 
-                let (isClosedSaved, isOpenSaved) = await (closedSuccess, openSuccess)
-                
-                if isClosedSaved && isOpenSaved {
-                    let localChest = LocalChestModel(
-                        id: id,
-                        version: version,
-                        displayName: chestName,
-                        closeLocalImagePath: RewardAssetReference(key: closedChestKey, source: .offlineStorage),
-                        openLocalImagePath: RewardAssetReference(key: openChestKey, source: .offlineStorage),
-                        textHexColor: remoteChest.textHexColor,
-                        backgroundGradientColors: remoteChest.gradientHexBackgroundColors
-                    )
-                    localChests.append(localChest)
-                }else {
-                    throw ChestRepositoryError.downloadImageError
-                }
+                let localChest = LocalChestModel(
+                    id: id,
+                    version: version,
+                    displayName: chestName,
+                    closeLocalImagePath: RewardAssetReference(key: closedChestKey, source: .offlineStorage),
+                    openLocalImagePath: RewardAssetReference(key: openChestKey, source: .offlineStorage),
+                    textHexColor: remoteChest.textHexColor,
+                    backgroundGradientColors: remoteChest.gradientHexBackgroundColors
+                )
+                localChests.append(localChest)
             }else {
                 throw ChestRepositoryError.decodingError
             }
@@ -160,13 +159,18 @@ private extension ChestRepository {
             guard let imageSource = ImageSource.convertImageSource(value: imageSource) else { throw RewardRepositoryError.emptySourceError }
             var localRewardType: LocalRewardType
             var posterImage: RewardAssetReference
-            let posterName = RewardRepository.posterName(id: id)
+            let posterName = RewardRepository.posterName(assetName: assetName)
             
             switch imageSource {
             case .local:
                 guard let localImageName = remoteReward.localImageName else { throw RewardRepositoryError.emptyLocalImageError }
                 posterImage = RewardAssetReference(key: localImageName, source: .appAssets)
             default:
+                guard let posterIconPath = remoteReward.posterIconPath,
+                      let version = remoteReward.remoteAssetVersion else {
+                    throw RewardRepositoryError.emptyRemotePath
+                }
+                try await downloadAndSaveImageIfNeeded(remotePath: posterIconPath, localKey: posterName, version: version)
                 posterImage = RewardAssetReference(key: posterName, source: .offlineStorage)
             }
             

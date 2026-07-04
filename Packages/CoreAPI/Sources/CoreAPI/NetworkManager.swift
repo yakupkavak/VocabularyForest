@@ -89,6 +89,7 @@ public final class NetworkManager<EndpointItem: EndPoint> {
             case .success(let data):
                 completion(.success(data))
             case .failure(let error):
+                print(error.localizedDescription)
                 if NSURLErrorTimedOut == (error as NSError).code {
                     completion(.failure(.timeout))
                 } else {

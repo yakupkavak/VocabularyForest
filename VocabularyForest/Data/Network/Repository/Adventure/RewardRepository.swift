@@ -41,10 +41,6 @@ final class RewardRepository {
         self.forestRepository = forestManager
     }
     
-    static func posterName(id: String) -> String {
-        "\(id)_poster"
-    }
-    
     static func posterName(assetName: String) -> String {
         "\(assetName)_poster"
     }
