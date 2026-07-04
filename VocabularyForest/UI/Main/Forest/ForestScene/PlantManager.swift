@@ -71,18 +71,45 @@ class PlantManager {
 private extension PlantManager {
     
     func loadTextures(for model: TreeModel) {
-        let atlas = SKTextureAtlas(named: model.assetName)
-        for i in Constants.firstFrameIndex..<atlas.textureNames.count {
-            textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+        switch model.assetSource {
+        case .appAssets:
+            let atlas = SKTextureAtlas(named: model.assetName)
+            for i in Constants.firstFrameIndex..<atlas.textureNames.count {
+                textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+            }
+        case .offlineStorage:
+            textures = loadOfflineTextures(assetName: model.assetName)
         }
         setPlant(model: model)
         plant.zPosition = getZIndex(yPosition: model.yPosition)
     }
     
+    /// Zip ile inen asset'ler `OfflineGameAssets/{assetName}/` klasöründe kare kare,
+    /// tekil remote görseller ise `OfflineGameAssets/{assetName}.png` olarak durur.
+    func loadOfflineTextures(assetName: String) -> [SKTexture] {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return [] }
+        let baseURL = appSupport.appendingPathComponent("OfflineGameAssets")
+        let bundleURL = baseURL.appendingPathComponent(assetName)
+        
+        var frameURLs: [URL]
+        if let contents = try? FileManager.default.contentsOfDirectory(at: bundleURL, includingPropertiesForKeys: nil) {
+            frameURLs = contents
+                .filter { $0.pathExtension.lowercased() == "png" }
+                .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        } else {
+            frameURLs = [baseURL.appendingPathComponent("\(assetName).png")]
+        }
+        
+        return frameURLs.compactMap { url in
+            guard let image = UIImage(contentsOfFile: url.path) else { return nil }
+            return SKTexture(image: image)
+        }
+    }
+    
     func setPlant(model: TreeModel) {
         // FUTURE: - GROW PLANT
         plant.removeFromParent()
-        guard let firstFrame = textures[safe: Constants.secondFrameIndex], let scene else {
+        guard let firstFrame = textures[safe: Constants.secondFrameIndex] ?? textures.first, let scene else {
             return
         }
         plant.texture = firstFrame

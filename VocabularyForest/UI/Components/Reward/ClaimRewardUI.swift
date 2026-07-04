@@ -221,6 +221,7 @@ private extension ClaimRewardUI {
             onClaim([claimReward])
         }
     }
+    
     func triggerShake() {
         if case .chest = claimReward.reward {
             withAnimation(.easeInOut(duration: 0.12).repeatCount(5, autoreverses: true)) {
