@@ -8,6 +8,7 @@
 //
 
 import SpriteKit
+import DTO
 
 // MARK: - ANIMAL MANAGER PROTOCOL
 
@@ -95,6 +96,30 @@ private extension AnimalManager {
         jumpTextures = loadAtlas(named: "\(type)Jump", prefix: "\(type.lowercased())_jump_")
         walkingTextures = loadAtlas(named: "\(type)Walk", prefix: "\(type.lowercased())_walk_")
     }
+    
+    func loadOfflineTextures(for assetName: String) {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return }
+        let bundleURL = appSupport.appendingPathComponent("OfflineGameAssets").appendingPathComponent(assetName)
+        let manifestURL = bundleURL.appendingPathComponent("manifest.json")
+        
+        guard let manifestData = try? Data(contentsOf: manifestURL),
+              let manifest = try? JSONDecoder().decode(ManifestModel.self, from: manifestData) else { return }
+        
+        idleTextures = loadFrames(names: manifest.animations?.idle, in: bundleURL)
+        walkingTextures = loadFrames(names: manifest.animations?.walk, in: bundleURL)
+        jumpTextures = loadFrames(names: manifest.animations?.jump, in: bundleURL)
+        
+        if walkingTextures.isEmpty { walkingTextures = idleTextures }
+        if jumpTextures.isEmpty { jumpTextures = idleTextures }
+    }
+    
+    func loadFrames(names: [String]?, in bundleURL: URL) -> [SKTexture] {
+        (names ?? []).compactMap { name in
+            let fileName = name.hasSuffix(".png") ? name : "\(name).png"
+            guard let image = UIImage(contentsOfFile: bundleURL.appendingPathComponent(fileName).path) else { return nil }
+            return SKTexture(image: image)
+        }
+    }
 
     func loadCircleAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
         let atlas = SKTextureAtlas(named: atlasName)
@@ -159,7 +184,12 @@ private extension AnimalManager {
     }
 
     func setupAnimal(animal: AnimalModel) {
-        loadTextures(for: animal.assetName)
+        switch animal.assetSource {
+        case .appAssets:
+            loadTextures(for: animal.assetName)
+        case .offlineStorage:
+            loadOfflineTextures(for: animal.assetName)
+        }
         setupAnimalFrames(model: animal)
         idleAnimation()
         randomActions()

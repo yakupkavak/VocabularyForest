@@ -84,8 +84,6 @@ private extension PlantManager {
         plant.zPosition = getZIndex(yPosition: model.yPosition)
     }
     
-    /// Zip ile inen asset'ler `OfflineGameAssets/{assetName}/` klasöründe kare kare,
-    /// tekil remote görseller ise `OfflineGameAssets/{assetName}.png` olarak durur.
     func loadOfflineTextures(assetName: String) -> [SKTexture] {
         guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return [] }
         let baseURL = appSupport.appendingPathComponent("OfflineGameAssets")
