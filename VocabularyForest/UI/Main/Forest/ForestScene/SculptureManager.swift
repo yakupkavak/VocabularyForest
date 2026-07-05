@@ -62,7 +62,13 @@ class SculptureManager {
 private extension SculptureManager {
     
     func setModel(model: SculptureModel) {
-        currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        switch model.assetSource {
+        case .appAssets:
+            currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        case .offlineStorage:
+            guard let texture = loadOfflineTexture(assetName: model.assetName) else { return }
+            currentSculptureNode = SKSpriteNode(texture: texture)
+        }
         currentSculptureNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
@@ -78,6 +84,24 @@ private extension SculptureManager {
         currentSculptureNode.zPosition = getZIndex(yPosition: model.yPosition)
         sculptureModel = model
         scene?.addChild(currentSculptureNode)
+    }
+    
+    func loadOfflineTexture(assetName: String) -> SKTexture? {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
+        let baseURL = appSupport.appendingPathComponent("OfflineGameAssets")
+        var fileURL = baseURL.appendingPathComponent("\(assetName).png")
+        
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            let bundleURL = baseURL.appendingPathComponent(assetName)
+            guard let firstFrame = (try? FileManager.default.contentsOfDirectory(at: bundleURL, includingPropertiesForKeys: nil))?
+                .filter({ $0.pathExtension.lowercased() == "png" })
+                .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
+                .first else { return nil }
+            fileURL = firstFrame
+        }
+        
+        guard let image = UIImage(contentsOfFile: fileURL.path) else { return nil }
+        return SKTexture(image: image)
     }
      
     func createInteractionBubble() {
