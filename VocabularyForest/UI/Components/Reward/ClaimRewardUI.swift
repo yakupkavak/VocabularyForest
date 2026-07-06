@@ -95,6 +95,17 @@ private extension ClaimRewardUI {
                 .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
                 .foregroundColor(model.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
+            rewardCountText(count: claimReward.rewardCount, fontSize: rewardTextSize * 0.75, color: model.textColorHex?.color ?? .white)
+        }
+    }
+    
+    @ViewBuilder
+    func rewardCountText(count: Int, fontSize: CGFloat, color: Color) -> some View {
+        if count > 1 {
+            Text("x\(count)")
+                .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                .foregroundColor(color)
+                .shadow(color: .black.opacity(0.3), radius: 5)
         }
     }
     
@@ -141,6 +152,7 @@ private extension ClaimRewardUI {
                         Text(LocalizedStringKey(rewards[index].reward.displayName.localized))
                             .font(.system(size: isPad ? 20 : 14, weight: .bold, design: .rounded))
                             .foregroundColor(rewards[index].reward.textColorHex?.color ?? .white)
+                        rewardCountText(count: rewards[index].rewardCount, fontSize: isPad ? 18 : 12, color: rewards[index].reward.textColorHex?.color ?? .white)
                     }
                     .padding()
                     .background(Color.white.opacity(0.15))
@@ -163,6 +175,7 @@ private extension ClaimRewardUI {
                 .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
                 .foregroundColor(model.reward.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
+            rewardCountText(count: model.rewardCount, fontSize: rewardTextSize * 0.75, color: model.reward.textColorHex?.color ?? .white)
         }
     }
     
