@@ -18,7 +18,7 @@ enum DailySpinServiceError: Error {
 
 enum DailySpinReadyState {
     case claimable
-    case alreadyClaimed(remainTime: Date)
+    case alreadyClaimed(remainSeconds: TimeInterval)
 }
 
 protocol DailySpinServiceProtocol {
@@ -89,63 +89,84 @@ extension DailySpinService: DailySpinServiceProtocol {
                 throw RewardRepositoryError.decodingError
             }
             //let dailyModel = DailySpinModel(id: id, weight: weight, reward: localReward, textColorHex: model.textColorHex, backgroundHexes: model.backgroundHexes)
-            let customImage = RewardImageView(asset: localReward.reward.posterImage).frame(width: UIScreen.main.bounds.height * 0.05, height: UIScreen.main.bounds.height * 0.05 )
-            let spinModel = SpinModel(id: id, text: model.text?.localized ?? "", customImage: customImage)
+            let customImage = RewardImageView(asset: localReward.reward.posterImage).frame(
+                width: UIScreen.main.bounds.height * 0.05,
+                height: UIScreen.main.bounds.height * 0.05
+            )
             
+            var spinModel: SpinModel
+            
+            if let textColor = model.textColorHex, let backgroundHexes = model.backgroundHexes {
+                spinModel = SpinModel(
+                    id: id,
+                    text: model.text?.localized ?? "",
+                    customImage: customImage,
+                    weight: weight,
+                    textColor: textColor.color,
+                    background: makeGradient(hexes: backgroundHexes)
+                )
+            }else {
+                spinModel = SpinModel(
+                    id: id,
+                    text: model.text?.localized ?? "",
+                    customImage: customImage,
+                    weight: weight
+                )
+            }
+                
             activeSpinList.append(spinModel)
             activeSpinRewardList[id] = localReward
         }
          
     }
     
+    func makeGradient(hexes: [String]) -> LinearGradient {
+        let colors = hexes.map { $0.color }
+        return LinearGradient(
+            gradient: Gradient(colors: colors),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
     func checkAndUpdateSpinState() async {
         stateUpdateTask?.cancel()
         
         do {
-            if let targetDate = try await fetchDailySpinStatusDate() {
-                let now = Date()
-                if targetDate > now {
-                    DispatchQueue.main.async {
-                        self.dailySpinState = .alreadyClaimed(remainTime: targetDate)
-                    }
-                    scheduleStateUpdate(after: targetDate.timeIntervalSince(now))
-                } else {
-                    DispatchQueue.main.async {
-                        self.dailySpinState = .claimable
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.dailySpinState = .claimable
-                }
-            }
+            let trueNow = try await NetworkTimeHelper.getTrueTime()
+            updateSpinState(now: trueNow)
         } catch {
-            DispatchQueue.main.async {
-                self.dailySpinState = .claimable
-            }
+            /// Offline fallback: keep the lock with local time instead of failing open
+            updateSpinState(now: Date())
         }
     }
     
     func claimDailySpinReward() async throws {
-        try forestManager.updateDailySpinTime(time: Date(), contextType: .main)
+        let trueNow = try await NetworkTimeHelper.getTrueTime()
+        try forestManager.updateDailySpinTime(time: trueNow, contextType: .main)
         await checkAndUpdateSpinState()
     }
 }
 
 private extension DailySpinService {
     
-    func fetchDailySpinStatusDate() async throws -> Date? {
-        do {
-            let trueNow = try await NetworkTimeHelper.getTrueTime()
-            let localForestRes = forestManager.fetchSafeForest(contextType: .main)
-            if let forest = localForestRes.data, let lastUsed = forest.dailyActivities.dailySpinLastUsedDate {
-                let targetTime = lastUsed.addingTimeInterval(86400)
-                return targetTime > trueNow ? targetTime : nil
-            } else {
-                return nil
+    func fetchDailySpinTargetDate() -> Date? {
+        let localForestRes = forestManager.fetchSafeForest(contextType: .main)
+        guard let forest = localForestRes.data, let lastUsed = forest.dailyActivities.dailySpinLastUsedDate else { return nil }
+        return lastUsed.addingTimeInterval(86400)
+    }
+    
+    func updateSpinState(now: Date) {
+        if let targetDate = fetchDailySpinTargetDate(), targetDate > now {
+            let remainSeconds = targetDate.timeIntervalSince(now)
+            DispatchQueue.main.async {
+                self.dailySpinState = .alreadyClaimed(remainSeconds: remainSeconds)
             }
-        } catch {
-            throw error
+            scheduleStateUpdate(after: remainSeconds)
+        } else {
+            DispatchQueue.main.async {
+                self.dailySpinState = .claimable
+            }
         }
     }
     

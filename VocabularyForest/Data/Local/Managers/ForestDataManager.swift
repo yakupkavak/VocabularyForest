@@ -665,7 +665,9 @@ extension ForestDataManager {
             guard let activities = forest.dailyActivities else {
                 throw ForestAdventureError.emptyForestActivities
             }
+            activities.dailySpinLastUsedDate = time
             activities.lastUpdatedDate = time
+            try save(context: context)
         }
     }
 }

@@ -227,8 +227,9 @@ private extension ForestAdventureService {
 
 extension ForestAdventureService: ForestAdventureServiceProtocol {
     func claimDailySpinReward(model: LocalRewardModel) async throws {
-        try await rewardRepository.claimLocalReward(reward: model)
+        /// Lock the spin with network time first so the reward can not be claimed without a saved lock
         try await dailySpinService.claimDailySpinReward()
+        try await rewardRepository.claimLocalReward(reward: model)
     }
     
     func claimLocalReward(model: LocalRewardModel) async throws {

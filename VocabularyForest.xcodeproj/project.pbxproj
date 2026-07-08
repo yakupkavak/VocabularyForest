@@ -257,6 +257,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				37267D222E90E9D90019D139 /* VocabularyForest */,
+				37D8A8B12EF95A2600E59CA9 /* Models */,
 			);
 			name = VocabularyForest;
 			packageProductDependencies = (

@@ -226,10 +226,17 @@ extension ForestViewModel {
             sculptureList.removeAll()
             treeList.removeAll()
             fetchForest()
-            //checkDailySpinStatus()
+            checkDailySpinStatus()
             refreshDailySpinRewards()
             fetchWeeklyDailyCards()
             fetchAdventureRoadData()
+        }
+    }
+    
+    func checkDailySpinStatus() {
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await dailySpinService.checkAndUpdateSpinState()
         }
     }
     
@@ -615,6 +622,21 @@ private extension ForestViewModel {
                 guard let self else { return }
                 dailySpinModels = models
                 dailySpinModelVersion = UUID()
+            }.store(in: &adventureCancellable)
+        
+        dailySpinService.dailySpinStatePublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self else { return }
+                switch state {
+                case .claimable:
+                    dailyTimeCancellable?.cancel()
+                    nextDailySpinTime = nil
+                    dailySpinTime = nil
+                case .alreadyClaimed(let remainSeconds):
+                    nextDailySpinTime = Date().addingTimeInterval(remainSeconds)
+                    dailySpinTime = Calendar.current.startOfDay(for: Date()).addingTimeInterval(remainSeconds)
+                    startDailySpinTimer()
+                }
             }.store(in: &adventureCancellable)
     }
     

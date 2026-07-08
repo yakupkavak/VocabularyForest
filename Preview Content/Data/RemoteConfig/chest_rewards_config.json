@@ -1,0 +1,928 @@
+{
+  "id": "chest_rewards_config_v3",
+  "season": "2026_s3",
+  "chests": [
+    {
+      "id": "chest-gold",
+      "chestName": {
+        "tr": "Altın Sandık",
+        "en": "Gold Chest",
+        "es": "Cofre de Oro",
+        "fr": "Coffre d'Or",
+        "de": "Goldtruhe",
+        "pt": "Baú de Ouro"
+      },
+      "version": 1,
+      "visuals": {
+        "closedImagePath": "assets/chests/gold_chest_close.png",
+        "openImagePath": "assets/chests/gold_chest_open.png"
+      },
+      "economy": {
+        "guaranteedDrops": [
+          {
+            "reward": {
+              "id": "reward-chest-gold-guaranteed-gold",
+              "type": "standart",
+              "category": "gold",
+              "rewardCount": 1,
+              "assetName": "gold_icon",
+              "displayName": {
+                "tr": "Altın",
+                "en": "Gold",
+                "es": "Oro",
+                "fr": "Or",
+                "de": "Gold",
+                "pt": "Ouro"
+              },
+              "imageSource": "local",
+              "localImageName": "gold_icon"
+            },
+            "minAmount": 120,
+            "maxAmount": 280
+          }
+        ],
+        "randomDrops": [
+          {
+            "reward": {
+              "id": "reward-chest-gold-bonus-diamond",
+              "type": "standart",
+              "category": "diamond",
+              "rewardCount": 1,
+              "assetName": "diamond_icon",
+              "displayName": {
+                "tr": "Elmas",
+                "en": "Diamond",
+                "es": "Diamante",
+                "fr": "Diamant",
+                "de": "Diamant",
+                "pt": "Diamante"
+              },
+              "imageSource": "local",
+              "localImageName": "diamond_icon"
+            },
+            "dropChance": 10,
+            "minAmount": 2,
+            "maxAmount": 6
+          },
+          {
+            "reward": {
+              "id": "reward-chest-gold-bonus-water",
+              "type": "standart",
+              "category": "water",
+              "rewardCount": 1,
+              "assetName": "water_icon",
+              "displayName": {
+                "tr": "Yağmur Damlası",
+                "en": "Rain Drop",
+                "es": "Gota de Lluvia",
+                "fr": "Goutte de Pluie",
+                "de": "Regentropfen",
+                "pt": "Gota de Chuva"
+              },
+              "imageSource": "local",
+              "localImageName": "water_icon"
+            },
+            "dropChance": 18,
+            "minAmount": 35,
+            "maxAmount": 60
+          },
+          {
+            "reward": {
+              "id": "reward-chest-gold-no-bonus",
+              "type": "standart",
+              "category": "gold",
+              "rewardCount": 0,
+              "assetName": "gold_icon",
+              "displayName": {
+                "tr": "Boş",
+                "en": "No Bonus",
+                "es": "Sin Bono",
+                "fr": "Pas de Bonus",
+                "de": "Kein Bonus",
+                "pt": "Sem Bônus"
+              },
+              "imageSource": "local",
+              "localImageName": "gold_icon"
+            },
+            "dropChance": 72,
+            "minAmount": 0,
+            "maxAmount": 0
+          }
+        ]
+      },
+      "gradientHexBackgroundColors": [
+        "#FFD700",
+        "#FF8C00"
+      ],
+      "textHexColor": "#FFFFFF"
+    },
+    {
+      "id": "chest-diamond",
+      "chestName": {
+        "tr": "Elmas Sandık",
+        "en": "Diamond Chest",
+        "es": "Cofre de Diamante",
+        "fr": "Coffre Diamant",
+        "de": "Diamanttruhe",
+        "pt": "Baú de Diamante"
+      },
+      "version": 1,
+      "visuals": {
+        "closedImagePath": "assets/chests/diamond_chest_close.png",
+        "openImagePath": "assets/chests/diamond_chest_open.png"
+      },
+      "economy": {
+        "guaranteedDrops": [
+          {
+            "reward": {
+              "id": "reward-chest-diamond-guaranteed-diamond",
+              "type": "standart",
+              "category": "diamond",
+              "rewardCount": 1,
+              "assetName": "diamond_icon",
+              "displayName": {
+                "tr": "Elmas",
+                "en": "Diamond",
+                "es": "Diamante",
+                "fr": "Diamant",
+                "de": "Diamant",
+                "pt": "Diamante"
+              },
+              "imageSource": "local",
+              "localImageName": "diamond_icon"
+            },
+            "minAmount": 14,
+            "maxAmount": 28
+          }
+        ],
+        "randomDrops": []
+      },
+      "gradientHexBackgroundColors": [
+        "#00FFFF",
+        "#4682B4"
+      ],
+      "textHexColor": "#FFFFFF"
+    },
+    {
+      "id": "chest-nature",
+      "chestName": {
+        "tr": "Doğa Sandığı",
+        "en": "Nature Chest",
+        "es": "Cofre de Naturaleza",
+        "fr": "Coffre Nature",
+        "de": "Naturtruhe",
+        "pt": "Baú da Natureza"
+      },
+      "version": 1,
+      "visuals": {
+        "closedImagePath": "assets/chests/nature_chest_close.png",
+        "openImagePath": "assets/chests/nature_chest_open.png"
+      },
+      "economy": {
+        "guaranteedDrops": [],
+        "randomDrops": [
+          {
+            "reward": {
+              "id": "chest-nature-animal-cat",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "Cat",
+              "displayName": {
+                "tr": "Kedi",
+                "en": "Cat",
+                "es": "Gato",
+                "fr": "Chat",
+                "de": "Katze",
+                "pt": "Gato"
+              },
+              "imageSource": "local",
+              "localImageName": "Cat"
+            },
+            "dropChance": 10,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-animal-dog",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "Dog",
+              "displayName": {
+                "tr": "Köpek",
+                "en": "Dog",
+                "es": "Perro",
+                "fr": "Chien",
+                "de": "Hund",
+                "pt": "Cachorro"
+              },
+              "imageSource": "local",
+              "localImageName": "Dog"
+            },
+            "dropChance": 10,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-animal-whitecat",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "WhiteCat",
+              "displayName": {
+                "tr": "Beyaz Kedi",
+                "en": "White Cat",
+                "es": "Gato Blanco",
+                "fr": "Chat Blanc",
+                "de": "Weiße Katze",
+                "pt": "Gato Branco"
+              },
+              "imageSource": "local",
+              "localImageName": "WhiteCat"
+            },
+            "dropChance": 10,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-sunflower",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "SunFlower",
+              "displayName": {
+                "tr": "Ayçiçeği",
+                "en": "Sun Flower",
+                "es": "Girasol",
+                "fr": "Tournesol",
+                "de": "Sonnenblume",
+                "pt": "Girassol"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/sunflower.png",
+              "posterIconPath": "assets/icons/plants/sunflower.png"
+            },
+            "dropChance": 12,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-blueflamebush",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "BlueFlameBush",
+              "displayName": {
+                "tr": "Mavi Alev Çalısı",
+                "en": "Blue Flame Bush",
+                "es": "Arbusto de Llama Azul",
+                "fr": "Buisson de Flamme Bleue",
+                "de": "Blauer Flammenbusch",
+                "pt": "Arbusto de Chama Azul"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/blueflamebush.png",
+              "posterIconPath": "assets/icons/plants/blueflamebush.png"
+            },
+            "dropChance": 12,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-emberbud",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "Emberbud",
+              "displayName": {
+                "tr": "Köz Tomurcuğu",
+                "en": "Emberbud",
+                "es": "Capullo de Ascuas",
+                "fr": "Bourgeon de Braise",
+                "de": "Glutknospe",
+                "pt": "Broto de Brasa"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/emberbud.png",
+              "posterIconPath": "assets/icons/plants/emberbud.png"
+            },
+            "dropChance": 12,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-moonbell",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "MoonBell",
+              "displayName": {
+                "tr": "Ay Çanı",
+                "en": "Moon Bell",
+                "es": "Campana Lunar",
+                "fr": "Cloche de Lune",
+                "de": "Mondglocke",
+                "pt": "Sino da Lua"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/moonbel.png",
+              "posterIconPath": "assets/icons/plants/moonbel.png"
+            },
+            "dropChance": 12,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-crystalreed",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "CrystalReed",
+              "displayName": {
+                "tr": "Kristal Sazlık",
+                "en": "Crystal Reed",
+                "es": "Junco de Cristal",
+                "fr": "Roseau de Cristal",
+                "de": "Kristallschilf",
+                "pt": "Junco de Cristal"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/crystalreed.png",
+              "posterIconPath": "assets/icons/plants/crystalreed.png"
+            },
+            "dropChance": 11,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-nature-plant-desertstarbloom",
+              "type": "standart",
+              "category": "plant",
+              "rewardCount": 1,
+              "assetName": "DesertStarBloom",
+              "displayName": {
+                "tr": "Çöl Yıldızı Çiçeği",
+                "en": "Desert Star Bloom",
+                "es": "Flor Estrella del Desierto",
+                "fr": "Fleur d'Étoile du Désert",
+                "de": "Wüstensternblüte",
+                "pt": "Flor Estrela do Deserto"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/plants/desertstar.png",
+              "posterIconPath": "assets/icons/plants/desertstar.png"
+            },
+            "dropChance": 11,
+            "minAmount": 1,
+            "maxAmount": 1
+          }
+        ]
+      },
+      "gradientHexBackgroundColors": [
+        "#32CD32",
+        "#006400"
+      ],
+      "textHexColor": "#FFFFFF"
+    },
+    {
+      "id": "chest-antique",
+      "chestName": {
+        "tr": "Antik Sandık",
+        "en": "Antique Chest",
+        "es": "Cofre Antiguo",
+        "fr": "Coffre Antique",
+        "de": "Antike Truhe",
+        "pt": "Baú Antigo"
+      },
+      "version": 1,
+      "visuals": {
+        "closedImagePath": "assets/chests/antique_chest_close.png",
+        "openImagePath": "assets/chests/antique_chest_open.png"
+      },
+      "economy": {
+        "guaranteedDrops": [],
+        "randomDrops": [
+          {
+            "reward": {
+              "id": "chest-antique-animal-cat",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "Cat",
+              "displayName": {
+                "tr": "Kedi",
+                "en": "Cat",
+                "es": "Gato",
+                "fr": "Chat",
+                "de": "Katze",
+                "pt": "Gato"
+              },
+              "imageSource": "local",
+              "localImageName": "Cat"
+            },
+            "dropChance": 27,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-antique-animal-dog",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "Dog",
+              "displayName": {
+                "tr": "Köpek",
+                "en": "Dog",
+                "es": "Perro",
+                "fr": "Chien",
+                "de": "Hund",
+                "pt": "Cachorro"
+              },
+              "imageSource": "local",
+              "localImageName": "Dog"
+            },
+            "dropChance": 27,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-antique-animal-whitecat",
+              "type": "standart",
+              "category": "animal",
+              "rewardCount": 1,
+              "assetName": "WhiteCat",
+              "displayName": {
+                "tr": "Beyaz Kedi",
+                "en": "White Cat",
+                "es": "Gato Blanco",
+                "fr": "Chat Blanc",
+                "de": "Weiße Katze",
+                "pt": "Gato Branco"
+              },
+              "imageSource": "local",
+              "localImageName": "WhiteCat"
+            },
+            "dropChance": 26,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-antique-sculpture-emeralddragon",
+              "type": "standart",
+              "category": "sculpture",
+              "rewardCount": 1,
+              "assetName": "EmeraldDragon",
+              "displayName": {
+                "tr": "Zümrüt Ejderha",
+                "en": "Emerald Dragon",
+                "es": "Dragón Esmeralda",
+                "fr": "Dragon d'Émeraude",
+                "de": "Smaragddrache",
+                "pt": "Dragão Esmeralda"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/sculptures/emerald_dragon.png",
+              "posterIconPath": "assets/icons/sculptures/emeraldDragon.png"
+            },
+            "dropChance": 7,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-antique-sculpture-deer",
+              "type": "standart",
+              "category": "sculpture",
+              "rewardCount": 1,
+              "assetName": "Deer",
+              "displayName": {
+                "tr": "Geyik",
+                "en": "Deer",
+                "es": "Ciervo",
+                "fr": "Cerf",
+                "de": "Hirsch",
+                "pt": "Cervo"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/sculptures/deer.png",
+              "posterIconPath": "assets/icons/sculptures/deer.png"
+            },
+            "dropChance": 7,
+            "minAmount": 1,
+            "maxAmount": 1
+          },
+          {
+            "reward": {
+              "id": "chest-antique-sculpture-ancientlancer",
+              "type": "standart",
+              "category": "sculpture",
+              "rewardCount": 1,
+              "assetName": "AncientLancer",
+              "displayName": {
+                "tr": "Kadim Mızrakçı",
+                "en": "Ancient Lancer",
+                "es": "Lancero Antiguo",
+                "fr": "Lancier Ancien",
+                "de": "Alter Lanzenträger",
+                "pt": "Lanceiro Antigo"
+              },
+              "imageSource": "remote",
+              "remoteAssetVersion": 1,
+              "remotePath": "assets/sculptures/ancientLancer.png",
+              "posterIconPath": "assets/icons/sculptures/ancientLancer.png"
+            },
+            "dropChance": 6,
+            "minAmount": 1,
+            "maxAmount": 1
+          }
+        ]
+      },
+      "gradientHexBackgroundColors": [
+        "#8B4513",
+        "#A0522D"
+      ],
+      "textHexColor": "#FFFFFF"
+    }
+  ],
+  "visuals": [
+    {
+      "id": "chest-antique",
+      "chestType": "antique",
+      "closedImagePath": "assets/chests/antique_chest_close.png",
+      "openImagePath": "assets/chests/antique_chest_open.png"
+    },
+    {
+      "id": "chest-diamond",
+      "chestType": "diamond",
+      "closedImagePath": "assets/chests/diamond_chest_close.png",
+      "openImagePath": "assets/chests/diamond_chest_open.png"
+    },
+    {
+      "id": "chest-gold",
+      "chestType": "gold",
+      "closedImagePath": "assets/chests/gold_chest_close.png",
+      "openImagePath": "assets/chests/gold_chest_open.png"
+    },
+    {
+      "id": "chest-nature",
+      "chestType": "nature",
+      "closedImagePath": "assets/chests/nature_chest_close.png",
+      "openImagePath": "assets/chests/nature_chest_open.png"
+    }
+  ],
+  "odds": {
+    "goldChestDiamondChance": 10,
+    "goldChestWaterChance": 18,
+    "natureChestAnimalChance": 30,
+    "antiqueChestAnimalChance": 80
+  },
+  "ranges": {
+    "goldChestGoldMin": 120,
+    "goldChestGoldMax": 280,
+    "goldChestDiamondMin": 2,
+    "goldChestDiamondMax": 6,
+    "goldChestWaterMin": 35,
+    "goldChestWaterMax": 60,
+    "diamondChestDiamondMin": 14,
+    "diamondChestDiamondMax": 28
+  },
+  "pools": {
+    "natureAnimals": [
+      {
+        "id": "chest-nature-animal-cat",
+        "type": "model",
+        "category": "animal",
+        "imageName": "Cat",
+        "probabilityWeight": 1,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "cat_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Kedi",
+          "en": "Cat",
+          "es": "Gato",
+          "fr": "Chat",
+          "de": "Katze",
+          "pt": "Gato"
+        },
+        "imagePath": null
+      },
+      {
+        "id": "chest-nature-animal-dog",
+        "type": "model",
+        "category": "animal",
+        "imageName": "Dog",
+        "probabilityWeight": 1,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "dog_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Köpek",
+          "en": "Dog",
+          "es": "Perro",
+          "fr": "Chien",
+          "de": "Hund",
+          "pt": "Cachorro"
+        },
+        "imagePath": null
+      },
+      {
+        "id": "chest-nature-animal-whitecat",
+        "type": "model",
+        "category": "animal",
+        "imageName": "WhiteCat",
+        "probabilityWeight": 1,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "white_cat_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Beyaz Kedi",
+          "en": "White Cat",
+          "es": "Gato Blanco",
+          "fr": "Chat Blanc",
+          "de": "Weiße Katze",
+          "pt": "Gato Branco"
+        },
+        "imagePath": null
+      }
+    ],
+    "naturePlants": [
+      {
+        "id": "chest-nature-plant-sunflower",
+        "type": "model",
+        "category": "plant",
+        "imageName": "SunFlower",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/sunflower.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/sunflower.png",
+        "displayName": {
+          "tr": "Ayçiçeği",
+          "en": "Sun Flower",
+          "es": "Girasol",
+          "fr": "Tournesol",
+          "de": "Sonnenblume",
+          "pt": "Girassol"
+        },
+        "imagePath": "assets/icons/plants/sunflower.png"
+      },
+      {
+        "id": "chest-nature-plant-blueflamebush",
+        "type": "model",
+        "category": "plant",
+        "imageName": "BlueFlameBush",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/blueflamebush.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/blueflamebush.png",
+        "displayName": {
+          "tr": "Mavi Alev Çalısı",
+          "en": "Blue Flame Bush",
+          "es": "Arbusto de Llama Azul",
+          "fr": "Buisson de Flamme Bleue",
+          "de": "Blauer Flammenbusch",
+          "pt": "Arbusto de Chama Azul"
+        },
+        "imagePath": "assets/icons/plants/blueflamebush.png"
+      },
+      {
+        "id": "chest-nature-plant-emberbud",
+        "type": "model",
+        "category": "plant",
+        "imageName": "Emberbud",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/emberbud.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/emberbud.png",
+        "displayName": {
+          "tr": "Köz Tomurcuğu",
+          "en": "Emberbud",
+          "es": "Capullo de Ascuas",
+          "fr": "Bourgeon de Braise",
+          "de": "Glutknospe",
+          "pt": "Broto de Brasa"
+        },
+        "imagePath": "assets/icons/plants/emberbud.png"
+      },
+      {
+        "id": "chest-nature-plant-moonbell",
+        "type": "model",
+        "category": "plant",
+        "imageName": "MoonBell",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/moonbel.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/moonbel.png",
+        "displayName": {
+          "tr": "Ay Çanı",
+          "en": "Moon Bell",
+          "es": "Campana Lunar",
+          "fr": "Cloche de Lune",
+          "de": "Mondglocke",
+          "pt": "Sino da Lua"
+        },
+        "imagePath": "assets/icons/plants/moonbel.png"
+      },
+      {
+        "id": "chest-nature-plant-crystalreed",
+        "type": "model",
+        "category": "plant",
+        "imageName": "CrystalReed",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/crystalreed.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/crystalreed.png",
+        "displayName": {
+          "tr": "Kristal Sazlık",
+          "en": "Crystal Reed",
+          "es": "Junco de Cristal",
+          "fr": "Roseau de Cristal",
+          "de": "Kristallschilf",
+          "pt": "Junco de Cristal"
+        },
+        "imagePath": "assets/icons/plants/crystalreed.png"
+      },
+      {
+        "id": "chest-nature-plant-desertstarbloom",
+        "type": "model",
+        "category": "plant",
+        "imageName": "DesertStarBloom",
+        "probabilityWeight": 1,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/plants/desertstar.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/plants/desertstar.png",
+        "displayName": {
+          "tr": "Çöl Yıldızı Çiçeği",
+          "en": "Desert Star Bloom",
+          "es": "Flor Estrella del Desierto",
+          "fr": "Fleur d'Étoile du Désert",
+          "de": "Wüstensternblüte",
+          "pt": "Flor Estrela do Deserto"
+        },
+        "imagePath": "assets/icons/plants/desertstar.png"
+      }
+    ],
+    "antiqueAnimals": [
+      {
+        "id": "chest-antique-animal-cat",
+        "type": "model",
+        "category": "animal",
+        "imageName": "Cat",
+        "probabilityWeight": 1.4,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "cat_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Kedi",
+          "en": "Cat",
+          "es": "Gato",
+          "fr": "Chat",
+          "de": "Katze",
+          "pt": "Gato"
+        },
+        "imagePath": null
+      },
+      {
+        "id": "chest-antique-animal-dog",
+        "type": "model",
+        "category": "animal",
+        "imageName": "Dog",
+        "probabilityWeight": 1.4,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "dog_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Köpek",
+          "en": "Dog",
+          "es": "Perro",
+          "fr": "Chien",
+          "de": "Hund",
+          "pt": "Cachorro"
+        },
+        "imagePath": null
+      },
+      {
+        "id": "chest-antique-animal-whitecat",
+        "type": "model",
+        "category": "animal",
+        "imageName": "WhiteCat",
+        "probabilityWeight": 1.4,
+        "mediaSourceType": "local_asset",
+        "mediaFileType": "image",
+        "sourceFieldKey": "white_cat_local",
+        "sourceVersion": "v1",
+        "displayName": {
+          "tr": "Beyaz Kedi",
+          "en": "White Cat",
+          "es": "Gato Blanco",
+          "fr": "Chat Blanc",
+          "de": "Weiße Katze",
+          "pt": "Gato Branco"
+        },
+        "imagePath": null
+      }
+    ],
+    "antiqueSculptures": [
+      {
+        "id": "chest-antique-sculpture-emeralddragon",
+        "type": "model",
+        "category": "sculpture",
+        "imageName": "EmeraldDragon",
+        "probabilityWeight": 0.35,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/sculptures/emerald_dragon.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/sculptures/emeraldDragon.png",
+        "displayName": {
+          "tr": "Zümrüt Ejderha",
+          "en": "Emerald Dragon",
+          "es": "Dragón Esmeralda",
+          "fr": "Dragon d'Émeraude",
+          "de": "Smaragddrache",
+          "pt": "Dragão Esmeralda"
+        },
+        "imagePath": "assets/icons/sculptures/emeraldDragon.png"
+      },
+      {
+        "id": "chest-antique-sculpture-deer",
+        "type": "model",
+        "category": "sculpture",
+        "imageName": "Deer",
+        "probabilityWeight": 0.35,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/sculptures/deer.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/sculptures/deer.png",
+        "displayName": {
+          "tr": "Geyik",
+          "en": "Deer",
+          "es": "Ciervo",
+          "fr": "Cerf",
+          "de": "Hirsch",
+          "pt": "Cervo"
+        },
+        "imagePath": "assets/icons/sculptures/deer.png"
+      },
+      {
+        "id": "chest-antique-sculpture-ancientlancer",
+        "type": "model",
+        "category": "sculpture",
+        "imageName": "AncientLancer",
+        "probabilityWeight": 0.35,
+        "mediaSourceType": "remote_bundle",
+        "mediaFileType": "image",
+        "sourceFieldKey": "assets/sculptures/ancientLancer.png",
+        "sourceVersion": "v1",
+        "previewImageURL": "assets/icons/sculptures/ancientLancer.png",
+        "displayName": {
+          "tr": "Kadim Mızrakçı",
+          "en": "Ancient Lancer",
+          "es": "Lancero Antiguo",
+          "fr": "Lancier Ancien",
+          "de": "Alter Lanzenträger",
+          "pt": "Lanceiro Antigo"
+        },
+        "imagePath": "assets/icons/sculptures/ancientLancer.png"
+      }
+    ]
+  }
+}

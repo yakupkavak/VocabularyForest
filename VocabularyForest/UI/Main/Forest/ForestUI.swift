@@ -242,6 +242,7 @@ private extension ForestUI {
             case .dailyReward:
                 uiState = .dailyTrack
             case .dailySpin:
+                viewModel.checkDailySpinStatus()
                 viewModel.refreshDailySpinRewards()
                 uiState = .dailySpin
             case .adventureRoad:

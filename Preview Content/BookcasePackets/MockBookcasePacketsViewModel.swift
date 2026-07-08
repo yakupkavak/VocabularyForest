@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import DTO
+import DomainMocks
 
 class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     var downloadState: DownloadState

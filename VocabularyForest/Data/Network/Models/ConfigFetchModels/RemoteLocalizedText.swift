@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct RemoteLocalizedText: Decodable, Hashable {
-    let tr, en, es, fr: String?
-    let de, pt: String?
+public struct RemoteLocalizedText: Decodable, Hashable {
+    public let tr, en, es, fr: String?
+    public let de, pt: String?
     
-    var localized: String {
+    public var localized: String {
         let preferredLanguage = Locale.preferredLanguages.first ?? "en"
         let languageCode = String(preferredLanguage.prefix(2)).lowercased()
         switch languageCode {
@@ -25,7 +25,7 @@ struct RemoteLocalizedText: Decodable, Hashable {
         }
     }
     
-    static func mock(en: String = "test") -> RemoteLocalizedText {
+    public static func mock(en: String = "test") -> RemoteLocalizedText {
         RemoteLocalizedText(tr: en, en: en, es: en, fr: en, de: en, pt: en)
     }
 }

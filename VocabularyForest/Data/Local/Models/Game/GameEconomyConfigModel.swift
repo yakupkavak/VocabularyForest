@@ -11,7 +11,7 @@ struct GameEconomyConfigModel: Decodable {
     let id: String?
     let season: String?
     let chestOdds: GameChestOddsModel?
-    let chestRewardRanges: GameChestRewardRangesModel?
+    let chestewardRanges: GameChestRewardRangesModel?
     let killCap: GameKillCapModel?
 }
 
