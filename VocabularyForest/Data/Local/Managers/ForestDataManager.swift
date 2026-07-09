@@ -102,6 +102,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws
     func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws
     func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws
+    func updateClaimedAdventureTier(track: AdventureMemoryTrack, wordCount: Int, time: Date, contextType: ForestDataManager.ContextType) throws
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -685,6 +686,24 @@ extension ForestDataManager {
             }
             activities.weeklyStreakCurrentDay = Int16(day)
             activities.weeklyStreakLastClaimDate = time
+            activities.lastUpdatedDate = time
+            try save(context: context)
+        }
+    }
+
+    func updateClaimedAdventureTier(track: AdventureMemoryTrack, wordCount: Int, time: Date, contextType: ForestDataManager.ContextType) throws {
+        let context = getContext(for: contextType)
+        return try context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else { throw ForestError.emptyForest }
+            guard let activities = forest.dailyActivities else {
+                throw ForestAdventureError.emptyForestActivities
+            }
+            switch track {
+            case .shortTerm:
+                activities.claimedShortTiers = AdventureTierCoder.append(wordCount, to: activities.claimedShortTiers)
+            case .longTerm:
+                activities.claimedLongTiers = AdventureTierCoder.append(wordCount, to: activities.claimedLongTiers)
+            }
             activities.lastUpdatedDate = time
             try save(context: context)
         }

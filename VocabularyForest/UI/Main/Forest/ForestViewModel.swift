@@ -57,6 +57,7 @@ class ForestViewModel: BaseViewModel {
     private let questService: QuestServiceProtocol
     private let dailySpinService: DailySpinServiceProtocol
     private let weeklyRewardService: WeeklyRewardServiceProtocol
+    private let adventureRoadService: AdventureRoadServiceProtocol
 
     // MARK: - PROPERTIES
     
@@ -72,8 +73,7 @@ class ForestViewModel: BaseViewModel {
     @Published var dailySpinTime: Date? = nil
     @Published var dailySpinModels: [SpinModel] = []
     @Published var dailySpinModelVersion = UUID()
-    //@Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
-    @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
+    @Published var adventureRoadScreenModel: AdventureRoadScreenModel? = nil
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -103,6 +103,7 @@ class ForestViewModel: BaseViewModel {
         questService: QuestServiceProtocol,
         dailySpinService: DailySpinServiceProtocol,
         weeklyRewardService: WeeklyRewardServiceProtocol,
+        adventureRoadService: AdventureRoadServiceProtocol,
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -114,10 +115,12 @@ class ForestViewModel: BaseViewModel {
         self.questService = questService
         self.dailySpinService = dailySpinService
         self.weeklyRewardService = weeklyRewardService
+        self.adventureRoadService = adventureRoadService
         super.init()
         bindQuests()
         bindDailySpin()
         bindWeeklyRewards()
+        bindAdventureRoad()
         fetchForest()
     }
 }
@@ -262,36 +265,10 @@ extension ForestViewModel {
     }
     
     func fetchAdventureRoadData() {
-        /*
-        Task { @MainActor in
-            let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
-            var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
-            
-            if let config = configResult.data, trueNow >= config.seasonEndDate {
-                configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
-            }
-            
-            let progress = playerDataManager.fetchAdventureRoadProgress(contextType: .main) ?? AdventureRoadProgressModel(
-                seasonID: nil,
-                monthlyShortLearnedCount: 0,
-                monthlyLongLearnedCount: 0
-            )
-            
-            guard configResult.status == .success, let config = configResult.data else {
-                adventureRoadScreenModel = AdventureRoadMockData.screenModel()
-                adventureRoadSeasonLeftTime = adventureRoadScreenModel.eventEndDate
-                return
-            }
-            
-            adventureRoadScreenModel = AdventureRoadBuilder.screenModel(
-                rewards: config.rewards,
-                progress: progress,
-                eventEndDate: config.seasonEndDate,
-                referenceDate: trueNow
-            )
-            adventureRoadSeasonLeftTime = config.seasonEndDate
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await adventureRoadService.checkAndUpdateAdventureState()
         }
-         */
     }
     
     func fetchForest() {
@@ -505,6 +482,17 @@ extension ForestViewModel: ForestViewModelProtocol {
             }
         }
     }
+    
+    func claimAdventureRewards(models: [LocalRewardModel], milestone: AdventureMilestoneModel) {
+        Task { @MainActor in
+            do {
+                try await adventureService.claimAdventureReward(models: models, milestone: milestone)
+                self.fetchForest()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
 // MARK: - FOREST SCENE PROTOCOL
@@ -640,6 +628,14 @@ private extension ForestViewModel {
             .sink { [weak self] cards in
                 guard let self else { return }
                 weeklyDailyCards = cards
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindAdventureRoad() {
+        adventureRoadService.adventureScreenModelPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self else { return }
+                adventureRoadScreenModel = model
             }.store(in: &adventureCancellable)
     }
     

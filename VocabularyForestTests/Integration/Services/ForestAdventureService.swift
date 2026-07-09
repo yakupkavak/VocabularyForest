@@ -29,6 +29,10 @@ struct ForestAdventureServiceQuestTrackTests {
         let chestRepository = ChestRepository(assetManager: assetManager, apiService: networkManager)
         let rewardRepository = RewardRepository(assetManager: assetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
+        let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
+        let weeklyRewardService = WeeklyRewardService(forestManager: forestData, rewardRepository: rewardRepository)
+        let seasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
+        let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: seasonProgressStore)
         self.sut = ForestAdventureService(
             forestManager: forestData,
             playerManager: playerManager,
@@ -36,7 +40,11 @@ struct ForestAdventureServiceQuestTrackTests {
             remoteConfig: remoteConfig,
             documentRepository: documentRepository,
             rewardRepository: rewardRepository,
-            questService: questService
+            questService: questService,
+            dailySpinService: dailySpinService,
+            weeklyRewardService: weeklyRewardService,
+            adventureRoadService: adventureRoadService,
+            chestService: chestRepository
         )
     }
     

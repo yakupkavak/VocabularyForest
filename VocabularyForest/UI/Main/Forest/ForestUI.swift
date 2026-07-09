@@ -213,14 +213,25 @@ private extension ForestUI {
     }
     
     var userRoadView: some View {
-        Text("todo")
-        /*
-        AdventureRoadUI(
-            screenModel: viewModel.adventureRoadScreenModel,
-            isVisible: Binding(get: { uiState == .userRoad }, set: { if !$0 { uiState = .empty } }),
-            seasonLeftTime: $viewModel.adventureRoadSeasonLeftTime
-        )
-         */
+        Group {
+            if let screenModel = viewModel.adventureRoadScreenModel {
+                AdventureRoadUI(
+                    screenModel: screenModel,
+                    isVisible: Binding(get: { uiState == .userRoad }, set: { if !$0 { uiState = .empty } })
+                ) { milestone in
+                    if milestone.status == .ready {
+                        PopupManager.shared.show {
+                            coordinator.startClaimRewardUI(claimReward: milestone.reward) { rewards in
+                                viewModel.claimAdventureRewards(models: rewards, milestone: milestone)
+                                PopupManager.shared.dismiss()
+                            }
+                        }
+                    }
+                }
+            } else {
+                ProgressView()
+            }
+        }
     }
     
     var announcementView: some View {

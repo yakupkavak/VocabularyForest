@@ -27,8 +27,10 @@ enum AppDependencyConfigurer {
         let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
         let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
         let weeklyRewardService = WeeklyRewardService(forestManager: forestData, rewardRepository: rewardRepository)
+        let adventureSeasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
+        let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: adventureSeasonProgressStore)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, chestService: chestRepository)
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, chestService: chestRepository)
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
@@ -52,6 +54,8 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(questService), for: QuestServiceProtocol.self)
         DC.shared.register(type: .singleInstance(dailySpinService), for: DailySpinServiceProtocol.self)
         DC.shared.register(type: .singleInstance(weeklyRewardService), for: WeeklyRewardServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(adventureRoadService), for: AdventureRoadServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(adventureSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

@@ -9,12 +9,14 @@ import Foundation
 
 struct AdventureRoadRewardModel {
     let wordCount: Int
-    let shortTermReward: LocalRewardType
-    let longTermReward: LocalRewardType
+    let shortTermReward: LocalRewardModel
+    let longTermReward: LocalRewardModel
 }
 
 struct AdventureRoadConfigModel {
     let id: String?
+    let title: String?
+    let description: String?
     let seasonEndDate: Date
     let rewards: [AdventureRoadRewardModel]
 }

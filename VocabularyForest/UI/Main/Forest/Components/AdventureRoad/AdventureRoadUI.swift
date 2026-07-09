@@ -7,20 +7,69 @@
 
 import SwiftUI
 
+// MARK: - REWARD STYLE
+
+/// Maps the dynamic reward content to the fixed color palette of the road cards
+private enum AdventureRewardStyle {
+    case gold
+    case water
+    case diamond
+    case chestGold
+    case chestNature
+    case chestDiamond
+    case chestAntique
+    case fallback
+
+    init(reward: LocalRewardModel) {
+        switch reward.reward {
+        case .standart(let model):
+            switch model.category {
+            case .gold:
+                self = .gold
+            case .water:
+                self = .water
+            case .diamond:
+                self = .diamond
+            default:
+                self = .fallback
+            }
+        case .chest(let model):
+            if model.id.contains("gold") {
+                self = .chestGold
+            } else if model.id.contains("nature") {
+                self = .chestNature
+            } else if model.id.contains("diamond") {
+                self = .chestDiamond
+            } else if model.id.contains("antique") {
+                self = .chestAntique
+            } else {
+                self = .chestGold
+            }
+        }
+    }
+
+    var isChest: Bool {
+        switch self {
+        case .chestGold, .chestNature, .chestDiamond, .chestAntique:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 struct AdventureRoadUI: View {
     
     // MARK: - PROPERTIES
     
     let screenModel: AdventureRoadScreenModel
     @Binding var isVisible: Bool
-    @Binding var seasonLeftTime: Date
+    let onMilestoneTap: (AdventureMilestoneModel) -> Void
     @Environment(\.safeAreaInsets) private var globalSafeArea
     
     // MARK: - UI
     
     var body: some View {
-        Text("adventure")
-        /*
         GeometryReader { geometry in
             let w = geometry.size.width
             let safeBottomInset = geometry.safeAreaInsets.bottom
@@ -55,7 +104,8 @@ struct AdventureRoadUI: View {
                             notchSide: .right,
                             cardWidth: cardWidth,
                             rowHeight: rowHeight,
-                            rowSpacing: rowSpacingForSideColumns
+                            rowSpacing: rowSpacingForSideColumns,
+                            onMilestoneTap: onMilestoneTap
                         )
                         .frame(width: cardWidth)
 
@@ -78,7 +128,8 @@ struct AdventureRoadUI: View {
                             notchSide: .left,
                             cardWidth: cardWidth,
                             rowHeight: rowHeight,
-                            rowSpacing: rowSpacingForSideColumns
+                            rowSpacing: rowSpacingForSideColumns,
+                            onMilestoneTap: onMilestoneTap
                         )
                         .frame(width: cardWidth)
                     }
@@ -88,11 +139,9 @@ struct AdventureRoadUI: View {
             }
             .padding(.top, globalSafeArea.top > 0 ? globalSafeArea.top : w * 0.04)        .background(backgroundGradient)
         }
-         */
     }
 }
 
-/*
 private extension AdventureRoadUI {
     
     var backgroundGradient: LinearGradient {
@@ -151,11 +200,13 @@ private extension AdventureRoadUI {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
 
-            Text(String(localized: "adventure_road_subtitle"))
-                .font(.system(size: w * 0.042, weight: .medium, design: .rounded))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .multilineTextAlignment(.center)
+            if !screenModel.subtitle.isEmpty {
+                Text(screenModel.subtitle)
+                    .font(.system(size: w * 0.042, weight: .medium, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .multilineTextAlignment(.center)
+            }
         }
     }
 }
@@ -200,6 +251,7 @@ private struct AdventureLaneColumn: View {
     let cardWidth: CGFloat
     let rowHeight: CGFloat
     let rowSpacing: CGFloat
+    let onMilestoneTap: (AdventureMilestoneModel) -> Void
 
     var body: some View {
         VStack(spacing: rowSpacing) {
@@ -207,6 +259,9 @@ private struct AdventureLaneColumn: View {
                 VStack(spacing: rowHeight * 0.08) {
                     AdventureRewardCard(milestone: milestone, notchSide: notchSide, cardWidth: cardWidth)
                         .frame(height: rowHeight * 0.82)
+                        .onTapGesture {
+                            onMilestoneTap(milestone)
+                        }
 
                     Text(String(localized: "\(milestone.wordCount) words"))
                         .font(.system(size: max(cardWidth * 0.1, 11), weight: .bold, design: .rounded))
@@ -292,7 +347,8 @@ private struct AdventureCenterRoads: View {
         neckRatio: CGFloat,
         centerOffsetY: CGFloat
     ) -> some View {
-        let baseColor = nodeOuterColor(milestone: milestone)
+        let style = AdventureRewardStyle(reward: milestone.reward)
+        let baseColor = nodeOuterColor(style: style)
 
         ZStack {
             AdventureFlowPath(neckRatio: neckRatio)
@@ -305,13 +361,13 @@ private struct AdventureCenterRoads: View {
                 )
                 .frame(width: nodeSize, height: segmentHeight)
             
-            if milestone.isClaimed {
+            if milestone.status == .claimed {
                 Image(systemName: "checkmark")
                     .font(.system(size: nodeSize * 0.5, weight: .bold))
                     .foregroundStyle(
-                        isWhiteNode(milestone: milestone)
-                        ? Color.green
-                        : Color.white
+                        style.isChest
+                        ? Color.white
+                        : Color.green
                     )
             } else {
                 EmptyView()
@@ -321,27 +377,18 @@ private struct AdventureCenterRoads: View {
         .frame(width: nodeSize, height: segmentHeight)
     }
 
-    private func nodeOuterColor(milestone: AdventureMilestoneModel) -> Color {
-        switch milestone.reward {
-        case .chest(model: .gold):
+    private func nodeOuterColor(style: AdventureRewardStyle) -> Color {
+        switch style {
+        case .chestGold:
             return Color(hex: "#E8B83F")
-        case .chest(model: .nature):
+        case .chestNature:
             return Color(hex: "#99D04E")
-        case .chest(model: .diamond):
+        case .chestDiamond:
             return Color(hex: "#7BDDF2")
-        case .chest(model: .antique):
+        case .chestAntique:
             return Color(hex: "#D1A05B")
         default:
             return Color.white.opacity(0.97)
-        }
-    }
-
-    private func isWhiteNode(milestone: AdventureMilestoneModel) -> Bool {
-        switch milestone.reward {
-        case .chest:
-            return false
-        default:
-            return true
         }
     }
 }
@@ -351,6 +398,27 @@ private struct AdventureRewardCard: View {
     let notchSide: AdventureTicketNotchSide
     let cardWidth: CGFloat
 
+    private var style: AdventureRewardStyle {
+        AdventureRewardStyle(reward: milestone.reward)
+    }
+
+    private var isClaimed: Bool {
+        milestone.status == .claimed
+    }
+
+    private var isReady: Bool {
+        milestone.status == .ready
+    }
+
+    private var amountText: String {
+        switch milestone.reward.reward {
+        case .standart:
+            return "x\(milestone.reward.rewardCount)"
+        case .chest(let model):
+            return model.displayName.localized
+        }
+    }
+
     var body: some View {
         let cardShape = AdventureRewardCardShape(notchSide: notchSide)
         let contentPadding = max(0, (cardWidth * 0.05) - 4)
@@ -359,40 +427,39 @@ private struct AdventureRewardCard: View {
             cardShape
                 .fill(cardFillGradient)
 
-            if milestone.isClaimed {
+            if isClaimed {
                 cardShape
                     .fill(claimedOverlayColor)
             }
 
             VStack(spacing: cardWidth * 0.05) {
                 ZStack {
-                    Image(milestone.reward.iconName)
-                        .resizable()
+                    RewardImageView(asset: milestone.reward.reward.posterImage)
                         .scaledToFit()
                         .frame(height: cardWidth * 0.4)
-                        .opacity(milestone.isClaimed ? 0.35 : 1)
+                        .opacity(isClaimed ? 0.35 : 1)
                 }
 
-                Text(String(localized: String.LocalizationValue(milestone.reward.amountText)))
+                Text(amountText)
                     .font(
                         .system(
-                            size: milestone.reward.isChestReward ? cardWidth * 0.11 : cardWidth * 0.18,
+                            size: style.isChest ? cardWidth * 0.11 : cardWidth * 0.18,
                             weight: .heavy,
                             design: .rounded
                         )
                     )
                     .foregroundStyle(rewardValueColor)
-                    .opacity(milestone.isClaimed ? (isChestReward ? 0.78 : 0.55) : 1)
+                    .opacity(isClaimed ? (style.isChest ? 0.78 : 0.55) : 1)
                     .multilineTextAlignment(.center)
-                    .lineLimit(isChestReward ? 2 : 1)
-                    .frame(maxWidth: isChestReward ? cardWidth * 0.52 : cardWidth * 0.9)
+                    .lineLimit(style.isChest ? 2 : 1)
+                    .frame(maxWidth: style.isChest ? cardWidth * 0.52 : cardWidth * 0.9)
                     .fixedSize(horizontal: false, vertical: true)
-                    .minimumScaleFactor(isChestReward ? 1.0 : 0.75)
+                    .minimumScaleFactor(style.isChest ? 1.0 : 0.75)
             }
             .padding(contentPadding)
             .padding(.top, 4)
 
-            if milestone.isClaimed {
+            if isClaimed {
                 claimedBadge
             }
         }
@@ -400,54 +467,50 @@ private struct AdventureRewardCard: View {
             cardShape
                 .stroke(borderGradient, lineWidth: cardWidth * 0.02)
         )
+        .shadow(color: Color.white.opacity(isReady ? 0.9 : 0), radius: isReady ? 5 : 0, x: 0, y: 0)
+        .opacity(milestone.status == .locked ? 0.72 : 1)
     }
 
     private var cardFillGradient: LinearGradient {
         let colors: [Color]
-        switch milestone.reward {
-        case .standart(model: .gold(count: _)):
+        switch style {
+        case .gold:
             colors = [
                 Color(hex: "#FFF5CC").opacity(0.98),
                 Color(hex: "#F4C430").opacity(0.78),
                 Color(hex: "#C88A1E").opacity(0.74)
             ]
-        case .standart(model: .water(count: _)):
+        case .water:
             colors = [
                 Color(hex: "#E2F5FA").opacity(0.98),
                 Color(hex: "#77AFCA").opacity(0.74),
                 Color(hex: "#3A7192").opacity(0.7)
             ]
-        case .standart(model: .diamond(count: _)):
-            colors = [
-                Color(hex: "#F0FDFF").opacity(0.99),
-                Color(hex: "#8BE9F7").opacity(0.78),
-                Color(hex: "#2783D7").opacity(0.74)
-            ]
-        case .chest(model: .gold):
+        case .chestGold:
             colors = [
                 Color(hex: "#FFF1BF").opacity(0.99),
                 Color(hex: "#FFCC4D").opacity(0.82),
                 Color(hex: "#B67F1E").opacity(0.72)
             ]
-        case .chest(model: .nature):
+        case .chestNature:
             colors = [
                 Color(hex: "#F2FFD5").opacity(0.98),
                 Color(hex: "#A8EA6A").opacity(0.78),
                 Color(hex: "#4D922A").opacity(0.72)
             ]
-        case .chest(model: .diamond):
+        case .chestDiamond:
             colors = [
                 Color(hex: "#EAFDFF").opacity(0.99),
                 Color(hex: "#72DFFF").opacity(0.82),
                 Color(hex: "#2A67D3").opacity(0.72)
             ]
-        case .chest(model: .antique):
+        case .chestAntique:
             colors = [
                 Color(hex: "#F7E4C2").opacity(0.99),
                 Color(hex: "#CD9F5F").opacity(0.82),
                 Color(hex: "#8A5A2B").opacity(0.72)
             ]
-        case .standart:
+        case .diamond, .fallback:
             colors = [
                 Color(hex: "#F0FDFF").opacity(0.99),
                 Color(hex: "#8BE9F7").opacity(0.78),
@@ -463,8 +526,8 @@ private struct AdventureRewardCard: View {
     }
 
     private var borderGradient: LinearGradient {
-        switch milestone.reward {
-        case .standart(model: .gold(count: _)), .chest(model: .gold):
+        switch style {
+        case .gold, .chestGold:
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -474,7 +537,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .standart(model: .water(count: _)):
+        case .water:
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.96),
@@ -484,17 +547,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .standart(model: .diamond(count: _)), .chest(model: .diamond):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#7BDDF2").opacity(0.92),
-                    Color(hex: "#2A67D3").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .chest(model: .nature):
+        case .chestNature:
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -504,7 +557,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .chest(model: .antique):
+        case .chestAntique:
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -514,7 +567,7 @@ private struct AdventureRewardCard: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-        case .standart:
+        case .diamond, .chestDiamond, .fallback:
             return LinearGradient(
                 colors: [
                     Color.white.opacity(0.98),
@@ -528,53 +581,32 @@ private struct AdventureRewardCard: View {
     }
 
     private var claimedOverlayColor: Color {
-        switch milestone.reward {
-        case .chest(model: .gold):
+        switch style {
+        case .gold, .chestGold:
             return Color(hex: "#8B5E00").opacity(0.16)
-        case .chest(model: .nature):
-            return Color(hex: "#2F5D1B").opacity(0.16)
-        case .chest(model: .diamond):
-            return Color(hex: "#0B3A64").opacity(0.16)
-        case .chest(model: .antique):
-            return Color(hex: "#6B4A1E").opacity(0.16)
-        case .standart(model: .gold(count: _)):
-            return Color(hex: "#8B5E00").opacity(0.14)
-        case .standart(model: .water(count: _)):
+        case .water:
             return Color(hex: "#0B4F6C").opacity(0.14)
-        case .standart(model: .diamond(count: _)):
-            return Color(hex: "#0B3A64").opacity(0.14)
-        case .standart:
+        case .chestNature:
+            return Color(hex: "#2F5D1B").opacity(0.16)
+        case .chestAntique:
+            return Color(hex: "#6B4A1E").opacity(0.16)
+        case .diamond, .chestDiamond, .fallback:
             return Color(hex: "#0B3A64").opacity(0.14)
         }
     }
 
     private var rewardValueColor: Color {
-        switch milestone.reward {
-        case .standart(model: .water(count: _)):
+        switch style {
+        case .gold, .chestGold:
+            return Color(hex: "#8B5E00")
+        case .water:
             return Color(hex: "#0B4F6C")
-        case .standart(model: .gold(count: _)):
-            return Color(hex: "#8B5E00")
-        case .standart(model: .diamond(count: _)):
-            return Color(hex: "#0B3A64")
-        case .chest(model: .gold):
-            return Color(hex: "#8B5E00")
-        case .chest(model: .nature):
+        case .chestNature:
             return Color(hex: "#2F5D1B")
-        case .chest(model: .diamond):
-            return Color(hex: "#0B3A64")
-        case .chest(model: .antique):
+        case .chestAntique:
             return Color(hex: "#6B4A1E")
-        case .standart:
+        case .diamond, .chestDiamond, .fallback:
             return Color(hex: "#0B3A64")
-        }
-    }
-
-    private var isChestReward: Bool {
-        switch milestone.reward {
-        case .chest:
-            return true
-        default:
-            return false
         }
     }
 
@@ -586,14 +618,3 @@ private struct AdventureRewardCard: View {
         }
     }
 }
-
-// MARK: - PREVIEW
-
-#Preview {
-    AdventureRoadUI(
-        screenModel: AdventureRoadMockData.screenModel(),
-        isVisible: .constant(true),
-        seasonLeftTime: .constant(Date())
-    )
-}
-*/

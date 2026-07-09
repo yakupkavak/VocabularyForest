@@ -33,7 +33,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchDailySpinRewards() async throws -> RemoteConfigResponse<RemoteDailySpinListModel>
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
     func fetchWeeklyRewards() async throws -> RemoteConfigResponse<RemoteWeeklyListModel>
-    func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>
+    func fetchAdventureRoadConfig() async throws -> RemoteConfigResponse<RemoteAdventureRoadListModel>
     func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>>
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
 }
@@ -202,67 +202,16 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         }*/
     }
 
-    func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>{
+    func fetchAdventureRoadConfig() async throws -> RemoteConfigResponse<RemoteAdventureRoadListModel> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.adventureRoadRewards).decoded(asType: RemoteAdventureRoadListModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.adventureRoadRewards).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
-            return Resource.success(response)
+            return response
         }catch {
-            return .error(error: RemoteConfigError.decodeFailed)
-        }
-        /*
-        let decodedResult: Result<DecodedPayload<RemoteAdventureRoadRewardDTO>, RemoteConfigError> = await fetchDecodedArray(
-            forKey: Keys.adventureRoadRewards,
-            as: RemoteAdventureRoadRewardDTO.self
-        )
-
-        switch decodedResult {
-        case .success(let payload):
-            let change = persistConfigID(payload.id, forRemoteKey: Keys.adventureRoadRewards)
-            applyAdventureRoadSeasonChangeIfNeeded(change: change, seasonID: payload.id)
-            
-            guard let seasonEndDate = parseSeasonEndDate(payload.seasonEndDateString) else {
-                return .error(error: RemoteConfigError.dataMissing)
-            }
-            
-            let safeModels = payload.items.enumerated().map { index, dto in
-                AdventureRoadRewardModel(
-                    wordCount: safeWordCount(dto.wordCount, fallback: (index + 1) * 10),
-                    shortTermReward: mapToLocalReward(dto.shortTermReward),
-                    longTermReward: mapToLocalReward(dto.longTermReward)
-                )
-            }
-            guard !safeModels.isEmpty else {
-                return .error(error: RemoteConfigError.dataMissing)
-            }
-            return .success(
-                AdventureRoadConfigModel(
-                    id: payload.id,
-                    seasonEndDate: seasonEndDate,
-                    rewards: safeModels
-                )
-            )
-
-        case .failure(let error):
-            return .error(error: error)
-        }
-         */
-    }
-    
-    /*
-    func fetchAdventureRoadRewards() async -> Resource<[AdventureRoadRewardModel]> {
-        let configResult = await fetchAdventureRoadConfig()
-        switch configResult.status {
-        case .success:
-            return .success(configResult.data?.rewards ?? [])
-        case .loading:
-            return .loading()
-        case .error:
-            return .error(error: configResult.error)
+            throw error
         }
     }
-    */
     
     func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>> {
         do {

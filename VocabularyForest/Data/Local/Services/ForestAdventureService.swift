@@ -40,6 +40,7 @@ enum ForestAdventureError: LocalizedError {
 protocol ForestAdventureServiceProtocol {
     func claimDailySpinReward(model: LocalRewardModel) async throws
     func claimWeeklyReward(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) async throws
+    func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws
     func claimQuestReward(quest: QuestModel) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
 }
@@ -69,11 +70,11 @@ class ForestAdventureService {
     private let questService: QuestServiceProtocol
     private let dailySpinService: DailySpinServiceProtocol
     private let weeklyRewardService: WeeklyRewardServiceProtocol
+    private let adventureRoadService: AdventureRoadServiceProtocol
     private let chestService: ChestRepositoryProtocol
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
-    private var adventureCacheList: AdventureRoadScreenModel? = nil
     
     init(
         forestManager: ForestDataManagerProtocol,
@@ -85,6 +86,7 @@ class ForestAdventureService {
         questService: QuestServiceProtocol,
         dailySpinService: DailySpinServiceProtocol,
         weeklyRewardService: WeeklyRewardServiceProtocol,
+        adventureRoadService: AdventureRoadServiceProtocol,
         chestService: ChestRepositoryProtocol,
     ) {
         self.forestManager = forestManager
@@ -96,6 +98,7 @@ class ForestAdventureService {
         self.questService = questService
         self.dailySpinService = dailySpinService
         self.weeklyRewardService = weeklyRewardService
+        self.adventureRoadService = adventureRoadService
         self.chestService = chestService
         setupParameters()
     }
@@ -126,20 +129,16 @@ private extension ForestAdventureService {
                     try await documentRepository.saveChestConfig(data: config.rawData)
                 }
             }
-            /*
             if adventureRoadID == parameters?.model.adventureRoadConfigVersion {
-                // TODO: - RETURN FROM LOCAL
-                let response = await documentRepository.fetchAdventureRoadConfig()
-                if let list = response.data {
-                    //convertRemoteToCacheAdventure(list: list)
-                }
+                /// Return from local
+                let response = try await documentRepository.fetchAdventureRoadConfig()
+                try await adventureRoadService.convertRemoteToAdventureList(list: response)
             } else if let adventureVersion = parameters?.model.adventureRoadConfigVersion {
                 UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
-                let config = await remoteConfigRepository.fetchAdventureRoadConfig()
-                let saveLocalResult = await documentRepository.saveAdventureRoadConfig(data: config.data?.rawData)
-                // TODO: - FETCH NEW VERSION FROM REMOTE
+                let config = try await remoteConfigRepository.fetchAdventureRoadConfig()
+                try await adventureRoadService.convertRemoteToAdventureList(list: config.model)
+                try await documentRepository.saveAdventureRoadConfig(data: config.rawData)
             }
-            */
             if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
                 let response = try await documentRepository.fetchDailySpinModels()
                 try await dailySpinService.convertRemoteToDailySpinList(list: response)
@@ -189,42 +188,6 @@ private extension ForestAdventureService {
     }
 }
 
-// MARK: PRIVATE STORAGE HELPERS
-
-private extension ForestAdventureService {
-    /*
-    func convertRemoteToCacheAdventure(list: RemoteAdventureRoadListModel) -> Resource<Bool> {
-        if let remoteItems = list.items, let title = list.title, let endDate = list.seasonEndDate, let progress = playerManager.fetchAdventureRoadProgress(contextType: .background) {
-            let sortedReward = remoteItems.sorted { $0.wordCount ?? 0 < $1.wordCount ?? 0 }
-            let maxWordCount = sortedReward.map { $0.wordCount ?? 0 }.max() ?? 0
-            let rows = sortedReward.map { reward in
-                
-                guard let wordCount = reward.wordCount, let shortTermReward = reward.shortTermReward, let longTermReward = reward.longTermReward else { return }
-                
-                AdventureRoadRowModel(
-                    wordCount: wordCount,
-                    leftMilestone: AdventureMilestoneModel(
-                        track: .shortTerm,
-                        wordCount: wordCount,
-                        reward: shortTermReward,
-                        isClaimed: wordCount <= progress.monthlyShortLearnedCount
-                    ),
-                    rightMilestone: AdventureMilestoneModel(
-                        track: .longTerm,
-                        wordCount: wordCount,
-                        reward: longTermReward,
-                        isClaimed: wordCount <= progress.monthlyLongLearnedCount
-                    )
-                )
-            }
-        }
-                
-        return Resource.success(true)
-    }
-     */
-    
-}
-
 // MARK: - QUEST HELPERS
 
 extension ForestAdventureService: ForestAdventureServiceProtocol {
@@ -237,6 +200,14 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
     func claimWeeklyReward(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) async throws {
         /// Lock the streak with network time first so the reward can not be claimed without a saved lock
         try await weeklyRewardService.claimWeeklyReward(model: weeklyModel)
+        for model in models {
+            try await rewardRepository.claimLocalReward(reward: model)
+        }
+    }
+    
+    func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws {
+        /// Lock the tier with network time first so the reward can not be claimed without a saved lock
+        try await adventureRoadService.claimAdventureReward(milestone: milestone)
         for model in models {
             try await rewardRepository.claimLocalReward(reward: model)
         }

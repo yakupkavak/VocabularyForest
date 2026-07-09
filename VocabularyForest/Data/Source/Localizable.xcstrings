@@ -146,6 +146,9 @@
         }
       }
     },
+    "%lld words" : {
+
+    },
     "%lld/%lld" : {
       "localizations" : {
         "en" : {
@@ -313,9 +316,6 @@
         }
       }
     },
-    "adventure" : {
-
-    },
     "Adventure Road" : {
 
     },
@@ -339,6 +339,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$d d %2$d h"
+          }
+        }
+      }
+    },
+    "adventure_road_title" : {
+      "comment" : "Main title of the Adventure Road screen",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Adventure Road"
           }
         }
       }
@@ -9600,9 +9612,6 @@
 
     },
     "The sun is completely unforgiving today." : {
-
-    },
-    "todo" : {
 
     },
     "Toprak sağlığı: %%%lld" : {
