@@ -7,7 +7,6 @@
 
 enum BountyStatus {
     case claimed
-    case passed
     case ready
     case locked
 }

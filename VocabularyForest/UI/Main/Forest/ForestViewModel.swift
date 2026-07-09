@@ -56,6 +56,7 @@ class ForestViewModel: BaseViewModel {
     private let playerDataManager: PlayerDataManagerProtocol
     private let questService: QuestServiceProtocol
     private let dailySpinService: DailySpinServiceProtocol
+    private let weeklyRewardService: WeeklyRewardServiceProtocol
 
     // MARK: - PROPERTIES
     
@@ -101,6 +102,7 @@ class ForestViewModel: BaseViewModel {
         playerDataManager: PlayerDataManagerProtocol,
         questService: QuestServiceProtocol,
         dailySpinService: DailySpinServiceProtocol,
+        weeklyRewardService: WeeklyRewardServiceProtocol,
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -111,9 +113,11 @@ class ForestViewModel: BaseViewModel {
         self.playerDataManager = playerDataManager
         self.questService = questService
         self.dailySpinService = dailySpinService
+        self.weeklyRewardService = weeklyRewardService
         super.init()
         bindQuests()
         bindDailySpin()
+        bindWeeklyRewards()
         fetchForest()
     }
 }
@@ -207,16 +211,10 @@ extension ForestViewModel {
 extension ForestViewModel {
     
     func fetchWeeklyDailyCards() {
-        /*
-        Task { @MainActor in
-            let result = await adventureService.fetchWeeklyDailyRewards()
-            if result.status == .success, let cards = result.data {
-                self.weeklyDailyCards = cards
-            } else {
-                print("Hata: Haftalık kartlar çekilemedi -> \(result.error?.localizedDescription ?? "")")
-            }
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await weeklyRewardService.checkAndUpdateWeeklyState()
         }
-         */
     }
     
     func initalizeForest() {
@@ -497,18 +495,15 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
-    func claimWeeklyReward(reward: LocalRewardModel, weeklyModel:  WeeklyDailyCardModel) {
-        /*
+    func claimWeeklyRewards(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) {
         Task { @MainActor in
-            let result = await adventureService.saveWeeklyReward(weeklyModel: weeklyModel, contextType: .main)
-            let _ = forestDataManager.claimReward(model: reward, contextType: .main)
-            if result.status == .success {
-                if let index = self.weeklyDailyCards.firstIndex(where: { $0.day == weeklyModel.day }) {
-                    self.weeklyDailyCards[index].status = .claimed
-                }
+            do {
+                try await adventureService.claimWeeklyReward(models: models, weeklyModel: weeklyModel)
+                self.fetchForest()
+            } catch {
+                print(error.localizedDescription)
             }
         }
-         */
     }
 }
 
@@ -637,6 +632,14 @@ private extension ForestViewModel {
                     dailySpinTime = Calendar.current.startOfDay(for: Date()).addingTimeInterval(remainSeconds)
                     startDailySpinTimer()
                 }
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindWeeklyRewards() {
+        weeklyRewardService.weeklyCardListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] cards in
+                guard let self else { return }
+                weeklyDailyCards = cards
             }.store(in: &adventureCancellable)
     }
     

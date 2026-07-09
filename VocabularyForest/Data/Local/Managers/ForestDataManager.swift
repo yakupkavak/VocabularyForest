@@ -101,6 +101,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws
     func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws
+    func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -666,6 +667,24 @@ extension ForestDataManager {
                 throw ForestAdventureError.emptyForestActivities
             }
             activities.dailySpinLastUsedDate = time
+            activities.lastUpdatedDate = time
+            try save(context: context)
+        }
+    }
+    
+    func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws {
+        let context = getContext(for: contextType)
+        return try context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else { throw ForestError.emptyForest }
+            guard let activities = forest.dailyActivities else {
+                throw ForestAdventureError.emptyForestActivities
+            }
+            /// Freeze the timezone on first claim so day calculations stay consistent
+            if activities.fixedTimeZone == nil {
+                activities.fixedTimeZone = TimeZone.current.identifier
+            }
+            activities.weeklyStreakCurrentDay = Int16(day)
+            activities.weeklyStreakLastClaimDate = time
             activities.lastUpdatedDate = time
             try save(context: context)
         }

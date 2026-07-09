@@ -20,14 +20,14 @@ protocol DocumentaryRepositoryProtocol {
     func fetchChestConfig() async throws -> RemoteChestConfigResponse
     func fetchDailySpinModels() async throws -> RemoteDailySpinListModel
     func fetchQuestsConfig() async throws -> RemoteQuestListModel
-    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel>
+    func fetchWeeklyRewards() async throws -> RemoteWeeklyListModel
     func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel>
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<(ConfigParametersList)>
     func saveChestConfig(data: Any?) async throws
     func saveDailySpinRewards(data: Any?) async throws
     func saveQuestsConfig(data: Any?) async throws
-    func saveWeeklyRewards(data: Any?) async -> Resource<Bool>
+    func saveWeeklyRewards(data: Any?) async throws
     func saveAdventureRoadConfig(data: Any?) async -> Resource<Bool>
     func saveGameEconomyConfig(data: Any?) async -> Resource<Bool>
     func saveConfigParameters(data: Any?) async -> Resource<(Bool)>
@@ -121,13 +121,8 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
         try fetchFromDisk(fileName: FileName.questsConfig, as: RemoteQuestListModel.self)
     }
     
-    func fetchWeeklyRewards() async -> Resource<RemoteWeeklyListModel> {
-        do {
-            let model = try fetchFromDisk(fileName: FileName.weeklyRewards, as: RemoteWeeklyListModel.self)
-            return .success(model)
-        } catch {
-            return .error(error: error)
-        }
+    func fetchWeeklyRewards() async throws -> RemoteWeeklyListModel {
+        try fetchFromDisk(fileName: FileName.weeklyRewards, as: RemoteWeeklyListModel.self)
     }
     
     func fetchAdventureRoadConfig() async -> Resource<RemoteAdventureRoadListModel> {
@@ -171,13 +166,8 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
         try saveToDisk(data: data, fileName: FileName.questsConfig)
     }
     
-    func saveWeeklyRewards(data: Any?) async -> Resource<Bool> {
-        do {
-            try saveToDisk(data: data, fileName: FileName.weeklyRewards)
-            return .success(true)
-        } catch {
-            return .error(error: error)
-        }
+    func saveWeeklyRewards(data: Any?) async throws {
+        try saveToDisk(data: data, fileName: FileName.weeklyRewards)
     }
     
     func saveAdventureRoadConfig(data: Any?) async -> Resource<Bool> {

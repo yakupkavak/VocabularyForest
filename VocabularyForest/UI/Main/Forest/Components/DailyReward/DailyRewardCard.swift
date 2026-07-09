@@ -62,7 +62,7 @@ struct DailyCard: View {
             }
         }
         .compositingGroup()
-        .opacity(model.status == .passed || model.status == .claimed  ? 0.8 : 1.0)
+        .opacity(model.status == .claimed ? 0.8 : 1.0)
 
         .onTapGesture {
             onClick()

@@ -201,14 +201,12 @@ private extension ForestUI {
         WeeklyRewardUI(isOpen: Binding ( get: { uiState == .dailyTrack }, set: { newValue in
             if !newValue { uiState = .empty }
         }), cardList: viewModel.weeklyDailyCards) { dailyModel in
-            if dailyModel.status == .ready{
+            if dailyModel.status == .ready {
                 PopupManager.shared.show {
-                    /*
-                    coordinator.startClaimRewardUI(claimReward: dailyModel) { rewards in
-                        viewModel.claimDailyRewards(models: rewards)
+                    coordinator.startClaimRewardUI(claimReward: dailyModel.bounty) { rewards in
+                        viewModel.claimWeeklyRewards(models: rewards, weeklyModel: dailyModel)
                         PopupManager.shared.dismiss()
                     }
-                     */
                 }
             }
         }
@@ -240,6 +238,7 @@ private extension ForestUI {
             case .tasks:
                 uiState = .quest
             case .dailyReward:
+                viewModel.fetchWeeklyDailyCards()
                 uiState = .dailyTrack
             case .dailySpin:
                 viewModel.checkDailySpinStatus()

@@ -32,7 +32,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchChestConfig() async throws -> RemoteConfigResponse<RemoteChestConfigResponse>
     func fetchDailySpinRewards() async throws -> RemoteConfigResponse<RemoteDailySpinListModel>
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
-    func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>>
+    func fetchWeeklyRewards() async throws -> RemoteConfigResponse<RemoteWeeklyListModel>
     func fetchAdventureRoadConfig() async -> Resource<RemoteConfigResponse<RemoteAdventureRoadListModel>>
     func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>>
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
@@ -167,14 +167,14 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
          */
     }
 
-    func fetchWeeklyRewards() async -> Resource<RemoteConfigResponse<RemoteWeeklyListModel>> {
+    func fetchWeeklyRewards() async throws -> RemoteConfigResponse<RemoteWeeklyListModel> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.weeklyRewards).decoded(asType: RemoteWeeklyListModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.weeklyRewards).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
-            return Resource.success(response)
+            return response
         }catch {
-            return .error(error: RemoteConfigError.decodeFailed)
+            throw error
         }
         /*
         let decodedResult: Result<DecodedPayload<RemoteWeeklyRewardItemDTO>, RemoteConfigError> = await fetchDecodedArray(
