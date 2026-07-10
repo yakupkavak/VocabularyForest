@@ -3790,6 +3790,9 @@
         }
       }
     },
+    "Garantili Ödüller" : {
+
+    },
     "Gelecek güncelleme ile mağazada kullanabileceksin." : {
       "localizations" : {
         "en" : {
@@ -8925,6 +8928,12 @@
           }
         }
       }
+    },
+    "Sandık içeriği ve çıkma oranları" : {
+
+    },
+    "Şans Ödülleri" : {
+
     },
     "Select your \nMagic" : {
       "localizations" : {

@@ -19,6 +19,7 @@ protocol ChestRepositoryProtocol {
     func getLocalChest(chestId: String) -> LocalChestModel?
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws
     func openChest(chestId: String) async throws -> [LocalRewardModel]
+    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
 }
 
 final class ChestRepository {
@@ -94,7 +95,8 @@ extension ChestRepository: ChestRepositoryProtocol {
             if let randomDrops = economy?.randomDrops, !randomDrops.isEmpty {
                 let totalChance = randomDrops.compactMap { $0.dropChance }.reduce(0, +)
                 if totalChance > 0 {
-                    let randomRoll = Int.random(in: 1...totalChance)
+                    /// Roll out of at least 100 so a total below 100 leaves a real chance of no bonus drop
+                    let randomRoll = Int.random(in: 1...max(totalChance, 100))
                     var currentWeight = 0
                     for drop in randomDrops {
                         if let chance = drop.dropChance {
@@ -120,6 +122,47 @@ extension ChestRepository: ChestRepositoryProtocol {
         }
     }
         
+    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
+        guard let economy = chestEconomy[chestId] else { throw ChestRepositoryError.invalidChestId }
+        
+        var infoList: [ChestDropInfoModel] = []
+        
+        if let guaranteed = economy.guaranteedDrops {
+            for drop in guaranteed {
+                guard let reward = drop.reward, let id = reward.id else { throw ChestRepositoryError.decodingError }
+                let localReward = try await processAndGetLocalReward(from: reward, rewardCount: drop.minAmount ?? 1)
+                infoList.append(
+                    ChestDropInfoModel(
+                        id: id,
+                        reward: localReward,
+                        chancePercent: nil,
+                        minAmount: drop.minAmount ?? 1,
+                        maxAmount: drop.maxAmount ?? 1
+                    )
+                )
+            }
+        }
+        
+        if let randomDrops = economy.randomDrops {
+            for drop in randomDrops {
+                guard let reward = drop.reward, let id = reward.id else { throw ChestRepositoryError.decodingError }
+                let localReward = try await processAndGetLocalReward(from: reward, rewardCount: drop.minAmount ?? 1)
+                infoList.append(
+                    ChestDropInfoModel(
+                        id: id,
+                        reward: localReward,
+                        chancePercent: drop.dropChance,
+                        minAmount: drop.minAmount ?? 1,
+                        maxAmount: drop.maxAmount ?? 1
+                    )
+                )
+            }
+        }
+        
+        guard !infoList.isEmpty else { throw ChestRepositoryError.chestListEmpty }
+        return infoList
+    }
+    
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws {
         var localChests: [LocalChestModel] = []
         

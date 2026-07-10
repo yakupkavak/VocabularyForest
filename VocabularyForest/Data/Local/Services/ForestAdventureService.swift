@@ -44,6 +44,7 @@ protocol ForestAdventureServiceProtocol {
     func claimQuestReward(quest: QuestModel) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
     func purchaseMarketItem(item: MarketItemModel) async throws
+    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
 }
 
 // MARK: - CONSTANTS
@@ -236,6 +237,10 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
     func purchaseMarketItem(item: MarketItemModel) async throws {
         /// Deduct the currency first so the reward can not be claimed without a paid purchase
         try await marketService.purchaseItem(item: item)
+    }
+    
+    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
+        try await chestService.fetchChestDropInfo(chestId: chestId)
     }
     
     func claimQuestReward(quest: QuestModel) async throws {

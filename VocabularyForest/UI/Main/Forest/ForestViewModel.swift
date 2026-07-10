@@ -514,6 +514,15 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
+    func fetchChestDropInfo(chestId: String) async -> [ChestDropInfoModel]? {
+        do {
+            return try await adventureService.fetchChestDropInfo(chestId: chestId)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
     func claimMarketRewards(models: [LocalRewardModel]) {
         Task { @MainActor in
             do {

@@ -21,3 +21,17 @@ enum ChestStatus {
     case open
     case close
 }
+
+/// A single possible drop of a chest, used to inform the user before purchase
+struct ChestDropInfoModel: Identifiable, Hashable {
+    let id: String
+    let reward: LocalRewardModel
+    /// nil means the drop is guaranteed
+    let chancePercent: Int?
+    let minAmount: Int
+    let maxAmount: Int
+    
+    var amountText: String {
+        minAmount == maxAmount ? "x\(minAmount)" : "x\(minAmount)-\(maxAmount)"
+    }
+}

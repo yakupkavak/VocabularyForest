@@ -89,7 +89,9 @@ struct ForestUI: View {
             }
             
             if uiState != .empty {
-                Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+                if uiState != .market {
+                    Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+                }
                 userMenu.zIndex(4.0)
             }
             
@@ -185,17 +187,21 @@ private extension ForestUI {
                     isVisible: Binding(get: { uiState == .market }, set: { if !$0 { uiState = .empty } }),
                     goldBalance: viewModel.forestStatus?.gold ?? 0,
                     diamondBalance: viewModel.forestStatus?.diamond ?? 0,
-                    errorMessage: viewModel.marketErrorMessage
-                ) { item in
-                    viewModel.purchaseMarketItem(item: item) {
-                        PopupManager.shared.show {
-                            coordinator.startClaimRewardUI(claimReward: item.reward) { rewards in
-                                viewModel.claimMarketRewards(models: rewards)
-                                PopupManager.shared.dismiss()
+                    errorMessage: viewModel.marketErrorMessage,
+                    onPurchase: { item in
+                        viewModel.purchaseMarketItem(item: item) {
+                            PopupManager.shared.show {
+                                coordinator.startClaimRewardUI(claimReward: item.reward) { rewards in
+                                    viewModel.claimMarketRewards(models: rewards)
+                                    PopupManager.shared.dismiss()
+                                }
                             }
                         }
+                    },
+                    onChestInfoRequest: { chestId in
+                        await viewModel.fetchChestDropInfo(chestId: chestId)
                     }
-                }
+                )
             } else {
                 ProgressView()
             }
