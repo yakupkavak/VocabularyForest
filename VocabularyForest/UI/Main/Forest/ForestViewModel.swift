@@ -58,6 +58,7 @@ class ForestViewModel: BaseViewModel {
     private let dailySpinService: DailySpinServiceProtocol
     private let weeklyRewardService: WeeklyRewardServiceProtocol
     private let adventureRoadService: AdventureRoadServiceProtocol
+    private let marketService: MarketServiceProtocol
 
     // MARK: - PROPERTIES
     
@@ -74,6 +75,8 @@ class ForestViewModel: BaseViewModel {
     @Published var dailySpinModels: [SpinModel] = []
     @Published var dailySpinModelVersion = UUID()
     @Published var adventureRoadScreenModel: AdventureRoadScreenModel? = nil
+    @Published var marketScreenModel: MarketScreenModel? = nil
+    @Published var marketErrorMessage: String? = nil
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -104,6 +107,7 @@ class ForestViewModel: BaseViewModel {
         dailySpinService: DailySpinServiceProtocol,
         weeklyRewardService: WeeklyRewardServiceProtocol,
         adventureRoadService: AdventureRoadServiceProtocol,
+        marketService: MarketServiceProtocol,
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -116,11 +120,13 @@ class ForestViewModel: BaseViewModel {
         self.dailySpinService = dailySpinService
         self.weeklyRewardService = weeklyRewardService
         self.adventureRoadService = adventureRoadService
+        self.marketService = marketService
         super.init()
         bindQuests()
         bindDailySpin()
         bindWeeklyRewards()
         bindAdventureRoad()
+        bindMarket()
         fetchForest()
     }
 }
@@ -331,7 +337,8 @@ extension ForestViewModel {
                     rainValue: forestData.rainValue,
                     landHealthPercentage: forestData.landHealthPercentage,
                     landStatus: forestData.landStatus,
-                    gold: forestData.gold
+                    gold: forestData.gold,
+                    diamond: forestData.diamond
                 )
                 
                 if forestData.rainValue >= 50 { self.showRainButton = true }
@@ -493,6 +500,32 @@ extension ForestViewModel: ForestViewModelProtocol {
             }
         }
     }
+    
+    func purchaseMarketItem(item: MarketItemModel, onSuccess: @escaping () -> Void) {
+        Task { @MainActor in
+            do {
+                try await adventureService.purchaseMarketItem(item: item)
+                marketErrorMessage = nil
+                fetchForest()
+                onSuccess()
+            } catch {
+                marketErrorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    func claimMarketRewards(models: [LocalRewardModel]) {
+        Task { @MainActor in
+            do {
+                for model in models {
+                    try await adventureService.claimLocalReward(model: model)
+                }
+                self.fetchForest()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
 // MARK: - FOREST SCENE PROTOCOL
@@ -636,6 +669,14 @@ private extension ForestViewModel {
             .sink { [weak self] model in
                 guard let self else { return }
                 adventureRoadScreenModel = model
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindMarket() {
+        marketService.marketScreenModelPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self else { return }
+                marketScreenModel = model
             }.store(in: &adventureCancellable)
     }
     

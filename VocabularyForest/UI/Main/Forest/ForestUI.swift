@@ -14,6 +14,7 @@ protocol ForestUIProtocol {
     func showAnnouncement()
     func showGameSelection()
     func showForestInfo()
+    func showMarket()
     func updateComponentName(model: ComponentNameable, type: ComponentType)
 }
 
@@ -32,7 +33,7 @@ private extension ForestUI {
         case option, setting, gameSelect
         case announce, forest, quest
         case updateName, empty, dailySpin
-        case dailyTrack, userRoad
+        case dailyTrack, userRoad, market
         
         var id: Self { self }
     }
@@ -171,6 +172,33 @@ private extension ForestUI {
             dailyTrackView
         case .userRoad:
             userRoadView
+        case .market:
+            marketView
+        }
+    }
+    
+    var marketView: some View {
+        Group {
+            if let screenModel = viewModel.marketScreenModel {
+                MarketUI(
+                    screenModel: screenModel,
+                    isVisible: Binding(get: { uiState == .market }, set: { if !$0 { uiState = .empty } }),
+                    goldBalance: viewModel.forestStatus?.gold ?? 0,
+                    diamondBalance: viewModel.forestStatus?.diamond ?? 0,
+                    errorMessage: viewModel.marketErrorMessage
+                ) { item in
+                    viewModel.purchaseMarketItem(item: item) {
+                        PopupManager.shared.show {
+                            coordinator.startClaimRewardUI(claimReward: item.reward) { rewards in
+                                viewModel.claimMarketRewards(models: rewards)
+                                PopupManager.shared.dismiss()
+                            }
+                        }
+                    }
+                }
+            } else {
+                ProgressView()
+            }
         }
     }
     
@@ -435,6 +463,11 @@ private extension ForestUI {
 // MARK: - PROTOCOL CONFORMANCE
 
 extension ForestUI: ForestUIProtocol {
+    
+    func showMarket() {
+        viewModel.marketErrorMessage = nil
+        uiState = .market
+    }
     
     func updateComponentName(model: any ComponentNameable, type: ComponentType) {
         componentName = model.characterName

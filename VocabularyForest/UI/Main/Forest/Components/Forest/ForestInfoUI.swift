@@ -64,7 +64,7 @@ struct ForestInfoUI: View {
 }
 
 #Preview {
-    ForestInfoUI(forestModel: ForestStatusModel(rainValue: 10, landHealthPercentage: 10, landStatus: true, gold: 210), onClose: {
+    ForestInfoUI(forestModel: ForestStatusModel(rainValue: 10, landHealthPercentage: 10, landStatus: true, gold: 210, diamond: 42), onClose: {
         print("yakup")
     })
 }

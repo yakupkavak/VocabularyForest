@@ -10,6 +10,7 @@ struct ConfigParametersList: Decodable {
     let chestRewardsConfigVersion: String?
     let dailySpinRewardsConfigVersion: String?
     let gameEconomyConfigVersion: String?
+    let marketConfigVersion: String?
     let questsConfigVersion: String?
     let weeklyRewardsConfigVersion: String?
 }

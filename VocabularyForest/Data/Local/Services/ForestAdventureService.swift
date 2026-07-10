@@ -43,6 +43,7 @@ protocol ForestAdventureServiceProtocol {
     func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws
     func claimQuestReward(quest: QuestModel) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
+    func purchaseMarketItem(item: MarketItemModel) async throws
 }
 
 // MARK: - CONSTANTS
@@ -52,6 +53,7 @@ private extension ForestAdventureService {
         static let questsConfig = "QuestsConfigID"
         static let weeklyRewards = "WeeklyRewardConfigID"
         static let adventureRoadRewards = "AdventureRoadConfigID"
+        static let marketConfig = "MarketConfigID"
         static let gameEconomyConfig = "GameEconomyConfigID"
         static let chestRewardConfig = "ChestRewardConfigID"
     }
@@ -71,6 +73,7 @@ class ForestAdventureService {
     private let dailySpinService: DailySpinServiceProtocol
     private let weeklyRewardService: WeeklyRewardServiceProtocol
     private let adventureRoadService: AdventureRoadServiceProtocol
+    private let marketService: MarketServiceProtocol
     private let chestService: ChestRepositoryProtocol
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
@@ -87,6 +90,7 @@ class ForestAdventureService {
         dailySpinService: DailySpinServiceProtocol,
         weeklyRewardService: WeeklyRewardServiceProtocol,
         adventureRoadService: AdventureRoadServiceProtocol,
+        marketService: MarketServiceProtocol,
         chestService: ChestRepositoryProtocol,
     ) {
         self.forestManager = forestManager
@@ -99,6 +103,7 @@ class ForestAdventureService {
         self.dailySpinService = dailySpinService
         self.weeklyRewardService = weeklyRewardService
         self.adventureRoadService = adventureRoadService
+        self.marketService = marketService
         self.chestService = chestService
         setupParameters()
     }
@@ -107,6 +112,7 @@ class ForestAdventureService {
 private extension ForestAdventureService {
     func setupParameters() {
         let adventureRoadID = UserDefaults.standard.string(forKey: DefaultsKeys.adventureRoadRewards)
+        let marketID = UserDefaults.standard.string(forKey: DefaultsKeys.marketConfig)
         let dailySpinID = UserDefaults.standard.string(forKey: DefaultsKeys.dailySpinRewards)
         let questsID = UserDefaults.standard.string(forKey: DefaultsKeys.questsConfig)
         let weeklyID = UserDefaults.standard.string(forKey: DefaultsKeys.weeklyRewards)
@@ -138,6 +144,16 @@ private extension ForestAdventureService {
                 let config = try await remoteConfigRepository.fetchAdventureRoadConfig()
                 try await adventureRoadService.convertRemoteToAdventureList(list: config.model)
                 try await documentRepository.saveAdventureRoadConfig(data: config.rawData)
+            }
+            if marketID == parameters?.model.marketConfigVersion {
+                /// Return from local
+                let response = try await documentRepository.fetchMarketConfig()
+                try await marketService.convertRemoteToMarketList(list: response)
+            } else if let marketVersion = parameters?.model.marketConfigVersion {
+                UserDefaults.standard.set(marketVersion, forKey: DefaultsKeys.marketConfig)
+                let config = try await remoteConfigRepository.fetchMarketConfig()
+                try await marketService.convertRemoteToMarketList(list: config.model)
+                try await documentRepository.saveMarketConfig(data: config.rawData)
             }
             if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
                 let response = try await documentRepository.fetchDailySpinModels()
@@ -215,6 +231,11 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
     
     func claimLocalReward(model: LocalRewardModel) async throws {
         try await rewardRepository.claimLocalReward(reward: model)
+    }
+    
+    func purchaseMarketItem(item: MarketItemModel) async throws {
+        /// Deduct the currency first so the reward can not be claimed without a paid purchase
+        try await marketService.purchaseItem(item: item)
     }
     
     func claimQuestReward(quest: QuestModel) async throws {

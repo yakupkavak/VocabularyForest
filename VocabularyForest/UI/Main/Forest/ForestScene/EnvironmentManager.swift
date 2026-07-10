@@ -38,6 +38,7 @@ class EnvironmentManager {
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let announcementButton = SKSpriteNode(imageNamed: "announcement_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
+    private let marketButton = SKSpriteNode(imageNamed: "market_button")
     private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let rightIcon = SKSpriteNode(imageNamed: "right_icon")
@@ -186,6 +187,10 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         forestButton.zPosition = 4
         forestButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
         forestButton.name = "forest_button"
+        marketButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.62)
+        marketButton.zPosition = 4
+        marketButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
+        marketButton.name = "market_button"
         rightIcon.name = ForestConstant.rightIconName
         leftIcon.name = ForestConstant.leftIconName
         downIcon.name = ForestConstant.downIconName
@@ -196,6 +201,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         scene.addChild(playButton)
         scene.addChild(announcementButton)
         scene.addChild(menuButton)
+        scene.addChild(marketButton)
         scene.addChild(scoreLabel)
     }
     

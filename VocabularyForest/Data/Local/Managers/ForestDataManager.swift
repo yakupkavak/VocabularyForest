@@ -346,7 +346,8 @@ extension ForestDataManager {
                 rainValue: Int(forest.rainValue),
                 landHealthPercentage: Int(forest.landHealthPercent),
                 landStatus: forest.landStatus,
-                gold: Int(forest.moneyValue)
+                gold: Int(forest.moneyValue),
+                diamond: Int(forest.diamondValue)
             )
             return model
         }

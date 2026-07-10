@@ -30,7 +30,8 @@ enum AppDependencyConfigurer {
         let adventureSeasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
         let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: adventureSeasonProgressStore)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, chestService: chestRepository)
+        let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository)
         let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
@@ -56,6 +57,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(weeklyRewardService), for: WeeklyRewardServiceProtocol.self)
         DC.shared.register(type: .singleInstance(adventureRoadService), for: AdventureRoadServiceProtocol.self)
         DC.shared.register(type: .singleInstance(adventureSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
+        DC.shared.register(type: .singleInstance(marketService), for: MarketServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

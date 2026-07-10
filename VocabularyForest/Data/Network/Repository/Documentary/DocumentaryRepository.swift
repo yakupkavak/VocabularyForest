@@ -22,6 +22,7 @@ protocol DocumentaryRepositoryProtocol {
     func fetchQuestsConfig() async throws -> RemoteQuestListModel
     func fetchWeeklyRewards() async throws -> RemoteWeeklyListModel
     func fetchAdventureRoadConfig() async throws -> RemoteAdventureRoadListModel
+    func fetchMarketConfig() async throws -> RemoteMarketListModel
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<(ConfigParametersList)>
     func saveChestConfig(data: Any?) async throws
@@ -29,6 +30,7 @@ protocol DocumentaryRepositoryProtocol {
     func saveQuestsConfig(data: Any?) async throws
     func saveWeeklyRewards(data: Any?) async throws
     func saveAdventureRoadConfig(data: Any?) async throws
+    func saveMarketConfig(data: Any?) async throws
     func saveGameEconomyConfig(data: Any?) async -> Resource<Bool>
     func saveConfigParameters(data: Any?) async -> Resource<(Bool)>
 }
@@ -43,6 +45,7 @@ final class DocumentaryRepository {
         static let questsConfig = "QuestsConfig"
         static let weeklyRewards = "WeeklyRewards"
         static let adventureRoadConfig = "AdventureRoadConfig"
+        static let marketConfig = "MarketConfig"
         static let gameEconomyConfig = "GameEconomyConfig"
         static let configParameters = "ConfigParameters"
     }
@@ -129,6 +132,10 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
         try fetchFromDisk(fileName: FileName.adventureRoadConfig, as: RemoteAdventureRoadListModel.self)
     }
     
+    func fetchMarketConfig() async throws -> RemoteMarketListModel {
+        try fetchFromDisk(fileName: FileName.marketConfig, as: RemoteMarketListModel.self)
+    }
+    
     func fetchGameEconomyConfig() async -> Resource<GameEconomyConfigModel> {
         do {
             let model = try fetchFromDisk(fileName: FileName.gameEconomyConfig, as: GameEconomyConfigModel.self)
@@ -167,6 +174,10 @@ extension DocumentaryRepository: DocumentaryRepositoryProtocol {
     
     func saveAdventureRoadConfig(data: Any?) async throws {
         try saveToDisk(data: data, fileName: FileName.adventureRoadConfig)
+    }
+    
+    func saveMarketConfig(data: Any?) async throws {
+        try saveToDisk(data: data, fileName: FileName.marketConfig)
     }
     
     func saveGameEconomyConfig(data: Any?) async -> Resource<Bool> {

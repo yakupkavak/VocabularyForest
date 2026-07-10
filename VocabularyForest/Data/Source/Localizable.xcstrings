@@ -6642,6 +6642,21 @@
         }
       }
     },
+    "Market is not available right now." : {
+
+    },
+    "market_title" : {
+      "comment" : "Main title of the Market screen",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Market"
+          }
+        }
+      }
+    },
     "Meaning: %@" : {
       "localizations" : {
         "en" : {
@@ -8185,6 +8200,9 @@
           }
         }
       }
+    },
+    "Purchase could not be completed. Please try again." : {
+
     },
     "Quest for the Desert Star 🌵" : {
       "extractionState" : "stale",
@@ -10258,6 +10276,12 @@
       }
     },
     "Yesterday at %@" : {
+
+    },
+    "You don't have enough diamonds." : {
+
+    },
+    "You don't have enough gold." : {
 
     },
     "You must be authenticated to use the reward system." : {

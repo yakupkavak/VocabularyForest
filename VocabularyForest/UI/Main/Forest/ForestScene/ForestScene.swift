@@ -174,6 +174,10 @@ private extension ForestScene {
             forestHelper?.showForestInfo()
             return true
         }
+        if nodes.contains(where: { $0.name == "market_button" }) {
+            forestHelper?.showMarket()
+            return true
+        }
         return false
     }
     

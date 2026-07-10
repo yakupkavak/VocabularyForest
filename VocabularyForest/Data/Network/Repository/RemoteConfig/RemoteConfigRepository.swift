@@ -34,6 +34,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchQuestsConfig() async -> Resource<RemoteConfigResponse<RemoteQuestListModel>>
     func fetchWeeklyRewards() async throws -> RemoteConfigResponse<RemoteWeeklyListModel>
     func fetchAdventureRoadConfig() async throws -> RemoteConfigResponse<RemoteAdventureRoadListModel>
+    func fetchMarketConfig() async throws -> RemoteConfigResponse<RemoteMarketListModel>
     func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>>
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
 }
@@ -44,6 +45,7 @@ private extension RemoteConfigRepository {
         static let questsConfig = "quests_config"
         static let weeklyRewards = "weekly_rewards_config"
         static let adventureRoadRewards = "adventure_road_rewards_config"
+        static let marketConfig = "market_config"
         static let gameEconomyConfig = "game_economy_config"
         static let chestRewardConfig = "chest_rewards_config"
         static let configParameters = "config_list"
@@ -206,6 +208,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.adventureRoadRewards).decoded(asType: RemoteAdventureRoadListModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.adventureRoadRewards).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return response
+        }catch {
+            throw error
+        }
+    }
+    
+    func fetchMarketConfig() async throws -> RemoteConfigResponse<RemoteMarketListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.marketConfig).decoded(asType: RemoteMarketListModel.self)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.marketConfig).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
             return response
         }catch {

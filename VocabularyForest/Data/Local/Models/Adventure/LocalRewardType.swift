@@ -88,6 +88,15 @@ extension LocalRewardType {
             model.textHexColor
         }
     }
+    
+    var gradientHexes: [String]? {
+        switch self {
+        case .standart(let model):
+            model.gradientHexes
+        case .chest(let model):
+            model.backgroundGradientColors
+        }
+    }
 }
 
 /*

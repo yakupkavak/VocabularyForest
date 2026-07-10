@@ -10,4 +10,5 @@ struct ForestStatusModel {
     let landHealthPercentage: Int
     let landStatus: Bool
     let gold: Int
+    let diamond: Int
 }
