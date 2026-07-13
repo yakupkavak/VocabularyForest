@@ -341,7 +341,7 @@ extension ForestViewModel {
                     diamond: forestData.diamond
                 )
                 
-                if forestData.rainValue >= 50 { self.showRainButton = true }
+                if forestData.rainValue >= ForestConstant.rainCostValue { self.showRainButton = true }
                 
                 if let landHealthPercentage = forestStatus?.landHealthPercentage {
                     if landHealthPercentage == 0 {

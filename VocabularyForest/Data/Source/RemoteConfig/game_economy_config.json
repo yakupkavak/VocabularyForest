@@ -1,23 +1,23 @@
 {
-  "id": "game_economy_config_v2",
-  "season": "2026_s2",
-  "chestOdds": {
-    "goldChestDiamondChance": 10,
-    "goldChestWaterChance": 20,
-    "natureChestAnimalChance": 20,
-    "antiqueChestAnimalChance": 50
-  },
-  "chestRewardRanges": {
-    "goldChestGoldMin": 50,
-    "goldChestGoldMax": 100,
-    "goldChestDiamondMin": 1,
-    "goldChestDiamondMax": 3,
-    "diamondChestDiamondMin": 10,
-    "diamondChestDiamondMax": 20
-  },
+  "id": "game_economy_config_v5",
+  "season": "2026_s3",
   "killCap": {
-    "minGoldPerKill": 1,
-    "maxGoldPerKill": 3,
-    "dailyKillCountCap": 40
+    "minGoldPerKill": 40,
+    "maxGoldPerKill": 60,
+    "dailyKillCountCap": 15
+  },
+  "marketPrices": {
+    "plantGold": 3500,
+    "animalDiamond": 100,
+    "sculptureDiamond": 200,
+    "exchangeGoldCost": 1000,
+    "exchangeDiamondAmount": 10
+  },
+  "progressionTargets": {
+    "dailyActiveGoldTarget": 750,
+    "adventureRoadTotalGoldTarget": 10000,
+    "rainCost": 50,
+    "rainDecayPerHour": 4,
+    "dailyQuestCompletionRateForRain": 0.8
   }
 }

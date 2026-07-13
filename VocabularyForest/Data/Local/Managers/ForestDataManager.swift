@@ -103,6 +103,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws
     func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws
     func updateClaimedAdventureTier(track: AdventureMemoryTrack, wordCount: Int, time: Date, contextType: ForestDataManager.ContextType) throws
+    func registerKillGold(minGold: Int, maxGold: Int, dailyCap: Int, contextType: ForestDataManager.ContextType) throws -> Int
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -707,6 +708,34 @@ extension ForestDataManager {
             }
             activities.lastUpdatedDate = time
             try save(context: context)
+        }
+    }
+    
+    /// Grants random gold for an enemy kill while respecting the daily kill cap.
+    /// Returns the granted amount, or 0 when the cap is already reached.
+    func registerKillGold(minGold: Int, maxGold: Int, dailyCap: Int, contextType: ContextType) throws -> Int {
+        let context = getContext(for: contextType)
+        return try context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else { throw ForestError.emptyForest }
+            guard let activities = forest.dailyActivities else {
+                throw ForestAdventureError.emptyForestActivities
+            }
+            let now = Date()
+            /// Lazy daily reset: clear the counter on the first kill of a new day
+            let lastReset = activities.killGoldLastResetDate ?? Date.distantPast
+            if !Calendar.current.isDate(lastReset, inSameDayAs: now) {
+                activities.dailyKillGoldCount = 0
+                activities.killGoldLastResetDate = now
+            }
+            guard Int(activities.dailyKillGoldCount) < dailyCap else { return 0 }
+            let safeMax = max(minGold, maxGold)
+            let grantedGold = Int.random(in: minGold...safeMax)
+            activities.dailyKillGoldCount += 1
+            activities.lastUpdatedDate = now
+            forest.moneyValue += Int16(grantedGold)
+            forest.lastUpdatedDate = now
+            try save(context: context)
+            return grantedGold
         }
     }
 }

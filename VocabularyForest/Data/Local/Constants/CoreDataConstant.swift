@@ -8,5 +8,6 @@
 enum CoreDataConstant {
     static let bookEntityName = "Book"
     static let bookcaseEntityName = "Bookcase"
+    static let bookcaseRelationName = "bookcase"
     static let entities = ["Book","Bookcase"]
 }

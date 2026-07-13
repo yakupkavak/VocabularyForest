@@ -40,7 +40,9 @@
         <attribute name="adventureSeasonID" optional="YES" attributeType="String"/>
         <attribute name="claimedLongTiers" optional="YES" attributeType="String"/>
         <attribute name="claimedShortTiers" optional="YES" attributeType="String"/>
+        <attribute name="dailyKillGoldCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dailySpinLastUsedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="killGoldLastResetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fixedTimeZone" optional="YES" attributeType="String"/>
         <attribute name="lastFetchDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

@@ -35,7 +35,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchWeeklyRewards() async throws -> RemoteConfigResponse<RemoteWeeklyListModel>
     func fetchAdventureRoadConfig() async throws -> RemoteConfigResponse<RemoteAdventureRoadListModel>
     func fetchMarketConfig() async throws -> RemoteConfigResponse<RemoteMarketListModel>
-    func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>>
+    func fetchGameEconomyConfig() async throws -> RemoteConfigResponse<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
 }
 
@@ -226,76 +226,15 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         }
     }
     
-    func fetchGameEconomyConfig() async -> Resource<RemoteConfigResponse<GameEconomyConfigModel>> {
+    func fetchGameEconomyConfig() async throws -> RemoteConfigResponse<GameEconomyConfigModel> {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.gameEconomyConfig).decoded(asType: GameEconomyConfigModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.gameEconomyConfig).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
-            return Resource.success(response)
+            return response
         }catch {
-            return .error(error: RemoteConfigError.decodeFailed)
+            throw error
         }
-        /*
-         do {
-         let jsonString = try await fetchJSONString(forKey: Keys.gameEconomyConfig)
-         let data = Data(jsonString.utf8)
-         let payload = try JSONDecoder().decode(RemoteGameEconomyPayload.self, from: data)
-         _ = persistConfigID(payload.id, forRemoteKey: Keys.gameEconomyConfig)
-         
-         let minGold = safePositive(payload.killCap?.minGoldPerKill, fallback: EconomyDefaults.minGoldPerKill)
-         let maxGoldCandidate = safePositive(payload.killCap?.maxGoldPerKill, fallback: EconomyDefaults.maxGoldPerKill)
-         let maxGold = max(minGold, maxGoldCandidate)
-         
-         let goldChestGoldRange = safeRange(
-         min: payload.chestRewardRanges?.goldChestGoldMin,
-         max: payload.chestRewardRanges?.goldChestGoldMax,
-         fallbackMin: EconomyDefaults.goldChestGoldMin,
-         fallbackMax: EconomyDefaults.goldChestGoldMax
-         )
-         let goldChestDiamondRange = safeRange(
-         min: payload.chestRewardRanges?.goldChestDiamondMin,
-         max: payload.chestRewardRanges?.goldChestDiamondMax,
-         fallbackMin: EconomyDefaults.goldChestDiamondMin,
-         fallbackMax: EconomyDefaults.goldChestDiamondMax
-         )
-         let diamondChestDiamondRange = safeRange(
-         min: payload.chestRewardRanges?.diamondChestDiamondMin,
-         max: payload.chestRewardRanges?.diamondChestDiamondMax,
-         fallbackMin: EconomyDefaults.diamondChestDiamondMin,
-         fallbackMax: EconomyDefaults.diamondChestDiamondMax
-         )
-         
-         let model = GameEconomyConfigModel(
-         id: trimmed(payload.id),
-         season: trimmed(payload.season) ?? trimmed(payload.seasonID) ?? trimmed(payload.seasonId),
-         chestOdds: GameChestOddsModel(
-         goldChestDiamondChance: safePercent(payload.chestOdds?.goldChestDiamondChance, fallback: EconomyDefaults.goldChestDiamondChance),
-         goldChestWaterChance: safePercent(payload.chestOdds?.goldChestWaterChance, fallback: EconomyDefaults.goldChestWaterChance),
-         natureChestAnimalChance: safePercent(payload.chestOdds?.natureChestAnimalChance, fallback: EconomyDefaults.natureChestAnimalChance),
-         antiqueChestAnimalChance: safePercent(payload.chestOdds?.antiqueChestAnimalChance, fallback: EconomyDefaults.antiqueChestAnimalChance)
-         ),
-         chestRewardRanges: GameChestRewardRangesModel(
-         goldChestGoldMin: goldChestGoldRange.min,
-         goldChestGoldMax: goldChestGoldRange.max,
-         goldChestDiamondMin: goldChestDiamondRange.min,
-         goldChestDiamondMax: goldChestDiamondRange.max,
-         diamondChestDiamondMin: diamondChestDiamondRange.min,
-         diamondChestDiamondMax: diamondChestDiamondRange.max
-         ),
-         killCap: GameKillCapModel(
-         minGoldPerKill: minGold,
-         maxGoldPerKill: maxGold,
-         dailyKillCountCap: safePositive(payload.killCap?.dailyKillCountCap, fallback: EconomyDefaults.dailyKillCountCap)
-         )
-         )
-         
-         return .success(model)
-         } catch let error as RemoteConfigError {
-         return .error(error: error)
-         } catch {
-         return .error(error: RemoteConfigError.decodeFailed)
-         }
-         */
     }
 }
 
@@ -350,38 +289,6 @@ private extension RemoteConfigRepository {
         let longTermReward: RemoteRewardModel?
     }
     
-    struct RemoteGameEconomyPayload: Decodable {
-        let id: String?
-        let season: String?
-        let seasonID: String?
-        let seasonId: String?
-        let chestOdds: RemoteChestOddsDTO?
-        let chestRewardRanges: RemoteChestRewardRangesDTO?
-        let killCap: RemoteKillCapDTO?
-    }
-    
-    struct RemoteChestOddsDTO: Decodable {
-        let goldChestDiamondChance: Int?
-        let goldChestWaterChance: Int?
-        let natureChestAnimalChance: Int?
-        let antiqueChestAnimalChance: Int?
-    }
-    
-    struct RemoteKillCapDTO: Decodable {
-        let minGoldPerKill: Int?
-        let maxGoldPerKill: Int?
-        let dailyKillCountCap: Int?
-    }
-    
-    struct RemoteChestRewardRangesDTO: Decodable {
-        let goldChestGoldMin: Int?
-        let goldChestGoldMax: Int?
-        let goldChestDiamondMin: Int?
-        let goldChestDiamondMax: Int?
-        let diamondChestDiamondMin: Int?
-        let diamondChestDiamondMax: Int?
-    }
-
     struct RemoteArrayPayload<Item: Decodable>: Decodable {
         let id: String?
         let seasonEndDate: String?
@@ -398,22 +305,6 @@ private extension RemoteConfigRepository {
         case updated
     }
     
-    enum EconomyDefaults {
-        static let goldChestDiamondChance = 10
-        static let goldChestWaterChance = 20
-        static let natureChestAnimalChance = 20
-        static let antiqueChestAnimalChance = 50
-        static let goldChestGoldMin = 50
-        static let goldChestGoldMax = 100
-        static let goldChestDiamondMin = 1
-        static let goldChestDiamondMax = 3
-        static let diamondChestDiamondMin = 10
-        static let diamondChestDiamondMax = 20
-        static let minGoldPerKill = 1
-        static let maxGoldPerKill = 3
-        static let dailyKillCountCap = 40
-    }
-
     func fetchDecodedArray<T: Decodable>(forKey key: String, as _: T.Type) async -> Result<DecodedPayload<T>, RemoteConfigError> {
         do {
             let jsonString = try await fetchJSONString(forKey: key)

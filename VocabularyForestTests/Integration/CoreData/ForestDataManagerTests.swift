@@ -160,3 +160,42 @@ struct ForestDataManagerRainTests: ForestTestHelperProtocol {
         #expect(healthAfterFirstCheck == initialHealth, "First check shouldn't decrease health")
     }
 }
+
+// MARK: - KILL GOLD TESTS
+
+@Suite("Forest Data Manager - Kill Gold Test", .tags(.database))
+@MainActor
+struct ForestDataManagerKillGoldTests: ForestTestHelperProtocol {
+    
+    var sut: ForestDataManagerProtocol
+    let inMemoryCoreData = CoreDataManager(inMemory: true)
+
+    init() {
+        self.sut = ForestDataManager(mainContext: inMemoryCoreData.viewContext, backgroundContext: inMemoryCoreData.backgroundContext)
+    }
+    
+    @Test("Kill gold stays within the configured range and increases balance")
+    func killGoldGrantsWithinRange() throws {
+        createForest()
+        let initialGold = try sut.fetchForestStatus(contextType: .main).gold
+        let granted = try sut.registerKillGold(minGold: 40, maxGold: 60, dailyCap: 15, contextType: .main)
+        #expect(granted >= 40 && granted <= 60, "Granted gold should stay within the min...max range")
+        let afterGold = try sut.fetchForestStatus(contextType: .main).gold
+        #expect(afterGold == initialGold + granted, "Balance should increase by the granted amount")
+    }
+    
+    @Test("Kill gold stops after the daily cap is reached")
+    func killGoldRespectsDailyCap() throws {
+        createForest()
+        let dailyCap = 15
+        for _ in 0..<dailyCap {
+            let granted = try sut.registerKillGold(minGold: 40, maxGold: 60, dailyCap: dailyCap, contextType: .main)
+            #expect(granted > 0, "Kills within the cap should always grant gold")
+        }
+        let goldAtCap = try sut.fetchForestStatus(contextType: .main).gold
+        let overCapGrant = try sut.registerKillGold(minGold: 40, maxGold: 60, dailyCap: dailyCap, contextType: .main)
+        #expect(overCapGrant == 0, "Kills over the daily cap should not grant gold")
+        let goldAfterOverCap = try sut.fetchForestStatus(contextType: .main).gold
+        #expect(goldAfterOverCap == goldAtCap, "Balance should not change after the cap is reached")
+    }
+}

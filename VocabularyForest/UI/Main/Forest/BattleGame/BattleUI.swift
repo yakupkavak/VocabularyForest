@@ -261,6 +261,14 @@ private extension BattleUI {
             Image("pop_up_background").resizable()
             Spacer()
             VStack(alignment: .center) {
+                if viewModel.gameStatus.earnedGold > 0 {
+                    HStack(spacing: 6) {
+                        Image("gold_icon").resizable().scaledToFit().frame(width: 24, height: 24)
+                        Text("+\(viewModel.gameStatus.earnedGold)")
+                            .foregroundStyle(.yellow)
+                            .font(.headline)
+                    }.padding(.top, 8)
+                }
                 VStack{
                     if viewModel.gameStatus.wrongWords.isEmpty {
                         Text("Amazing!!\nYou remembered everything!").multilineTextAlignment(.center).foregroundStyle(.white).padding()

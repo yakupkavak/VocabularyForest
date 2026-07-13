@@ -76,6 +76,7 @@ class ForestAdventureService {
     private let adventureRoadService: AdventureRoadServiceProtocol
     private let marketService: MarketServiceProtocol
     private let chestService: ChestRepositoryProtocol
+    private let gameManager: GameManagerProtocol
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
@@ -93,6 +94,7 @@ class ForestAdventureService {
         adventureRoadService: AdventureRoadServiceProtocol,
         marketService: MarketServiceProtocol,
         chestService: ChestRepositoryProtocol,
+        gameManager: GameManagerProtocol,
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -106,6 +108,7 @@ class ForestAdventureService {
         self.adventureRoadService = adventureRoadService
         self.marketService = marketService
         self.chestService = chestService
+        self.gameManager = gameManager
         setupParameters()
     }
 }
@@ -188,14 +191,16 @@ private extension ForestAdventureService {
                 try await weeklyRewardService.convertRemoteToWeeklyList(list: weeklyRewards.model)
                 try await documentRepository.saveWeeklyRewards(data: weeklyRewards.rawData)
             }
-            /*
             if gameEconomyID == parameters?.model.gameEconomyConfigVersion {
-                // TODO: - RETURN FROM LOCAL
+                /// Return from local
+                let config = try await documentRepository.fetchGameEconomyConfig()
+                gameManager.applyEconomyConfig(config)
             } else if let gameEconomyVersion = parameters?.model.gameEconomyConfigVersion {
                 UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
-                // TODO: - FETCH NEW VERSION FROM REMOTE
+                let config = try await remoteConfigRepository.fetchGameEconomyConfig()
+                gameManager.applyEconomyConfig(config.model)
+                try await documentRepository.saveGameEconomyConfig(data: config.rawData)
             }
-             */
             }
             catch {
                 print("hata geldi")

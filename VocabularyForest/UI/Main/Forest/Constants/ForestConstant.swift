@@ -21,7 +21,10 @@ enum ForestConstant {
     static let sculptureName = "sculptureNode"
     static let animalName = "animalNode"
     static let plantName = "plantNode"
-    static let rainCostValue = 50
+    /// Rain cost comes from the remote economy config; falls back to 50 until the config loads
+    static var rainCostValue: Int {
+        GameManager.snapshotEconomyConfig()?.progressionTargets?.rainCost ?? 50
+    }
     static let healthyLandHealth = 100
     static let menu_ballon_name = ""
     static let talk_ballon_name = ""

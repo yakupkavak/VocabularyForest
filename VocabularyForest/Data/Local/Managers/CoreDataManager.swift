@@ -368,7 +368,7 @@ extension CoreDataManager {
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
+                    request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase), bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
@@ -421,7 +421,7 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
+            request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase), bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })

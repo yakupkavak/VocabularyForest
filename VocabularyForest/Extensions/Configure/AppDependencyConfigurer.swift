@@ -31,8 +31,8 @@ enum AppDependencyConfigurer {
         let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: adventureSeasonProgressStore)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository)
-        let gameManager = GameManager(remoteConfigRepository: remoteConfigRepository)
+        let gameManager = GameManager()
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
         forestData.notificationManager = notificationManager

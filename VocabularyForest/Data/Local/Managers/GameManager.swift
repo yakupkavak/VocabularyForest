@@ -8,19 +8,14 @@
 import Foundation
 
 protocol GameManagerProtocol: AnyObject {
-    func refreshEconomyConfig() async -> Resource<GameEconomyConfigModel>
+    func applyEconomyConfig(_ config: GameEconomyConfigModel)
     func currentEconomyConfig() -> GameEconomyConfigModel?
 }
 
 final class GameManager {
-    private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private var cachedEconomyConfig: GameEconomyConfigModel?
     private static let cacheLock = NSLock()
     private static var sharedEconomyConfig: GameEconomyConfigModel?
-
-    init(remoteConfigRepository: RemoteConfigRepositoryProtocol) {
-        self.remoteConfigRepository = remoteConfigRepository
-    }
     
     static func snapshotEconomyConfig() -> GameEconomyConfigModel? {
         cacheLock.lock()
@@ -36,16 +31,9 @@ final class GameManager {
 }
 
 extension GameManager: GameManagerProtocol {
-    func refreshEconomyConfig() async -> Resource<GameEconomyConfigModel> {
-        /* // TODO: - BURAYA BAKILCAK.
-        let result = await remoteConfigRepository.fetchGameEconomyConfig()
-        if result.status == .success, let config = result.data {
-            cachedEconomyConfig = config
-            Self.setSnapshotEconomyConfig(config)
-        }
-        return result
-         */
-        return .error(error: nil)
+    func applyEconomyConfig(_ config: GameEconomyConfigModel) {
+        cachedEconomyConfig = config
+        Self.setSnapshotEconomyConfig(config)
     }
     
     func currentEconomyConfig() -> GameEconomyConfigModel? {

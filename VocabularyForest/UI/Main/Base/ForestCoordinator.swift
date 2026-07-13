@@ -111,12 +111,14 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
+        let gameManager = resolver.resolve(type: .singleInstance, for: GameManagerProtocol.self)
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
             forestDataManager: forestData,
             playerDataManager: playerManager,
             questService: questService,
+            gameManager: gameManager,
         )
         
         self.cachedBattleViewModel = viewModel

@@ -29,6 +29,6 @@ struct DocumentRepositoryTest {
         try await sut.saveQuestsConfig(data: questJson)
         let fetchQuestJson = try await sut.fetchQuestsConfig()
         #expect(questModels.id == fetchQuestJson.id, "Quest ids are not equal")
-        #expect(questModels.items.count == fetchQuestJson.items.count, "Quest counts are not equal")
+        #expect(questModels.items?.count == fetchQuestJson.items?.count, "Quest counts are not equal")
     }
 }

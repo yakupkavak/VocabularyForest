@@ -10,16 +10,8 @@ import Foundation
 struct GameEconomyConfigModel: Decodable {
     let id: String?
     let season: String?
-    let chestOdds: GameChestOddsModel?
-    let chestewardRanges: GameChestRewardRangesModel?
     let killCap: GameKillCapModel?
-}
-
-struct GameChestOddsModel: Decodable {
-    let goldChestDiamondChance: Int?
-    let goldChestWaterChance: Int?
-    let natureChestAnimalChance: Int?
-    let antiqueChestAnimalChance: Int?
+    let progressionTargets: GameProgressionTargetsModel?
 }
 
 struct GameKillCapModel: Decodable {
@@ -28,11 +20,10 @@ struct GameKillCapModel: Decodable {
     let dailyKillCountCap: Int?
 }
 
-struct GameChestRewardRangesModel: Decodable {
-    let goldChestGoldMin: Int?
-    let goldChestGoldMax: Int?
-    let goldChestDiamondMin: Int?
-    let goldChestDiamondMax: Int?
-    let diamondChestDiamondMin: Int?
-    let diamondChestDiamondMax: Int?
+struct GameProgressionTargetsModel: Decodable {
+    let dailyActiveGoldTarget: Int?
+    let adventureRoadTotalGoldTarget: Int?
+    let rainCost: Int?
+    let rainDecayPerHour: Int?
+    let dailyQuestCompletionRateForRain: Double?
 }

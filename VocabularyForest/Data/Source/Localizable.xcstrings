@@ -169,6 +169,9 @@
         }
       }
     },
+    "+%lld" : {
+
+    },
     "1 hour ago" : {
 
     },
@@ -3063,7 +3066,18 @@
         }
       }
     },
+    "Doluluk oranı %lld / %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Doluluk oranı %1$lld / %2$lld"
+          }
+        }
+      }
+    },
     "Doluluk oranı %lld / 50" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

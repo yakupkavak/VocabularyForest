@@ -51,7 +51,7 @@ struct QuestServiceTests {
         let questData = try await TestBundleHelper.loadMockJSON(filename: "mock_quests_config", model: RemoteQuestListModel.self)
         
         await sut.convertRemoteToCacheQuest(list: questData)
-        let expectedCount = questData.items.count
+        let expectedCount = questData.items?.count ?? 0
         let actualCount = sut.questList.count
         #expect(
             actualCount == expectedCount,

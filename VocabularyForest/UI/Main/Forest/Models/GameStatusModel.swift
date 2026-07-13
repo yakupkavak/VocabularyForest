@@ -10,4 +10,5 @@ struct GameStatusModel {
     var wrongCount: Int
     var wrongWords: [BookModel]
     var userWon: Bool?
+    var earnedGold: Int = 0
 }

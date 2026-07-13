@@ -46,7 +46,8 @@ struct ForestAdventureServiceQuestTrackTests {
             weeklyRewardService: weeklyRewardService,
             adventureRoadService: adventureRoadService,
             marketService: marketService,
-            chestService: chestRepository
+            chestService: chestRepository,
+            gameManager: GameManager()
         )
     }
     

@@ -1,78 +1,145 @@
 {
-  "id": "weekly_rewards_config_v1",
+  "id": "weekly_rewards_config_v4",
   "items": [
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e201",
+      "id": "weekly-day-1",
       "day": 1,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g401",
-        "type": "resource",
-        "category": "gold",
-        "rewardCount": 100,
-        "imageName": "gold_icon"
+        "id": "weekly-reward-day1-water",
+        "type": "standart",
+        "category": "water",
+        "rewardCount": 40,
+        "assetName": "water_icon",
+        "displayName": {
+          "tr": "Yağmur Damlası",
+          "en": "Rain Drops",
+          "es": "Gotas de Lluvia",
+          "fr": "Gouttes de Pluie",
+          "de": "Regentropfen",
+          "pt": "Gotas de Chuva"
+        },
+        "imageSource": "local",
+        "localImageName": "water_icon"
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e202",
+      "id": "weekly-day-2",
       "day": 2,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g402",
-        "type": "resource",
-        "category": "water",
-        "rewardCount": 50,
-        "imageName": "water_icon"
+        "id": "weekly-reward-day2-gold",
+        "type": "standart",
+        "category": "gold",
+        "rewardCount": 500,
+        "assetName": "gold_icon",
+        "displayName": {
+          "tr": "Altın",
+          "en": "Gold",
+          "es": "Oro",
+          "fr": "Or",
+          "de": "Gold",
+          "pt": "Ouro"
+        },
+        "imageSource": "local",
+        "localImageName": "gold_icon"
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e203",
+      "id": "weekly-day-3",
       "day": 3,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g403",
+        "id": "weekly-reward-day3-nature-chest",
         "type": "chest",
-        "category": "antique",
-        "rewardCount": 1
+        "category": "nature",
+        "rewardCount": 1,
+        "chestId": "chest-nature",
+        "displayName": {
+          "tr": "Doğa Sandığı",
+          "en": "Nature Chest",
+          "es": "Cofre de Naturaleza",
+          "fr": "Coffre Nature",
+          "de": "Naturtruhe",
+          "pt": "Baú da Natureza"
+        }
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e204",
+      "id": "weekly-day-4",
       "day": 4,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g404",
-        "type": "resource",
+        "id": "weekly-reward-day4-gold",
+        "type": "standart",
         "category": "gold",
-        "rewardCount": 200,
-        "imageName": "gold_icon"
+        "rewardCount": 750,
+        "assetName": "gold_icon",
+        "displayName": {
+          "tr": "Altın",
+          "en": "Gold",
+          "es": "Oro",
+          "fr": "Or",
+          "de": "Gold",
+          "pt": "Ouro"
+        },
+        "imageSource": "local",
+        "localImageName": "gold_icon"
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e205",
+      "id": "weekly-day-5",
       "day": 5,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g405",
+        "id": "weekly-reward-day5-gold-chest",
         "type": "chest",
         "category": "gold",
-        "rewardCount": 1
+        "rewardCount": 1,
+        "chestId": "chest-gold",
+        "displayName": {
+          "tr": "Altın Sandık",
+          "en": "Gold Chest",
+          "es": "Cofre de Oro",
+          "fr": "Coffre d'Or",
+          "de": "Goldtruhe",
+          "pt": "Baú de Ouro"
+        }
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e206",
+      "id": "weekly-day-6",
       "day": 6,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g406",
-        "type": "resource",
+        "id": "weekly-reward-day6-diamond",
+        "type": "standart",
         "category": "diamond",
-        "rewardCount": 10,
-        "imageName": "diamond_icon"
+        "rewardCount": 25,
+        "assetName": "diamond_icon",
+        "displayName": {
+          "tr": "Elmas",
+          "en": "Diamonds",
+          "es": "Diamantes",
+          "fr": "Diamants",
+          "de": "Diamanten",
+          "pt":  "Diamantes"
+        },
+        "imageSource": "local",
+        "localImageName": "diamond_icon"
       }
     },
     {
-      "id": "b17cf3b5-b2f3-4c74-c09f-f52dc5e4e207",
+      "id": "weekly-day-7",
       "day": 7,
       "reward": {
-        "id": "d39eg5d7-d4g5-4e96-e2bg-174fe706g407",
+        "id": "weekly-reward-day7-diamond-chest",
         "type": "chest",
-        "category": "gold",
-        "rewardCount": 1
+        "category": "diamond",
+        "rewardCount": 1,
+        "chestId": "chest-diamond",
+        "displayName": {
+          "tr": "Elmas Sandık",
+          "en": "Diamond Chest",
+          "es": "Cofre de Diamante",
+          "fr": "Coffre Diamant",
+          "de": "Diamanttruhe",
+          "pt": "Baú de Diamante"
+        }
       }
     }
   ]

@@ -54,6 +54,7 @@ class BattleViewModel: ObservableObject {
     private let forestDataManager: any ForestDataManagerProtocol
     private let playerDataManager: any PlayerDataManagerProtocol
     private let questService: any QuestServiceProtocol
+    private let gameManager: any GameManagerProtocol
     
     // MARK: - PROPERTIES
     
@@ -90,12 +91,14 @@ class BattleViewModel: ObservableObject {
         forestDataManager: (ForestDataManagerProtocol),
         playerDataManager: PlayerDataManagerProtocol,
         questService: QuestServiceProtocol,
+        gameManager: GameManagerProtocol,
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
         self.playerDataManager = playerDataManager
         self.questService = questService
+        self.gameManager = gameManager
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
@@ -106,6 +109,17 @@ class BattleViewModel: ObservableObject {
                 self.timer = nil
             }
         })
+    }
+}
+
+// MARK: - CONSTANTS
+
+private extension BattleViewModel {
+    /// Fallback values used only when the remote economy config has not loaded yet
+    enum EconomyFallback {
+        static let minGoldPerKill = 40
+        static let maxGoldPerKill = 60
+        static let dailyKillCountCap = 15
     }
 }
 
@@ -229,6 +243,39 @@ private extension BattleViewModel {
         uiStation = .gameOver
     }
     
+    /// Grants gold for a defeated enemy using the remote economy config; daily cap is enforced by the manager
+    func grantKillGold() {
+        let killCap = gameManager.currentEconomyConfig()?.killCap
+        let minGold = killCap?.minGoldPerKill ?? EconomyFallback.minGoldPerKill
+        let maxGold = killCap?.maxGoldPerKill ?? EconomyFallback.maxGoldPerKill
+        let dailyCap = killCap?.dailyKillCountCap ?? EconomyFallback.dailyKillCountCap
+        // TODO: SHOW SAVE ERROR
+        if let grantedGold = try? forestDataManager.registerKillGold(
+            minGold: minGold,
+            maxGold: maxGold,
+            dailyCap: dailyCap,
+            contextType: .background
+        ) {
+            gameStatus.earnedGold += grantedGold
+        }
+    }
+    
+    /// Clears all per-game state so a cached view model can start a fresh game
+    func resetGameState() {
+        questionList = []
+        answerBooks = []
+        currentQuestionId = 0
+        currentEnemyIndex = 0
+        currentQuestion = nil
+        errorModel = nil
+        questionStation = .notDetermined
+        gameStatus = GameStatusModel(
+            trueCount: 0,
+            wrongCount: 0,
+            wrongWords: []
+        )
+    }
+    
     func nextEnemy() {
         currentEnemyIndex += 1
         if let nextEnemy = enemyList?[safe: currentEnemyIndex], let safeGameLevel = gameLevel {
@@ -314,7 +361,7 @@ extension BattleViewModel: BattleViewModelProtocol {
         }
         preparePlayerLevel(gameLevel: gameLevel)
         prepareEnemyLevel(gameLevel: gameLevel, characterModel: firstEnemy)
-        questionList = []
+        resetGameState()
         switch questionType {
         case .learning, .competitive:
             setShortBooks(books: books, bookCount: minBook)
@@ -411,6 +458,7 @@ extension BattleViewModel: BattleViewModelProtocol {
 
 extension BattleViewModel: BattleSceneProtocol {
     func roundComplete() {
+        grantKillGold()
         output?.setupNextEnemy()
         playerAnger?.currentLevel = 0
         nextQuestion()
@@ -421,6 +469,7 @@ extension BattleViewModel: BattleSceneProtocol {
         uiStation = .gameOver
     }
     func playerWon() {
+        grantKillGold()
         if let gameLevel, let questionType, let battleMode {
             try? questService.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, questionType: questionType)
         }

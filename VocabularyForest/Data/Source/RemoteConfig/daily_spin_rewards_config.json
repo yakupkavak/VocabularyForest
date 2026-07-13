@@ -1,56 +1,121 @@
 {
-  "id": "daily_spin_rewards_config_v1",
+  "id": "daily_spin_rewards_config_v6",
   "items": [
     {
-      "id": "daily-spin-gold-chest",
+      "id": 1,
       "weight": 3,
+      "textColorHex": "#FFFFFF",
+      "backgroundHexes": [
+        "#FFD700",
+        "#FF8C00"
+      ],
       "reward": {
         "id": "reward-gold-chest",
         "type": "chest",
         "category": "gold",
-        "rewardCount": 1
+        "rewardCount": 1,
+        "chestId": "chest-gold",
+        "displayName": {
+          "tr": "Altın Sandık",
+          "en": "Gold Chest",
+          "es": "Cofre de Oro",
+          "fr": "Coffre d'Or",
+          "de": "Goldtruhe",
+          "pt": "Baú de Ouro"
+        }
       }
     },
     {
-      "id": "daily-spin-antique-chest",
-      "weight": 1,
+      "id": 4,
+      "weight": 1.2,
+      "textColorHex": "#FFFFFF",
+      "backgroundHexes": [
+        "#E0F7FA",
+        "#B3E5FC",
+        "#E1F5FE"
+      ],
       "reward": {
-        "id": "reward-antique-chest",
+        "id": "reward-diamond-chest",
         "type": "chest",
-        "category": "antique",
-        "rewardCount": 1
+        "category": "diamond",
+        "rewardCount": 1,
+        "chestId": "chest-diamond",
+        "displayName": {
+          "tr": "Elmas Sandık",
+          "en": "Diamond Chest",
+          "es": "Cofre de Diamante",
+          "fr": "Coffre Diamant",
+          "de": "Diamanttruhe",
+          "pt": "Baú de Diamante"
+        }
       }
     },
     {
-      "id": "daily-spin-nature-chest",
-      "weight": 1,
-      "reward": {
-        "id": "reward-nature-chest",
-        "type": "chest",
-        "category": "nature",
-        "rewardCount": 1
-      }
-    },
-    {
-      "id": "daily-spin-gold-resource",
+      "id": 5,
       "weight": 5,
+      "textColorHex": "#000000",
+      "backgroundHexes": [
+        "#FFFACD",
+        "#FFD700"
+      ],
+      "text": {
+        "tr": "500 Altın",
+        "en": "500 Gold",
+        "es": "500 Oro",
+        "fr": "500 Or",
+        "de": "500 Gold",
+        "pt": "500 Ouro"
+      },
       "reward": {
         "id": "reward-gold-resource",
-        "type": "resource",
+        "type": "standart",
         "category": "gold",
-        "rewardCount": 5,
-        "imageName": "gold_icon"
+        "rewardCount": 500,
+        "assetName": "gold_icon",
+        "displayName": {
+          "tr": "Altın",
+          "en": "Gold",
+          "es": "Oro",
+          "fr": "Or",
+          "de": "Gold",
+          "pt": "Ouro"
+        },
+        "imageSource": "local",
+        "localImageName": "gold_icon"
       }
     },
     {
-      "id": "daily-spin-water-resource",
-      "weight": 5,
+      "id": 6,
+      "weight": 6,
+      "textColorHex": "#FFFFFF",
+      "backgroundHexes": [
+        "#87CEFA",
+        "#1E90FF"
+      ],
+      "text": {
+        "tr": "25 Damla",
+        "en": "25 Drops",
+        "es": "25 Gotas",
+        "fr": "25 Gouttes",
+        "de": "25 Tropfen",
+        "pt": "25 Gotas"
+      },
       "reward": {
         "id": "reward-water-resource",
-        "type": "resource",
+        "type": "standart",
         "category": "water",
-        "rewardCount": 10,
-        "imageName": "water_icon"
+        "rewardCount": 25,
+        "assetName": "water_icon",
+        "displayName": {
+          "tr": "Yağmur Damlaları",
+          "en": "Rain Drops",
+          "es": "Gotas de Lluvia",
+          "fr": "Gouttes de Pluie",
+          "de": "Regentropfen",
+          "pt": "Gotas de Chuva"
+        },
+        "imageSource": "local",
+        "localImageName": "water_icon"
       }
     }
   ]
