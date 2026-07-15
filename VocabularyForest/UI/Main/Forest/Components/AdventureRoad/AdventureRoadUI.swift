@@ -348,33 +348,46 @@ private struct AdventureCenterRoads: View {
         centerOffsetY: CGFloat
     ) -> some View {
         let style = AdventureRewardStyle(reward: milestone.reward)
-        let baseColor = nodeOuterColor(style: style)
+        let isReached = milestone.status != .locked
+        let baseColor = isReached
+            ? nodeRewardColor(style: style)
+            : nodeOuterColor(style: style)
 
         ZStack {
             AdventureFlowPath(neckRatio: neckRatio)
                 .fill(
                     LinearGradient(
-                        colors: [.white, baseColor, .white],
+                        colors: isReached
+                            ? [
+                                baseColor.opacity(0.35),
+                                baseColor,
+                                baseColor.opacity(0.35)
+                              ]
+                            : [.white, baseColor, .white],
                         startPoint: .top,
                         endPoint: .bottom
                     )
                 )
                 .frame(width: nodeSize, height: segmentHeight)
-            
-            if milestone.status == .claimed {
-                Image(systemName: "checkmark")
-                    .font(.system(size: nodeSize * 0.5, weight: .bold))
-                    .foregroundStyle(
-                        style.isChest
-                        ? Color.white
-                        : Color.green
-                    )
-            } else {
-                EmptyView()
-            }
         }
         .offset(y: centerOffsetY)
         .frame(width: nodeSize, height: segmentHeight)
+    }
+
+    /// Reward-matching fill color used when the user has reached the milestone
+    private func nodeRewardColor(style: AdventureRewardStyle) -> Color {
+        switch style {
+        case .gold, .chestGold:
+            return Color(hex: "#F4C430")
+        case .water:
+            return Color(hex: "#77AFCA")
+        case .chestNature:
+            return Color(hex: "#99D04E")
+        case .chestAntique:
+            return Color(hex: "#D1A05B")
+        case .diamond, .chestDiamond, .fallback:
+            return Color(hex: "#7BDDF2")
+        }
     }
 
     private func nodeOuterColor(style: AdventureRewardStyle) -> Color {
