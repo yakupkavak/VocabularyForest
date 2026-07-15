@@ -7,21 +7,34 @@
 
 import SwiftUI
 import CoreData
+import DependencyContainer
 
 struct SelectBookcaseUI: View {
     
     // MARK: - PROPERTIES
     
-    var allBookcases: [BookcaseModel]
     @Binding var selectedBookcase: BookcaseModel?
     @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
+    @State private var showCreateBookcase = false
+    @State private var bookcases: [BookcaseModel]
+
+    private var coreDataManager: CoreDataManagerProtocol {
+        DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+    }
+
+    // MARK: - INIT
+
+    init(allBookcases: [BookcaseModel], selectedBookcase: Binding<BookcaseModel?>) {
+        self._selectedBookcase = selectedBookcase
+        self._bookcases = State(initialValue: allBookcases)
+    }
 
     var filteredBookcases: [BookcaseModel]  {
         if searchText.isEmpty {
-            return allBookcases
+            return bookcases
         } else {
-            return allBookcases.filter {
+            return bookcases.filter {
                 $0.bookcaseName.localizedCaseInsensitiveContains(searchText)
             }
         }
@@ -55,6 +68,9 @@ struct SelectBookcaseUI: View {
             }.background(.backgroundSystem)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
+            .onAppear {
+                refreshBookcases()
+            }
             .navigationTitle("Kitaplık Seç")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.visible, for: .navigationBar)
@@ -66,8 +82,35 @@ struct SelectBookcaseUI: View {
                         dismiss()
                     }
                 }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        showCreateBookcase = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
             }
-            
+            .sheet(isPresented: $showCreateBookcase) {
+                NavigationStack {
+                    CreateBookcaseUI(
+                        viewModel: CreateBookcaseViewModel(coreDataManager: coreDataManager),
+                        onCreated: {
+                            refreshBookcases()
+                            showCreateBookcase = false
+                        }
+                    )
+                }
+            }
         }
+        .tint(.clickableButton)
+    }
+
+    // MARK: - HELPERS
+
+    private func refreshBookcases() {
+        bookcases = coreDataManager.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ) ?? []
     }
 }

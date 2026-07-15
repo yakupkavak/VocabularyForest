@@ -24,6 +24,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     // MARK: - PROPERTIES
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
+    @Environment(\.presentToast) private var presentToast
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -35,6 +36,11 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     @State private var showOption = false
     @State private var showSetting = false
     @State private var showExistAlert = false
+    @State private var showSelectWordBookcase = false
+    @State private var wordTargetBookcase: BookcaseModel? = nil
+    @State private var pendingWordToAdd: BookModel? = nil
+    @State private var lastAddedBookCopy: BookModel? = nil
+    @State private var isChangingWordBookcase = false
     @State private var scene: BattleScene
     var gameType: BattleQuestionType
     var battleMode: BattleEnemyModel
@@ -132,9 +138,17 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                 }.ignoresSafeArea(.all)
             }
         }
+        .sheet(isPresented: $showSelectWordBookcase) {
+            SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $wordTargetBookcase)
+        }
+        .onChange(of: wordTargetBookcase) { bookcase in
+            guard let bookcase, let book = pendingWordToAdd else { return }
+            addWord(book, to: bookcase, replacingPrevious: isChangingWordBookcase)
+        }
         .task {
             self.viewModel.output = scene
             self.scene.helper = viewModel
+            self.viewModel.fetchBookcases()
             self.viewModel.prepareGame(bookcaseModel: selectedBookcase, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }.onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
@@ -276,8 +290,15 @@ private extension BattleUI {
                         Text("Review  wrong words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
                         List {
                             ForEach(viewModel.gameStatus.wrongWords) { book in
-                                Text(book.learningWord).foregroundStyle(.white).listRowBackground(Color.clear)
-                                    .listRowSeparator(.hidden)
+                                HStack {
+                                    Text(book.learningWord).foregroundStyle(.white)
+                                    Spacer()
+                                    Image(.addListIcon).resizable().scaledToFit().frame(width: 24, height: 24).onTapGesture {
+                                        addWordTapped(book: book)
+                                    }
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                             }
                         }.padding(.horizontal).listRowInsets(.none).listRowSeparator(.hidden, edges: .all)
                             .listStyle(.plain)
@@ -407,6 +428,53 @@ private extension BattleUI {
 private extension BattleUI {
     func exitGame() {
         showExistAlert = true
+    }
+    
+    /// First add opens the bookcase picker; later adds reuse the last chosen bookcase directly
+    func addWordTapped(book: BookModel) {
+        pendingWordToAdd = book
+        isChangingWordBookcase = false
+        if let bookcase = wordTargetBookcase {
+            addWord(book, to: bookcase, replacingPrevious: false)
+        } else {
+            showSelectWordBookcase = true
+        }
+    }
+    
+    func addWord(_ book: BookModel, to bookcase: BookcaseModel, replacingPrevious: Bool) {
+        guard !viewModel.isWordAlreadyInBookcase(book: book, bookcase: bookcase) else {
+            isChangingWordBookcase = false
+            // No copy was created for this word, so a later "change" must not delete an older copy
+            lastAddedBookCopy = nil
+            // Forget the quick-add target so the next add opens the picker again
+            wordTargetBookcase = nil
+            let messageFormat = NSLocalizedString("word_already_in_bookcase_toast", comment: "Toast shown when the word is already in the selected bookcase")
+            presentToast(
+                ToastValue(message: String(format: messageFormat, bookcase.bookcaseName))
+            )
+            return
+        }
+        if replacingPrevious, let lastAddedBookCopy {
+            viewModel.removeAddedWord(book: lastAddedBookCopy)
+        }
+        isChangingWordBookcase = false
+        lastAddedBookCopy = viewModel.addWordToBookcase(book: book, bookcase: bookcase)
+        
+        guard lastAddedBookCopy != nil else { return }
+        let messageFormat = NSLocalizedString("added_to_bookcase_toast", comment: "Toast shown when a word is added to a bookcase")
+        presentToast(
+            ToastValue(
+                message: String(format: messageFormat, bookcase.bookcaseName),
+                button: ToastButton(
+                    title: String(localized: "Change"),
+                    underlined: true
+                ) {
+                    isChangingWordBookcase = true
+                    showSelectWordBookcase = true
+                },
+                duration: 4.0
+            )
+        )
     }
 }
 /*

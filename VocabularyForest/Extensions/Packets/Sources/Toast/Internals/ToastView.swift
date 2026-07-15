@@ -55,6 +55,7 @@ internal struct ToastView: View {
         Capsule()
           .fill(button.color.opacity(isDark ? 0.15 : 0.07))
         Text(button.title)
+          .underline(button.underlined)
           ._foregroundColor(button.color)
           .padding(.horizontal, 9)
       }

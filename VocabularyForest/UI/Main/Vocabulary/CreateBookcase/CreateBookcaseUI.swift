@@ -16,6 +16,8 @@ struct CreateBookcaseUI: View {
     @ObservedObject var viewModel: CreateBookcaseViewModel
     @FocusState private var focusedField: Field?
     @State private var activeSheet: SheetTypes? = nil
+    /// When set, called after a successful creation instead of the default router navigation (e.g. when shown inside a sheet)
+    var onCreated: (() -> Void)? = nil
     
     // MARK: - VIEWS
     
@@ -78,7 +80,11 @@ private extension CreateBookcaseUI {
             }
             Button {
                 if viewModel.checkAndCreateBookcase() {
-                    router.navigateToRoot()
+                    if let onCreated {
+                        onCreated()
+                    } else {
+                        router.navigateToRoot()
+                    }
                 }
             } label: {
                 Text("Oluştur").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)

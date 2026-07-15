@@ -20,6 +20,8 @@ struct ClaimRewardUI: View {
     @State private var shakeOffset: CGFloat = 0
     @State private var showClaim = true
     @State private var chestStation: ChestStatus = .close
+    @State private var isChestLidOpen = false
+    @State private var chestScale: CGFloat = 1.0
     @State private var chestRewardIndex = 0
     private let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     private let isPad = UIDevice.current.userInterfaceIdiom == .pad
@@ -112,8 +114,15 @@ private extension ClaimRewardUI {
     @ViewBuilder
     func chestRewardView(chestModel: LocalChestModel, size: CGSize) -> some View {
         let mainImageWidth = isPad ? min(size.width * 0.35, 450) : size.width * 0.4
-        
-        VStack {
+        let openedChestWidth = mainImageWidth * 0.6
+
+        VStack(spacing: size.height * 0.03) {
+            RewardImageView(asset: isChestLidOpen ? chestModel.openLocalImagePath : chestModel.closeLocalImagePath)
+                .scaledToFit()
+                .frame(width: chestStation == .open ? openedChestWidth : mainImageWidth)
+                .scaleEffect(chestScale)
+                .offset(x: chestStation == .open ? 0 : shakeOffset)
+
             if chestStation == .open, let chestRewards = viewModel.chestRewards {
                 if chestRewardIndex < chestRewards.count {
                     let currentReward = chestRewards[chestRewardIndex]
@@ -124,11 +133,6 @@ private extension ClaimRewardUI {
                     chestSummaryView(rewards: chestRewards, size: size)
                         .transition(.opacity)
                 }
-            } else {
-                RewardImageView(asset: chestModel.closeLocalImagePath)
-                    .scaledToFit()
-                    .frame(width: mainImageWidth)
-                    .offset(x: shakeOffset)
             }
         }
     }
@@ -213,8 +217,23 @@ private extension ClaimRewardUI {
 private extension ClaimRewardUI {
     
     func openChest() {
-        chestStation = .open
-        showClaim = true
+        guard chestStation == .close, !isChestLidOpen else { return }
+
+        // Lid pops open with a small bounce before the chest settles at the top
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.55)) {
+            isChestLidOpen = true
+            chestScale = 1.15
+        }
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.25)) {
+            chestScale = 1.0
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                chestStation = .open
+                showClaim = true
+            }
+        }
     }
     
     func handleClaim() {
@@ -236,7 +255,7 @@ private extension ClaimRewardUI {
     }
     
     func triggerShake() {
-        if case .chest = claimReward.reward {
+        if case .chest = claimReward.reward, !isChestLidOpen {
             withAnimation(.easeInOut(duration: 0.12).repeatCount(5, autoreverses: true)) {
                 shakeOffset = 2
             }

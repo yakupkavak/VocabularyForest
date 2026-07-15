@@ -35,6 +35,11 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     var playerName: String { get }
     var enemyAnger: CharacterAnger? { get }
     var gameStatus: GameStatusModel { get }
+    var bookcasesList: [BookcaseModel] { get }
+    func fetchBookcases()
+    func addWordToBookcase(book: BookModel, bookcase: BookcaseModel) -> BookModel?
+    func removeAddedWord(book: BookModel)
+    func isWordAlreadyInBookcase(book: BookModel, bookcase: BookcaseModel) -> Bool
 }
 
 protocol BattleViewModelOutputProcotol: AnyObject {
@@ -84,6 +89,7 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
     @Published var playerName: String = ""
+    @Published var bookcasesList: [BookcaseModel] = []
 
     init(
         coreDataManager: (CoreDataManagerProtocol),
@@ -451,6 +457,42 @@ extension BattleViewModel: BattleViewModelProtocol {
     
     func playSoundEffect(name: String) {
         audioService.playSFX(filename: name)
+    }
+    
+    func fetchBookcases() {
+        bookcasesList = coreData.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ) ?? []
+    }
+    
+    /// Copies a wrongly answered word into the given bookcase; returns the created book so it can be undone
+    func addWordToBookcase(book: BookModel, bookcase: BookcaseModel) -> BookModel? {
+        coreData.createSafeBook(
+            learningWord: book.learningWord,
+            meaningWord: book.meaningWord,
+            exampleSentence: book.exampleSentence,
+            descriptionWord: book.descriptionWord,
+            partOfSpeech: book.partOfSpeech.rawValue,
+            safeBookcase: bookcase,
+            contextType: .main
+        )
+    }
+    
+    /// Removes a previously added copy when the user changes the target bookcase
+    func removeAddedWord(book: BookModel) {
+        coreData.deleteBook(book: book, contextType: .main)
+    }
+    
+    /// True when the bookcase already contains the same learning word (case/diacritic insensitive)
+    func isWordAlreadyInBookcase(book: BookModel, bookcase: BookcaseModel) -> Bool {
+        let books = coreData.fetchSafeBooks(model: bookcase, sortDescriptors: nil, contextType: .main) ?? []
+        return books.contains { existing in
+            existing.learningWord.compare(
+                book.learningWord,
+                options: [.caseInsensitive, .diacriticInsensitive]
+            ) == .orderedSame
+        }
     }
 }
 
