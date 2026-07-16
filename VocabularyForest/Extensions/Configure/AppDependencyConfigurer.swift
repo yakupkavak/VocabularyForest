@@ -33,6 +33,7 @@ enum AppDependencyConfigurer {
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
         let rewardNotificationService = RewardNotificationService(forestManager: forestData, adventureRoadService: adventureRoadService)
+        let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData)
         let gameManager = GameManager()
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
         coreData.notificationManager = notificationManager
@@ -63,6 +64,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(adventureSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
         DC.shared.register(type: .singleInstance(marketService), for: MarketServiceProtocol.self)
         DC.shared.register(type: .singleInstance(rewardNotificationService), for: RewardNotificationServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(cloudRestorePromptService), for: CloudRestorePromptServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

@@ -37,78 +37,79 @@ struct ForestConflictView: View {
     // MARK: - VIEW
     var body: some View {
         ZStack {
-            Color.black.opacity(0.85)
+            Color.backgroundSystem
                 .ignoresSafeArea()
             
-            VStack(spacing: 24) {
-                VStack(spacing: 8) {
-                    Text("Conflict Detected")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(.horizontal)
-                
-                HStack(spacing: 12) {
-                    forestCard(
-                        title: String(localized: "Local Forest"),
-                        forest: localForest,
-                        source: .local,
-                        icon: "iphone"
-                    )
-                    
-                    forestCard(
-                        title: String(localized: "Cloud Forest"),
-                        forest: cloudForest,
-                        source: .cloud,
-                        icon: "icloud.fill"
-                    )
-                }
-                .padding(.horizontal)
-                
-                Divider()
-                    .background(Color.gray.opacity(0.3))
-                
-                VStack(spacing: 12) {
-                    Text("Type **'\(expectedKeyword)'** to confirm your selection:")
-                        .font(.callout)
-                        .foregroundColor(.primary)
-                    
-                    TextField(expectedKeyword, text: $confirmText)
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.center)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .frame(maxWidth: 250)
-                }
-                
-                Button {
-                    if let selected = selectedSource {
-                        onResolve(selected)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        Text("Conflict Detected")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Text("Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                } label: {
-                    Text("Confirm Selection")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(isConfirmed ? Color.logoGreen : Color.gray)
-                        .cornerRadius(12)
+                    .padding(.horizontal)
+                    
+                    HStack(spacing: 12) {
+                        forestCard(
+                            title: String(localized: "Local Forest"),
+                            forest: localForest,
+                            source: .local,
+                            icon: "iphone"
+                        )
+                        
+                        forestCard(
+                            title: String(localized: "Cloud Forest"),
+                            forest: cloudForest,
+                            source: .cloud,
+                            icon: "icloud.fill"
+                        )
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal)
+                    
+                    Divider()
+                        .background(Color.gray.opacity(0.3))
+                    
+                    VStack(spacing: 12) {
+                        Text("Type **'\(expectedKeyword)'** to confirm your selection:")
+                            .font(.callout)
+                            .foregroundColor(.primary)
+                        
+                        TextField(expectedKeyword, text: $confirmText)
+                            .textFieldStyle(.roundedBorder)
+                            .multilineTextAlignment(.center)
+                            .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
+                            .frame(maxWidth: 250)
+                    }
+                    
+                    Button {
+                        if let selected = selectedSource {
+                            onResolve(selected)
+                        }
+                    } label: {
+                        Text("Confirm Selection")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(isConfirmed ? Color.logoGreen : Color.gray)
+                            .cornerRadius(12)
+                    }
+                    .disabled(!isConfirmed)
+                    .padding(.horizontal, 30)
                 }
-                .disabled(!isConfirmed)
-                .padding(.horizontal, 30)
+                .padding(.vertical, 24)
+                .frame(maxWidth: 500)
+                .frame(maxWidth: .infinity)
             }
-            .padding(.vertical, 30)
-            .background(Color.backgroundSystem)
-            .cornerRadius(24)
-            .padding(.horizontal, 16)
-            .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 10)
         }
     }
     
@@ -137,10 +138,10 @@ struct ForestConflictView: View {
                 
                 Divider().padding(.vertical, 2)
                 
-                statRow(icon: "tree.fill", color: .green, text: "\(forest.trees.count) Trees")
+                statRow(icon: "tree.fill", color: .green, text: "\(forest.trees.count) Plants")
                 statRow(icon: "pawprint.fill", color: .orange, text: "\(forest.animals.count) Animals")
                 statRow(icon: "building.columns.fill", color: .gray, text: "\(forest.sculptures.count) Sculptures")
-                statRow(icon: "leaf.fill", color: .mint, text: "\(forest.quests.count) Plants/Quests")
+                statRow(icon: "checkmark.seal.fill", color: .mint, text: "\(forest.quests.count) Quests")
                 
                 Divider().padding(.vertical, 2)
                 

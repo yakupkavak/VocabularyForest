@@ -56,7 +56,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             playerManager: playerManager,
             coreData: coreData
         )
-        let viewModel = SplashViewModel(forestController: forestControllerService)
+        let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
+        let viewModel = SplashViewModel(forestController: forestControllerService, restorePromptService: restorePromptService)
         self.cachedSplashViewModel = viewModel
         return AnyView(
             SplashUI(viewModel: viewModel)
@@ -152,13 +153,15 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManager.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+        let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
             authManager: auth,
             syncManager: sync,
             forestManager: forestData,
-            playerManager: playerManager
+            playerManager: playerManager,
+            restorePromptService: restorePromptService
         )
         
         self.cachedSettingsViewModel = viewModel

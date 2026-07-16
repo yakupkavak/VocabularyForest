@@ -31,6 +31,7 @@ class SettingsViewModel: ObservableObject {
     private let syncManager: ForestSyncManagerProtocol
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
+    private let restorePromptService: CloudRestorePromptServiceProtocol
     
     // MARK: - PROPERTIES
     
@@ -39,9 +40,6 @@ class SettingsViewModel: ObservableObject {
     @Published var notificationsEnabled: Bool = false
     @Published var userSignIn: Bool = false
     @Published var lastSyncDate: String = ""
-    @Published var userHaveForestInFirebase: Bool = false
-    @Published var firebaseForest: SafeForestModel? = nil
-    @Published var userLocalForest: SafeForestModel? = nil
     @Published var showConflictError: Bool = false
     @Published var conflictErrorMsg: String = ""
     @Published var playerName: String = ""
@@ -54,7 +52,8 @@ class SettingsViewModel: ObservableObject {
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
         forestManager: ForestDataManagerProtocol,
-        playerManager: PlayerDataManagerProtocol
+        playerManager: PlayerDataManagerProtocol,
+        restorePromptService: CloudRestorePromptServiceProtocol
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
@@ -62,6 +61,7 @@ class SettingsViewModel: ObservableObject {
         self.syncManager = syncManager
         self.forestManager = forestManager
         self.playerManager = playerManager
+        self.restorePromptService = restorePromptService
         setupInit()
     }
     
@@ -109,68 +109,9 @@ class SettingsViewModel: ObservableObject {
     }
     
     func checkUserForest() async {
-        let conflictCheck = await syncManager.checkHasConflictOnlyMetadata()
-        if conflictCheck.status == .error {
-            showError(message: String(localized: "Sunucu eşleştirilemedi"))
-            return
-        }
-        if conflictCheck.status == .success, conflictCheck.data == false {
-            // Firebase de boş, ormanın da sahibi yok. bağlayalım o zaman
-            let safeCurrentForest = forestManager.fetchSafeForest(contextType: .main)
-            if safeCurrentForest.data?.ownerId == nil {
-                //Ormanın sahibi yok, firebase de datası da yok bunları bağla geç
-                await syncManager.forceOverwriteCloud()
-            }
-            return
-        }
-        
-        let fireForest = await syncManager.userHaveForest()
-        let safeCurrentForest = forestManager.fetchSafeForest(contextType: .main)
-        if fireForest.status == .success {
-            if let forest = fireForest.data, safeCurrentForest.status == .success, let currentSafeForest = safeCurrentForest.data {
-                // Forest conflict
-                userHaveForestInFirebase = true
-                firebaseForest = forest
-                userLocalForest = currentSafeForest
-            }else if let forest = fireForest.data {
-                //Only firebase
-                userHaveForestInFirebase = true
-                firebaseForest = forest
-            }else if safeCurrentForest.status == .success, let currentSafeForest = safeCurrentForest.data {
-                // only local forest, connect it.
-                let syncResult = await syncManager.forceOverwriteCloud()
-            }
-        }
-    }
-    
-    func resolveForestConflict(keep source: ForestSource) {
-        Task {
-            let result: Resource<Bool>
-            
-            switch source {
-            case .local:
-                result = await syncManager.forceOverwriteCloud()
-                
-            case .cloud:
-                if let cloudForest = self.firebaseForest {
-                    result = await syncManager.downloadAndOverwriteLocal(with: cloudForest)
-                } else {
-                    self.showError(message: String(localized: "Bulut verisi bulunamadı. Lütfen tekrar deneyin."))
-                    return
-                }
-            }
-            
-            switch result.status {
-                case .success:
-                    self.userHaveForestInFirebase = false
-                    self.firebaseForest = nil
-                    self.userLocalForest = nil
-                case .error:
-                    let fallbackMsg = String(localized: "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin.")
-                    self.showError(message: fallbackMsg)
-                case .loading:
-                    print("")
-            }
+        let outcome = await restorePromptService.checkAndPromptIfNeeded()
+        if case .failed(let error) = outcome {
+            showError(message: error?.localizedDescription ?? String(localized: "Sunucu eşleştirilemedi"))
         }
     }
     

@@ -164,23 +164,6 @@ struct SettingsUI: View {
             .presentationBackground(.clear)
             
         }
-        .overlay {
-            if viewModel.userHaveForestInFirebase,
-               let local = viewModel.userLocalForest,
-               let cloud = viewModel.firebaseForest {
-                
-                ForestConflictView(
-                    localForest: local,
-                    cloudForest: cloud,
-                    onResolve: { source in
-                        viewModel.resolveForestConflict(keep: source)
-                    }
-                )
-                .transition(.opacity.combined(with: .scale(scale: 0.95)))
-                .zIndex(100) 
-            }
-        }
-        .animation(.easeInOut(duration: 0.3), value: viewModel.userHaveForestInFirebase)
     }
 }
 
@@ -353,14 +336,17 @@ private struct PolicySheetView: View {
 #Preview {
     let coreData = CoreDataManager()
     let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
+    let authManager = AuthManager()
+    let syncManager = ForestSyncManager()
     SettingsUI(
         viewModel: SettingsViewModel(
             notificationManager: NotificationManager(),
             coreDataManager: coreData,
-            authManager: AuthManager(),
-            syncManager: ForestSyncManager(),
+            authManager: authManager,
+            syncManager: syncManager,
             forestManager: forestData,
-            playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext)
+            playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
+            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData)
         )
     )
 }

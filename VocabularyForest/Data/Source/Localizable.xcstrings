@@ -2192,6 +2192,7 @@
       }
     },
     "Bulut verisi bulunamadı. Lütfen tekrar deneyin." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2224,6 +2225,9 @@
           }
         }
       }
+    },
+    "Buluttaki orman bu cihazdakinden farklı. Lütfen hangi ormanı kullanmak istediğinizi seçin." : {
+
     },
     "Bunu hatırlıyor musun 👀" : {
       "localizations" : {
@@ -6288,6 +6292,7 @@
       }
     },
     "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin." : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
