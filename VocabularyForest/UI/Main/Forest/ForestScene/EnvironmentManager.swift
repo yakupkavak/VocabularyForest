@@ -19,6 +19,7 @@ protocol EnvironmentManagerProtocol: AnyObject {
     func finishDrought()
     func showPositionArrows()
     func closePositionArrows()
+    func setAnnouncementClaimable(_ isClaimable: Bool)
 }
 
 private extension EnvironmentManager {
@@ -48,6 +49,7 @@ class EnvironmentManager {
     private let confirmIcon = SKSpriteNode(imageNamed: "accept_button")
     private let refuseIcon = SKSpriteNode(imageNamed: "close_button")
     private var icons: [SKSpriteNode] = []
+    private var announcementBadgeNode: SKShapeNode?
 
     private var isRaining = false
     
@@ -299,5 +301,45 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         for icon in icons {
             icon.removeFromParent()
         }
+    }
+    
+    // MARK: - ANNOUNCEMENT CLAIM INDICATOR
+    
+    func setAnnouncementClaimable(_ isClaimable: Bool) {
+        if isClaimable {
+            setupAnnouncementIndicatorsIfNeeded()
+        }
+        announcementBadgeNode?.isHidden = !isClaimable
+    }
+    
+    private func setupAnnouncementIndicatorsIfNeeded() {
+        guard let scene, announcementBadgeNode == nil else { return }
+        let buttonSize = scene.size.height * 0.05
+        
+        // "!" badge on the top-right corner of the button (kept as a sibling node
+        // because changing the sprite's size also scales its children)
+        let badgeRadius = buttonSize * 0.2
+        let badge = SKShapeNode(circleOfRadius: badgeRadius)
+        badge.fillColor = SKColor(red: 0.97, green: 0.94, blue: 0.87, alpha: 1.0)
+        badge.strokeColor = SKColor(red: 0.45, green: 0.31, blue: 0.18, alpha: 1.0)
+        badge.lineWidth = badgeRadius * 0.22
+        badge.position = CGPoint(
+            x: announcementButton.position.x + buttonSize * 0.4,
+            y: announcementButton.position.y + buttonSize * 0.4
+        )
+        badge.zPosition = announcementButton.zPosition + 0.1
+        badge.name = "announcementButton"
+        
+        let exclamation = SKLabelNode(fontNamed: "AvenirNext-Bold")
+        exclamation.text = "!"
+        exclamation.fontSize = badgeRadius * 1.6
+        exclamation.fontColor = SKColor(red: 0.45, green: 0.31, blue: 0.18, alpha: 1.0)
+        exclamation.verticalAlignmentMode = .center
+        exclamation.horizontalAlignmentMode = .center
+        exclamation.name = "announcementButton"
+        badge.addChild(exclamation)
+        
+        scene.addChild(badge)
+        announcementBadgeNode = badge
     }
 }

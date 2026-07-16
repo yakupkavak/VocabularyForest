@@ -31,6 +31,7 @@ enum AppDependencyConfigurer {
         let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: adventureSeasonProgressStore)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
+        let rewardNotificationService = RewardNotificationService(forestManager: forestData, adventureRoadService: adventureRoadService)
         let gameManager = GameManager()
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
         coreData.notificationManager = notificationManager
@@ -58,6 +59,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(adventureRoadService), for: AdventureRoadServiceProtocol.self)
         DC.shared.register(type: .singleInstance(adventureSeasonProgressStore), for: AdventureRoadSeasonProgressStoreProtocol.self)
         DC.shared.register(type: .singleInstance(marketService), for: MarketServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(rewardNotificationService), for: RewardNotificationServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

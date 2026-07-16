@@ -37,9 +37,15 @@ struct VocabularyForestApp: App {
     var body: some Scene {
         WindowGroup {
             coordinator.startSplashUI().background(.backgroundSystem).onChange(of: scenePhase) { phase in
+                let rewardNotificationService = DC.shared.resolve(type: .singleInstance, for: RewardNotificationServiceProtocol.self)
                 if phase == .background {
                     let coreDataManager = DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
                     coreDataManager.save(type: .main)
+                    Task {
+                        await rewardNotificationService.scheduleRewardNotifications()
+                    }
+                } else if phase == .active {
+                    rewardNotificationService.cancelRewardNotifications()
                 }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .environmentObject(tabbarController).environmentObject(coordinator)

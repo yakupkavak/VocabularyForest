@@ -46,6 +46,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     private var previewDirectionList: [DirectionWithCount] = []
     private var selectedManager: UpdatePositionProtocol? = nil
     private var selectedModel: ComponentModelProtocol? = nil
+    private var isAnnouncementClaimable = false
     var timer: Timer?
     
     // MARK: - LIFECYCLE
@@ -56,6 +57,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         playerManager = PlayerManager(scene: self)
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
+        environmentManager.setAnnouncementClaimable(isAnnouncementClaimable)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -297,6 +299,11 @@ private extension ForestScene {
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
+    
+    func updateAnnouncementClaimable(_ isClaimable: Bool) {
+        isAnnouncementClaimable = isClaimable
+        environmentManager?.setAnnouncementClaimable(isClaimable)
+    }
     
     func talkComponent(type model: ComponentType, id: UUID, message: String) {
         switch model {

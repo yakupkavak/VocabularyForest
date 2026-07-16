@@ -20,6 +20,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
     func talkComponent(type model: ComponentType, id: UUID, message: String)
+    func updateAnnouncementClaimable(_ isClaimable: Bool)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -77,6 +78,7 @@ class ForestViewModel: BaseViewModel {
     @Published var adventureRoadScreenModel: AdventureRoadScreenModel? = nil
     @Published var marketScreenModel: MarketScreenModel? = nil
     @Published var marketErrorMessage: String? = nil
+    @Published private(set) var isDailySpinClaimable = false
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -218,6 +220,27 @@ extension ForestViewModel {
 // MARK: - FOREST HELPERS
 
 extension ForestViewModel {
+    
+    var claimableAnnouncementTypes: Set<AnnouncementTypeModel> {
+        var types: Set<AnnouncementTypeModel> = []
+        let allQuests = dailyQuestList + weeklyQuestList + monthlyQuestList + specialQuestList
+        if allQuests.contains(where: { $0.status == .completed }) {
+            types.insert(.tasks)
+        }
+        if weeklyDailyCards.contains(where: { $0.status == .ready }) {
+            types.insert(.dailyReward)
+        }
+        if isDailySpinClaimable {
+            types.insert(.dailySpin)
+        }
+        let hasAdventureReward = adventureRoadScreenModel?.rows.contains {
+            $0.leftMilestone.status == .ready || $0.rightMilestone.status == .ready
+        } ?? false
+        if hasAdventureReward {
+            types.insert(.adventureRoad)
+        }
+        return types
+    }
     
     func fetchWeeklyDailyCards() {
         Task(priority: .background) { [weak self] in
@@ -638,6 +661,7 @@ private extension ForestViewModel {
                 weeklyQuestList = updatedQuests.filter {  $0.type == .weekly }
                 monthlyQuestList = updatedQuests.filter {  $0.type == .monthly }
                 specialQuestList = updatedQuests.filter {  $0.type == .special }
+                notifyAnnouncementClaimState()
             }.store(in: &questCancellable)
     }
     
@@ -657,11 +681,14 @@ private extension ForestViewModel {
                     dailyTimeCancellable?.cancel()
                     nextDailySpinTime = nil
                     dailySpinTime = nil
+                    isDailySpinClaimable = true
                 case .alreadyClaimed(let remainSeconds):
                     nextDailySpinTime = Date().addingTimeInterval(remainSeconds)
                     dailySpinTime = Calendar.current.startOfDay(for: Date()).addingTimeInterval(remainSeconds)
                     startDailySpinTimer()
+                    isDailySpinClaimable = false
                 }
+                notifyAnnouncementClaimState()
             }.store(in: &adventureCancellable)
     }
     
@@ -670,6 +697,7 @@ private extension ForestViewModel {
             .sink { [weak self] cards in
                 guard let self else { return }
                 weeklyDailyCards = cards
+                notifyAnnouncementClaimState()
             }.store(in: &adventureCancellable)
     }
     
@@ -678,6 +706,7 @@ private extension ForestViewModel {
             .sink { [weak self] model in
                 guard let self else { return }
                 adventureRoadScreenModel = model
+                notifyAnnouncementClaimState()
             }.store(in: &adventureCancellable)
     }
     
@@ -687,6 +716,10 @@ private extension ForestViewModel {
                 guard let self else { return }
                 marketScreenModel = model
             }.store(in: &adventureCancellable)
+    }
+    
+    func notifyAnnouncementClaimState() {
+        output?.updateAnnouncementClaimable(!claimableAnnouncementTypes.isEmpty)
     }
     
     func startDailySpinTimer() {

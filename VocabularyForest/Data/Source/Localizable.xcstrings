@@ -1,110 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "word_already_in_bookcase_toast" : {
-      "comment" : "Toast shown when the word is already in the selected bookcase",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Already in “%@”"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ya está en “%@”"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Já está em “%@”"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Уже есть в «%@»"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%@” kitaplığında bu kelime zaten var"
-          }
-        }
-      }
-    },
-    "added_to_bookcase_toast" : {
-      "comment" : "Toast shown when a word is added to a bookcase",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Added to “%@”"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agregado a “%@”"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adicionado a “%@”"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Добавлено в «%@»"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%@” kitaplığına eklendi"
-          }
-        }
-      }
-    },
-    "Change" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cambiar"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alterar"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изменить"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Değiştir"
-          }
-        }
-      }
-    },
     "" : {
 
     },
@@ -419,6 +315,41 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Açıklama"
+          }
+        }
+      }
+    },
+    "added_to_bookcase_toast" : {
+      "comment" : "Toast shown when a word is added to a bookcase",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added to “%@”"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregado a “%@”"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionado a “%@”"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавлено в «%@»"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” kitaplığına eklendi"
           }
         }
       }
@@ -1981,6 +1912,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kedi"
+          }
+        }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambiar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alterar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Değiştir"
           }
         }
       }
@@ -6766,6 +6731,18 @@
     "Market is not available right now." : {
 
     },
+    "market_purchase_success_toast" : {
+      "comment" : "Toast shown after a successful market purchase",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Satın alındı, tebrikler!"
+          }
+        }
+      }
+    },
     "market_title" : {
       "comment" : "Main title of the Market screen",
       "extractionState" : "extracted_with_value",
@@ -7356,6 +7333,496 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Hiçbir görev açık değil"
+          }
+        }
+      }
+    },
+    "notif_reward_adventure_ready_body" : {
+      "comment" : "Notification body when an adventure road milestone reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You earned a milestone reward on the Adventure Road. Come claim it!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganaste una recompensa en el Camino de Aventura. ¡Ven a reclamarla!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você ganhou uma recompensa na Estrada da Aventura. Venha resgatar!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ты заработал награду на Пути приключений. Забери её!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macera Yolu'nda bir ödül kazandın. Gel ve ödülünü al!"
+          }
+        }
+      }
+    },
+    "notif_reward_adventure_ready_title" : {
+      "comment" : "Notification title when an adventure road milestone reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adventure Road reward unlocked! 🗺️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Recompensa del Camino de Aventura desbloqueada! 🗺️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa da Estrada da Aventura desbloqueada! 🗺️"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Награда Пути приключений открыта! 🗺️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macera Yolu ödülün açıldı! 🗺️"
+          }
+        }
+      }
+    },
+    "notif_reward_multiple_ready_body" : {
+      "comment" : "Notification body when multiple rewards are unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have several unclaimed rewards waiting in the forest. Come collect them!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienes varias recompensas sin reclamar en el bosque. ¡Ven a recogerlas!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você tem várias recompensas esperando na floresta. Venha coletar!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В лесу тебя ждут несколько наград. Приходи и забери их!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanda seni bekleyen birden fazla ödül var. Gel ve topla!"
+          }
+        }
+      }
+    },
+    "notif_reward_multiple_ready_title" : {
+      "comment" : "Notification title when multiple rewards are unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewards are piling up! 🎁"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Las recompensas se acumulan! 🎁"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As recompensas estão se acumulando! 🎁"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Награды накапливаются! 🎁"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ödüllerin birikiyor! 🎁"
+          }
+        }
+      }
+    },
+    "notif_reward_quest_ready_body" : {
+      "comment" : "Notification body when a completed quest reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your quest reward is waiting to be claimed. Don't leave it behind!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recompensa de tu misión espera ser reclamada. ¡No la dejes atrás!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A recompensa da sua missão está esperando. Não deixe para trás!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Награда за квест ждёт тебя. Не забудь её забрать!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görev ödülün seni bekliyor. Sakın unutma!"
+          }
+        }
+      }
+    },
+    "notif_reward_quest_ready_title" : {
+      "comment" : "Notification title when a completed quest reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quest completed! ⚔️"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Misión completada! ⚔️"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missão concluída! ⚔️"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Квест выполнен! ⚔️"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görev tamamlandı! ⚔️"
+          }
+        }
+      }
+    },
+    "notif_reward_spin_available_body" : {
+      "comment" : "Notification body when the daily spin cooldown expires while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A new free spin is ready. Try your luck!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un nuevo giro gratis está listo. ¡Prueba tu suerte!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um novo giro grátis está pronto. Tente a sorte!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новое бесплатное вращение готово. Испытай удачу!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni ücretsiz çevirme hakkın hazır. Şansını dene!"
+          }
+        }
+      }
+    },
+    "notif_reward_spin_available_title" : {
+      "comment" : "Notification title when the daily spin cooldown expires while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Spin is back! 🎡"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El giro diario volvió! 🎡"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O giro diário voltou! 🎡"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ежедневное колесо снова доступно! 🎡"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük çark yeniden hazır! 🎡"
+          }
+        }
+      }
+    },
+    "notif_reward_spin_ready_body" : {
+      "comment" : "Notification body when the daily spin is unclaimed while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spin the wheel and grab your free reward!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Gira la rueda y reclama tu recompensa gratis!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gire a roleta e pegue sua recompensa grátis!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Крути колесо и забери бесплатную награду!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çarkı çevir, ücretsiz ödülünü kap!"
+          }
+        }
+      }
+    },
+    "notif_reward_spin_ready_title" : {
+      "comment" : "Notification title when the daily spin is unclaimed while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Daily Spin is waiting! 🎡"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Tu giro diario te espera! 🎡"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu giro diário está esperando! 🎡"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Твоё ежедневное колесо ждёт! 🎡"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük çarkın seni bekliyor! 🎡"
+          }
+        }
+      }
+    },
+    "notif_reward_weekly_available_body" : {
+      "comment" : "Notification body when the next weekly streak day unlocks while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim your reward today to keep your weekly streak going!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Reclama tu recompensa hoy para mantener tu racha semanal!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resgate sua recompensa hoje para manter sua sequência semanal!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забери награду сегодня, чтобы не прервать недельную серию!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haftalık serini korumak için ödülünü bugün al!"
+          }
+        }
+      }
+    },
+    "notif_reward_weekly_available_title" : {
+      "comment" : "Notification title when the next weekly streak day unlocks while the app is closed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A new daily reward awaits! 🎁"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Una nueva recompensa diaria te espera! 🎁"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uma nova recompensa diária espera por você! 🎁"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новая ежедневная награда ждёт! 🎁"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni günlük ödülün seni bekliyor! 🎁"
+          }
+        }
+      }
+    },
+    "notif_reward_weekly_ready_body" : {
+      "comment" : "Notification body when today's weekly streak reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claim today's reward and keep your streak alive!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Reclama la recompensa de hoy y mantén tu racha viva!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resgate a recompensa de hoje e mantenha sua sequência viva!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забери сегодняшнюю награду и сохрани свою серию!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugünün ödülünü al, serini kaybetme!"
+          }
+        }
+      }
+    },
+    "notif_reward_weekly_ready_title" : {
+      "comment" : "Notification title when today's weekly streak reward is unclaimed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly reward ready! 🎁"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Recompensa semanal lista! 🎁"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensa semanal pronta! 🎁"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Еженедельная награда готова! 🎁"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haftalık ödülün hazır! 🎁"
           }
         }
       }
@@ -10284,6 +10751,41 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beyaz kedi"
+          }
+        }
+      }
+    },
+    "word_already_in_bookcase_toast" : {
+      "comment" : "Toast shown when the word is already in the selected bookcase",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already in “%@”"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ya está en “%@”"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Já está em “%@”"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уже есть в «%@»"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%@” kitaplığında bu kelime zaten var"
           }
         }
       }

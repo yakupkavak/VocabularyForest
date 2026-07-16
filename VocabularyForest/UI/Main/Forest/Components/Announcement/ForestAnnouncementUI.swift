@@ -13,6 +13,7 @@ struct ForestAnnouncementUI: View {
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Binding var isVisible: Bool
+    var claimableTypes: Set<AnnouncementTypeModel> = []
     var onClick: (AnnouncementTypeModel) -> Void
     
     private var responsivePadding: CGFloat {
@@ -43,7 +44,8 @@ struct ForestAnnouncementUI: View {
                     ForEach(announcements) { model in
                         AnnouncementCellUI(
                             model: model,
-                            width: geometryWidth * cellWidthMultipler
+                            width: geometryWidth * cellWidthMultipler,
+                            isClaimable: claimableTypes.contains(model.type)
                         ).onTapGesture {
                             onClick(model.type)
                             isVisible = false
@@ -59,6 +61,7 @@ struct AnnouncementCellUI: View {
     
     let model: AnnouncementItem
     let width: CGFloat
+    var isClaimable: Bool = false
     
     var body: some View {
         VStack(spacing: 4) {
@@ -67,7 +70,7 @@ struct AnnouncementCellUI: View {
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 18)
-        .background(.white.opacity(0.15))
+        .background(isClaimable ? AnyShapeStyle(Color.green.opacity(0.3)) : AnyShapeStyle(.white.opacity(0.15)))
         .borderShape(radius: 20)
     }
 }
