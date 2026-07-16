@@ -14,9 +14,67 @@ enum AdventureTicketNotchSide {
     case right
 } 
 
+/// Season theme colors driven by the remote config, falls back to the default forest palette
+struct AdventureRoadThemeModel {
+    let backgroundTopColor: Color
+    let backgroundBottomColor: Color
+    let titleTextColor: Color
+    let subtitleTextColor: Color
+    let countdownTextColor: Color
+    let countdownBackgroundColor: Color
+    let wordLabelTextColor: Color
+    let shortBadgeTopColor: Color
+    let shortBadgeBottomColor: Color
+    let shortBadgeTextColor: Color
+    let longBadgeTopColor: Color
+    let longBadgeBottomColor: Color
+    let longBadgeTextColor: Color
+
+    static let `default` = AdventureRoadThemeModel(
+        backgroundTopColor: Color(red: 0.74, green: 0.88, blue: 0.55),
+        backgroundBottomColor: Color(red: 0.16, green: 0.56, blue: 0.33),
+        titleTextColor: .white,
+        subtitleTextColor: .white,
+        countdownTextColor: .white,
+        countdownBackgroundColor: Color.black.opacity(0.14),
+        wordLabelTextColor: Color.white.opacity(0.96),
+        shortBadgeTopColor: Color(red: 0.31, green: 0.87, blue: 0.76).opacity(0.78),
+        shortBadgeBottomColor: Color(red: 0.16, green: 0.74, blue: 0.64).opacity(0.7),
+        shortBadgeTextColor: Color(red: 0.04, green: 0.28, blue: 0.33),
+        longBadgeTopColor: Color.white.opacity(0.14),
+        longBadgeBottomColor: Color.white.opacity(0.05),
+        longBadgeTextColor: .white
+    )
+
+    static func make(from remote: RemoteAdventureRoadThemeModel?) -> AdventureRoadThemeModel {
+        guard let remote else { return .default }
+        return AdventureRoadThemeModel(
+            backgroundTopColor: color(remote.backgroundTopColor, fallback: Self.default.backgroundTopColor),
+            backgroundBottomColor: color(remote.backgroundBottomColor, fallback: Self.default.backgroundBottomColor),
+            titleTextColor: color(remote.titleTextColor, fallback: Self.default.titleTextColor),
+            subtitleTextColor: color(remote.subtitleTextColor, fallback: Self.default.subtitleTextColor),
+            countdownTextColor: color(remote.countdownTextColor, fallback: Self.default.countdownTextColor),
+            countdownBackgroundColor: color(remote.countdownBackgroundColor, fallback: Self.default.countdownBackgroundColor),
+            wordLabelTextColor: color(remote.wordLabelTextColor, fallback: Self.default.wordLabelTextColor),
+            shortBadgeTopColor: color(remote.shortBadgeTopColor, fallback: Self.default.shortBadgeTopColor),
+            shortBadgeBottomColor: color(remote.shortBadgeBottomColor, fallback: Self.default.shortBadgeBottomColor),
+            shortBadgeTextColor: color(remote.shortBadgeTextColor, fallback: Self.default.shortBadgeTextColor),
+            longBadgeTopColor: color(remote.longBadgeTopColor, fallback: Self.default.longBadgeTopColor),
+            longBadgeBottomColor: color(remote.longBadgeBottomColor, fallback: Self.default.longBadgeBottomColor),
+            longBadgeTextColor: color(remote.longBadgeTextColor, fallback: Self.default.longBadgeTextColor)
+        )
+    }
+
+    private static func color(_ hex: String?, fallback: Color) -> Color {
+        guard let hex = hex?.trimmingCharacters(in: .whitespacesAndNewlines), !hex.isEmpty else { return fallback }
+        return Color(hex: hex)
+    }
+}
+
 struct AdventureRoadScreenModel {
     let title: String
     let subtitle: String
+    let theme: AdventureRoadThemeModel
     let eventEndDate: Date
     let referenceDate: Date
     let shortTermCorrectWords: Int

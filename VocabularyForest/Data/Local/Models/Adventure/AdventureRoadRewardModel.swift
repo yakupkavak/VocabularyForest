@@ -17,6 +17,7 @@ struct AdventureRoadConfigModel {
     let id: String?
     let title: String?
     let description: String?
+    let theme: AdventureRoadThemeModel
     let seasonEndDate: Date
     let rewards: [AdventureRoadRewardModel]
 }

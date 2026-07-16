@@ -69,14 +69,9 @@ extension AdventureRoadService: AdventureRoadServiceProtocol {
             guard let wordCount = item.wordCount,
                   let shortRemote = item.shortTermReward,
                   let longRemote = item.longTermReward else { continue }
-            var shortReward: LocalRewardModel
-            var longReward: LocalRewardModel
-            do {
-                shortReward = try await rewardRepository.processAndGetLocalReward(from: shortRemote)
-                longReward = try await rewardRepository.processAndGetLocalReward(from: longRemote)
-            } catch {
-                throw RewardRepositoryError.decodingError
-            }
+            /// Don't mask repository errors as decodingError, the real cause (download, chest lookup...) must surface
+            let shortReward = try await rewardRepository.processAndGetLocalReward(from: shortRemote)
+            let longReward = try await rewardRepository.processAndGetLocalReward(from: longRemote)
             rewards.append(
                 AdventureRoadRewardModel(
                     wordCount: wordCount,
@@ -92,6 +87,7 @@ extension AdventureRoadService: AdventureRoadServiceProtocol {
             id: list.id,
             title: list.title?.localized,
             description: list.description?.localized,
+            theme: AdventureRoadThemeModel.make(from: list.theme),
             seasonEndDate: seasonEndDate,
             rewards: rewards.sorted { $0.wordCount < $1.wordCount }
         )
@@ -210,6 +206,7 @@ private extension AdventureRoadService {
                 comment: "Main title of the Adventure Road screen"
             ),
             subtitle: config.description ?? "",
+            theme: config.theme,
             eventEndDate: config.seasonEndDate,
             referenceDate: now,
             shortTermCorrectWords: progress.shortLearnedCount,
