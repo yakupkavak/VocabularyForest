@@ -20,6 +20,7 @@ protocol AuthManagerProtocol: ObservableObject {
         nonce: String?) async throws -> AuthDataResult?
     func signInWithGoogle() async throws
     func signOut() throws
+    func deleteAccount(cloudCleanup: () async throws -> Void) async throws
 }
 
 enum SignInType {
@@ -103,6 +104,43 @@ class AuthManager: AuthManagerProtocol {
             }
             isUserSignedIn = false
         }
+    }
+    
+    // MARK: - DELETE ACCOUNT
+    
+    /// Apple 5.1.1(v): reauth -> bulut verisi temizliği -> Apple token revoke -> hesabı sil.
+    func deleteAccount(cloudCleanup: () async throws -> Void) async throws {
+        guard let user = auth.currentUser else { return }
+        let providers = user.providerData.map { $0.providerID }
+        
+        if providers.contains("apple.com") {
+            let appleCredential = try await AppleSignInManager.shared.requestFreshCredential()
+            guard let tokenData = appleCredential.identityToken,
+                  let idTokenString = String(data: tokenData, encoding: .utf8) else {
+                throw AuthError.invalidCredantial
+            }
+            let credentials = OAuthProvider.appleCredential(withIDToken: idTokenString,
+                                                            rawNonce: AppleSignInManager.nonce,
+                                                            fullName: nil)
+            try await user.reauthenticate(with: credentials)
+            try await cloudCleanup()
+            if let codeData = appleCredential.authorizationCode,
+               let authCode = String(data: codeData, encoding: .utf8) {
+                try await auth.revokeToken(withAuthorizationCode: authCode)
+            }
+        }
+        else {
+            if let googleUser = try await signInWithGoogle(), let idToken = googleUser.idToken?.tokenString {
+                let credentials = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                                accessToken: googleUser.accessToken.tokenString)
+                try await user.reauthenticate(with: credentials)
+            }
+            try await cloudCleanup()
+            signOutFromGoogle()
+        }
+        
+        try await user.delete()
+        await MainActor.run { isUserSignedIn = false }
     }
 }
 

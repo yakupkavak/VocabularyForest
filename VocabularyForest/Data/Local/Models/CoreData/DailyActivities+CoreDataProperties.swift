@@ -51,7 +51,9 @@ extension DailyActivities: ConvertSafeModel {
                     lastFetchDate: lastFetchDate,
                     fixedTimeZone: fixedTimeZone,
                     dailySpinLastUsedDate: dailySpinLastUsedDate,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    dailyKillGoldCount: Int(dailyKillGoldCount),
+                    killGoldLastResetDate: killGoldLastResetDate
                 )
             }
             throw SafeModelError.emptyValue

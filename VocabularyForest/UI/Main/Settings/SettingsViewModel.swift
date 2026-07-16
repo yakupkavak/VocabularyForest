@@ -330,6 +330,19 @@ class SettingsViewModel: ObservableObject {
     func deleteAllData() {
         coreDataManager.deleteEverything(contextType: .background)
     }
+    
+    func deleteAccount() {
+        Task {
+            do {
+                try await authManager.deleteAccount { [weak self] in
+                    try await self?.syncManager.deleteCloudData()
+                }
+            } catch {
+                print(error)
+                showError(message: String(localized: "Hesap silinemedi. Lütfen tekrar deneyin."))
+            }
+        }
+    }
 }
 
 private extension SettingsViewModel {

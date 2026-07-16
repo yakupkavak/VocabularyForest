@@ -93,7 +93,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     // MARK: Update Helpers
     
     func overwriteLocalForest(with safeForest: SafeForestModel, ownerId: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
-    func bindForestToUser(uid: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func bindForestToUser(uid: String?, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateLastSyncCloudTime(date: Date, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func addRainValue(rain: Int, contextType: ForestDataManager.ContextType) throws
     func startRain(contextType: ForestDataManager.ContextType) throws
@@ -409,6 +409,7 @@ extension ForestDataManager {
                 animal.assetSourceString = animalModel.assetSource.rawValue
                 animal.posterKey = animalModel.poster.key
                 animal.posterSourceString = animalModel.poster.source.rawValue
+                animal.rewardId = animalModel.rewardId
                 forest.addToAnimals(animal)
                 
             case .plant:
@@ -426,6 +427,7 @@ extension ForestDataManager {
                 tree.posterKey = treeModel.poster.key
                 tree.posterSourceString = treeModel.poster.source.rawValue
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
+                tree.rewardId = treeModel.rewardId
                 forest.addToTrees(tree)
                 
             case .sculpture:
@@ -441,6 +443,7 @@ extension ForestDataManager {
                 sculpture.assetSourceString = sculptureModel.assetSource.rawValue
                 sculpture.posterKey = sculptureModel.poster.key
                 sculpture.posterSourceString = sculptureModel.poster.source.rawValue
+                sculpture.rewardId = sculptureModel.rewardId
                 forest.addToSculptures(sculpture)
                 
             case .gold:
@@ -499,6 +502,10 @@ extension ForestDataManager {
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
                 tree.xPosition = treeModel.xPosition
                 tree.yPosition = treeModel.yPosition
+                tree.assetSourceString = treeModel.assetSource.rawValue
+                tree.posterKey = treeModel.poster.key
+                tree.posterSourceString = treeModel.poster.source.rawValue
+                tree.rewardId = treeModel.rewardId
                 newForest.addToTrees(tree)
             }
             
@@ -513,6 +520,10 @@ extension ForestDataManager {
                 animal.lastUpdatedDate = animalModel.lastUpdatedDate
                 animal.xPosition = animalModel.xPosition
                 animal.yPosition = animalModel.yPosition
+                animal.assetSourceString = animalModel.assetSource.rawValue
+                animal.posterKey = animalModel.poster.key
+                animal.posterSourceString = animalModel.poster.source.rawValue
+                animal.rewardId = animalModel.rewardId
                 newForest.addToAnimals(animal)
             }
             
@@ -525,8 +536,33 @@ extension ForestDataManager {
                 sculpture.lastUpdatedDate = sculptureModel.lastUpdatedDate
                 sculpture.xPosition = sculptureModel.xPosition
                 sculpture.yPosition = sculptureModel.yPosition
+                sculpture.assetSourceString = sculptureModel.assetSource.rawValue
+                sculpture.posterKey = sculptureModel.poster.key
+                sculpture.posterSourceString = sculptureModel.poster.source.rawValue
+                sculpture.rewardId = sculptureModel.rewardId
                 newForest.addToSculptures(sculpture)
             }
+            
+            let player = Player(context: context)
+            player.name = safeForest.player.name
+            player.lastUpdatedDate = safeForest.player.lastUpdateDate
+            newForest.player = player
+            
+            let dailyActivities = DailyActivities(context: context)
+            dailyActivities.adventureSeasonID = safeForest.dailyActivities.adventureSeasonID
+            dailyActivities.claimedLongTiers = safeForest.dailyActivities.claimedLongTiers
+            dailyActivities.claimedShortTiers = safeForest.dailyActivities.claimedShortTiers
+            dailyActivities.monthlyLongLearnedCount = Int16(safeForest.dailyActivities.monthlyLongLearnedCount)
+            dailyActivities.monthlyShortLearnedCount = Int16(safeForest.dailyActivities.monthlyShortLearnedCount)
+            dailyActivities.weeklyStreakLastClaimDate = safeForest.dailyActivities.weeklyStreakLastClaimDate
+            dailyActivities.weeklyStreakCurrentDay = Int16(safeForest.dailyActivities.weeklyStreakCurrentDay)
+            dailyActivities.lastFetchDate = safeForest.dailyActivities.lastFetchDate
+            dailyActivities.fixedTimeZone = safeForest.dailyActivities.fixedTimeZone
+            dailyActivities.dailySpinLastUsedDate = safeForest.dailyActivities.dailySpinLastUsedDate
+            dailyActivities.lastUpdatedDate = safeForest.dailyActivities.lastUpdatedDate
+            dailyActivities.dailyKillGoldCount = Int16(safeForest.dailyActivities.dailyKillGoldCount)
+            dailyActivities.killGoldLastResetDate = safeForest.dailyActivities.killGoldLastResetDate
+            newForest.dailyActivities = dailyActivities
             
             for questModel in safeForest.quests {
                 let quest = Quest(context: context)
@@ -546,7 +582,7 @@ extension ForestDataManager {
         }
     }
     
-    func bindForestToUser(uid: String, contextType: ContextType) -> Resource<Bool> {
+    func bindForestToUser(uid: String?, contextType: ContextType) -> Resource<Bool> {
         let context = getContext(for: contextType)
         return context.performAndWait {
             guard let forest = getCurrentForest(context: context) else {
@@ -877,7 +913,8 @@ private extension ForestDataManager {
             isAlive: true,
             xPosition: CGFloat.random(in: -50...50),
             yPosition: CGFloat.random(in: -50...50),
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            rewardId: model.id
         )
     }
     func createSafePlant(model: ReadyRewardModel, contextType: ContextType) -> TreeModel {
@@ -893,7 +930,8 @@ private extension ForestDataManager {
             treeHealthValue: 5,
             xPosition: CGFloat(position.x),
             yPosition: CGFloat(position.y),
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            rewardId: model.id
         )
     }
     func createSafeSculpture(model: ReadyRewardModel, contextType: ContextType) -> SculptureModel {
@@ -907,7 +945,8 @@ private extension ForestDataManager {
             poster: model.posterImage,
             xPosition: CGFloat(position.x),
             yPosition: CGFloat(position.y),
-            lastUpdatedDate: Date()
+            lastUpdatedDate: Date(),
+            rewardId: model.id
         )
     }
 }

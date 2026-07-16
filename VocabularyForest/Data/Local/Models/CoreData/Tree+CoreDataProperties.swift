@@ -30,6 +30,7 @@ extension Tree {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var rewardId: String?
     
 }
 
@@ -55,7 +56,8 @@ extension Tree: ConvertSafeModel {
                     treeHealthValue: Int(healthValue),
                     xPosition: xPosition,
                     yPosition: yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    rewardId: rewardId
                 )
             }
             throw SafeModelError.emptyValue

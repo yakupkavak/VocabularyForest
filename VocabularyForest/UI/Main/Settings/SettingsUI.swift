@@ -16,6 +16,7 @@ struct SettingsUI: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     @State private var showingDeleteAlert = false
+    @State private var showingDeleteAccountAlert = false
     @State private var showNameEditAlert = false
     @State private var newUserName = ""
     @State private var showSignIn = false
@@ -65,6 +66,20 @@ struct SettingsUI: View {
             Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
                 .font(.caption)
                 .foregroundColor(.gray)
+            
+            if viewModel.userSignIn {
+                Button("Hesabı Sil") {
+                    showingDeleteAccountAlert = true
+                }
+                .padding(.horizontal)
+                .tint(.red)
+                .cornerRadius(10)
+                .accessibilityIdentifier("delete_account_button")
+                
+                Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
             Spacer()
         }
         .padding(.horizontal)
@@ -82,6 +97,14 @@ struct SettingsUI: View {
             }
         } message: {
             Text("Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir.")
+        }
+        .alert("Hesabınız Silinsin mi?", isPresented: $showingDeleteAccountAlert) {
+            Button("Vazgeç", role: .cancel) { }
+            Button("Hesabı Sil", role: .destructive) {
+                viewModel.deleteAccount()
+            }
+        } message: {
+            Text("Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir.")
         }
         .alert("Kullanıcı Adı", isPresented: $showNameEditAlert) {
             TextField("Yeni adınız", text: $newUserName)

@@ -37,6 +37,7 @@ protocol RemoteConfigRepositoryProtocol {
     func fetchMarketConfig() async throws -> RemoteConfigResponse<RemoteMarketListModel>
     func fetchGameEconomyConfig() async throws -> RemoteConfigResponse<GameEconomyConfigModel>
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>>
+    func fetchRewardsCatalog() async throws -> RemoteConfigResponse<RemoteRewardListModel>
 }
 
 private extension RemoteConfigRepository {
@@ -49,6 +50,7 @@ private extension RemoteConfigRepository {
         static let gameEconomyConfig = "game_economy_config"
         static let chestRewardConfig = "chest_rewards_config"
         static let configParameters = "config_list"
+        static let rewardsConfig = "rewards_config"
     }
     
     private enum DefaultsKeys {
@@ -230,6 +232,17 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
         do {
             let listValue = try remoteConfig.configValue(forKey: Keys.gameEconomyConfig).decoded(asType: GameEconomyConfigModel.self)
             let jsonValue = remoteConfig.configValue(forKey: Keys.gameEconomyConfig).jsonValue
+            let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
+            return response
+        }catch {
+            throw error
+        }
+    }
+    
+    func fetchRewardsCatalog() async throws -> RemoteConfigResponse<RemoteRewardListModel> {
+        do {
+            let listValue = try remoteConfig.configValue(forKey: Keys.rewardsConfig).decoded(asType: RemoteRewardListModel.self)
+            let jsonValue = remoteConfig.configValue(forKey: Keys.rewardsConfig).jsonValue
             let response = RemoteConfigResponse(model: listValue, rawData: jsonValue)
             return response
         }catch {

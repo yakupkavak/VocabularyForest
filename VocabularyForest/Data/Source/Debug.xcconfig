@@ -8,3 +8,5 @@
 // Configuration settings file format documentation can be found at:
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 API_BASE_URL = https:/$()/vocab-api.yakupkavk.workers.dev/api/
+ADMOB_APP_ID = ca-app-pub-7361200649027961~7922835624
+ADMOB_REWARDED_AD_UNIT_ID = ca-app-pub-3940256099942544/1712485313

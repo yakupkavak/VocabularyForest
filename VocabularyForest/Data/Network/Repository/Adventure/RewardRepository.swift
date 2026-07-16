@@ -27,6 +27,13 @@ protocol RewardRepositoryProtocol {
     func claimLocalReward(reward: LocalRewardModel) async throws
 }
 
+/// Download primitives shared with `RewardAssetHydrationService` so that assets
+/// missing after a cloud restore can be re-downloaded with the same logic used at claim time.
+protocol RewardAssetDownloaderProtocol {
+    func downloadAndSaveImageIfNeeded(remotePath: String, localKey: String, version: Int) async throws
+    func downloadAndSaveZipIfNeeded(remotePath: String, localKey: String, version: Int) async throws
+}
+
 final class RewardRepository {
     
     private let offlineAssetManager: OfflineAssetManagerProtocol
@@ -186,6 +193,9 @@ private extension RewardRepository {
         
     }
     
+}
+
+extension RewardRepository: RewardAssetDownloaderProtocol {
     func downloadAndSaveZipIfNeeded(remotePath: String, localKey: String, version: Int) async throws {
         if offlineAssetManager.isZipAssetUpToDate(bundleId: localKey, expectedVersion: version) {
             return

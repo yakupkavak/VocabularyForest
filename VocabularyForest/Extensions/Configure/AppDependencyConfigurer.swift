@@ -25,6 +25,7 @@ enum AppDependencyConfigurer {
         let offlineAssetManager = OfflineAssetManager()
         let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
         let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
+        let rewardAssetHydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: remoteConfigRepository)
         let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
         let weeklyRewardService = WeeklyRewardService(forestManager: forestData, rewardRepository: rewardRepository)
         let adventureSeasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
@@ -36,6 +37,8 @@ enum AppDependencyConfigurer {
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
+        cloudSyncManager.remoteConfigRepository = remoteConfigRepository
+        cloudSyncManager.assetHydrationService = rewardAssetHydrationService
         forestData.notificationManager = notificationManager
         DC.shared.register(type: .singleInstance(coreData), for: CoreDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)

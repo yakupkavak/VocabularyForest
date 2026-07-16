@@ -16,7 +16,9 @@
 		</dict>
 	</array>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-7361200649027961~7922835624</string>
+	<string>$(ADMOB_APP_ID)</string>
+	<key>ADMOB_REWARDED_AD_UNIT_ID</key>
+	<string>$(ADMOB_REWARDED_AD_UNIT_ID)</string>
 	<key>GIDClientID</key>
 	<string>346070689740-9gshb39j1o7q26aqov5hnm0qrl8kg8ud.apps.googleusercontent.com</string>
 </dict>

@@ -22,7 +22,6 @@ struct GameKillCapModel: Decodable {
 
 struct GameProgressionTargetsModel: Decodable {
     let dailyActiveGoldTarget: Int?
-    let adventureRoadTotalGoldTarget: Int?
     let rainCost: Int?
     let rainDecayPerHour: Int?
     let dailyQuestCompletionRateForRain: Double?

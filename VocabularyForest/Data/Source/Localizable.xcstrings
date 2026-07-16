@@ -11,12 +11,60 @@
             "state" : "translated",
             "value" : ":"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ":"
+          }
         }
       }
     },
     "%@" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@"
@@ -28,7 +76,31 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ - %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "%1$@ - %2$@"
           }
         }
@@ -37,6 +109,24 @@
     "%%%lld" : {
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%%%lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%%%lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%%%lld"
+          }
+        },
+        "ru" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%%%lld"
@@ -58,6 +148,24 @@
             "value" : "%lld"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -67,10 +175,72 @@
       }
     },
     "%lld days ago" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld days ago"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hace %lld días"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "há %lld dias"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld дн. назад"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld gün önce"
+          }
+        }
+      }
     },
     "%lld Diamond" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Diamond"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Diamantes"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Diamantes"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld алмазов"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Elmas"
+          }
+        }
+      }
     },
     "%lld Gold" : {
       "localizations" : {
@@ -107,10 +277,72 @@
       }
     },
     "%lld hours ago" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hours ago"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hace %lld horas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "há %lld horas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ч. назад"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld saat önce"
+          }
+        }
+      }
     },
     "%lld minutes ago" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld minutes ago"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hace %lld minutos"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "há %lld minutos"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld мин. назад"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dakika önce"
+          }
+        }
+      }
     },
     "%lld Water Drops" : {
       "localizations" : {
@@ -147,13 +379,68 @@
       }
     },
     "%lld words" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld words"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld palabras"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld palavras"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld слов"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kelime"
+          }
+        }
+      }
     },
     "%lld/%lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "%1$lld/%2$lld"
           }
         }
@@ -166,90 +453,168 @@
             "state" : "translated",
             "value" : "%lld%%"
           }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
         }
       }
     },
     "+%lld" : {
-
-    },
-    "1 hour ago" : {
-
-    },
-    "1 minute ago" : {
-
-    },
-    "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A secret is hidden in the depths of the forest. Pass this tough test, reach the noble white cat."
+            "value" : "+%lld"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hay un secreto escondido en lo profundo del bosque. Supera esta difícil prueba y llega hasta el noble gato blanco."
+            "value" : "+%lld"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Um segredo está escondido nas profundezas da floresta. Passe neste difícil teste e alcance o nobre gato branco."
+            "value" : "+%lld"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "В глубине леса скрывается секрет. Пройди это сложное испытание, доберись до благородного белого кота."
+            "value" : "+%lld"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ormanın derinliklerinde bir sır saklı. Bu zorlu sınavı geç, asil beyaz kediye ulaş."
+            "value" : "+%lld"
           }
         }
       }
     },
-    "A Sip of Water 💧" : {
-      "extractionState" : "stale",
+    "1 hour ago" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A Sip of Water 💧"
+            "value" : "1 hour ago"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un sorbo de agua 💧"
+            "value" : "hace 1 hora"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Um gole de água 💧"
+            "value" : "há 1 hora"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Глоток воды 💧"
+            "value" : "1 ч. назад"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Bir Yudum Su "
+            "state" : "translated",
+            "value" : "1 saat önce"
+          }
+        }
+      }
+    },
+    "1 minute ago" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 minute ago"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hace 1 minuto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "há 1 minuto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 мин. назад"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 dakika önce"
           }
         }
       }
     },
     "Account" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conta"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аккаунт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap"
+          }
+        }
+      }
     },
     "Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir." : {
       "localizations" : {
@@ -355,64 +720,210 @@
       }
     },
     "Adventure Road" : {
-
-    },
-    "adventure_road_countdown_ended" : {
-      "comment" : "Adventure Road countdown text when the event has ended",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "Adventure Road"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camino de Aventura"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estrada da Aventura"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дорога приключений"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macera Yolu"
+          }
+        }
+      }
+    },
+    "adventure_road_countdown_ended" : {
+      "comment" : "Adventure Road countdown text when the event has ended",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Time is up"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se acabó el tiempo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O tempo acabou"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Время вышло"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Süre doldu"
           }
         }
       }
     },
     "adventure_road_countdown_format" : {
       "comment" : "Adventure Road countdown format with day and hour placeholders",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$d d %2$d h"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d d %2$d h"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d d %2$d h"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d д %2$d ч"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d g %2$d s"
           }
         }
       }
     },
     "adventure_road_title" : {
       "comment" : "Main title of the Adventure Road screen",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Adventure Road"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camino de Aventura"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estrada da Aventura"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дорога приключений"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macera Yolu"
           }
         }
       }
     },
     "adventure_track_long_term" : {
       "comment" : "Adventure Road long-term track title",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Long Memory"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memoria a Largo Plazo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memória de Longo Prazo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Долгая память"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzun Hafıza"
           }
         }
       }
     },
     "adventure_track_short_term" : {
       "comment" : "Adventure Road short-term track title",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "Short Memory"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memoria a Corto Plazo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memória de Curto Prazo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Короткая память"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa Hafıza"
           }
         }
       }
@@ -827,17 +1338,6 @@
         }
       }
     },
-    "antique_chest" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Antique Chest"
-          }
-        }
-      }
-    },
     "Arapça" : {
       "localizations" : {
         "en" : {
@@ -1008,43 +1508,39 @@
         }
       }
     },
-    "Awakening of the Ancient Guardian 🗿" : {
-      "extractionState" : "stale",
+    "Ay" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Awakening of Ancient Guardian 🗿"
+            "value" : "Moon"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El despertar del antiguo guardián 🗿"
+            "value" : "Luna"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Despertar do Guardião Antigo 🗿"
+            "value" : "Lua"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Пробуждение древнего стража 🗿"
+            "value" : "Луна"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Kadim Muhafızın Uyanışı 🗿"
+            "state" : "translated",
+            "value" : "Ay"
           }
         }
       }
-    },
-    "Ay" : {
-
     },
     "Ayarlar" : {
       "localizations" : {
@@ -1144,41 +1640,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bağlaç"
-          }
-        }
-      }
-    },
-    "Bağlantı hatası" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connection error"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error de conexión"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erro de conexão"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ошибка подключения"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bağlantı hatası"
           }
         }
       }
@@ -1354,7 +1815,38 @@
       }
     },
     "Bilge" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sage"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sábio"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мудрец"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilge"
+          }
+        }
+      }
     },
     "Bilinmiyor" : {
       "localizations" : {
@@ -1390,43 +1882,39 @@
         }
       }
     },
-    "Biliyorum" : {
-      "extractionState" : "stale",
+    "Bir Sorun Oluştu" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I know"
+            "value" : "Something Went Wrong"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lo sé."
+            "value" : "Algo salió mal"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eu sei"
+            "value" : "Algo deu errado"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Я знаю"
+            "value" : "Что-то пошло не так"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Biliyorum"
+            "state" : "translated",
+            "value" : "Bir Sorun Oluştu"
           }
         }
       }
-    },
-    "Bir Sorun Oluştu" : {
-
     },
     "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz" : {
       "localizations" : {
@@ -1564,76 +2052,6 @@
         }
       }
     },
-    "blue_flame_bush_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blue Flame Bush"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arbusto de llama azul"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arbusto de Chama Azul"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Синий пламенный куст"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mavi Alev Çalısı"
-          }
-        }
-      }
-    },
-    "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bring the Fire Dragon to its knees 4 times, and the Blue Flame Bush is yours."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Pon al Dragón de Fuego de rodillas 4 veces y el Arbusto de Llama Azul será tuyo!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Dragão de Fogo 4 vezes e o Arbusto de Chamas Azuis será seu."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сразите Огненного Дракона 4 раза, и Куст Голубого Пламени будет вашим."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ateş Ejderhası'nı 4 kez dize getir, Mavi Alev Çalısı senin olsun."
-          }
-        }
-      }
-    },
     "Bu dil için kütüphane bulunamadı." : {
       "localizations" : {
         "en" : {
@@ -1667,6 +2085,9 @@
           }
         }
       }
+    },
+    "Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir." : {
+
     },
     "Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir." : {
       "localizations" : {
@@ -1737,10 +2158,72 @@
       }
     },
     "Bu orman başka bir hesaba bağlı. Lütfen kendi hesabınıza giriş yapın veya oyunu sıfırlayın." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This forest is linked to another account. Please sign in to your own account or reset the game."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este bosque está vinculado a otra cuenta. Inicia sesión con tu propia cuenta o reinicia el juego."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta floresta está vinculada a outra conta. Faça login na sua própria conta ou reinicie o jogo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот лес привязан к другому аккаунту. Войдите в свой аккаунт или сбросьте игру."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu orman başka bir hesaba bağlı. Lütfen kendi hesabınıza giriş yapın veya oyunu sıfırlayın."
+          }
+        }
+      }
     },
     "Bulut verisi bulunamadı. Lütfen tekrar deneyin." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud data not found. Please try again."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron datos en la nube. Inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dados da nuvem não encontrados. Tente novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные в облаке не найдены. Попробуйте снова."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulut verisi bulunamadı. Lütfen tekrar deneyin."
+          }
+        }
+      }
     },
     "Bunu hatırlıyor musun 👀" : {
       "localizations" : {
@@ -1879,39 +2362,35 @@
       }
     },
     "Çark Yükleniyor..." : {
-
-    },
-    "cat_name" : {
-      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cat"
+            "value" : "Wheel is loading..."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gato"
+            "value" : "Cargando la ruleta..."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gato"
+            "value" : "Carregando a roleta..."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Кошка"
+            "value" : "Колесо загружается..."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kedi"
+            "value" : "Çark Yükleniyor..."
           }
         }
       }
@@ -1950,43 +2429,39 @@
         }
       }
     },
-    "Chasing the Sunflower 🌻" : {
-      "extractionState" : "stale",
+    "Chose your best friend to start the adventure!" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chasing the Sunflower 🌻"
+            "value" : "Choose your best friend to start the adventure!"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Persiguiendo el girasol 🌻"
+            "value" : "¡Elige a tu mejor amigo para comenzar la aventura!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Perseguindo o girassol 🌻"
+            "value" : "Escolha seu melhor amigo para começar a aventura!"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "В погоне за подсолнухом 🌻"
+            "value" : "Выберите лучшего друга, чтобы начать приключение!"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Güneş Çiçeği Peşinde 🌻"
+            "state" : "translated",
+            "value" : "Maceraya başlamak için en iyi arkadaşını seç!"
           }
         }
       }
-    },
-    "Chose your best friend to start the adventure!" : {
-
     },
     "Çince (Basitleştirilmiş)" : {
       "localizations" : {
@@ -2091,7 +2566,38 @@
       }
     },
     "Cloud Forest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cloud Forest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bosque en la Nube"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floresta na Nuvem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Облачный лес"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bulut Ormanı"
+          }
+        }
+      }
     },
     "Completed!" : {
       "localizations" : {
@@ -2128,19 +2634,104 @@
       }
     },
     "Confirm Selection" : {
-
-    },
-    "Conflict Detected" : {
-
-    },
-    "conflict_confirm_keyword" : {
-      "comment" : "Keyword to type for confirmation",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "Confirm Selection"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar selección"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar seleção"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердить выбор"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçimi Onayla"
+          }
+        }
+      }
+    },
+    "Conflict Detected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conflict Detected"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conflicto detectado"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conflito detectado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обнаружен конфликт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çakışma Algılandı"
+          }
+        }
+      }
+    },
+    "conflict_confirm_keyword" : {
+      "comment" : "Keyword to type for confirmation",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "confirm"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "confirmar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "confirmar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "подтвердить"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "onayla"
           }
         }
       }
@@ -2175,111 +2766,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Doğru"
-          }
-        }
-      }
-    },
-    "Create your first book" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create your first book"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crea tu primer libro"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crie seu primeiro livro"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Создайте свою первую книгу"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İlk kitabını oluştur"
-          }
-        }
-      }
-    },
-    "Crystal Reed Quest ✨" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crystal Reed Quest ✨"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Misión de Crystal Reed ✨"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Missão Crystal Reed ✨"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Кристалл Рид Квест ✨"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kristal Sazlık Görevi ✨"
-          }
-        }
-      }
-    },
-    "crystal_reed_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crystal Reed"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crystal Reed"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crystal Reed"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Кристал Рид"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kristal Sazlık"
           }
         }
       }
@@ -2353,45 +2839,103 @@
       }
     },
     "Daily Reward" : {
-
-    },
-    "Daily Spin" : {
-
-    },
-    "Daily Spin preview data could not be loaded." : {
-
-    },
-    "Dance with Fire 🔥" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dance with Fire 🔥"
+            "value" : "Daily Reward"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Baila con el fuego 🔥"
+            "value" : "Recompensa diaria"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dança com o Fogo 🔥"
+            "value" : "Recompensa diária"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Танцуй с огнем 🔥"
+            "value" : "Ежедневная награда"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ateşle Dans 🔥"
+            "value" : "Günlük Ödül"
+          }
+        }
+      }
+    },
+    "Daily Spin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Spin"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giro diario"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giro diário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ежедневное вращение"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük Çark"
+          }
+        }
+      }
+    },
+    "Daily Spin preview data could not be loaded." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Spin preview data could not be loaded."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron cargar los datos de vista previa del Giro diario."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar os dados de visualização do Giro diário."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить данные предпросмотра ежедневного вращения."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günlük Çark önizleme verileri yüklenemedi."
           }
         }
       }
@@ -2431,7 +2975,38 @@
       }
     },
     "Day %lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Día %lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dia %lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "День %lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld. Gün"
+          }
+        }
+      }
     },
     "Death" : {
       "localizations" : {
@@ -2498,181 +3073,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Decode Hatası Oluştu: %@"
-          }
-        }
-      }
-    },
-    "Defeat the Fire Elemental 5 times and earn the sacred Emberbud." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defeat the Fire Elemental 5 times and earn the sacred Emberbud."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrota al Elemental de Fuego 5 veces y obtén el sagrado Emberbud."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Elemental do Fogo 5 vezes e ganhe o sagrado Emberbud."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Победите Огненного элементаля 5 раз и получите священный Уголек."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ateş Elementini 5 kez yen ve kutsal Köz Tomurcuğu'nu kazan."
-          }
-        }
-      }
-    },
-    "Defeat the Ice Elemental 5 times, grab the Moon Bell!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defeat the Ice Elemental 5 times, grab the Moon Bell!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrota al elemental de hielo 5 veces y hazte con la campana lunar."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Elemental de Gelo 5 vezes e pegue o Sino da Lua!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Победите Ледяного элементаля 5 раз и захватите Лунный колокол!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buz Elementini 5 kez mağlup et, Ay Çanı Çiçeği'ni kap!"
-          }
-        }
-      }
-    },
-    "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defeat the Nature Elemental 7 times and collect the glowing Crystal Reed!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Derrota al Elemental de la Naturaleza 7 veces y consigue el Brillante Cristal de Caña!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Elemental da Natureza 7 vezes e recolha o Cristal de Junco brilhante!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Победите Элементаля Природы 7 раз и соберите светящийся Кристаллический Камышовый Стебель!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Doğa Elementini 7 defa alt et ve parlayan Kristal Sazlığı topla!"
-          }
-        }
-      }
-    },
-    "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defeat the Sand Dragon 7 times and own the rare Desert Star Bloom!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Derrota al Dragón de Arena 7 veces y hazte con la rara Flor Estrella del Desierto!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Dragão das Areias 7 vezes e ganhe a rara Flor Estrela do Deserto!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Победите Песчаного Дракона 7 раз и получите редкий цветок «Звезда пустыни»!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kum Ejderhasını 7 kez yen ve nadir bulunan Çöl Yıldızı Çiçeği'ne sahip ol!"
-          }
-        }
-      }
-    },
-    "Defeat the Vampire 5 times and add that rare SunFlower to your collection." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Defeat the Vampire 5 times and add that rare SunFlower to your collection."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrota al vampiro 5 veces y añade ese raro girasol a tu colección."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derrote o Vampiro 5 vezes e adicione essa rara Flor do Sol à sua coleção."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Победите вампира 5 раз и добавьте редкий подсолнух в свою коллекцию."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vampiri 5 kez alt et ve o nadide Güneş Çiçeği'ni koleksiyonuna kat."
           }
         }
       }
@@ -2813,41 +3213,6 @@
         }
       }
     },
-    "desert_star_bloom_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desert Star Bloom"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flor estrella del desierto"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flor Estrela do Deserto"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Цветение пустынной звезды"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Çöl Yıldızı"
-          }
-        }
-      }
-    },
     "Detaylar (Opsiyonel)" : {
       "localizations" : {
         "en" : {
@@ -2882,19 +3247,39 @@
         }
       }
     },
-    "diamond_chest" : {
-      "extractionState" : "stale",
+    "Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diamond Chest"
+            "value" : "Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se encontraron registros de bosque diferentes en tu dispositivo y en la nube. ¿Cuál quieres conservar?\n\n**Advertencia: esta acción no se puede deshacer. El bosque no seleccionado se eliminará de forma permanente.**"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foram encontrados registros de floresta diferentes no seu dispositivo e na nuvem. Qual você quer manter?\n\n**Aviso: esta ação não pode ser desfeita. A floresta não selecionada será excluída permanentemente.**"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На вашем устройстве и в облаке найдены разные записи леса. Какую вы хотите сохранить?\n\n**Внимание: это действие нельзя отменить. Невыбранный лес будет удалён навсегда.**"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihazınızda ve bulutta farklı orman kayıtları bulundu. Hangisini saklamak istiyorsunuz?\n\n**Uyarı: Bu işlem geri alınamaz. Seçilmeyen orman kalıcı olarak silinecektir.**"
           }
         }
       }
-    },
-    "Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**" : {
-
     },
     "Diğer" : {
       "localizations" : {
@@ -3139,49 +3524,69 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Doluluk oranı %1$lld / %2$lld"
-          }
-        }
-      }
-    },
-    "Doluluk oranı %lld / 50" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
             "state" : "translated",
-            "value" : "Occupancy rate %lld / 50"
+            "value" : "Capacity %1$lld / %2$lld"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tasa de ocupación %lld / 50"
+            "value" : "Capacidad %1$lld / %2$lld"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taxa de ocupação %lld / 50"
+            "value" : "Capacidade %1$lld / %2$lld"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Коэффициент заполняемости %lld / 50"
+            "value" : "Заполнение %1$lld / %2$lld"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Doluluk oranı %lld / 50"
+            "state" : "translated",
+            "value" : "Doluluk oranı %1$lld / %2$lld"
           }
         }
       }
     },
     "Download Vocabulary" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download Vocabulary"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargar vocabulario"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baixar vocabulário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скачать словарь"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kelime İndir"
+          }
+        }
+      }
     },
     "Düşmanı %lld doğru seçimle yenebilirsin. %lld canın var." : {
       "localizations" : {
@@ -3421,172 +3826,104 @@
         }
       }
     },
-    "emberbud_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emberbud"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amigo humano"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amigo humano"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Человек-будда"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Köz Tomurcuk"
-          }
-        }
-      }
-    },
-    "Emerald Legend 🐉" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emerald Legend 🐉"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leyenda Esmeralda 🐉"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lenda Esmeralda 🐉"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изумрудная легенда 🐉"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zümrüt Efsanesi 🐉"
-          }
-        }
-      }
-    },
-    "emerald_dragon_name" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Emerald Dragon"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dragón Esmeralda"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dragão Esmeralda"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изумрудный дракон"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zümrüt Ejderi"
-          }
-        }
-      }
-    },
     "emptyBookcase" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No bookcase found."
+          }
+        },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "emptyBookcase"
+            "value" : "No se encontró ninguna estantería."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma estante encontrada."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Книжный шкаф не найден."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kitaplık bulunamadı."
           }
         }
       }
     },
     "emptyEnemyAsset" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enemy content could not be loaded."
+          }
+        },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "emptyEnemyAsset"
+            "value" : "No se pudo cargar el contenido del enemigo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar o conteúdo do inimigo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить противника."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşman içeriği yüklenemedi."
           }
         }
       }
     },
     "emptyQuestionList" : {
       "localizations" : {
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "emptyQuestionList"
-          }
-        }
-      }
-    },
-    "Endless Water 💧" : {
-      "extractionState" : "stale",
-      "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Endless Water 💧"
+            "value" : "No questions available."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agua infinita 💧"
+            "value" : "No hay preguntas disponibles."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Água infinita 💧"
+            "value" : "Nenhuma pergunta disponível."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Бесконечная вода 💧"
+            "value" : "Нет доступных вопросов."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sınırsız Su"
+            "value" : "Soru bulunamadı."
           }
         }
       }
@@ -3626,10 +3963,72 @@
       }
     },
     "Even stone feels the pain of this drought." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Even stone feels the pain of this drought."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasta la piedra siente el dolor de esta sequía."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Até a pedra sente a dor desta seca."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Даже камень чувствует боль этой засухи."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu kuraklığın acısını taş bile hissediyor."
+          }
+        }
+      }
     },
     "Everything is so dry around here..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything is so dry around here..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todo está muy seco por aquí..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Está tudo tão seco por aqui..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь всё такое сухое..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buralar çok kurak..."
+          }
+        }
+      }
     },
     "Example" : {
       "localizations" : {
@@ -3733,41 +4132,6 @@
         }
       }
     },
-    "Fiery Friendship 🔥" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fiery Friendship 🔥"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amistad ardiente 🔥"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amizade ardente 🔥"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Пламенная дружба 🔥"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ateşli Dostluk 🔥"
-          }
-        }
-      }
-    },
     "Fiil" : {
       "localizations" : {
         "en" : {
@@ -3837,10 +4201,72 @@
       }
     },
     "Firstly create a book" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First, create a book"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primero crea un libro"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primeiro crie um livro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сначала создайте книгу"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Önce bir kitap oluştur"
+          }
+        }
+      }
     },
     "Forest data manager eklenmedi." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest data manager was not added."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se agregó el administrador de datos del bosque."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O gerenciador de dados da floresta não foi adicionado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Менеджер данных леса не добавлен."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest data manager eklenmedi."
+          }
+        }
+      }
     },
     "Fransızca" : {
       "localizations" : {
@@ -3877,7 +4303,38 @@
       }
     },
     "Garantili Ödüller" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guaranteed Rewards"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas garantizadas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas garantidas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Гарантированные награды"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garantili Ödüller"
+          }
+        }
+      }
     },
     "Gelecek güncelleme ile mağazada kullanabileceksin." : {
       "localizations" : {
@@ -3943,87 +4400,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Gizlilik Politikası"
-          }
-        }
-      }
-    },
-    "Gold Hunt 💰" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gold Hunt 💰"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Búsqueda del oro 💰"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Caça ao ouro 💰"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Охота за золотом 💰"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Altın Avı 💰"
-          }
-        }
-      }
-    },
-    "Gold Hunt 2💰" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gold Hunt 2💰"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Búsqueda del oro 2💰"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Caça ao Ouro 2💰"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Охота за золотом 2💰"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Altın Avı 2💰"
-          }
-        }
-      }
-    },
-    "gold_chest" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gold Chest"
           }
         }
       }
@@ -4097,7 +4473,38 @@
       }
     },
     "Güneş" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sol"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sol"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Солнце"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş"
+          }
+        }
+      }
     },
     "Günlük Görevler" : {
       "localizations" : {
@@ -4304,7 +4711,38 @@
       }
     },
     "happiness" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Happiness"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Felicidad"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Felicidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Счастье"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutluluk"
+          }
+        }
+      }
     },
     "Hatırlama" : {
       "localizations" : {
@@ -4510,42 +4948,50 @@
         }
       }
     },
-    "Henüz hiç kelime eklememişsin." : {
-      "extractionState" : "stale",
+    "Hesaba Giriş Yap" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You haven't added any words yet."
+            "value" : "Sign In to Account"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aún no has añadido ninguna palabra."
+            "value" : "Iniciar sesión en la cuenta"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Você ainda não adicionou nenhuma palavra."
+            "value" : "Entrar na conta"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Вы еще не добавили ни одного слова."
+            "value" : "Войти в аккаунт"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Henüz hiç kelime eklememişsin."
+            "state" : "translated",
+            "value" : "Hesaba Giriş Yap"
           }
         }
       }
     },
-    "Hesaba Giriş Yap" : {
+    "Hesabı Sil" : {
+
+    },
+    "Hesabınız Silinsin mi?" : {
+
+    },
+    "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez." : {
+
+    },
+    "Hesap silinemedi. Lütfen tekrar deneyin." : {
 
     },
     "Heykel" : {
@@ -4753,34 +5199,344 @@
       }
     },
     "Huzur" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serenity"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serenidad"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serenidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Покой"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Huzur"
+          }
+        }
+      }
     },
     "I am the silent guardian of this forest." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I am the silent guardian of this forest."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soy el guardián silencioso de este bosque."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sou o guardião silencioso desta floresta."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я безмолвный страж этого леса."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu ormanın sessiz koruyucusuyum."
+          }
+        }
+      }
     },
     "I can't grow without a drop of water..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I can't grow without a drop of water..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No puedo crecer sin una gota de agua..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não consigo crescer sem uma gota de água..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я не могу расти без капли воды..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir damla su olmadan büyüyemem..."
+          }
+        }
+      }
     },
     "I feel like I'm growing taller every day!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I feel like I'm growing taller every day!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Siento que crezco más cada día!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinto que cresço mais a cada dia!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Кажется, я расту с каждым днём!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her gün biraz daha boy atıyorum sanki!"
+          }
+        }
+      }
     },
     "I have been standing here for years." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I have been standing here for years."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llevo años aquí de pie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estou aqui de pé há anos."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я стою здесь уже много лет."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yıllardır burada duruyorum."
+          }
+        }
+      }
     },
     "I have no energy left to move, need some water..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I have no energy left to move, need some water..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No me queda energía para moverme, necesito agua..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não tenho mais energia para me mover, preciso de água..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У меня нет сил двигаться, нужна вода..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıpırdayacak enerjim kalmadı, biraz suya ihtiyacım var..."
+          }
+        }
+      }
     },
     "I love hanging out in this forest." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I love hanging out in this forest."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me encanta pasar el rato en este bosque."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adoro ficar nesta floresta."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обожаю проводить время в этом лесу."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu ormanda takılmayı seviyorum."
+          }
+        }
+      }
     },
     "I might crack from this unbearable heat..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I might crack from this unbearable heat..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Podría agrietarme con este calor insoportable..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posso rachar com este calor insuportável..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я могу треснуть от этой невыносимой жары..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu dayanılmaz sıcaktan çatlayacağım..."
+          }
+        }
+      }
     },
     "I need a drink to keep going..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I need a drink to keep going..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Necesito beber algo para seguir..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preciso beber algo para continuar..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мне нужно попить, чтобы продолжать..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam edebilmek için bir yudum suya ihtiyacım var..."
+          }
+        }
+      }
     },
     "I need water to revive..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I need water to revive..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Necesito agua para revivir..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preciso de água para reviver..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мне нужна вода, чтобы ожить..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canlanmak için suya ihtiyacım var..."
+          }
+        }
+      }
     },
     "I’m ready" : {
       "extractionState" : "manual",
@@ -4818,7 +5574,38 @@
       }
     },
     "I'm so thirsty..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'm so thirsty..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengo mucha sed..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estou com muita sede..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я так хочу пить..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çok susadım..."
+          }
+        }
+      }
     },
     "Ice" : {
       "localizations" : {
@@ -4854,41 +5641,6 @@
         }
       }
     },
-    "Ice Cold Victory ❄️" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ice Cold Victory ❄️"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Victoria helada ❄️"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitória gelada ❄️"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ледяная победа ❄️"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soğuk zafer ❄️"
-          }
-        }
-      }
-    },
     "Ichigo" : {
       "localizations" : {
         "en" : {
@@ -4919,41 +5671,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Maraz Ali"
-          }
-        }
-      }
-    },
-    "Icy Paws ❄️" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Icy Paws ❄️"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Patas heladas ❄️"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Patas geladas ❄️"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ледяные лапы ❄️"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buzul Patiler ❄️"
           }
         }
       }
@@ -5094,41 +5811,6 @@
         }
       }
     },
-    "İngilizce (Amerikan)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "English (US)"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inglés (EE. UU.)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inglês (EUA)"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Английский (US)"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İngilizce (US)"
-          }
-        }
-      }
-    },
     "İngilizce (Birleşik Krallık)" : {
       "localizations" : {
         "en" : {
@@ -5159,41 +5841,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İngilizce (UK)"
-          }
-        }
-      }
-    },
-    "İngilizce (Birleşik Krallık) " : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "English (UK)"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inglés (Reino Unido)"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inglês (Americano)"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Английский (UK)"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İngilizce (UK) "
           }
         }
       }
@@ -5233,10 +5880,72 @@
       }
     },
     "İnternet bağlantınız yok. Ödüllerinizi almak için lütfen bağlantınızı kontrol edip tekrar deneyin." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have no internet connection. Please check your connection and try again to claim your rewards."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes conexión a internet. Comprueba tu conexión e inténtalo de nuevo para reclamar tus recompensas."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você está sem conexão com a internet. Verifique sua conexão e tente novamente para receber suas recompensas."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подключения к интернету. Проверьте соединение и повторите попытку, чтобы получить награды."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İnternet bağlantınız yok. Ödüllerinizi almak için lütfen bağlantınızı kontrol edip tekrar deneyin."
+          }
+        }
+      }
     },
     "Internet connection is required to complete the initial setup." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Internet connection is required to complete the initial setup."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se requiere conexión a internet para completar la configuración inicial."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É necessária conexão com a internet para concluir a configuração inicial."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Для завершения первоначальной настройки требуется подключение к интернету."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlk kurulumu tamamlamak için internet bağlantısı gerekli."
+          }
+        }
+      }
     },
     "İptal" : {
       "localizations" : {
@@ -5302,41 +6011,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İsim"
-          }
-        }
-      }
-    },
-    "İsim Değiştir" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change Name"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cambiar nombre"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alterar nome"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Изменить имя"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İsmi Değiştir"
           }
         }
       }
@@ -5443,41 +6117,6 @@
         }
       }
     },
-    "İstek zaman aşımına uğradı" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The request has timed out"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La solicitud ha expirado."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A solicitação expirou."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Запрос превысил время ожидания"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İstek zaman aşımına uğradı"
-          }
-        }
-      }
-    },
     "Japonca" : {
       "localizations" : {
         "en" : {
@@ -5513,7 +6152,38 @@
       }
     },
     "Just now" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Just now"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Justo ahora"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora mesmo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Только что"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Az önce"
+          }
+        }
+      }
     },
     "Kapat" : {
       "localizations" : {
@@ -5618,10 +6288,72 @@
       }
     },
     "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registration failed. Please try again."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El registro falló. Inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O registro falhou. Tente novamente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось выполнить регистрацию. Попробуйте снова."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin."
+          }
+        }
+      }
     },
     "Kazanılan Ödüller" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rewards Earned"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas obtenidas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas obtidas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полученные награды"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kazanılan Ödüller"
+          }
+        }
+      }
     },
     "Kelime" : {
       "localizations" : {
@@ -5721,41 +6453,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Kelime Bildirimleri"
-          }
-        }
-      }
-    },
-    "Kelime Ekle" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Word"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añadir palabra"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adicionar palavra"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Добавить слово"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Kelime Ekle"
           }
         }
       }
@@ -6170,7 +6867,38 @@
       }
     },
     "Kitaplık bulunamadı" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No bookcase found"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna estantería"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma estante encontrada"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Книжный шкаф не найден"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kitaplık bulunamadı"
+          }
+        }
+      }
     },
     "Kitaplık oluştur" : {
       "localizations" : {
@@ -6479,7 +7207,38 @@
       }
     },
     "Kullanıcı Adı" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre de usuario"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nome de usuário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя пользователя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanıcı Adı"
+          }
+        }
+      }
     },
     "Kullanım Koşulları" : {
       "localizations" : {
@@ -6618,7 +7377,38 @@
       }
     },
     "Let's run around!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let's run around!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Vamos a correr!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vamos correr por aí!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Давай побегаем!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hadi koşturalım!"
+          }
+        }
+      }
     },
     "Level:" : {
       "localizations" : {
@@ -6655,10 +7445,72 @@
       }
     },
     "Local Forest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local Forest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bosque local"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floresta local"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Локальный лес"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerel Orman"
+          }
+        }
+      }
     },
     "Local forest data is not available." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local forest data is not available."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los datos del bosque local no están disponibles."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os dados da floresta local não estão disponíveis."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные локального леса недоступны."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerel orman verileri mevcut değil."
+          }
+        }
+      }
     },
     "Locked" : {
       "localizations" : {
@@ -6695,10 +7547,72 @@
       }
     },
     "Lütfen yeni bir yedekleme yapmak için %lld dakika bekleyin." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please wait %lld minutes to make a new backup."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espera %lld minutos para hacer una nueva copia de seguridad."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aguarde %lld minutos para fazer um novo backup."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подождите %lld минут, чтобы создать новую резервную копию."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen yeni bir yedekleme yapmak için %lld dakika bekleyin."
+          }
+        }
+      }
     },
     "Lütfen yeni kullanıcı adınızı girin." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter your new username."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce tu nuevo nombre de usuario."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Digite seu novo nome de usuário."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите новое имя пользователя."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen yeni kullanıcı adınızı girin."
+          }
+        }
+      }
     },
     "Maceraya Atıl" : {
       "localizations" : {
@@ -6735,15 +7649,69 @@
       }
     },
     "Market is not available right now." : {
-
-    },
-    "market_purchase_success_toast" : {
-      "comment" : "Toast shown after a successful market purchase",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "Market is not available right now."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La tienda no está disponible en este momento."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A loja não está disponível no momento."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Магазин сейчас недоступен."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Market şu anda kullanılamıyor."
+          }
+        }
+      }
+    },
+    "market_purchase_success_toast" : {
+      "comment" : "Toast shown after a successful market purchase",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchased, congratulations!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Comprado, felicidades!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprado, parabéns!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Куплено, поздравляем!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Satın alındı, tebrikler!"
           }
         }
@@ -6751,11 +7719,34 @@
     },
     "market_title" : {
       "comment" : "Main title of the Market screen",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
+            "value" : "Market"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tienda"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loja"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Магазин"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Market"
           }
         }
@@ -6825,76 +7816,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anlamı: %@ 🥰"
-          }
-        }
-      }
-    },
-    "Meet 10 new words and learn their meanings." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meet 10 new words and learn their meanings."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conoce 10 palabras nuevas y aprende su significado."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conheça 10 novas palavras e aprenda seus significados."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Познакомьтесь с 10 новыми словами и узнайте их значения."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "10 yeni kelimeyle tanış ve anlamlarını öğren."
-          }
-        }
-      }
-    },
-    "Meet 20 new words and learn their meanings." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meet 20 new words and learn their meanings."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conoce 20 palabras nuevas y aprende su significado."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conheça 20 novas palavras e aprenda seus significados."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Познакомьтесь с 20 новыми словами и узнайте их значения."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "20 yeni kelimeyle tanış ve anlamlarını öğren."
           }
         }
       }
@@ -6969,7 +7890,38 @@
       }
     },
     "Mutlu" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joy"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alegría"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alegria"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Радость"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutlu"
+          }
+        }
+      }
     },
     "Mutlu hayvan ve bitkiler için olmazsa olmaz." : {
       "localizations" : {
@@ -7006,13 +7958,106 @@
       }
     },
     "My belly is full, life is good." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My belly is full, life is good."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengo la barriga llena, la vida es buena."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estou de barriga cheia, a vida é boa."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Живот полон, жизнь прекрасна."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karnım tok, hayat güzel."
+          }
+        }
+      }
     },
     "My leaves are drying up, please give me water..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My leaves are drying up, please give me water..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mis hojas se están secando, por favor dame agua..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minhas folhas estão secando, por favor me dê água..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мои листья сохнут, пожалуйста, полей меня..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yapraklarım kuruyor, lütfen bana su ver..."
+          }
+        }
+      }
     },
     "My roots feel incredibly strong today." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My roots feel incredibly strong today."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy mis raíces se sienten increíblemente fuertes."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minhas raízes estão incrivelmente fortes hoje."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сегодня мои корни невероятно сильны."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Köklerim bugün inanılmaz güçlü hissediyor."
+          }
+        }
+      }
     },
     "Name" : {
       "localizations" : {
@@ -7048,127 +8093,73 @@
         }
       }
     },
-    "nature_chest" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nature Chest"
-          }
-        }
-      }
-    },
     "Network error occurred. Please check your connection." : {
-
-    },
-    "New Discoveries 🗺️" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Discoveries 🗺️"
+            "value" : "Network error occurred. Please check your connection."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nuevos descubrimientos 🗺️"
+            "value" : "Se produjo un error de red. Comprueba tu conexión."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Novas descobertas 🗺️"
+            "value" : "Ocorreu um erro de rede. Verifique sua conexão."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Новые открытия 🗺️"
+            "value" : "Произошла ошибка сети. Проверьте подключение."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yeni Keşifler🗺️"
-          }
-        }
-      }
-    },
-    "New Discoveries 2🗺️" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Discoveries 2🗺️"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nuevos descubrimientos 2🗺️"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Novas descobertas 2🗺️"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Новые открытия 2🗺️"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yeni Keşifler 2🗺️"
-          }
-        }
-      }
-    },
-    "New Discoveries 3🗺️" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Discoveries 3🗺️"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nuevos descubrimientos 3🗺️"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Novas descobertas 3🗺️"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Новые открытия 3🗺️"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yeni Keşifler 3🗺️"
+            "value" : "Ağ hatası oluştu. Lütfen bağlantınızı kontrol edin."
           }
         }
       }
     },
     "Next" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Далее"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İleri"
+          }
+        }
+      }
     },
     "Nice to meet you!" : {
       "extractionState" : "manual",
@@ -7235,76 +8226,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hayır"
-          }
-        }
-      }
-    },
-    "No hints, only victory! Pass 4 new words on your own merit." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hints, only victory! Pass 4 new words on your own merit."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Sin pistas, solo victoria! Acierta 4 palabras nuevas por tus propios méritos."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem dicas, apenas vitória! Aprovem 4 novas palavras por mérito próprio."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Никаких подсказок, только победа! Запомни 4 новых слова самостоятельно."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İpucu yok, sadece zafer var! 4 yeni kelimeyi bileğinin hakkıyla geç."
-          }
-        }
-      }
-    },
-    "No hints, only victory! Pass 10 new words on your own merit." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No hints, only victory! Pass 10 new words on your own merit."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Sin pistas, solo victoria! Acierta 10 palabras nuevas por tus propios méritos."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem dicas, apenas vitória! Aprovem 10 novas palavras por mérito próprio."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Никаких подсказок, только победа! Запомни 10 новых слов самостоятельно."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "İpucu yok, sadece zafer var! Kendi başınıza 10 yeni kelimeyi geçin."
           }
         }
       }
@@ -8071,41 +8992,6 @@
         }
       }
     },
-    "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only the wisest can see this deer. Are you ready for a battle that will challenge your mind?"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solo los más sabios pueden ver este ciervo. ¿Estás listo para una batalla que pondrá a prueba tu mente?"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Somente os mais sábios podem ver este veado. Você está pronto para uma batalha que desafiará sua mente?"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Только самые мудрые могут увидеть этого оленя. Готовы ли вы к битве, которая станет испытанием для вашего ума?"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sadece en bilgeler bu geyiği görebilir. Zihnini zorlayacak bir savaşa hazır mısın?"
-          }
-        }
-      }
-    },
     "Options" : {
       "localizations" : {
         "en" : {
@@ -8311,7 +9197,38 @@
       }
     },
     "Ormanını buluta kaydetmek için giriş yap." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in to save your forest to the cloud."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión para guardar tu bosque en la nube."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faça login para salvar sua floresta na nuvem."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войдите, чтобы сохранить лес в облаке."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanını buluta kaydetmek için giriş yap."
+          }
+        }
+      }
     },
     "Örnek" : {
       "localizations" : {
@@ -8688,10 +9605,72 @@
       }
     },
     "Peace" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peace"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paz"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paz"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мир"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barış"
+          }
+        }
+      }
     },
     "Play everyday and get additional bonuses" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play everyday and get additional bonuses"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juega todos los días y obtén bonos adicionales"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogue todos os dias e ganhe bônus adicionais"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Играйте каждый день и получайте дополнительные бонусы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her gün oyna ve ek bonuslar kazan"
+          }
+        }
+      }
     },
     "Portekizce (Brezilya)" : {
       "localizations" : {
@@ -8796,39 +9775,35 @@
       }
     },
     "Purchase could not be completed. Please try again." : {
-
-    },
-    "Quest for the Desert Star 🌵" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quest for the Desert Star 🌵"
+            "value" : "Purchase could not be completed. Please try again."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En busca de la estrella del desierto 🌵"
+            "value" : "No se pudo completar la compra. Inténtalo de nuevo."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Em busca da Estrela do Deserto 🌵"
+            "value" : "Não foi possível concluir a compra. Tente novamente."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "В поисках звезды пустыни 🌵"
+            "value" : "Не удалось завершить покупку. Попробуйте снова."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Çöl Yıldızı Arayışı 🌵"
+            "value" : "Satın alma tamamlanamadı. Lütfen tekrar deneyin."
           }
         }
       }
@@ -9107,19 +10082,174 @@
       }
     },
     "Reklam esnasında hata oluştu" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error occurred during the ad"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error durante el anuncio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu um erro durante o anúncio"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Произошла ошибка во время рекламы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklam esnasında hata oluştu"
+          }
+        }
+      }
     },
     "Reklam hazırlanıyor" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The ad is loading"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El anuncio se está preparando"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O anúncio está sendo preparado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Реклама загружается"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklam hazırlanıyor"
+          }
+        }
+      }
     },
     "Reklam henüz hazır değil." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The ad is not ready yet."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El anuncio aún no está listo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O anúncio ainda não está pronto."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Реклама ещё не готова."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklam henüz hazır değil."
+          }
+        }
+      }
     },
     "Reklam yüklenirken hata oluştu. Birazdan tekrar deneyiniz" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error occurred while loading the ad. Please try again shortly"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error al cargar el anuncio. Inténtalo de nuevo en breve"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu um erro ao carregar o anúncio. Tente novamente em breve"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ошибка при загрузке рекламы. Повторите попытку чуть позже"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklam yüklenirken hata oluştu. Birazdan tekrar deneyiniz"
+          }
+        }
+      }
     },
     "Remote configuration data is missing." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remote configuration data is missing."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faltan los datos de configuración remota."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os dados de configuração remota estão ausentes."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отсутствуют данные удалённой конфигурации."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzak yapılandırma verileri eksik."
+          }
+        }
+      }
     },
     "Resume" : {
       "localizations" : {
@@ -9253,111 +10383,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Hatalı kelimelerini incele"
-          }
-        }
-      }
-    },
-    "Revive your memory: Repeat 5 old words and master them!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revive your memory: Repeat 5 old words and master them!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Reaviva tu memoria: repite 5 palabras antiguas y domínalas!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reviva sua memória: repita 5 palavras antigas e domine-as!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оживите свою память: повторите 5 старых слов и заучите их!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Hafızanı canlandır: 5 eski kelimeyi tekrar et ve ustalaş!"
-          }
-        }
-      }
-    },
-    "Revive your memory: Repeat 10 old words and master them!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revive your memory: Repeat 10 old words and master them!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Reaviva tu memoria: repite 10 palabras antiguas y domínalas!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reviva sua memória: repita 10 palavras antigas e domine-as!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оживите свою память: повторите 10 старых слов и освойте их!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Hafızanı canlandır: 10 eski kelimeyi tekrar et ve ustalaş"
-          }
-        }
-      }
-    },
-    "Revive your memory: Repeat 20 old words and master them!" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Revive your memory: Repeat 20 old words and master them!"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡Reaviva tu memoria: repite 20 palabras antiguas y domínalas!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reviva sua memória: repita 20 palavras antigas e domine-as!"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оживите свою память: повторите 20 старых слов и освойте их!"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Hafızanı canlandır: 20 eski kelimeyi tekrar et ve ustalaş"
           }
         }
       }
@@ -9533,10 +10558,72 @@
       }
     },
     "Sandık içeriği ve çıkma oranları" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chest contents and drop rates"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contenido del cofre y probabilidades"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conteúdo do baú e taxas de obtenção"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Содержимое сундука и шансы выпадения"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sandık içeriği ve çıkma oranları"
+          }
+        }
+      }
     },
     "Şans Ödülleri" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luck Rewards"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas de la suerte"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recompensas da sorte"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Награды удачи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şans Ödülleri"
+          }
+        }
+      }
     },
     "Select your \nMagic" : {
       "localizations" : {
@@ -9573,7 +10660,38 @@
       }
     },
     "Senkronize edilecek yeni bir veri bulunamadı." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No new data to sync was found."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron datos nuevos para sincronizar."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhum dado novo para sincronizar foi encontrado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новых данных для синхронизации не найдено."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senkronize edilecek yeni bir veri bulunamadı."
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {
@@ -9781,13 +10899,106 @@
       }
     },
     "So much beautiful green around us!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So much beautiful green around us!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Cuánto hermoso verde a nuestro alrededor!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quanto verde lindo ao nosso redor!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сколько прекрасной зелени вокруг нас!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etrafımız ne kadar güzel yeşilliklerle dolu!"
+          }
+        }
+      }
     },
     "So thirsty... I can't breathe." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So thirsty... I can't breathe."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengo tanta sed... No puedo respirar."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanta sede... Não consigo respirar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Так хочу пить... Не могу дышать."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çok susadım... Nefes alamıyorum."
+          }
+        }
+      }
     },
     "Son eşitleme: %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last sync: %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronización: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronização: %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Последняя синхронизация: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Son eşitleme: %@"
+          }
+        }
+      }
     },
     "Sorular Hakkında" : {
       "localizations" : {
@@ -9819,41 +11030,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sorular Hakkında"
-          }
-        }
-      }
-    },
-    "Spirit of the Forest 🦌" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Spirit of the Forest 🦌"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espíritu del bosque 🦌"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espírito da Floresta 🦌"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Дух леса 🦌"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ormanın Ruhu 🦌"
           }
         }
       }
@@ -9893,10 +11069,72 @@
       }
     },
     "Start Spin" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Spin"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Girar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Girar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Крутить"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çevir"
+          }
+        }
+      }
     },
     "Such peaceful and ancient vibes." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Such peaceful and ancient vibes."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qué ambiente tan pacífico y ancestral."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que clima tão pacífico e ancestral."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Такая умиротворённая, древняя атмосфера."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne huzurlu ve kadim bir hava var."
+          }
+        }
+      }
     },
     "sun_flower_name" : {
       "extractionState" : "manual",
@@ -9934,51 +11172,140 @@
       }
     },
     "Sunucu eşleştirilemedi" : {
-
-    },
-    "Sunucu saati alınamadı. Lütfen daha sonra tekrar deneyin." : {
-
-    },
-    "Tamam" : {
-
-    },
-    "Taşı" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Move"
+            "value" : "Could not connect to the server"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mover"
+            "value" : "No se pudo conectar con el servidor"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mover"
+            "value" : "Não foi possível conectar ao servidor"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перемещение"
+            "value" : "Не удалось подключиться к серверу"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taşı"
+            "value" : "Sunucu eşleştirilemedi"
+          }
+        }
+      }
+    },
+    "Sunucu saati alınamadı. Lütfen daha sonra tekrar deneyin." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not get the server time. Please try again later."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo obtener la hora del servidor. Inténtalo más tarde."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível obter a hora do servidor. Tente novamente mais tarde."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось получить время сервера. Попробуйте позже."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunucu saati alınamadı. Lütfen daha sonra tekrar deneyin."
+          }
+        }
+      }
+    },
+    "Tamam" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
           }
         }
       }
     },
     "Tasks" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasks"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tareas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarefas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задания"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görevler"
+          }
+        }
+      }
     },
     "Tebrikler!" : {
       "localizations" : {
@@ -10048,201 +11375,243 @@
         }
       }
     },
-    "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The Fire Dragon blocked the path! Defeat him with your wisdom and take the loyal dog with you."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡El Dragón de Fuego bloqueó el camino! Derrótalo con tu sabiduría y llévate al perro leal contigo."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Dragão de Fogo bloqueou o caminho! Derrote-o com sua sabedoria e leve o cão leal com você."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Огненный дракон преградил путь! Победите его с помощью своей мудрости и заберите с собой верного пса."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ateş Ejderhası yolu kesti! Onu bilgeliğinle yen ve sadık köpeği yanına al."
-          }
-        }
-      }
-    },
-    "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The Fire Dragon is furious! Quell this chaos and earn the legendary Emerald Dragon statue."
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¡El Dragón de Fuego está furioso! Pon fin a este caos y gana la legendaria estatua del Dragón Esmeralda."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Dragão de Fogo está furioso! Acabe com esse caos e ganhe a lendária estátua do Dragão Esmeralda."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Огненный дракон в ярости! Успокойте этот хаос и заработайте легендарную статую Изумрудного дракона."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ateş Ejderhası çok öfkeli! Bu kaosu dindir ve efsanevi Zümrüt Ejderha heykelini hak et."
-          }
-        }
-      }
-    },
     "The forest is beautiful today!" : {
-
-    },
-    "The forest is expanding! Meet 5 new words and learn their meanings." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The forest is expanding! Meet 5 new words and learn their meanings."
+            "value" : "The forest is beautiful today!"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡El bosque se expande! Conoce 5 palabras nuevas y aprende sus significados."
+            "value" : "¡El bosque está hermoso hoy!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A floresta está se expandindo! Conheça 5 novas palavras e aprenda seus significados."
+            "value" : "A floresta está linda hoje!"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Лес расширяется! Познакомьтесь с 5 новыми словами и узнайте их значения."
+            "value" : "Лес сегодня прекрасен!"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Orman genişliyor! 5 yeni kelimeyle tanış ve anlamlarını öğren."
+            "value" : "Orman bugün çok güzel!"
           }
         }
       }
     },
     "The fresh air is simply wonderful." : {
-
-    },
-    "The ground is bone dry..." : {
-
-    },
-    "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The Ice Elemental froze the forest! Melt the ice with your words and save the cute cat."
+            "value" : "The fresh air is simply wonderful."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡El elemental de hielo ha congelado el bosque! Derrite el hielo con tus palabras y salva al adorable gatito."
+            "value" : "El aire fresco es simplemente maravilloso."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Elemental do Gelo congelou a floresta! Derreta o gelo com suas palavras e salve o gatinho fofo."
+            "value" : "O ar fresco é simplesmente maravilhoso."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ледяной элементаль заморозил лес! Растопи лед своими словами и спаси милого котика."
+            "value" : "Свежий воздух просто чудесен."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buz Elementi ormanı dondurdu! Kelimelerinle buzları çöz ve sevimli kediyi kurtar."
+            "value" : "Temiz hava tam anlamıyla harika."
           }
         }
       }
     },
-    "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!" : {
-      "extractionState" : "stale",
+    "The ground is bone dry..." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The Sand Dragon protects the ancient ruins. Defeat him and add the Mossy Guardian statue to your collection!"
+            "value" : "The ground is bone dry..."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El Dragón de Arena protege las ruinas antiguas. ¡Derrótalo y añade la estatua del Guardián Musgoso a tu colección!"
+            "value" : "El suelo está completamente seco..."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O Dragão de Areia protege as ruínas antigas. Derrote-o e adicione a estátua do Guardião Musgoso à sua coleção!"
+            "value" : "O chão está seco como osso..."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Песчаный дракон охраняет древние руины. Победите его и добавьте статую «Покрытый мхом страж» в свою коллекцию!"
+            "value" : "Земля пересохла..."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kum Ejderhası antik harabeleri koruyor. Onu yen ve Yosunlu Muhafız heykelini koleksiyonuna kat!"
+            "value" : "Toprak kupkuru..."
           }
         }
       }
     },
     "The silence of the forest is beautiful." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The silence of the forest is beautiful."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El silencio del bosque es hermoso."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O silêncio da floresta é lindo."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тишина леса прекрасна."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanın sessizliği çok güzel."
+          }
+        }
+      }
     },
     "The soil is turning into dust..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The soil is turning into dust..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La tierra se está convirtiendo en polvo..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O solo está virando pó..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Почва превращается в пыль..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toprak toza dönüşüyor..."
+          }
+        }
+      }
     },
     "The sun feels amazing!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The sun feels amazing!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡El sol se siente increíble!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O sol está uma delícia!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Солнце — это восхитительно!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş harika hissettiriyor!"
+          }
+        }
+      }
     },
     "The sun is completely unforgiving today." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The sun is completely unforgiving today."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El sol no da tregua hoy."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O sol está impiedoso hoje."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Солнце сегодня совершенно беспощадно."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş bugün hiç acımıyor."
+          }
+        }
+      }
     },
     "Toprak sağlığı: %%%lld" : {
       "localizations" : {
@@ -10274,41 +11643,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Toprak sağlığı: %%%lld"
-          }
-        }
-      }
-    },
-    "Trail of the Blue Flame" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trail of the Blue Flame"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El rastro de la llama azul"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trilha da Chama Azul"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Тропа голубого пламени"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mavi Alevin İzinde"
           }
         }
       }
@@ -10449,61 +11783,236 @@
         }
       }
     },
-    "Two Sips of Water 💧" : {
-      "extractionState" : "stale",
+    "Type **'%@'** to confirm your selection:" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Two Sips of Water 💧"
+            "value" : "Type **'%@'** to confirm your selection:"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dos sorbos de agua 💧"
+            "value" : "Escribe **'%@'** para confirmar tu selección:"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dois goles de água 💧"
+            "value" : "Digite **'%@'** para confirmar sua seleção:"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Два глотка воды 💧"
+            "value" : "Введите **'%@'**, чтобы подтвердить выбор:"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "İki Yudum Su 💧"
+            "state" : "translated",
+            "value" : "Seçiminizi onaylamak için **'%@'** yazın:"
           }
         }
       }
     },
-    "Type **'%@'** to confirm your selection:" : {
-
-    },
     "umut" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hope"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperanza"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esperança"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Надежда"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umut"
+          }
+        }
+      }
     },
     "Unable to decode remote configuration data." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to decode remote configuration data."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron decodificar los datos de configuración remota."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível decodificar os dados de configuração remota."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось декодировать данные удалённой конфигурации."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzak yapılandırma verileri çözümlenemedi."
+          }
+        }
+      }
     },
     "Unable to fetch remote configuration." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to fetch remote configuration."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo obtener la configuración remota."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível obter a configuração remota."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось получить удалённую конфигурацию."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzak yapılandırma alınamadı."
+          }
+        }
+      }
     },
     "Unexpected error." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unexpected error."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error inesperado."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro inesperado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Непредвиденная ошибка."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beklenmeyen bir hata oluştu."
+          }
+        }
+      }
     },
     "Unexpected error. Error Code: 1001" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unexpected error. Error Code: 1001"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error inesperado. Código de error: 1001"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro inesperado. Código de erro: 1001"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Непредвиденная ошибка. Код ошибки: 1001"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beklenmeyen bir hata oluştu. Hata Kodu: 1001"
+          }
+        }
+      }
     },
     "unexpectedError" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An unexpected error occurred."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error inesperado."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu um erro inesperado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Произошла непредвиденная ошибка."
+          }
+        },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10683,101 +12192,310 @@
       }
     },
     "Venüs" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venus"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venus"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vênus"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Венера"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venüs"
+          }
+        }
+      }
     },
     "Wait until \n %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wait until \n %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espera hasta \n %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aguarde até \n %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подождите до \n %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu saate kadar bekleyin \n %@"
+          }
+        }
+      }
     },
     "Watch the Video" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch the Video"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver el video"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistir ao vídeo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смотреть видео"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videoyu İzle"
+          }
+        }
+      }
     },
     "Watching over the trees is my duty." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watching over the trees is my duty."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuidar de los árboles es mi deber."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuidar das árvores é o meu dever."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оберегать деревья — мой долг."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ağaçları gözetmek benim görevim."
+          }
+        }
+      }
     },
     "We desperately need some rain..." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We desperately need some rain..."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Necesitamos lluvia desesperadamente..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Precisamos desesperadamente de chuva..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нам отчаянно нужен дождь..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umutsuzca yağmura ihtiyacımız var..."
+          }
+        }
+      }
     },
     "Welcome to your forest" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to your forest"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a tu bosque"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bem-vindo à sua floresta"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать в ваш лес"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ormanına hoş geldin"
+          }
+        }
+      }
     },
     "What a lovely day to play!" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What a lovely day to play!"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Qué día tan bonito para jugar!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que dia lindo para brincar!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Какой чудесный день для игры!"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oynamak için ne güzel bir gün!"
+          }
+        }
+      }
     },
     "Where did all the water go?" : {
-
-    },
-    "White Shadow ☁️" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "White Shadow ☁️"
+            "value" : "Where did all the water go?"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sombra blanca ☁️"
+            "value" : "¿A dónde se fue toda el agua?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sombra Branca ☁️"
+            "value" : "Para onde foi toda a água?"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Белая тень ☁️"
+            "value" : "Куда делась вся вода?"
           }
         },
         "tr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Beyaz Gölge ☁️"
+            "state" : "translated",
+            "value" : "Bütün sular nereye gitti?"
           }
         }
       }
     },
-    "white_cat_name" : {
-      "extractionState" : "manual",
+    "Word Class: %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "White Cat"
+            "value" : "Word Class: %@"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gato blanco"
+            "value" : "Clase de palabra: %@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gato Branco"
+            "value" : "Classe da palavra: %@"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Белая кошка"
+            "value" : "Часть речи: %@"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beyaz kedi"
+            "value" : "Kelime Türü: %@"
           }
         }
       }
-    },
-    "Word class: %@" : {
-
     },
     "word_already_in_bookcase_toast" : {
       "comment" : "Toast shown when the word is already in the selected bookcase",
@@ -10849,7 +12567,38 @@
       }
     },
     "x%lld" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x%lld"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x%lld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "x%lld"
+          }
+        }
+      }
     },
     "Yağmur Hakkında" : {
       "localizations" : {
@@ -10886,13 +12635,106 @@
       }
     },
     "Yedekleme yapmak için giriş yapmalısınız." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You must sign in to make a backup."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes iniciar sesión para hacer una copia de seguridad."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você precisa fazer login para fazer um backup."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы создать резервную копию, необходимо войти."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yedekleme yapmak için giriş yapmalısınız."
+          }
+        }
+      }
     },
     "Yeni adınız" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your new name"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu nuevo nombre"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu novo nome"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваше новое имя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni adınız"
+          }
+        }
+      }
     },
     "Yerel veriler okunurken bir hata oluştu." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error occurred while reading local data."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error al leer los datos locales."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu um erro ao ler os dados locais."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Произошла ошибка при чтении локальных данных."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerel veriler okunurken bir hata oluştu."
+          }
+        }
+      }
     },
     "Yes" : {
       "localizations" : {
@@ -10929,19 +12771,174 @@
       }
     },
     "Yesterday at %@" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday at %@"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayer a las %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontem às %@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вчера в %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dün %@"
+          }
+        }
+      }
     },
     "You can download a vocabulary by watching a video. Would you like to watch a video?" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can download a vocabulary by watching a video. Would you like to watch a video?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes descargar un vocabulario viendo un video. ¿Quieres ver un video?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você pode baixar um vocabulário assistindo a um vídeo. Deseja assistir a um vídeo?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы можете скачать словарь, посмотрев видео. Хотите посмотреть видео?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir video izleyerek kelime paketi indirebilirsin. Video izlemek ister misin?"
+          }
+        }
+      }
     },
     "You don't have enough diamonds." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have enough diamonds."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes suficientes diamantes."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você não tem diamantes suficientes."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У вас недостаточно алмазов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeterli elmasın yok."
+          }
+        }
+      }
     },
     "You don't have enough gold." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have enough gold."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tienes suficiente oro."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você não tem ouro suficiente."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У вас недостаточно золота."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeterli altının yok."
+          }
+        }
+      }
     },
     "You must be authenticated to use the reward system." : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You must be authenticated to use the reward system."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes haber iniciado sesión para usar el sistema de recompensas."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você precisa estar autenticado para usar o sistema de recompensas."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Чтобы пользоваться системой наград, необходимо войти в аккаунт."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ödül sistemini kullanmak için giriş yapmış olmalısınız."
+          }
+        }
+      }
     },
     "Your Forest" : {
       "localizations" : {
@@ -11046,7 +13043,38 @@
       }
     },
     "Zafer" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Victory"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Victoria"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitória"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Победа"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zafer"
+          }
+        }
+      }
     },
     "Zamir" : {
       "localizations" : {

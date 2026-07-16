@@ -13,4 +13,5 @@ struct ConfigParametersList: Decodable {
     let marketConfigVersion: String?
     let questsConfigVersion: String?
     let weeklyRewardsConfigVersion: String?
+    let rewardsConfigVersion: String?
 }

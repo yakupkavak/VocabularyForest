@@ -123,7 +123,7 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
     
     func loadRewardedAd() {
         let request = Request()
-        RewardedAd.load(with: "ca-app-pub-7361200649027961~7922835624", request: request) { [weak self] ad, error in
+        RewardedAd.load(with: AppConfig.rewardedAdUnitID, request: request) { [weak self] ad, error in
             guard let self = self else { return }
             
             if let error = error {

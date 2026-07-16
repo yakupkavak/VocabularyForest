@@ -18,6 +18,8 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var xPosition: CGFloat
     var yPosition: CGFloat
     var lastUpdatedDate: Date
+    /// Reward catalog id (rewards_config) used to re-download remote assets after a cloud restore.
+    var rewardId: String? = nil
 }
 
 let baseSculptureList = [

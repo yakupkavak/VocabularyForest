@@ -10,6 +10,7 @@ import CoreData
 import DependencyContainer
 import FirebaseCore
 import GoogleMobileAds
+import AppTrackingTransparency
 
 @main
 struct VocabularyForestApp: App {
@@ -48,6 +49,8 @@ struct VocabularyForestApp: App {
                     }
                 } else if phase == .active {
                     rewardNotificationService.cancelRewardNotifications()
+                    // Reklamlar yüklenmeden önce ATT izni. Sistem yalnızca ilk seferde sorar.
+                    ATTrackingManager.requestTrackingAuthorization { _ in }
                 }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .environmentObject(tabbarController).environmentObject(coordinator)

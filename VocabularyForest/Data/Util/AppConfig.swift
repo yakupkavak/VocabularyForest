@@ -20,4 +20,10 @@ struct AppConfig {
         }
         return urlString.replacingOccurrences(of: "\\", with: "")
     }
+    static var rewardedAdUnitID: String {
+        guard let adUnitID = Bundle.main.object(forInfoDictionaryKey: "ADMOB_REWARDED_AD_UNIT_ID") as? String else {
+            fatalError("ADMOB_REWARDED_AD_UNIT_ID not found in Info.plist")
+        }
+        return adUnitID
+    }
 }

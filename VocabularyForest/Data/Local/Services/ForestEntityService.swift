@@ -61,6 +61,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             tree.xPosition = Double(model.xPosition)
             tree.yPosition = Double(model.yPosition)
             tree.lastUpdatedDate = Date()
+            tree.rewardId = model.rewardId
             forest.addToTrees(tree)
             do {
                 try save(context: context)
@@ -90,6 +91,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             animal.xPosition = Double(model.xPosition)
             animal.yPosition = Double(model.yPosition)
             animal.lastUpdatedDate = Date()
+            animal.rewardId = model.rewardId
             forest.addToAnimals(animal)
             try save(context: context)
         }
@@ -112,6 +114,7 @@ final class ForestEntityServiceAdapter: ForestEntityServiceProtocol {
             sculpture.xPosition = Double(model.xPosition)
             sculpture.yPosition = Double(model.yPosition)
             sculpture.lastUpdatedDate = Date()
+            sculpture.rewardId = model.rewardId
             forest.addToSculptures(sculpture)
             do {
                 try save(context: context)
