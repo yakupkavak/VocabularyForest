@@ -10,6 +10,7 @@
 		371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6CB02FDBD93C00225FE5 /* YKSpinWheel */; };
 		371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6F4D2FDD714A00225FE5 /* Alamofire */; };
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
+		372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 372851583008FEF500C0605F /* GoogleMobileAds */; };
 		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
 		375FE1A92F7005F200765018 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1A82F7005F200765018 /* CoreAPI */; };
@@ -160,6 +161,7 @@
 				37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */,
 				377BE2C22F854D8E008A13CC /* FirebasePerformance in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
+				372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */,
 				377BE2BC2F854D8E008A13CC /* FirebaseCrashlytics in Frameworks */,
 				373232812F7239AC004F3DF9 /* Domain in Frameworks */,
 				3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */,
@@ -285,6 +287,7 @@
 				377BE2CD2F868777008A13CC /* GoogleSignInSwift */,
 				376DE2F62FCABB3E00305BAB /* ZIPFoundation */,
 				371C6CB02FDBD93C00225FE5 /* YKSpinWheel */,
+				372851583008FEF500C0605F /* GoogleMobileAds */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -382,6 +385,7 @@
 				377BE2CA2F868777008A13CC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */,
+				372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -603,6 +607,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to deliver better ads.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -647,6 +652,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We use your data to deliver better ads.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -819,6 +825,14 @@
 				minimumVersion = 8.5.0;
 			};
 		};
+		372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.6.0;
+			};
+		};
 		376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
@@ -876,6 +890,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		372851583008FEF500C0605F /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 		3732327E2F723975004F3DF9 /* YakoSwift */ = {
 			isa = XCSwiftPackageProductDependency;

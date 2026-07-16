@@ -220,6 +220,7 @@ private extension BattleUI {
                     Spacer()
                     VStack(alignment: .center) {
                         Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
+                        Text("Word Class: \(question.partOfSpeech.localizedText)").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12))
                         if gameType == .learning {
                             if let example = question.example, !example.isEmpty {
                                 Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(.top, 4)
@@ -444,9 +445,7 @@ private extension BattleUI {
     func addWord(_ book: BookModel, to bookcase: BookcaseModel, replacingPrevious: Bool) {
         guard !viewModel.isWordAlreadyInBookcase(book: book, bookcase: bookcase) else {
             isChangingWordBookcase = false
-            // No copy was created for this word, so a later "change" must not delete an older copy
             lastAddedBookCopy = nil
-            // Forget the quick-add target so the next add opens the picker again
             wordTargetBookcase = nil
             let messageFormat = NSLocalizedString("word_already_in_bookcase_toast", comment: "Toast shown when the word is already in the selected bookcase")
             presentToast(

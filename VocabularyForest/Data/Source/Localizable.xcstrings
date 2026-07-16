@@ -3180,6 +3180,9 @@
         }
       }
     },
+    "Download Vocabulary" : {
+
+    },
     "Düşmanı %lld doğru seçimle yenebilirsin. %lld canın var." : {
       "localizations" : {
         "en" : {
@@ -6166,6 +6169,9 @@
         }
       }
     },
+    "Kitaplık bulunamadı" : {
+
+    },
     "Kitaplık oluştur" : {
       "localizations" : {
         "en" : {
@@ -9100,6 +9106,18 @@
         }
       }
     },
+    "Reklam esnasında hata oluştu" : {
+
+    },
+    "Reklam hazırlanıyor" : {
+
+    },
+    "Reklam henüz hazır değil." : {
+
+    },
+    "Reklam yüklenirken hata oluştu. Birazdan tekrar deneyiniz" : {
+
+    },
     "Remote configuration data is missing." : {
 
     },
@@ -10670,6 +10688,9 @@
     "Wait until \n %@" : {
 
     },
+    "Watch the Video" : {
+
+    },
     "Watching over the trees is my duty." : {
 
     },
@@ -10754,6 +10775,9 @@
           }
         }
       }
+    },
+    "Word class: %@" : {
+
     },
     "word_already_in_bookcase_toast" : {
       "comment" : "Toast shown when the word is already in the selected bookcase",
@@ -10905,6 +10929,9 @@
       }
     },
     "Yesterday at %@" : {
+
+    },
+    "You can download a vocabulary by watching a video. Would you like to watch a video?" : {
 
     },
     "You don't have enough diamonds." : {

@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 import DependencyContainer
 import FirebaseCore
+import GoogleMobileAds
 
 @main
 struct VocabularyForestApp: App {
@@ -28,6 +29,7 @@ struct VocabularyForestApp: App {
     init() {
         FirebaseApp.configure()
         AppDependencyConfigurer.configure()
+        MobileAds.shared.start(completionHandler: nil)
         let resolver = DC.shared
         _coordinator = StateObject(wrappedValue: VocabularyForestCoordinator(resolver: resolver))
     }

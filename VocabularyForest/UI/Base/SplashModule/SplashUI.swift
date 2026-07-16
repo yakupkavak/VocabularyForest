@@ -28,9 +28,10 @@ struct SplashUI: View {
             }
         }.ignoresSafeArea().frame(maxWidth: .infinity,maxHeight: .infinity)
             .onAppear {
+                guard !isActive else { return }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                     withAnimation(.default) {
-                        isActive.toggle()
+                        isActive = true
                     }
                 }
             }
