@@ -89,15 +89,50 @@ class CoreDataManager: CoreDataManagerProtocol {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores { storeDescription, error in
-            if let error = error {
-                fatalError("Core data couldn't inin -> \(error.localizedDescription)")
-            }
+        if let description = container.persistentStoreDescriptions.first {
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
         }
+        
+        var loadError: Error?
+        container.loadPersistentStores { _, error in
+            loadError = error
+        }
+        
+        if let loadError {
+            Self.recoverFromStoreLoadFailure(container: container, error: loadError)
+        }
+        
         viewContext.automaticallyMergesChangesFromParent = true
         backgroundContext.perform { [weak self] in
             guard let self else { return }
             self.checkGame(contextType: .background)
+        }
+    }
+    
+    private static func recoverFromStoreLoadFailure(container: NSPersistentContainer, error: Error) {
+        assertionFailure("Core Data store couldn't load -> \(error.localizedDescription)")
+        
+        guard let storeURL = container.persistentStoreDescriptions.first?.url,
+              storeURL.isFileURL else {
+            fatalError("Core data couldn't init -> \(error.localizedDescription)")
+        }
+        
+        let fileManager = FileManager.default
+        let timestamp = Int(Date().timeIntervalSince1970)
+        for suffix in ["", "-wal", "-shm"] {
+            let source = URL(fileURLWithPath: storeURL.path + suffix)
+            guard fileManager.fileExists(atPath: source.path) else { continue }
+            let destination = URL(fileURLWithPath: storeURL.path + suffix + ".backup-\(timestamp)")
+            try? fileManager.moveItem(at: source, to: destination)
+        }
+        
+        var retryError: Error?
+        container.loadPersistentStores { _, error in
+            retryError = error
+        }
+        if let retryError {
+            fatalError("Core data couldn't init -> \(retryError.localizedDescription)")
         }
     }
     

@@ -7844,6 +7844,7 @@
     },
     "market_purchase_success_toast" : {
       "comment" : "Toast shown after a successful market purchase",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
