@@ -1,7 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {},
+    "" : {
+
+    },
     ":" : {
       "localizations" : {
         "en" : {
@@ -2092,12 +2094,6 @@
             "value" : "This action cannot be undone. Your account and all data saved to the cloud will be permanently deleted. You may be asked to verify your identity."
           }
         },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir."
-          }
-        },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2114,6 +2110,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Это действие нельзя отменить. Ваш аккаунт и все данные, сохранённые в облаке, будут удалены навсегда. Возможно, вам потребуется подтвердить свою личность."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir."
           }
         }
       }
@@ -2255,7 +2257,9 @@
         }
       }
     },
-    "Buluttaki orman bu cihazdakinden farklı. Lütfen hangi ormanı kullanmak istediğinizi seçin." : {},
+    "Buluttaki orman bu cihazdakinden farklı. Lütfen hangi ormanı kullanmak istediğinizi seçin." : {
+
+    },
     "Bunu hatırlıyor musun 👀" : {
       "localizations" : {
         "en" : {
@@ -5021,12 +5025,6 @@
             "value" : "Delete Account"
           }
         },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hesabı Sil"
-          }
-        },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5044,6 +5042,12 @@
             "state" : "translated",
             "value" : "Удалить аккаунт"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabı Sil"
+          }
         }
       }
     },
@@ -5053,12 +5057,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete Your Account?"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hesabınız Silinsin mi?"
           }
         },
         "es-419" : {
@@ -5078,6 +5076,12 @@
             "state" : "translated",
             "value" : "Удалить ваш аккаунт?"
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınız Silinsin mi?"
+          }
         }
       }
     },
@@ -5087,12 +5091,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your account and all data saved to the cloud will be permanently deleted. Data on your device will not be affected."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez."
           }
         },
         "es-419" : {
@@ -5112,6 +5110,12 @@
             "state" : "translated",
             "value" : "Ваш аккаунт и все данные, сохранённые в облаке, будут удалены навсегда. Данные на вашем устройстве не будут затронуты."
           }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez."
+          }
         }
       }
     },
@@ -5121,12 +5125,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The account could not be deleted. Please try again."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hesap silinemedi. Lütfen tekrar deneyin."
           }
         },
         "es-419" : {
@@ -5145,6 +5143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Не удалось удалить аккаунт. Пожалуйста, попробуйте ещё раз."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap silinemedi. Lütfen tekrar deneyin."
           }
         }
       }

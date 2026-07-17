@@ -49,7 +49,6 @@ struct ForestUI: View {
     @EnvironmentObject var router: LearningRouter
     @EnvironmentObject var bookcaseRouter: BookcaseRouter
     @EnvironmentObject private var coordinator: VocabularyForestCoordinator
-    @Environment(\.presentToast) private var presentToast
     @ObservedObject var viewModel: ForestViewModel
     @State private var forestScene = ForestScene()
     
@@ -191,9 +190,6 @@ private extension ForestUI {
                     errorMessage: viewModel.marketErrorMessage,
                     onPurchase: { item in
                         viewModel.purchaseMarketItem(item: item) {
-                            presentToast(
-                                ToastValue(message: String(localized: "market_purchase_success_toast", defaultValue: "Satın alındı, tebrikler!", comment: "Toast shown after a successful market purchase"))
-                            )
                             PopupManager.shared.show {
                                 coordinator.startClaimRewardUI(claimReward: item.reward) { rewards in
                                     viewModel.claimMarketRewards(models: rewards)

@@ -496,8 +496,13 @@ extension ForestViewModel: ForestViewModelProtocol {
     
     func claimDailyRewards(models: [LocalRewardModel]) {
         Task { @MainActor in
-            for model in models {
-                let result: () = try await adventureService.claimDailySpinReward(model: model)
+            do {
+                for model in models {
+                    try await adventureService.claimDailySpinReward(model: model)
+                }
+                self.fetchForest()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
