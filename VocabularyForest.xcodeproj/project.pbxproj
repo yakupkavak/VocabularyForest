@@ -17,7 +17,6 @@
 		375FE1B82F704F7200765018 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1B72F704F7200765018 /* Router */; };
 		376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 376DE2F62FCABB3E00305BAB /* ZIPFoundation */; };
 		377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B12F854D8E008A13CC /* FirebaseAnalytics */; };
-		377BE2B42F854D8E008A13CC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B32F854D8E008A13CC /* FirebaseAppCheck */; };
 		377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */; };
 		377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B72F854D8E008A13CC /* FirebaseAuth */; };
 		377BE2BA2F854D8E008A13CC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B92F854D8E008A13CC /* FirebaseCore */; };
@@ -154,7 +153,6 @@
 				377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */,
 				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */,
-				377BE2B42F854D8E008A13CC /* FirebaseAppCheck in Frameworks */,
 				3788162A2F82754600C2BB52 /* YKSpinWheel in Frameworks */,
 				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
 				377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */,
@@ -274,7 +272,6 @@
 				37E8617B2F72C94300DD54C6 /* DomainMocks */,
 				378816292F82754600C2BB52 /* YKSpinWheel */,
 				377BE2B12F854D8E008A13CC /* FirebaseAnalytics */,
-				377BE2B32F854D8E008A13CC /* FirebaseAppCheck */,
 				377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */,
 				377BE2B72F854D8E008A13CC /* FirebaseAuth */,
 				377BE2B92F854D8E008A13CC /* FirebaseCore */,
@@ -921,11 +918,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalytics;
-		};
-		377BE2B32F854D8E008A13CC /* FirebaseAppCheck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAppCheck;
 		};
 		377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */ = {
 			isa = XCSwiftPackageProductDependency;
