@@ -56,7 +56,8 @@ struct GlobalPopupModifier: ViewModifier {
                     .transition(.opacity)
                     .zIndex(1)
                 popup
-                    .ignoresSafeArea()
+                    // .container only: keyboard safe area stays active so popups avoid the keyboard
+                    .ignoresSafeArea(.container)
                     .zIndex(2)
                     .transition(.move(edge: .bottom))
             }

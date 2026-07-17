@@ -64,14 +64,14 @@ final class RemoteConfigRepository: RemoteConfigRepositoryProtocol {
     private let userDefaults: UserDefaults
 
     init(
-        remoteConfig: RemoteConfig = RemoteConfig.remoteConfig(),
+        remoteConfig: RemoteConfig? = nil,
         userDefaults: UserDefaults = .standard,
     ) {
-        self.remoteConfig = remoteConfig
+        self.remoteConfig = remoteConfig ?? RemoteConfig.remoteConfig()
         self.userDefaults = userDefaults
         let settings = RemoteConfigSettings()
         settings.minimumFetchInterval = 0
-        remoteConfig.configSettings = settings
+        self.remoteConfig.configSettings = settings
     }
     
     func fetchConfigParameters() async -> Resource<RemoteConfigResponse<ConfigParametersList>> {

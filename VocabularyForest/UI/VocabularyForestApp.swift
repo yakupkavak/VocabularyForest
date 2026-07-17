@@ -10,6 +10,7 @@ import CoreData
 import DependencyContainer
 import GoogleMobileAds
 import AppTrackingTransparency
+import FirebaseCore
 
 @main
 struct VocabularyForestApp: App {
@@ -27,7 +28,7 @@ struct VocabularyForestApp: App {
     // MARK: - INIT
     
     init() {
-        FirebaseBootstrap.configureIfNeeded()
+        FirebaseApp.configure()
         AppDependencyConfigurer.configure()
         MobileAds.shared.start(completionHandler: nil)
         let resolver = DC.shared

@@ -65,7 +65,9 @@ extension CloudRestorePromptService: CloudRestorePromptServiceProtocol {
         guard let localForest else {
             // Cloud has a forest but the device has none: restore directly, nothing to lose.
             let restoreResult = await syncManager.downloadAndOverwriteLocal(with: cloudForest)
-            return restoreResult.status == .success ? .upToDate : .failed(restoreResult.error)
+            guard restoreResult.status == .success else { return .failed(restoreResult.error) }
+            markFirstRewardAsClaimed()
+            return .upToDate
         }
         
         // Same forest on both sides: the regular delta sync keeps them aligned.
@@ -110,7 +112,16 @@ private extension CloudRestorePromptService {
         
         // On failure the popup stays open so the user can retry.
         if result.status == .success {
+            if source == .cloud {
+                markFirstRewardAsClaimed()
+            }
             PopupManager.shared.dismiss()
         }
+    }
+    
+    /// A restored cloud forest belongs to an existing player, so the one-time
+    /// starter animal pick must not be offered again.
+    func markFirstRewardAsClaimed() {
+        UserDefaults.standard.set(true, forKey: AppStorageNames.userClaimedFirtReward.rawValue)
     }
 }
