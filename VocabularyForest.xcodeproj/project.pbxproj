@@ -11,8 +11,12 @@
 		371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6F4D2FDD714A00225FE5 /* Alamofire */; };
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
 		372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 372851583008FEF500C0605F /* GoogleMobileAds */; };
-		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
+		373876C8300CCD2F009949B4 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 373876C7300CCD2F009949B4 /* CoreAPI */; };
+		373876CB300CCD44009949B4 /* DependencyContainer in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CA300CCD44009949B4 /* DependencyContainer */; };
+		373876CE300CCD59009949B4 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CD300CCD59009949B4 /* Domain */; };
+		373876D0300CCD59009949B4 /* DomainMocks in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CF300CCD59009949B4 /* DomainMocks */; };
+		373876D3300CCD68009949B4 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 373876D2300CCD68009949B4 /* Router */; };
 		375FE1A92F7005F200765018 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1A82F7005F200765018 /* CoreAPI */; };
 		375FE1B82F704F7200765018 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1B72F704F7200765018 /* Router */; };
 		376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 376DE2F62FCABB3E00305BAB /* ZIPFoundation */; };
@@ -70,24 +74,11 @@
 			);
 			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
 		};
-		37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
+		377C6AF4300CD310002E12A6 /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Data/Source/Info.plist,
-			);
-			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
-		};
-		37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				MockBookcasePacketsViewModel.swift,
-			);
-			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
-		};
-		37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				MockData.swift,
+				Data/Source/InfoPlist.xcstrings,
 			);
 			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
 		};
@@ -105,7 +96,7 @@
 		37267D222E90E9D90019D139 /* VocabularyForest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */,
+				377C6AF4300CD310002E12A6 /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */,
 			);
 			path = VocabularyForest;
 			sourceTree = "<group>";
@@ -122,17 +113,11 @@
 		};
 		37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */,
-			);
 			path = BookcasePackets;
 			sourceTree = "<group>";
 		};
 		37D8A8B12EF95A2600E59CA9 /* Models */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */,
-			);
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -153,18 +138,22 @@
 				377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */,
 				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */,
+				373876C8300CCD2F009949B4 /* CoreAPI in Frameworks */,
 				3788162A2F82754600C2BB52 /* YKSpinWheel in Frameworks */,
 				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
 				377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */,
 				37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */,
 				377BE2C22F854D8E008A13CC /* FirebasePerformance in Frameworks */,
+				373876D0300CCD59009949B4 /* DomainMocks in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
+				373876CB300CCD44009949B4 /* DependencyContainer in Frameworks */,
 				372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */,
 				377BE2BC2F854D8E008A13CC /* FirebaseCrashlytics in Frameworks */,
 				373232812F7239AC004F3DF9 /* Domain in Frameworks */,
-				3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */,
 				377BE2C42F854D8E008A13CC /* FirebaseRemoteConfig in Frameworks */,
+				373876D3300CCD68009949B4 /* Router in Frameworks */,
 				377BE2CC2F868777008A13CC /* GoogleSignIn in Frameworks */,
+				373876CE300CCD59009949B4 /* Domain in Frameworks */,
 				377BE2CE2F868777008A13CC /* GoogleSignInSwift in Frameworks */,
 				376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */,
 			);
@@ -267,7 +256,6 @@
 				3791D1A42F6EE10F002D219E /* DependencyContainer */,
 				375FE1A82F7005F200765018 /* CoreAPI */,
 				375FE1B72F704F7200765018 /* Router */,
-				3732327E2F723975004F3DF9 /* YakoSwift */,
 				373232802F7239AC004F3DF9 /* Domain */,
 				37E8617B2F72C94300DD54C6 /* DomainMocks */,
 				378816292F82754600C2BB52 /* YKSpinWheel */,
@@ -285,6 +273,11 @@
 				376DE2F62FCABB3E00305BAB /* ZIPFoundation */,
 				371C6CB02FDBD93C00225FE5 /* YKSpinWheel */,
 				372851583008FEF500C0605F /* GoogleMobileAds */,
+				373876C7300CCD2F009949B4 /* CoreAPI */,
+				373876CA300CCD44009949B4 /* DependencyContainer */,
+				373876CD300CCD59009949B4 /* Domain */,
+				373876CF300CCD59009949B4 /* DomainMocks */,
+				373876D2300CCD68009949B4 /* Router */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -383,6 +376,10 @@
 				376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */,
 				372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				373876C6300CCD2F009949B4 /* XCLocalSwiftPackageReference "Packages/CoreAPI" */,
+				373876C9300CCD44009949B4 /* XCLocalSwiftPackageReference "Packages/DependencyContainer" */,
+				373876CC300CCD59009949B4 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				373876D1300CCD68009949B4 /* XCLocalSwiftPackageReference "Packages/Router" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -616,7 +613,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bootcamp.vocabulary-forest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -661,7 +658,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bootcamp.vocabulary-forest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -805,6 +802,25 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		373876C6300CCD2F009949B4 /* XCLocalSwiftPackageReference "Packages/CoreAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAPI;
+		};
+		373876C9300CCD44009949B4 /* XCLocalSwiftPackageReference "Packages/DependencyContainer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/DependencyContainer;
+		};
+		373876CC300CCD59009949B4 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Domain;
+		};
+		373876D1300CCD68009949B4 /* XCLocalSwiftPackageReference "Packages/Router" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Router;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -893,13 +909,29 @@
 			package = 372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
-		3732327E2F723975004F3DF9 /* YakoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = YakoSwift;
-		};
 		373232802F7239AC004F3DF9 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		373876C7300CCD2F009949B4 /* CoreAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreAPI;
+		};
+		373876CA300CCD44009949B4 /* DependencyContainer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DependencyContainer;
+		};
+		373876CD300CCD59009949B4 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		373876CF300CCD59009949B4 /* DomainMocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DomainMocks;
+		};
+		373876D2300CCD68009949B4 /* Router */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Router;
 		};
 		375FE1A82F7005F200765018 /* CoreAPI */ = {
 			isa = XCSwiftPackageProductDependency;

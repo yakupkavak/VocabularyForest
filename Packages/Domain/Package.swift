@@ -27,7 +27,6 @@ let package = Package(
         .target(
             name: "DTO",
             dependencies: [
-                .product(name: "YakoSwift", package: "YakoSwift"),
                 .product(name: "CoreAPI", package: "CoreAPI")
             ]
         ),
