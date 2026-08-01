@@ -78,6 +78,8 @@ class CoreDataManager: CoreDataManagerProtocol {
     lazy var backgroundContext: NSManagedObjectContext = {
         let context = container.newBackgroundContext()
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        // Main context'te yapilan kayitlar (or. market satin alimi) aninda bu context'e yansisin
+        context.automaticallyMergesChangesFromParent = true
         return context
     }()
     

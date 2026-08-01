@@ -31,7 +31,7 @@ struct DailyCard: View {
         .padding(.top, 10)
         .padding(.vertical, 6)
         .background(
-            RadialGradient(colors: model.status == .ready ? [.backgroundSystem, .brown500, .claimedText] : [.backgroundSystem, .brown700, .claimedText], center: .center, startRadius: 30, endRadius: (isPad ? 300 : 150))
+            RadialGradient(colors: model.status == .ready ? [.backgroundLight, .brown500, .claimedText] : [.backgroundLight, .brown700, .claimedText], center: .center, startRadius: 30, endRadius: (isPad ? 300 : 150))
         )
         .borderShape(radius: 24)
         .outlinedLine(radius: model.status == .ready ? 2 : 0.2, color: model.status == .ready ? .darkGren.opacity(0.3) : .orange.opacity(0.3))

@@ -26,8 +26,9 @@ struct VocabularyTextField: View {
             .padding(.vertical, 16)
             .padding(.horizontal)
             .lineLimit(1)
+            .foregroundStyle(.logoGreen)
             .textFieldStyle(PlainTextFieldStyle())
-            .background(Color.white)
+            .background(Color.textfieldBackground)
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -36,12 +37,13 @@ struct VocabularyTextField: View {
             .overlay(alignment: .topLeading){
                 if let title {
                     Text(title)
-                        .font(.system(size: 18, weight: .medium))
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundStyle(.textfieldHeader)
                         .background(
                             VStack(spacing: 0) {
                                 Color.backgroundSystem
                                     .frame(height: 12)
-                                Color.white
+                                Color.textfieldBackground
                             }
                         )
                         .offset(x: 16, y: -12)
@@ -67,5 +69,6 @@ struct VocabularyTextField: View {
     VStack {
         VocabularyTextField(userInput: $input, isSelected: $selected, isEmpty: .constant(true), placeholder: "English word", title: "English",imageHead: "elephanthead", imageFoot: "elephantfoot")
     }.frame(minHeight: 0, maxHeight: .infinity).padding().background(.backgroundSystem)
+        .preferredColorScheme(.dark)
     
 }

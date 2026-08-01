@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ADMOB_REWARDED_AD_UNIT_ID</key>
+	<string>$(ADMOB_REWARDED_AD_UNIT_ID)</string>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
 	<key>CFBundleURLTypes</key>
@@ -17,8 +19,6 @@
 	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>$(ADMOB_APP_ID)</string>
-	<key>ADMOB_REWARDED_AD_UNIT_ID</key>
-	<string>$(ADMOB_REWARDED_AD_UNIT_ID)</string>
 	<key>GIDClientID</key>
 	<string>346070689740-9gshb39j1o7q26aqov5hnm0qrl8kg8ud.apps.googleusercontent.com</string>
 </dict>

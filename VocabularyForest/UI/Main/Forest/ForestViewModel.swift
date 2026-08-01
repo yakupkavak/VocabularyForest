@@ -87,6 +87,7 @@ class ForestViewModel: BaseViewModel {
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
     private var dailySpinRewardMap: [Int: LocalRewardType] = [:]
+    private var fetchForestTask: Task<Void, Error>? = nil
     weak var output: ForestViewModelOutputProcotol?
     
     private var talkCancellable: AnyCancellable?
@@ -303,7 +304,10 @@ extension ForestViewModel {
     func fetchForest() {
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
 
-        Task(priority: .background) { [weak self] in
+        let previousTask = fetchForestTask
+        fetchForestTask = Task(priority: .background) { [weak self] in
+            // Ayni anda birden fazla fetch calisip eski verinin yeniyi ezmesini engelle
+            if let previousTask { _ = try? await previousTask.value }
             guard let self else { return }
             
             if !forestInitalized {

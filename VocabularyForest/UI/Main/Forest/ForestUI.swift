@@ -92,7 +92,7 @@ struct ForestUI: View {
                 if uiState != .market {
                     Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
                 }
-                userMenu.zIndex(4.0)
+                userMenu.zIndex(5.0)
             }
             
             if viewModel.showRainButton {
@@ -103,7 +103,7 @@ struct ForestUI: View {
                     } label: {
                         Text("Start Rain").modifier(TitleBackground())
                     }.padding(.bottom, 32)
-                }.zIndex(4.0)
+                }.zIndex(1.1)
             }
             
             if viewModel.showBookThreshold {
@@ -111,6 +111,7 @@ struct ForestUI: View {
                     titleText: String(localized: "Eksik soru"),
                     descriptionText: String(localized: "Kitaplığında bu oyun için yeterli sayıda kelimele bulunmuyor. Hazır kütüphane indirerek hızlıca oynayabilirsin"),
                     onConfirm: {
+                        viewModel.closeBookError()
                         tabbarController.navigateTo(tab: .bookcases)
                         bookcaseRouter.navigate(to: .bookcasePacket)
                         exitForest()

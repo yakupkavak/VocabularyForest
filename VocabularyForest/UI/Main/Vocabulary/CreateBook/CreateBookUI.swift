@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DTO
+import DependencyContainer
 
 // MARK: - CREATE BOOK TYPE ENUM
 
@@ -170,6 +171,14 @@ private extension CreateBookUI {
             .focused($focusedField, equals: .sentence)
             .submitLabel(.done)
             
+            Button {
+                if let url = URL(string: "https://dictionary.cambridge.org/") {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                Text("Cambridge Dictionary").frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing).foregroundStyle(.clickableButton).font(.system(size: 14))
+            }.padding(.vertical, -8)
+            
             partOfSpeechPicker
                 .focused($focusedField, equals: .partOfSpeech)
 
@@ -202,6 +211,7 @@ private extension CreateBookUI {
                 Text(
                     "\(viewModel.currentBookcase?.learningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.meaningLanguage.toLanguageDisplayName() ?? "")"
                 ) .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.brown300)
             }
             Spacer()
         }
@@ -210,7 +220,7 @@ private extension CreateBookUI {
                 viewModel.checkAndCreateBook()
                 focusedField = .vocabulary
             } label: {
-                Text("Ekle").foregroundStyle(.title)
+                Text("Ekle").foregroundStyle(.darkGren)
             }
             .offset(x: -24)
         }
@@ -220,6 +230,8 @@ private extension CreateBookUI {
             } label: {
                 Image("bookcase")
                     .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.brown300)
                     .scaledToFit()
                     .frame(minWidth: 24, maxWidth: 36)
             }
@@ -242,8 +254,4 @@ private extension CreateBookUI {
     enum Field: Hashable {
         case vocabulary, meaning, description, partOfSpeech, sentence
     }
-}
-
-#Preview {
-    CreateBookUI(viewModel: CreateBookViewModel(coreDataManager: CoreDataManager()))
 }

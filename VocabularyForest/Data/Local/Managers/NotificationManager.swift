@@ -158,7 +158,7 @@ class NotificationManager: NotificationManagerProtocol {
         }else if description.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty && !example.isEmpty{
             content = askExample(learningWord: learningWord, meaningWord: meaningWord, example: example)
         }else if example.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty {
-            content = askDescription(learningWord: learningWord, meaningWord: description, description: description) // Düzeltme yapıldı
+            content = askDescription(learningWord: learningWord, meaningWord: meaningWord, description: description)
         }
         
         if let content {
