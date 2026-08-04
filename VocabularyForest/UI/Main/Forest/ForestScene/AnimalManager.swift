@@ -68,6 +68,7 @@ class AnimalManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var idleTextures: [SKTexture] = []
     private var walkingTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
@@ -190,6 +191,10 @@ private extension AnimalManager {
         case .offlineStorage:
             loadOfflineTextures(for: animal.assetName)
         }
+        guard !idleTextures.isEmpty else {
+            logger.debug("AnimalManager skipped setup, empty idle textures for asset \(animal.assetName) (source: \(animal.assetSource))", category: .asset)
+            return
+        }
         setupAnimalFrames(model: animal)
         idleAnimation()
         randomActions()
@@ -219,6 +224,7 @@ private extension AnimalManager {
     // MARK: - ANIMATIONS
     
     func idleAnimation() {
+        guard !idleTextures.isEmpty else { return }
         let animate = SKAction.animate(with: idleTextures, timePerFrame: GameConstant.waitingTimePerFrame * Constants.idleTimeMultiplier)
         currentAnimalNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation )
     }
@@ -234,6 +240,7 @@ private extension AnimalManager {
     }
     
     func walkAnimation() {
+        guard !walkingTextures.isEmpty else { return }
         let animate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.waitingTimePerFrame)
         let animateAction = SKAction.repeatForever(animate)
         currentAnimalNode.run(
@@ -243,6 +250,10 @@ private extension AnimalManager {
     }
     
     func jumpAnimation(completion: @escaping () -> Void) {
+        guard !jumpTextures.isEmpty else {
+            completion()
+            return
+        }
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
         let animate = SKAction.animate(with: jumpTextures, timePerFrame: GameConstant.jumpTimePerFrame)
         let jumpFinish = SKAction.run {

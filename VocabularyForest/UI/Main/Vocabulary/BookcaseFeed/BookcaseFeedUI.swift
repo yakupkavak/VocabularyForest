@@ -124,9 +124,6 @@ private extension BookcaseFeedUI {
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
-                .onDisappear {
-                    print("disapper")
-                }
             }
         }.scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)

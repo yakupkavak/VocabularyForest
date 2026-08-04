@@ -39,7 +39,7 @@ struct RewardImageView: View {
                 let data = try Data(contentsOf: fileURL)
                 return UIImage(data: data)
             } catch {
-                print("Aranan yol: \(fileURL.path)")
+                AppLogger.shared.debug("Reward image not found on disk at \(fileURL.path)", category: .asset)
                 return nil
             }
         }

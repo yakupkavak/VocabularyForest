@@ -25,7 +25,7 @@ enum AppDependencyConfigurer {
         let offlineAssetManager = OfflineAssetManager()
         let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
         let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
-        let rewardAssetHydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: remoteConfigRepository)
+        let rewardAssetHydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: remoteConfigRepository, offlineAssetManager: offlineAssetManager, forestManager: forestData)
         let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
         let weeklyRewardService = WeeklyRewardService(forestManager: forestData, rewardRepository: rewardRepository)
         let adventureSeasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
@@ -33,7 +33,7 @@ enum AppDependencyConfigurer {
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
         let rewardNotificationService = RewardNotificationService(forestManager: forestData, adventureRoadService: adventureRoadService)
-        let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData)
+        let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData, assetHydrationService: rewardAssetHydrationService)
         let gameManager = GameManager()
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
         coreData.notificationManager = notificationManager
@@ -65,6 +65,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(marketService), for: MarketServiceProtocol.self)
         DC.shared.register(type: .singleInstance(rewardNotificationService), for: RewardNotificationServiceProtocol.self)
         DC.shared.register(type: .singleInstance(cloudRestorePromptService), for: CloudRestorePromptServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(rewardAssetHydrationService), for: RewardAssetHydrationServiceProtocol.self)
         forestData.checkGame(contextType: .background)
         cloudSyncManager.backgroundSyncIfNeeded()
     }

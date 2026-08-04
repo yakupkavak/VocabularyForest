@@ -15,6 +15,33 @@ struct LocalChestModel: Hashable {
     let openLocalImagePath: RewardAssetReference
     let textHexColor: String?
     let backgroundGradientColors: [String]?
+    let roadColorHex: String?
+    let cardGradientHexes: [String]?
+    let cardTextColorHex: String?
+
+    init(
+        id: String,
+        version: Int,
+        displayName: RemoteLocalizedText,
+        closeLocalImagePath: RewardAssetReference,
+        openLocalImagePath: RewardAssetReference,
+        textHexColor: String?,
+        backgroundGradientColors: [String]?,
+        roadColorHex: String? = nil,
+        cardGradientHexes: [String]? = nil,
+        cardTextColorHex: String? = nil
+    ) {
+        self.id = id
+        self.version = version
+        self.displayName = displayName
+        self.closeLocalImagePath = closeLocalImagePath
+        self.openLocalImagePath = openLocalImagePath
+        self.textHexColor = textHexColor
+        self.backgroundGradientColors = backgroundGradientColors
+        self.roadColorHex = roadColorHex
+        self.cardGradientHexes = cardGradientHexes
+        self.cardTextColorHex = cardTextColorHex
+    }
 }
 
 enum ChestStatus {

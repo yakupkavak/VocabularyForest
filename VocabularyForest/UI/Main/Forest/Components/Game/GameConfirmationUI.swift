@@ -75,9 +75,7 @@ struct GameConfirmationUI: View {
 
 #Preview {
     GameConfirmationUI(title: "Emin misin", message: "yakup") {
-        print("yau")
     } onCancel: {
-        print("yakup")
     }
 
 }

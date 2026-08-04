@@ -38,12 +38,6 @@ struct QuizRowUI: View {
 }
 
 #Preview {
-    QuizRowUI(quizModel: QuizRowModel(leftImage: "bambuuLeft", rightImage: "bambuuRight", quizType: .flashCard), height: 400, onClick: ({ type in
-        switch type {
-        case .flashCard:
-            print("flashcard clicked")
-        case .forest:
-            print("flashcard clicked")
-        }}))
+    QuizRowUI(quizModel: QuizRowModel(leftImage: "bambuuLeft", rightImage: "bambuuRight", quizType: .flashCard), height: 400, onClick: ({ _ in }))
 }
 

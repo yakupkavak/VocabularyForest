@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct AnimatedGradientView: View {
     
     // MARK: - PRIVATE PROPERTIES
+    
     @State private var isAnimating = false
     
     // MARK: - PROPERTIES

@@ -24,6 +24,41 @@ struct LocalQuestRewardModel: Hashable {
     let textColorHex: String?
     let textStrokeColorHex: String?
     let gradientHexes: [String]?
+    let roadColorHex: String?
+    let cardGradientHexes: [String]?
+    let cardTextColorHex: String?
+
+    init(
+        id: String,
+        category: QuestRewardModel,
+        displayName: RemoteLocalizedText,
+        assetName: String,
+        imageSource: ImageSource,
+        posterImage: RewardAssetReference,
+        remotePath: String?,
+        remoteAssetVersion: Int?,
+        textColorHex: String?,
+        textStrokeColorHex: String?,
+        gradientHexes: [String]?,
+        roadColorHex: String? = nil,
+        cardGradientHexes: [String]? = nil,
+        cardTextColorHex: String? = nil
+    ) {
+        self.id = id
+        self.category = category
+        self.displayName = displayName
+        self.assetName = assetName
+        self.imageSource = imageSource
+        self.posterImage = posterImage
+        self.remotePath = remotePath
+        self.remoteAssetVersion = remoteAssetVersion
+        self.textColorHex = textColorHex
+        self.textStrokeColorHex = textStrokeColorHex
+        self.gradientHexes = gradientHexes
+        self.roadColorHex = roadColorHex
+        self.cardGradientHexes = cardGradientHexes
+        self.cardTextColorHex = cardTextColorHex
+    }
 }
 
 enum ImageSource: Hashable {
@@ -125,7 +160,7 @@ extension LocalRewardType: Rewardable {
         case .chest(let model): return "chest"
         }
     }
-    ///Ödülün ismini, altın sayısını vs tutmak için
+    /// Backing value persisted in CoreData for the reward (name, gold amount, etc.)
     var coreDataValueString: String {
         switch self {
         case .standart(let model): return model.category.coreDataValueString

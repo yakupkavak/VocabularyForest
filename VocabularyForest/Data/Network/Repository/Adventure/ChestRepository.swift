@@ -182,7 +182,10 @@ extension ChestRepository: ChestRepositoryProtocol {
                     closeLocalImagePath: RewardAssetReference(key: closedChestKey, source: .offlineStorage),
                     openLocalImagePath: RewardAssetReference(key: openChestKey, source: .offlineStorage),
                     textHexColor: remoteChest.textHexColor,
-                    backgroundGradientColors: remoteChest.gradientHexBackgroundColors
+                    backgroundGradientColors: remoteChest.gradientHexBackgroundColors,
+                    roadColorHex: remoteChest.roadColorHex,
+                    cardGradientHexes: remoteChest.cardGradientHexes,
+                    cardTextColorHex: remoteChest.cardTextColorHex
                 )
                 localChests.append(localChest)
             }else {
@@ -232,7 +235,10 @@ private extension ChestRepository {
                             remoteAssetVersion: remoteReward.remoteAssetVersion,
                             textColorHex: remoteReward.textColorHex,
                             textStrokeColorHex: remoteReward.textStrokeColorHex,
-                            gradientHexes: remoteReward.gradientHexes
+                            gradientHexes: remoteReward.gradientHexes,
+                            roadColorHex: remoteReward.roadColorHex,
+                            cardGradientHexes: remoteReward.cardGradientHexes,
+                            cardTextColorHex: remoteReward.cardTextColorHex
                         )
                     )
             default:

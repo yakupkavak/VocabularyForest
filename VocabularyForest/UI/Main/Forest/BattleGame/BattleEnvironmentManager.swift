@@ -290,7 +290,6 @@ extension BattleEnvironmentManager: BattleEnvironmentManagerProtocol {
     }
     
     func update() {
-        //print("upd")
     }
     
     func moveBackground(direction: HorizontalDirection) {

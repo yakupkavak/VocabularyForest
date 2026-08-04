@@ -77,5 +77,5 @@ struct LibraryPopUp: View{
 #Preview {
     @State var bool: Bool = false
     
-    LibraryPopUp(titleText: "Download Vocabulary", descriptionText: "You can download a vocabulary by watching a Video. Would you like to watch a Video?", onConfirm: {print("") }, onClose: {print("")}, confirmText: "Watch the Video")
+    LibraryPopUp(titleText: "Download Vocabulary", descriptionText: "You can download a vocabulary by watching a Video. Would you like to watch a Video?", onConfirm: { }, onClose: { }, confirmText: "Watch the Video")
 }

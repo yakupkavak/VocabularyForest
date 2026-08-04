@@ -387,7 +387,7 @@ private extension BattleUI {
                         showOption = false
                         showExistAlert = true
                     case .info:
-                        print("nil")
+                        break
                     }
                 }
             }

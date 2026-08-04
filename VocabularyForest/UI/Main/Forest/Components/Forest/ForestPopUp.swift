@@ -69,5 +69,5 @@ struct ForestPopUp: View{
 #Preview {
     @State var bool: Bool = false
     
-    ForestPopUp(titleText: "Yakup", descriptionText: "Kafasdfsdafsdafsafasfsafdsafasasfsdafsdafsafasvak", onConfirm: {print("") }, onDenied: { print("")}, confirmText: "Kabul", deniedText: "Red", showForestPopUp: $bool)
+    ForestPopUp(titleText: "Yakup", descriptionText: "Kafasdfsdafsdafsafasfsafdsafasasfsdafsdafsafasvak", onConfirm: { }, onDenied: { }, confirmText: "Kabul", deniedText: "Red", showForestPopUp: $bool)
 }

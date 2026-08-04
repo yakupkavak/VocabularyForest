@@ -56,6 +56,7 @@ class PlantManager {
     private var treeModel: TreeModel? = nil
     private var isMenuOpen = false
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var textures: [SKTexture] = []
     private var isPerished = false
     
@@ -79,6 +80,10 @@ private extension PlantManager {
             }
         case .offlineStorage:
             textures = loadOfflineTextures(assetName: model.assetName)
+        }
+        if textures.isEmpty {
+            logger.debug("PlantManager skipped setup, empty textures for asset \(model.assetName) (source: \(model.assetSource))", category: .asset)
+            return
         }
         setPlant(model: model)
         plant.zPosition = getZIndex(yPosition: model.yPosition)

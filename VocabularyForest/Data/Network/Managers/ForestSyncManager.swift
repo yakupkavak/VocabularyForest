@@ -36,9 +36,9 @@ enum ForestSyncConstants {
     static let createdDateField = "createdDate"
     static let lastUpdatedDateField = "lastUpdatedDate"
     static let rewardIdField = "rewardId"
-    /// Entity dokümanının hangi ormana ait olduğunu işaretler (bayat doküman filtrelemesi için).
+    /// Tags which forest an entity document belongs to (used to filter out stale documents).
     static let forestIdField = "forestId"
-    /// Forest dokümanında: tüm entity'lerin forestId etiketiyle yüklendiğini gösterir.
+    /// On the forest document: signals that every entity was uploaded with a forestId tag.
     static let entitiesTaggedField = "entitiesTagged"
     
     static let moneyValueField = "moneyValue"
@@ -157,9 +157,13 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         lastSyncSubject.eraseToAnyPublisher()
     }
     
+    private let logger: AppLoggerProtocol
+
     // MARK: - INIT
-    
-    init() { }
+
+    init(logger: AppLoggerProtocol = AppLogger.shared) {
+        self.logger = logger
+    }
     
     // MARK: - PUBLIC METHODS
     
@@ -228,10 +232,9 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             
             let lastUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
             
-            // Ekstra okuma/yazma maliyeti olmadan bayat doküman filtreleme:
-            // entitiesTagged bayrağı, tüm entity'lerin forestId etiketiyle yüklendiği
-            // anlamına gelir. Bu durumda etiketi bu ormana ait olmayan (eski kurulumlardan
-            // kalan) dokümanlar restore sırasında yok sayılır.
+            // Stale-document filtering with no extra read/write cost: the entitiesTagged flag
+            // means every entity was uploaded with a forestId tag. When it is set, documents
+            // tagged for another forest (leftovers from older installs) are ignored during restore.
             let entitiesTagged = forestData[ForestSyncConstants.entitiesTaggedField] as? Bool ?? false
             let belongsToForest: ([String: Any]) -> Bool = { data in
                 guard entitiesTagged else { return true }
@@ -274,7 +277,8 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                     xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
                     yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
                     lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    rewardId: rewardId
+                    rewardId: rewardId,
+                    assetReady: resolvedAsset.assetSource == .appAssets
                 )
             }
             
@@ -300,7 +304,8 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                     xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
                     yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
                     lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    rewardId: rewardId
+                    rewardId: rewardId,
+                    assetReady: resolvedAsset.assetSource == .appAssets
                 )
             }
             
@@ -324,10 +329,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                     xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
                     yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
                     lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    rewardId: rewardId
+                    rewardId: rewardId,
+                    assetReady: resolvedAsset.assetSource == .appAssets
                 )
             }
-            
+
             let parsedQuests = questsDocs.documents.compactMap { document -> QuestTrackModel? in
                 let data = document.data()
                 guard belongsToForest(data),
@@ -405,8 +411,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         let result = dataManager.overwriteLocalForest(with: safeForest, ownerId: currentUID, contextType: .main)
         if case .success = result.status {
             lastSyncSubject.send(Date())
-            // Best effort: re-download remote assets that are not on this device yet.
-            await assetHydrationService?.hydrateMissingAssets(for: safeForest)
+            // The restore completes with the CoreData write; asset downloads continue in the background.
+            // Assets that fail stay at assetReady = false and are retried on the next hydration pass.
+            Task { [weak self] in
+                await self?.assetHydrationService?.hydrateMissingAssets(for: safeForest)
+            }
         }
         return result
     }
@@ -445,7 +454,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         }
     }
     
-    /// Hesap silme akışı: kullanıcının Firestore'daki tüm verisini siler ve yerel ormanın hesap bağını koparır.
+    /// Account deletion flow: wipes all of the user's Firestore data and unlinks the local forest from the account.
     func deleteCloudData() async throws {
         guard let uid = Auth.auth().currentUser?.uid else { throw ForestSyncError.unauthenticated }
         
@@ -483,7 +492,7 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 try await checkCooldown(hoursRequired: ForestSyncConstants.backgroundSyncCooldownHours)
                 try await performDeltaSync()
             } catch {
-                print(error)
+                logger.error("Background delta sync failed: \(error.localizedDescription)", category: .sync)
             }
         }
     }
@@ -510,7 +519,7 @@ private extension ForestSyncManager {
     func deleteSubcollections(_ collectionNames: [String], under parentDoc: DocumentReference) async throws {
         for collectionName in collectionNames {
             let documents = try await parentDoc.collection(collectionName).getDocuments().documents
-            // Firestore batch limiti 500 yazma olduğu için parçalara bölüyoruz.
+            // Firestore caps a batch at 500 writes, so the deletes are chunked.
             for chunkStart in stride(from: 0, to: documents.count, by: 400) {
                 let batch = db.batch()
                 documents[chunkStart..<min(chunkStart + 400, documents.count)].forEach {
@@ -552,10 +561,10 @@ private extension ForestSyncManager {
             throw ForestSyncError.fetchError
         }
         
-        // İlk senkronizasyonda (lastSync yok) veya açık kullanıcı seçiminde (fullResync)
-        // tüm entity'ler yüklenir; hepsi forestId etiketi taşıyacağı için forest
-        // dokümanına entitiesTagged bayrağı yazabiliriz. Bu bayrak, restore sırasında
-        // etiketsiz/başka ormana ait (bayat) dokümanların maliyetsiz elenmesini sağlar.
+        // On the first sync (no lastSync) or on an explicit user request (fullResync) every entity
+        // is uploaded; since all of them then carry a forestId tag, the entitiesTagged flag can be
+        // written on the forest document. That flag lets restore discard untagged documents and
+        // documents belonging to another forest at no extra cost.
         let isFullUpload = forest.lastSyncCloudTime == nil || fullResync
         let lastSyncDate = isFullUpload ? Date.distantPast : (forest.lastSyncCloudTime ?? Date.distantPast)
         let forestIdString = forest.forestId.uuidString

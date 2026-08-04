@@ -31,15 +31,18 @@ final class CloudRestorePromptService {
     private let authManager: any AuthManagerProtocol
     private let syncManager: ForestSyncManagerProtocol
     private let forestManager: ForestDataManagerProtocol
-    
+    private let assetHydrationService: RewardAssetHydrationServiceProtocol
+
     init(
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
-        forestManager: ForestDataManagerProtocol
+        forestManager: ForestDataManagerProtocol,
+        assetHydrationService: RewardAssetHydrationServiceProtocol
     ) {
         self.authManager = authManager
         self.syncManager = syncManager
         self.forestManager = forestManager
+        self.assetHydrationService = assetHydrationService
     }
 }
 
@@ -114,8 +117,30 @@ private extension CloudRestorePromptService {
         if result.status == .success {
             if source == .cloud {
                 markFirstRewardAsClaimed()
+                // The restore is already written to CoreData; asset downloads continue in the background.
+                // The popup switches to progress mode: it closes normally if hydration finishes within
+                // 5 s, otherwise it closes with a "will continue in the background" notice, and can be cancelled.
+                presentRestoreProgressPopup()
+            } else {
+                PopupManager.shared.dismiss()
             }
-            PopupManager.shared.dismiss()
+        }
+    }
+
+    func presentRestoreProgressPopup() {
+        PopupManager.shared.show { [assetHydrationService] in
+            ForestRestoreProgressView(
+                statePublisher: assetHydrationService.statePublisher,
+                onCancel: {
+                    // Cancelling does not roll the restore back: the forest stays in place, only the
+                    // downloads stop and undownloaded entities remain queued (assetReady == false).
+                    assetHydrationService.cancelActiveHydration()
+                    PopupManager.shared.dismiss()
+                },
+                onFinished: {
+                    PopupManager.shared.dismiss()
+                }
+            )
         }
     }
     

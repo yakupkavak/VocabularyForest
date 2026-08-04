@@ -13,6 +13,10 @@ struct RemoteChestModel: Decodable {
     let economy: RemoteChestEconomy?
     let gradientHexBackgroundColors: [String]?
     let textHexColor: String?
+    /// Adventure road styling; when absent the road derives colors from `gradientHexBackgroundColors`
+    let roadColorHex: String?
+    let cardGradientHexes: [String]?
+    let cardTextColorHex: String?
 }
 
 struct RemoteChestVisuals: Decodable {

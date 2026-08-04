@@ -30,6 +30,7 @@ class ForestAudioService: NSObject, AudioServiceProtocol {
     ]
     private var playlist: [String] = []
     private var currentTrackIndex = 0
+    private let logger: AppLoggerProtocol = AppLogger.shared
     
     // MARK: - INIT
     
@@ -78,7 +79,7 @@ class ForestAudioService: NSObject, AudioServiceProtocol {
             sfxPlayer?.volume = currentSFXVolume
             sfxPlayer?.play()
         } catch {
-            print("SFX Error: \(error)")
+            logger.error("Sound effect playback failed: \(error.localizedDescription)", category: .forest)
         }
     }
 }

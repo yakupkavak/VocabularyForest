@@ -31,12 +31,18 @@ final class QuestService {
     
     private let forestManager: ForestDataManagerProtocol
     private let rewardRepository: RewardRepositoryProtocol
+    private let logger: AppLoggerProtocol
     @Published private var activeQuests: [QuestModel] = []
     private var activeQuestTracks: [QuestTrackModel] = []
 
-    init(forestManager: ForestDataManagerProtocol, rewardRepository: RewardRepositoryProtocol) {
+    init(
+        forestManager: ForestDataManagerProtocol,
+        rewardRepository: RewardRepositoryProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared
+    ) {
         self.forestManager = forestManager
         self.rewardRepository = rewardRepository
+        self.logger = logger
     }
     
 }
@@ -195,7 +201,7 @@ extension QuestService: QuestServiceProtocol {
                         try forestManager.importQuest(track: track, contextType: .background)
                         questList.append(quest)
                     }catch {
-                        print(error.localizedDescription)
+                        logger.error("Quest import failed: \(error.localizedDescription)", category: .forest)
                         return .error(error: error)
                     }
                     continue

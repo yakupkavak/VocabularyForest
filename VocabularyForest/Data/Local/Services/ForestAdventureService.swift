@@ -77,6 +77,7 @@ class ForestAdventureService {
     private let marketService: MarketServiceProtocol
     private let chestService: ChestRepositoryProtocol
     private let gameManager: GameManagerProtocol
+    private let logger: AppLoggerProtocol
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
@@ -95,6 +96,7 @@ class ForestAdventureService {
         marketService: MarketServiceProtocol,
         chestService: ChestRepositoryProtocol,
         gameManager: GameManagerProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -109,6 +111,7 @@ class ForestAdventureService {
         self.marketService = marketService
         self.chestService = chestService
         self.gameManager = gameManager
+        self.logger = logger
         setupParameters()
     }
 }
@@ -203,8 +206,7 @@ private extension ForestAdventureService {
             }
             }
             catch {
-                print("hata geldi")
-                print(error)
+                logger.error("Remote config parameter setup failed: \(error.localizedDescription)", category: .sync)
             }
         }
     }

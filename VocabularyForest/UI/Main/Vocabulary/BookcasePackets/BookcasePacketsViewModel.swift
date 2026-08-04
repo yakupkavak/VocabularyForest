@@ -154,11 +154,9 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
 
 extension BookcasePacketsViewModel: FullScreenContentDelegate {
     func adDidRecordImpression(_ ad: FullScreenPresentingAd) {
-        print("\(#function) called")
     }
     
     func adDidRecordClick(_ ad: FullScreenPresentingAd) {
-        print("\(#function) called")
     }
     
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
@@ -167,11 +165,9 @@ extension BookcasePacketsViewModel: FullScreenContentDelegate {
     }
     
     func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
-        print("\(#function) called")
     }
     
     func adWillDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        print("\(#function) called")
     }
     
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {

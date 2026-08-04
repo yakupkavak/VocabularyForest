@@ -149,7 +149,7 @@ struct SettingsUI: View {
                                 case .success(let authorization):
                                     viewModel.signInApple(auth: authorization)
                                 case .failure(let error):
-                                    print("AppleAuthorization failed: \(error)")
+                                    AppLogger.shared.error("Apple authorization failed: \(error.localizedDescription)", category: .auth)
                                 }
                                 showSignIn = false
                             }
@@ -338,6 +338,11 @@ private struct PolicySheetView: View {
     let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
     let authManager = AuthManager()
     let syncManager = ForestSyncManager()
+    let offlineAssetManager = OfflineAssetManager()
+    let networkManager = APIService(vocabularyBaseURLProvider: VocabularyBaseURLProvider())
+    let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
+    let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
+    let hydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: RemoteConfigRepository(), offlineAssetManager: offlineAssetManager, forestManager: forestData)
     SettingsUI(
         viewModel: SettingsViewModel(
             notificationManager: NotificationManager(),
@@ -346,7 +351,7 @@ private struct PolicySheetView: View {
             syncManager: syncManager,
             forestManager: forestData,
             playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
-            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData)
+            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData, assetHydrationService: hydrationService)
         )
     )
 }

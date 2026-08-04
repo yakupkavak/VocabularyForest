@@ -100,6 +100,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     func updateMoneyValue(money: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDiamondValue(diamond: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func claimReward(model: ReadyRewardModel, contextType: ForestDataManager.ContextType) throws
+    func markAssetsReady(assetNames: [String], contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws
     func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws
     func updateClaimedAdventureTier(track: AdventureMemoryTrack, wordCount: Int, time: Date, contextType: ForestDataManager.ContextType) throws
@@ -112,13 +113,19 @@ class ForestDataManager: ForestDataManagerProtocol {
     
     private let mainContext: NSManagedObjectContext
     private let backgroundContext: NSManagedObjectContext
+    private let logger: AppLoggerProtocol
     weak var notificationManager: (any NotificationManagerProtocol)?
-    
+
     // MARK: - INIT
-    
-    init(mainContext: NSManagedObjectContext, backgroundContext: NSManagedObjectContext) {
+
+    init(
+        mainContext: NSManagedObjectContext,
+        backgroundContext: NSManagedObjectContext,
+        logger: AppLoggerProtocol = AppLogger.shared
+    ) {
         self.mainContext = mainContext
         self.backgroundContext = backgroundContext
+        self.logger = logger
     }
     
     // MARK: - UPDATE QUESTS
@@ -253,6 +260,7 @@ extension ForestDataManager {
                 sculpture.assetSourceString = ImageSourceType.appAssets.rawValue
                 sculpture.posterKey = sculptureModel.assetName
                 sculpture.posterSourceString = ImageSourceType.appAssets.rawValue
+                sculpture.assetReady = true
                 forest.addToSculptures(sculpture)
             }
             do {
@@ -367,7 +375,7 @@ extension ForestDataManager {
                         let questModel = try quest.safeObject(context: context)
                         questList.append(questModel)
                     } catch {
-                        print(SafeModelError.invalidMapping.localizedDescription)
+                        logger.error("Quest could not be mapped to its safe model: \(error.localizedDescription)", category: .forest)
                         return Resource.error(error: SafeModelError.invalidMapping)
                     }
                 }
@@ -410,8 +418,9 @@ extension ForestDataManager {
                 animal.posterKey = animalModel.poster.key
                 animal.posterSourceString = animalModel.poster.source.rawValue
                 animal.rewardId = animalModel.rewardId
+                animal.assetReady = animalModel.assetReady
                 forest.addToAnimals(animal)
-                
+
             case .plant:
                 let treeModel = createSafePlant(model: model, contextType: contextType)
                 let tree = Tree(context: context)
@@ -428,8 +437,9 @@ extension ForestDataManager {
                 tree.posterSourceString = treeModel.poster.source.rawValue
                 tree.lastUpdatedDate = treeModel.lastUpdatedDate
                 tree.rewardId = treeModel.rewardId
+                tree.assetReady = treeModel.assetReady
                 forest.addToTrees(tree)
-                
+
             case .sculpture:
                 let sculptureModel = createSafeSculpture(model: model, contextType: contextType)
                 let sculpture = Sculpture(context: context)
@@ -444,8 +454,9 @@ extension ForestDataManager {
                 sculpture.posterKey = sculptureModel.poster.key
                 sculpture.posterSourceString = sculptureModel.poster.source.rawValue
                 sculpture.rewardId = sculptureModel.rewardId
+                sculpture.assetReady = sculptureModel.assetReady
                 forest.addToSculptures(sculpture)
-                
+
             case .gold:
                 forest.moneyValue += Int16(model.rewardCount)
                 
@@ -466,6 +477,34 @@ extension ForestDataManager {
         }
     }
     
+    /// Marks every entity (animal/tree/sculpture) using a disk-verified asset as ready.
+    /// Leaves `lastUpdatedDate` untouched: `assetReady` is device-local state and is never synced to the cloud.
+    func markAssetsReady(assetNames: [String], contextType: ContextType) -> Resource<Bool> {
+        guard !assetNames.isEmpty else { return Resource.success(false) }
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.emptyForest)
+            }
+            do {
+                var changed = false
+                for entityName in CoreDataConstant.forestAssetEntityNames {
+                    changed = try markEntitiesReady(
+                        entityName: entityName,
+                        assetNames: assetNames,
+                        forest: forest,
+                        context: context
+                    ) || changed
+                }
+                guard changed else { return Resource.success(false) }
+                try save(context: context)
+                return Resource.success(true)
+            } catch {
+                return Resource.error(error: ForestError.saveError)
+            }
+        }
+    }
+
     func overwriteLocalForest(
         with safeForest: SafeForestModel,
         ownerId: String,
@@ -506,6 +545,7 @@ extension ForestDataManager {
                 tree.posterKey = treeModel.poster.key
                 tree.posterSourceString = treeModel.poster.source.rawValue
                 tree.rewardId = treeModel.rewardId
+                tree.assetReady = treeModel.assetReady
                 newForest.addToTrees(tree)
             }
             
@@ -524,6 +564,7 @@ extension ForestDataManager {
                 animal.posterKey = animalModel.poster.key
                 animal.posterSourceString = animalModel.poster.source.rawValue
                 animal.rewardId = animalModel.rewardId
+                animal.assetReady = animalModel.assetReady
                 newForest.addToAnimals(animal)
             }
             
@@ -540,6 +581,7 @@ extension ForestDataManager {
                 sculpture.posterKey = sculptureModel.poster.key
                 sculpture.posterSourceString = sculptureModel.poster.source.rawValue
                 sculpture.rewardId = sculptureModel.rewardId
+                sculpture.assetReady = sculptureModel.assetReady
                 newForest.addToSculptures(sculpture)
             }
             
@@ -823,7 +865,7 @@ private extension ForestDataManager {
         do {
             try context.save()
         } catch {
-            print("Core data couldn't saved -> \(error.localizedDescription)")
+            logger.error("Forest context save failed: \(error.localizedDescription)", category: .forest)
             throw error
         }
     }
@@ -843,7 +885,7 @@ private extension ForestDataManager {
             do {
                 try save(context: context)
             } catch {
-                print("Setup quest error -> \(error.localizedDescription)")
+                logger.error("Quest setup save failed: \(error.localizedDescription)", category: .forest)
             }
         }
     }
@@ -858,6 +900,27 @@ private extension ForestDataManager {
         case sculpture
     }
     
+    /// One fetch per entity, scoped to the given forest; the caller batches the single save.
+    func markEntitiesReady(
+        entityName: String,
+        assetNames: [String],
+        forest: Forest,
+        context: NSManagedObjectContext
+    ) throws -> Bool {
+        let request = NSFetchRequest<NSManagedObject>(entityName: entityName)
+        request.predicate = NSPredicate(
+            format: "%K IN %@ AND %K == NO AND %K == %@",
+            CoreDataConstant.assetNameKey, assetNames,
+            CoreDataConstant.assetReadyKey,
+            CoreDataConstant.forestRelationName, forest
+        )
+        let entities = try context.fetch(request)
+        for entity in entities {
+            entity.setValue(true, forKey: CoreDataConstant.assetReadyKey)
+        }
+        return !entities.isEmpty
+    }
+
     private func generateValidPosition(for type: ForestObjectType, contextType: ContextType) -> (x: Double, y: Double) {
         let context = getContext(for: contextType)
         let xRange = -0.33...0.56

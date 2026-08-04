@@ -318,9 +318,7 @@ private extension ClaimRewardUI {
             rewardRepository: RewardRepository(assetManager: OfflineAssetManager(), apiService: APIService(), chestRepository: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()), forestManager: ForestDataManager(mainContext: CoreDataManager().viewContext, backgroundContext: CoreDataManager().backgroundContext))
         ),
         claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))
-    ) { reward in
-        print("Reward claimed: \(reward)")
-    }
+    ) { _ in }
 }
 
 #Preview("Cat") {
@@ -333,7 +331,5 @@ private extension ClaimRewardUI {
             rewardCount: 1,
             reward: .standart(model: LocalQuestRewardModel(id: "1", category: .animal, displayName: .mock(), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))
         )
-    ) { reward in
-        print("Reward claimed: \(reward)")
-    }
+    ) { _ in }
 }

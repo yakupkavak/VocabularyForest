@@ -97,15 +97,11 @@ struct DailyHeader: View {
         Spacer()
         VStack {
             Spacer()
-            DailyCard(parentWidth: UIScreen.main.bounds.width, model: waterModel) {
-                print("yakup")
-            }
+            DailyCard(parentWidth: UIScreen.main.bounds.width, model: waterModel) { }
             Spacer()
         }
         Spacer()
-        DailyCard(parentWidth: UIScreen.main.bounds.width, model: goldModel) {
-            print("yakup")
-        }
+        DailyCard(parentWidth: UIScreen.main.bounds.width, model: goldModel) { }
         Spacer()
     }
     .background(.blue)

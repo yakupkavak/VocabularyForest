@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="24G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Animal" representedClassName="Animal" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
         <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>
@@ -89,6 +90,7 @@
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="quests" inverseEntity="Forest"/>
     </entity>
     <entity name="Sculpture" representedClassName="Sculpture" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
         <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>
@@ -103,6 +105,7 @@
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="sculptures" inverseEntity="Forest"/>
     </entity>
     <entity name="Tree" representedClassName="Tree" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
         <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>

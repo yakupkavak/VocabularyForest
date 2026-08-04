@@ -229,7 +229,7 @@ struct TodayCardUI: View {
 }
 
 #Preview {
-    TodayCardUI(height: 320, learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf", onRefreshClick: { print("refresh") })
+    TodayCardUI(height: 320, learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf", onRefreshClick: { })
 }
 
 extension Color {

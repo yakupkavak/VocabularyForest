@@ -56,7 +56,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             coreData: coreData
         )
         let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
-        let viewModel = SplashViewModel(forestController: forestControllerService, restorePromptService: restorePromptService)
+        let assetHydrationService = resolver.resolve(type: .singleInstance, for: RewardAssetHydrationServiceProtocol.self)
+        let viewModel = SplashViewModel(forestController: forestControllerService, restorePromptService: restorePromptService, assetHydrationService: assetHydrationService)
         self.cachedSplashViewModel = viewModel
         return AnyView(
             SplashUI(viewModel: viewModel)
@@ -80,6 +81,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let weeklyRewardService = resolver.resolve(type: .singleInstance, for: WeeklyRewardServiceProtocol.self)
         let adventureRoadService = resolver.resolve(type: .singleInstance, for: AdventureRoadServiceProtocol.self)
         let marketService = resolver.resolve(type: .singleInstance, for: MarketServiceProtocol.self)
+        let assetHydrationService = resolver.resolve(type: .singleInstance, for: RewardAssetHydrationServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
             coreDataManager: coreData,
@@ -92,9 +94,10 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             dailySpinService: dailySpinService,
             weeklyRewardService: weeklyRewardService,
             adventureRoadService: adventureRoadService,
-            marketService: marketService
+            marketService: marketService,
+            assetHydrationService: assetHydrationService
         )
-        
+
         self.cachedForestViewModel = viewModel
         return AnyView(
             ForestUI(viewModel: viewModel)

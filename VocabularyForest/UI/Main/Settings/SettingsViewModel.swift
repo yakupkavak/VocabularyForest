@@ -43,7 +43,8 @@ class SettingsViewModel: ObservableObject {
     @Published var showConflictError: Bool = false
     @Published var conflictErrorMsg: String = ""
     @Published var playerName: String = ""
-    
+    private let logger: AppLoggerProtocol
+
     // MARK: - INIT
     
     init(
@@ -53,7 +54,8 @@ class SettingsViewModel: ObservableObject {
         syncManager: ForestSyncManagerProtocol,
         forestManager: ForestDataManagerProtocol,
         playerManager: PlayerDataManagerProtocol,
-        restorePromptService: CloudRestorePromptServiceProtocol
+        restorePromptService: CloudRestorePromptServiceProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
@@ -62,6 +64,7 @@ class SettingsViewModel: ObservableObject {
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.restorePromptService = restorePromptService
+        self.logger = logger
         setupInit()
     }
     
@@ -76,7 +79,7 @@ class SettingsViewModel: ObservableObject {
                     await checkUserForest()
                 }
             } catch(let error) {
-                print(error)
+                logger.error("Apple sign-in failed: \(error.localizedDescription)", category: .auth)
             }
         }
     }
@@ -87,7 +90,7 @@ class SettingsViewModel: ObservableObject {
                 try await authManager.signInWithGoogle()
                 await checkUserForest()
             }catch {
-                print(error)
+                logger.error("Google sign-in failed: \(error.localizedDescription)", category: .auth)
             }
         }
     }
@@ -126,7 +129,7 @@ class SettingsViewModel: ObservableObject {
         do {
             try authManager.signOut()
         }catch {
-            print(error)
+            logger.error("Sign-out failed: \(error.localizedDescription)", category: .auth)
         }
     }
     
@@ -150,7 +153,7 @@ class SettingsViewModel: ObservableObject {
                 }
             }
             if let error = error {
-                print("Bildirim izin hatası: \(error.localizedDescription)")
+                self.logger.error("Notification permission request failed: \(error.localizedDescription)", category: .ui)
             }
         }
     }
@@ -279,7 +282,7 @@ class SettingsViewModel: ObservableObject {
                     try await self?.syncManager.deleteCloudData()
                 }
             } catch {
-                print(error)
+                logger.error("Account deletion failed: \(error.localizedDescription)", category: .auth)
                 showError(message: String(localized: "Hesap silinemedi. Lütfen tekrar deneyin."))
             }
         }

@@ -37,7 +37,7 @@ struct GameOptionsUI: View {
                                 case .settings: onSettings()
                                 case .home:     onHome()
                                 case .info:
-                                    print("")
+                                    break
                                 }
                             }
                     }

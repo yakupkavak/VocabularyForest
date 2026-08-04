@@ -32,6 +32,7 @@ extension Animal {
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
     @NSManaged public var rewardId: String?
+    @NSManaged public var assetReady: Bool
 
 }
 
@@ -56,7 +57,8 @@ extension Animal: ConvertSafeModel {
                     xPosition: xPosition,
                     yPosition: yPosition,
                     lastUpdatedDate: lastUpdatedDate,
-                    rewardId: rewardId
+                    rewardId: rewardId,
+                    assetReady: mainAssetSource == .appAssets ? true : assetReady
                 )
             }
             throw SafeModelError.emptyValue

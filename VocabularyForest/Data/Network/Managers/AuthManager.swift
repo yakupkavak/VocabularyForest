@@ -40,9 +40,12 @@ class AuthManager: AuthManagerProtocol {
     var isUserSignedInPublisher: AnyPublisher<Bool, Never> {
         $isUserSignedIn.eraseToAnyPublisher()
     }
+    private let logger: AppLoggerProtocol
+
     // MARK: INIT
-    
-    init() {
+
+    init(logger: AppLoggerProtocol = AppLogger.shared) {
+        self.logger = logger
         checkPreviousSign()
         verifySignInWithAppleID()
     }
@@ -74,11 +77,11 @@ class AuthManager: AuthManagerProtocol {
             fatalError("Invalid state: A login callback was received, but no login request was sent.")
         }
         guard let appleIDToken = appleIDCredential.identityToken else {
-            print("Unable to fetch identity token")
+            logger.error("Apple sign-in could not fetch the identity token", category: .auth)
             return nil
         }
         guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-            print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+            logger.error("Apple sign-in could not serialize the identity token", category: .auth)
             return nil
         }
         let credentials = OAuthProvider.appleCredential(withIDToken: idTokenString,
@@ -88,27 +91,24 @@ class AuthManager: AuthManagerProtocol {
             return try await authenticateUser(credentials: credentials)
         }
         catch {
-            print("FirebaseAuthError: appleAuth(appleIDCredential:nonce:) failed. \(error)")
+            logger.error("Apple authentication failed: \(error.localizedDescription)", category: .auth)
             throw error
         }
     }
     
     func signOut() throws {
-        if let currentUser {
-            let providers = currentUser.providerData.map { $0.providerID }.joined(separator: ", ")
-            if providers.contains("google.com") {
-                signOutFromGoogle()
-            }
-            else {
-                try auth.signOut()
-            }
-            isUserSignedIn = false
+        let providers = auth.currentUser?.providerData.map { $0.providerID } ?? []
+        if providers.contains("google.com") {
+            signOutFromGoogle()
         }
+        try auth.signOut()
+        currentUser = nil
+        isUserSignedIn = false
     }
     
     // MARK: - DELETE ACCOUNT
     
-    /// Apple 5.1.1(v): reauth -> bulut verisi temizliği -> Apple token revoke -> hesabı sil.
+    /// Apple 5.1.1(v): reauth -> wipe cloud data -> revoke the Apple token -> delete the account.
     func deleteAccount(cloudCleanup: () async throws -> Void) async throws {
         guard let user = auth.currentUser else { return }
         let providers = user.providerData.map { $0.providerID }
@@ -140,7 +140,10 @@ class AuthManager: AuthManagerProtocol {
         }
         
         try await user.delete()
-        await MainActor.run { isUserSignedIn = false }
+        await MainActor.run {
+            currentUser = nil
+            isUserSignedIn = false
+        }
     }
 }
 
@@ -155,6 +158,7 @@ private extension AuthManager {
                 if let user {
                     self.setupCurrentUser(user: user)
                 } else {
+                    self.currentUser = nil
                     self.isUserSignedIn = false
                 }
             }
@@ -174,7 +178,7 @@ private extension AuthManager {
                         try self.signOut()
                     }
                     catch {
-                        print("FirebaseAuthError: signOut() failed. \(error)")
+                        self.logger.error("Sign-out after revoked Apple credential failed: \(error.localizedDescription)", category: .auth)
                     }
                 default:
                     break
@@ -210,7 +214,7 @@ private extension AuthManager {
             return try await authenticateUser(credentials: credentials)
         }
         catch {
-            print("FirebaseAuthError: googleAuth(user:) failed. \(error)")
+            logger.error("Google authentication failed: \(error.localizedDescription)", category: .auth)
             throw error
         }
     }

@@ -72,6 +72,7 @@ class CoreDataManager: CoreDataManagerProtocol {
     
     weak var notificationManager: (any NotificationManagerProtocol)?
     let container: NSPersistentContainer
+    private let logger: AppLoggerProtocol
     var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
@@ -86,7 +87,8 @@ class CoreDataManager: CoreDataManagerProtocol {
     
     // MARK: - INIT
     
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, logger: AppLoggerProtocol = AppLogger.shared) {
+        self.logger = logger
         container = NSPersistentContainer(name: "VocabularyForest")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -174,7 +176,7 @@ class CoreDataManager: CoreDataManagerProtocol {
             do {
                 try context.save()
             } catch {
-                print("Core data couldn't saved context \(context) description -> \(error.localizedDescription)")
+                logger.error("Core Data context save failed: \(error.localizedDescription)", category: .data)
             }
         }
     }
@@ -186,7 +188,7 @@ class CoreDataManager: CoreDataManagerProtocol {
             do {
                 try context.save()
             } catch {
-                print("Core data couldn't saved context \(context) description -> \(error.localizedDescription)")
+                logger.error("Core Data context save failed: \(error.localizedDescription)", category: .data)
             }
         }
     }
@@ -201,7 +203,7 @@ class CoreDataManager: CoreDataManagerProtocol {
                 do {
                     try context.execute(deleteRequest)
                 } catch {
-                    print("Error in \(entity): \(error.localizedDescription)")
+                    logger.error("Batch delete failed for entity \(entity): \(error.localizedDescription)", category: .data)
                 }
             }
             save(in: context)
@@ -219,7 +221,7 @@ extension CoreDataManager {
         let context = getContext(for: contextType)
         return context.performAndWait {
             guard let answerBook = fetchSingleBook(book: book, contextType: contextType) else {
-                print("updateBookAnswer Error")
+                logger.error("updateBookAnswer could not find the book to update", category: .data)
                 return .error(error: nil)
             }
             if type == .competitive {
@@ -380,7 +382,7 @@ extension CoreDataManager {
                 }
                 catch {
                     results = nil
-                    print("Fetch error: \(error.localizedDescription)")
+                    logger.error("Fetch failed: \(error.localizedDescription)", category: .data)
                 }
             }
             return results
@@ -411,7 +413,7 @@ extension CoreDataManager {
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
-                        print("Books couldn't fetched -> \(error)")
+                        logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                         return nil
                     }
                 }else {
@@ -441,7 +443,7 @@ extension CoreDataManager {
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -464,7 +466,7 @@ extension CoreDataManager {
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -519,7 +521,7 @@ extension CoreDataManager {
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
-                        print("Books couldn't fetched -> \(error)")
+                        logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                         return nil
                     }
                 }else {
@@ -555,7 +557,7 @@ extension CoreDataManager {
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -766,7 +768,7 @@ extension CoreDataManager {
                 let safeBookcase = try singleBookcase.first?.safeObject(context: context)
                 return safeBookcase
             } catch {
-                print("Bookcase coduln't fetched \(error)")
+                logger.error("Bookcase fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -789,7 +791,7 @@ extension CoreDataManager {
                 let bookcase = try firtBookcase?.safeObject(context: context)
                 return bookcase
             } catch {
-                print(error.localizedDescription)
+                logger.error("First bookcase fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -809,7 +811,7 @@ private extension CoreDataManager {
                 let booklist = try context.fetch(request)
                 return booklist.first
             } catch {
-                print("Book id couldn't fetch \(book.id)")
+                logger.error("Book could not be fetched by id \(book.id)", category: .data)
                 return nil
             }
         }
@@ -825,7 +827,7 @@ private extension CoreDataManager {
                 let booklist = try context.fetch(request)
                 return booklist.first
             } catch {
-                print("Bookcase id couldn't fetch \(bookcase.id)")
+                logger.error("Bookcase could not be fetched by id \(bookcase.id)", category: .data)
                 return nil
             }
         }
@@ -848,7 +850,7 @@ private extension CoreDataManager {
                 }
                 catch {
                     results = nil
-                    print("Fetch error: \(error.localizedDescription)")
+                    logger.error("Fetch failed: \(error.localizedDescription)", category: .data)
                 }
             }
             return results

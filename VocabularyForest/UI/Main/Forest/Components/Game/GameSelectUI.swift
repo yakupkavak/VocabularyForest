@@ -258,8 +258,5 @@ struct TagView: View {
 
 #Preview {
     @State var gameSelect = true
-    GameSelectUI(showGameSelect: $gameSelect, bookcaseList: []) {
-        otpion, game, level, type  in
-        print("yakup")
-    }
+    GameSelectUI(showGameSelect: $gameSelect, bookcaseList: []) { _, _, _, _ in }
 }

@@ -77,7 +77,5 @@ private extension ForestFirstRewardUI {
         LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "initalize_whitecat_id", category: .animal, displayName: RemoteLocalizedText.mock(en: "WhiteCat"), assetName: "WhiteCat", imageSource: .local, posterImage: RewardAssetReference(key: "WhiteCat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil))),
         LocalRewardModel(rewardCount: 1, reward: .standart(model: .init(id: "initalize_cat_id", category: .animal, displayName: RemoteLocalizedText.mock(en: "Cat"), assetName: "Cat", imageSource: .local, posterImage: RewardAssetReference(key: "Cat", source: .appAssets), remotePath: nil, remoteAssetVersion: nil, textColorHex: nil, textStrokeColorHex: nil, gradientHexes: nil)))
     ]
-    ForestFirstRewardUI(rewards: rewards, selectedReward: { model in
-        print(model)
-    })
+    ForestFirstRewardUI(rewards: rewards, selectedReward: { _ in })
 }

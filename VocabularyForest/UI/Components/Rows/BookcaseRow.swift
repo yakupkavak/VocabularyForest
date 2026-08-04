@@ -100,7 +100,7 @@ private extension BookcaseRow {
         sampleBook.shortMemory = i % 2 == 0 ? false : true
         sampleBook.bookcase = sampleBookcase
     }
-    return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel(), onEdit: { print("edit") } , onDelete: {print("delete")}
+    return BookcaseRow(bookcase: sampleBookcase, animalModel: getRandomAnimalModel(), onEdit: { } , onDelete: { }
     )
 }
 */

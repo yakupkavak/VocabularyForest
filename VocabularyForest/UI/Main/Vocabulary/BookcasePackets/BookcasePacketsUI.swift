@@ -38,7 +38,7 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
         .onChange(of: viewModel.downloadState) { state in
             switch state {
             case .waiting:
-                print("Waiting")
+                break
             case .downloading:
                 presentToast(ToastValue(message: String(localized: "Yükleniyor")))
             case .success:

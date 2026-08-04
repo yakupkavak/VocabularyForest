@@ -19,7 +19,7 @@ enum AssetManagerError: Error {
 
 protocol OfflineAssetManagerProtocol {
     func saveImageToAssets(data: Data, imageName: String, version: Int) -> Resource<Bool>
-    func saveAndExtractZip(zipData: Data) throws
+    func saveAndExtractZip(zipData: Data, localKey: String, version: Int) throws
     func loadImageFromAssets(imageName: String) throws -> UIImage
     func isAssetReady(assetName: String) throws -> Bool
     func fileExists(fileName: String) -> Bool
@@ -35,11 +35,13 @@ final class OfflineAssetManager {
     private let fileManager = FileManager.default
     private let userDefaults: UserDefaults
     private let baseDirectoryURL: URL
-    
+    private let logger: AppLoggerProtocol
+
     // MARK: - INIT
-    
-    init(directoryURL: URL? = nil, userDefaults: UserDefaults = .standard) {
+
+    init(directoryURL: URL? = nil, userDefaults: UserDefaults = .standard, logger: AppLoggerProtocol = AppLogger.shared) {
         self.userDefaults = userDefaults
+        self.logger = logger
         if let directoryURL = directoryURL {
             self.baseDirectoryURL = directoryURL
         } else {
@@ -63,7 +65,7 @@ extension OfflineAssetManager: OfflineAssetManagerProtocol {
         return savedVersion >= expectedVersion
     }
     
-    func saveAndExtractZip(zipData: Data) throws {
+    func saveAndExtractZip(zipData: Data, localKey: String, version: Int) throws {
         let baseAssetDirectory = getAssetDirectory()
         let tempProcessFolderURL = baseAssetDirectory.appendingPathComponent("Temp_\(UUID().uuidString)")
         try fileManager.createDirectory(at: tempProcessFolderURL, withIntermediateDirectories: true, attributes: nil)
@@ -76,18 +78,24 @@ extension OfflineAssetManager: OfflineAssetManagerProtocol {
             guard let bundleFolderName = contents.first(where: { !$0.hasPrefix(".") && !$0.hasPrefix("__") }) else {
                 throw AssetManagerError.zipExtractionError
             }
+            if bundleFolderName != localKey {
+                // Readers resolve textures by localKey, so the bundle is installed under that name
+                // regardless of what the zip's folder happens to be called.
+                logger.debug("Zip bundle folder \(bundleFolderName) does not match localKey \(localKey); installing as \(localKey)", category: .asset)
+            }
             let extractedBundleURL = tempProcessFolderURL.appendingPathComponent(bundleFolderName)
-            
+
             let manifestURL = extractedBundleURL.appendingPathComponent("manifest.json")
             let manifestData = try Data(contentsOf: manifestURL)
-            let manifest = try JSONDecoder().decode(ManifestModel.self, from: manifestData)
-            let finalDestinationURL = baseAssetDirectory.appendingPathComponent(bundleFolderName)
-            
+            // Decoded only to verify the bundle is not corrupt; the version comes from the caller.
+            _ = try JSONDecoder().decode(ManifestModel.self, from: manifestData)
+            let finalDestinationURL = baseAssetDirectory.appendingPathComponent(localKey)
+
             if fileManager.fileExists(atPath: finalDestinationURL.path) {
                 try fileManager.removeItem(at: finalDestinationURL)
             }
             try fileManager.moveItem(at: extractedBundleURL, to: finalDestinationURL)
-            userDefaults.set(manifest.version, forKey: "version_\(manifest.bundleId)")
+            userDefaults.set(version, forKey: "version_\(localKey)")
             try fileManager.removeItem(at: tempProcessFolderURL)
         } catch {
             try? fileManager.removeItem(at: tempProcessFolderURL)

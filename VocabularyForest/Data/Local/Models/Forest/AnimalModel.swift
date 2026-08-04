@@ -22,5 +22,8 @@ struct AnimalModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var lastUpdatedDate: Date
     /// Reward catalog id (rewards_config) used to re-download remote assets after a cloud restore.
     var rewardId: String? = nil
+    /// Invariant: an entity with `assetSource == .offlineStorage` and `assetReady == true`
+    /// has its file verified on disk. Only such entities are added to the scene.
+    var assetReady: Bool = true
 }
 

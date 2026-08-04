@@ -7,60 +7,108 @@
 
 import SwiftUI
 
-// MARK: - REWARD STYLE
+// MARK: - REWARD PALETTE
 
-/// Maps the dynamic reward content to the fixed color palette of the road cards
-private enum AdventureRewardStyle {
-    case gold
-    case water
-    case diamond
-    case plant
-    case sculpture
-    case animal
-    case chestGold
-    case chestNature
-    case chestDiamond
-    case chestAntique
-    case fallback
+/// Derives the missing palette stops from the remote colors.
+/// Hex parsing itself is not repeated here — it stays in the shared `Color(hex:)` initializer.
+private enum AdventureColorMath {
+
+    /// Mixes the color toward white and/or black, both ratios in 0...1
+    static func mixed(_ color: Color, whiteMix: Double = 0, blackMix: Double = 0) -> Color {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(color).getRed(&r, green: &g, blue: &b, alpha: &a)
+        func channel(_ value: CGFloat) -> Double {
+            let mixed = (Double(value) + (1 - Double(value)) * whiteMix) * (1 - blackMix)
+            return min(max(mixed, 0), 1)
+        }
+        return Color(.sRGB, red: channel(r), green: channel(g), blue: channel(b), opacity: Double(a))
+    }
+}
+
+/// Resolves every color the road UI needs from the remote-driven reward data.
+/// Chests read their own config colors (deriving from the market background gradient when the
+/// dedicated fields are missing), so a newly added chest never drops to a generic fallback look.
+private struct AdventureRewardPalette {
+    let roadColor: Color
+    let cardGradientColors: [Color]
+    let borderColors: [Color]
+    let claimedOverlayColor: Color
+    let valueTextColor: Color
 
     init(reward: LocalRewardModel) {
         switch reward.reward {
         case .standart(let model):
-            switch model.category {
-            case .gold:
-                self = .gold
-            case .water:
-                self = .water
-            case .diamond:
-                self = .diamond
-            case .plant:
-                self = .plant
-            case .sculpture:
-                self = .sculpture
-            case .animal:
-                self = .animal
-            }
+            let defaults = Self.categoryStyle(for: model.category)
+            self.init(
+                cardHexes: model.cardGradientHexes ?? defaults.cardHexes,
+                roadHex: model.roadColorHex ?? defaults.roadHex,
+                textHex: model.cardTextColorHex ?? defaults.textHex
+            )
         case .chest(let model):
-            if model.id.contains("gold") {
-                self = .chestGold
-            } else if model.id.contains("nature") {
-                self = .chestNature
-            } else if model.id.contains("diamond") {
-                self = .chestDiamond
-            } else if model.id.contains("antique") {
-                self = .chestAntique
-            } else {
-                self = .chestGold
-            }
+            self.init(
+                cardHexes: model.cardGradientHexes ?? model.backgroundGradientColors ?? [],
+                roadHex: model.roadColorHex,
+                textHex: model.cardTextColorHex
+            )
         }
     }
 
-    var isChest: Bool {
-        switch self {
-        case .chestGold, .chestNature, .chestDiamond, .chestAntique:
-            return true
+    /// Missing road/text colors are derived from the normalized light → base → dark card stops
+    private init(cardHexes: [String], roadHex: String?, textHex: String?) {
+        let stops = Self.normalizedCardColors(cardHexes)
+        let base = stops[stops.count / 2]
+        let dark = stops[stops.count - 1]
+
+        cardGradientColors = stops
+        roadColor = roadHex.map { Color(hex: $0) } ?? base
+
+        let textColor = textHex.map { Color(hex: $0) } ?? AdventureColorMath.mixed(dark, blackMix: 0.35)
+        valueTextColor = textColor
+        claimedOverlayColor = textColor.opacity(0.15)
+
+        borderColors = [
+            Color.white.opacity(0.98),
+            base.opacity(0.92),
+            dark.opacity(0.9)
+        ]
+    }
+
+    /// The card design needs at least three stops; short remote gradients gain a light top stop
+    private static func normalizedCardColors(_ hexes: [String]) -> [Color] {
+        switch hexes.count {
+        case 0:
+            return ["#F2F2F2", "#BFBFBF", "#8F8F8F"].map { Color(hex: $0) }
+        case 1:
+            let base = Color(hex: hexes[0])
+            return [
+                AdventureColorMath.mixed(base, whiteMix: 0.75),
+                base,
+                AdventureColorMath.mixed(base, blackMix: 0.3)
+            ]
+        case 2:
+            let light = Color(hex: hexes[0])
+            return [AdventureColorMath.mixed(light, whiteMix: 0.75), light, Color(hex: hexes[1])]
         default:
-            return false
+            return hexes.map { Color(hex: $0) }
+        }
+    }
+
+    /// Fixed palette for the closed set of standart reward categories,
+    /// used only when the remote reward doesn't specify its own colors
+    private static func categoryStyle(for category: QuestRewardModel) -> (roadHex: String, cardHexes: [String], textHex: String) {
+        switch category {
+        case .gold:
+            ("#F4C430", ["#FFF5CC", "#F4C430", "#C88A1E"], "#8B5E00")
+        case .water:
+            ("#77AFCA", ["#E2F5FA", "#77AFCA", "#3A7192"], "#0B4F6C")
+        case .diamond:
+            ("#7BDDF2", ["#F0FDFF", "#8BE9F7", "#2783D7"], "#0B3A64")
+        case .plant:
+            ("#7ED957", ["#EFFFDD", "#7ED957", "#1E8449"], "#2F5D1B")
+        case .sculpture:
+            ("#B983FF", ["#F3E8FF", "#B983FF", "#5B2A86"], "#4A2270")
+        case .animal:
+            ("#FF9F45", ["#FFEEDB", "#FF9F45", "#E4572E"], "#8A3417")
         }
     }
 }
@@ -352,11 +400,12 @@ private struct AdventureCenterRoads: View {
         neckRatio: CGFloat,
         centerOffsetY: CGFloat
     ) -> some View {
-        let style = AdventureRewardStyle(reward: milestone.reward)
+        let palette = AdventureRewardPalette(reward: milestone.reward)
         let isReached = milestone.status != .locked
+        /// Locked road segments stay plain white, only reached ones take the reward color
         let baseColor = isReached
-            ? nodeRewardColor(style: style)
-            : nodeOuterColor(style: style)
+            ? palette.roadColor
+            : Color.white.opacity(0.97)
 
         ZStack {
             AdventureFlowPath(neckRatio: neckRatio)
@@ -378,31 +427,6 @@ private struct AdventureCenterRoads: View {
         .offset(y: centerOffsetY)
         .frame(width: nodeSize, height: segmentHeight)
     }
-
-    /// Reward-matching fill color used when the user has reached the milestone
-    private func nodeRewardColor(style: AdventureRewardStyle) -> Color {
-        switch style {
-        case .gold, .chestGold:
-            return Color(hex: "#F4C430")
-        case .water:
-            return Color(hex: "#77AFCA")
-        case .plant, .chestNature:
-            return Color(hex: "#7ED957")
-        case .sculpture:
-            return Color(hex: "#B983FF")
-        case .animal:
-            return Color(hex: "#FF9F45")
-        case .chestAntique:
-            return Color(hex: "#D1A05B")
-        case .diamond, .chestDiamond, .fallback:
-            return Color(hex: "#7BDDF2")
-        }
-    }
-
-    /// Locked road segments stay plain white, chests no longer tint the road
-    private func nodeOuterColor(style: AdventureRewardStyle) -> Color {
-        Color.white.opacity(0.97)
-    }
 }
 
 private struct AdventureRewardCard: View {
@@ -411,8 +435,8 @@ private struct AdventureRewardCard: View {
     let cardWidth: CGFloat
     let isFinalMilestone: Bool
 
-    private var style: AdventureRewardStyle {
-        AdventureRewardStyle(reward: milestone.reward)
+    private var palette: AdventureRewardPalette {
+        AdventureRewardPalette(reward: milestone.reward)
     }
 
     private var isClaimed: Bool {
@@ -500,68 +524,16 @@ private struct AdventureRewardCard: View {
     }
 
     private var cardFillGradient: LinearGradient {
-        let colors: [Color]
-        switch style {
-        case .gold:
-            colors = [
-                Color(hex: "#FFF5CC").opacity(0.98),
-                Color(hex: "#F4C430").opacity(0.78),
-                Color(hex: "#C88A1E").opacity(0.74)
-            ]
-        case .water:
-            colors = [
-                Color(hex: "#E2F5FA").opacity(0.98),
-                Color(hex: "#77AFCA").opacity(0.74),
-                Color(hex: "#3A7192").opacity(0.7)
-            ]
-        case .chestGold:
-            colors = [
-                Color(hex: "#FFF1BF").opacity(0.99),
-                Color(hex: "#FFCC4D").opacity(0.82),
-                Color(hex: "#B67F1E").opacity(0.72)
-            ]
-        case .chestNature:
-            colors = [
-                Color(hex: "#F2FFD5").opacity(0.98),
-                Color(hex: "#A8EA6A").opacity(0.78),
-                Color(hex: "#4D922A").opacity(0.72)
-            ]
-        case .chestDiamond:
-            colors = [
-                Color(hex: "#EAFDFF").opacity(0.99),
-                Color(hex: "#72DFFF").opacity(0.82),
-                Color(hex: "#2A67D3").opacity(0.72)
-            ]
-        case .chestAntique:
-            colors = [
-                Color(hex: "#F7E4C2").opacity(0.99),
-                Color(hex: "#CD9F5F").opacity(0.82),
-                Color(hex: "#8A5A2B").opacity(0.72)
-            ]
-        case .plant:
-            colors = [
-                Color(hex: "#EFFFDD").opacity(0.98),
-                Color(hex: "#7ED957").opacity(0.78),
-                Color(hex: "#1E8449").opacity(0.72)
-            ]
-        case .sculpture:
-            colors = [
-                Color(hex: "#F3E8FF").opacity(0.98),
-                Color(hex: "#B983FF").opacity(0.78),
-                Color(hex: "#5B2A86").opacity(0.72)
-            ]
-        case .animal:
-            colors = [
-                Color(hex: "#FFEEDB").opacity(0.98),
-                Color(hex: "#FF9F45").opacity(0.78),
-                Color(hex: "#E4572E").opacity(0.72)
-            ]
-        case .diamond, .fallback:
-            colors = [
-                Color(hex: "#F0FDFF").opacity(0.99),
-                Color(hex: "#8BE9F7").opacity(0.78),
-                Color(hex: "#2783D7").opacity(0.74)
-            ]
+        let gradientColors = palette.cardGradientColors
+        let colors = gradientColors.enumerated().map { index, color in
+            switch index {
+            case 0:
+                color.opacity(0.98)
+            case gradientColors.count - 1:
+                color.opacity(0.72)
+            default:
+                color.opacity(0.78)
+            }
         }
 
         /// The final rewards drop the near-white top stop so the card reads as a rich solid color
@@ -575,107 +547,15 @@ private struct AdventureRewardCard: View {
     }
 
     private var borderGradient: LinearGradient {
-        switch style {
-        case .gold, .chestGold:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#E8B83F").opacity(0.92),
-                    Color(hex: "#B67F1E").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .water:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.96),
-                    Color(hex: "#5FB3D9").opacity(0.9),
-                    Color(hex: "#1F6780").opacity(0.88)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .chestNature:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#99D04E").opacity(0.92),
-                    Color(hex: "#4F8F2D").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .chestAntique:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#D1A05B").opacity(0.92),
-                    Color(hex: "#8A5A2B").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .plant:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#7ED957").opacity(0.92),
-                    Color(hex: "#1E8449").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .sculpture:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#B983FF").opacity(0.92),
-                    Color(hex: "#5B2A86").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .animal:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#FF9F45").opacity(0.92),
-                    Color(hex: "#E4572E").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .diamond, .chestDiamond, .fallback:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#7BDDF2").opacity(0.92),
-                    Color(hex: "#2A67D3").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
+        LinearGradient(
+            colors: palette.borderColors,
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
 
     private var claimedOverlayColor: Color {
-        switch style {
-        case .gold, .chestGold:
-            return Color(hex: "#8B5E00").opacity(0.16)
-        case .water:
-            return Color(hex: "#0B4F6C").opacity(0.14)
-        case .plant, .chestNature:
-            return Color(hex: "#2F5D1B").opacity(0.16)
-        case .sculpture:
-            return Color(hex: "#3A1D59").opacity(0.16)
-        case .animal:
-            return Color(hex: "#7A2E12").opacity(0.16)
-        case .chestAntique:
-            return Color(hex: "#6B4A1E").opacity(0.16)
-        case .diamond, .chestDiamond, .fallback:
-            return Color(hex: "#0B3A64").opacity(0.14)
-        }
+        palette.claimedOverlayColor
     }
 
     private var rewardValueColor: Color {
@@ -683,22 +563,7 @@ private struct AdventureRewardCard: View {
         if isFinalMilestone {
             return Color(hex: "#FFB800")
         }
-        switch style {
-        case .gold, .chestGold:
-            return Color(hex: "#8B5E00")
-        case .water:
-            return Color(hex: "#0B4F6C")
-        case .plant, .chestNature:
-            return Color(hex: "#2F5D1B")
-        case .sculpture:
-            return Color(hex: "#4A2270")
-        case .animal:
-            return Color(hex: "#8A3417")
-        case .chestAntique:
-            return Color(hex: "#6B4A1E")
-        case .diamond, .chestDiamond, .fallback:
-            return Color(hex: "#0B3A64")
-        }
+        return palette.valueTextColor
     }
 
     private var claimedBadge: some View {

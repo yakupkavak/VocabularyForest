@@ -28,6 +28,10 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let textColorHex: String?
     let gradientHexes: [String]?
     let textStrokeColorHex: String?
+    /// Adventure road styling; when absent the road falls back to the category palette
+    let roadColorHex: String?
+    let cardGradientHexes: [String]?
+    let cardTextColorHex: String?
 }
 
 // MARK: - SAFE COMPUTED PROPERTIES (UI HELPERS)

@@ -96,7 +96,6 @@ class LearningFeedViewModel: ObservableObject{
         defaults.set(todaysLearningWord, forKey: Constant.dailyWordKey)
         defaults.set(todaysMeaning, forKey: Constant.dailyMeaningKey)
         defaults.set(todaysExample, forKey: Constant.dailyExampleKey)
-        print("New word saved to UserDefaults for today.")
     }
     
     private func clearDailyWord() {

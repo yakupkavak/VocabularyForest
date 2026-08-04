@@ -76,7 +76,5 @@ struct AnnouncementCellUI: View {
 }
 
 #Preview {
-    ForestAnnouncementUI(isVisible: .constant(true), onClick: { _ in
-        print("yakup")
-    })
+    ForestAnnouncementUI(isVisible: .constant(true), onClick: { _ in })
 }

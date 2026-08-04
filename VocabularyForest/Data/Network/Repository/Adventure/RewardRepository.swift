@@ -124,7 +124,10 @@ extension RewardRepository: RewardRepositoryProtocol {
                             remoteAssetVersion: remoteReward.remoteAssetVersion,
                             textColorHex: remoteReward.textColorHex,
                             textStrokeColorHex: remoteReward.textStrokeColorHex,
-                            gradientHexes: remoteReward.gradientHexes
+                            gradientHexes: remoteReward.gradientHexes,
+                            roadColorHex: remoteReward.roadColorHex,
+                            cardGradientHexes: remoteReward.cardGradientHexes,
+                            cardTextColorHex: remoteReward.cardTextColorHex
                         )
                     )
                 case "chest":
@@ -213,7 +216,7 @@ extension RewardRepository: RewardAssetDownloaderProtocol {
                 switch result {
                 case .success(let zipData):
                     do {
-                        try self.offlineAssetManager.saveAndExtractZip(zipData: zipData)
+                        try self.offlineAssetManager.saveAndExtractZip(zipData: zipData, localKey: localKey, version: version)
                         continuation.resume()
                     } catch {
                         continuation.resume(throwing: error)

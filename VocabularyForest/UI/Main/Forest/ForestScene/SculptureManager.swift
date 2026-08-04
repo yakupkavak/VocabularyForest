@@ -46,6 +46,7 @@ class SculptureManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var sculptureModel: SculptureModel? = nil
     private var isMenuOpen = false
     var currentSculptureNode = SKSpriteNode()
@@ -66,7 +67,10 @@ private extension SculptureManager {
         case .appAssets:
             currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
         case .offlineStorage:
-            guard let texture = loadOfflineTexture(assetName: model.assetName) else { return }
+            guard let texture = loadOfflineTexture(assetName: model.assetName) else {
+                logger.debug("SculptureManager skipped setup, empty texture for asset \(model.assetName) (source: \(model.assetSource))", category: .asset)
+                return
+            }
             currentSculptureNode = SKSpriteNode(texture: texture)
         }
         currentSculptureNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
