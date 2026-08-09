@@ -60,6 +60,7 @@ struct BookcaseDetailUI: View {
                         .frame(maxWidth: 32)
                         .foregroundStyle(.brown300)
                 }
+                .accessibilityLabel(String(localized: showMeaning ? "a11y_hide_meanings" : "a11y_show_meanings"))
             }
         }
         .frame(maxWidth: .greatestFiniteMagnitude)

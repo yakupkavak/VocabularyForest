@@ -88,13 +88,16 @@ private extension OnboardingUI {
     var bottomBar: some View {
         HStack(spacing: 12) {
             let dotCount = max(models.count - 2, 0)
-            ForEach(0..<dotCount, id: \.self) { index in
-                Circle()
-                    .fill(currentPage == index ? Colors.selectedButton : Colors.unselectedButton)
-                    .frame(width: currentPage == index ? 24 : 16)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.85), value: currentPage)
+            HStack(spacing: 12) {
+                ForEach(0..<dotCount, id: \.self) { index in
+                    Circle()
+                        .fill(currentPage == index ? Colors.selectedButton : Colors.unselectedButton)
+                        .frame(width: currentPage == index ? 24 : 16)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.85), value: currentPage)
+                }
             }
-            
+            .a11yGroup(String(format: NSLocalizedString("a11y_page_of", comment: ""), currentPage + 1, dotCount))
+
             Spacer()
             
             Button {
@@ -203,6 +206,8 @@ private extension OnboardingUI {
                 }
         )
         .position(x: UIScreen.main.bounds.width - 30, y: waveCenterY)
+        // Purely decorative swipe affordance; the "next" button covers navigation
+        .accessibilityHidden(true)
     }
 }
 

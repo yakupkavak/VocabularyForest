@@ -92,6 +92,7 @@ private extension WeeklyRewardUI {
                         .shadow(color: .black.opacity(0.3), radius: 1)
                 }
                 .offset(x: size.width * (isPad ? -0.00 : 0.07), y: size.height * (isPad ? 0.015 : 0.01))
+                .accessibilityLabel(String(localized: "a11y_close"))
             }
             
             

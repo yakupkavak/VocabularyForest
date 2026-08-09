@@ -85,6 +85,7 @@ extension BookcasePacketsUI {
                                 .onTapGesture {
                                     withAnimation { viewModel.selectLibrary(code: languageCode) }
                                 }
+                                .a11yTapButton(isSelected: isSelected)
                         }
                     }
                     .padding(.horizontal)

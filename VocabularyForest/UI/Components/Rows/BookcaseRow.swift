@@ -62,6 +62,7 @@ private extension BookcaseRow {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "a11y_more_options"))
         }
     }
     var languageLine: some View {
@@ -80,6 +81,13 @@ private extension BookcaseRow {
             }
             Spacer()
         }.padding(.top, -8)
+            .a11yGroup(
+                String(
+                    format: NSLocalizedString("a11y_memory_counts", comment: ""),
+                    bookcase.longMemoryBooksCount ?? 0,
+                    bookcase.shortMemoryBooksCount ?? 0
+                )
+            )
     }
 }
 

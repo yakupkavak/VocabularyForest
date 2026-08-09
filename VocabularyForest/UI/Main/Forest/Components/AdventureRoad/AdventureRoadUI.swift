@@ -113,6 +113,29 @@ private struct AdventureRewardPalette {
     }
 }
 
+// MARK: - ACCESSIBILITY TEXT
+
+/// Milestone state is otherwise conveyed only through opacity and glow,
+/// so VoiceOver needs an explicit spoken equivalent.
+private extension AdventureMilestoneModel {
+
+    var a11yStatusText: String {
+        switch status {
+        case .locked: String(localized: "a11y_status_locked")
+        case .ready: String(localized: "a11y_status_ready")
+        case .claimed: String(localized: "a11y_status_claimed")
+        }
+    }
+
+    var a11yLabel: String {
+        let rewardName = switch reward.reward {
+        case .standart(let model): model.displayName.localized
+        case .chest(let model): model.displayName.localized
+        }
+        return String(format: NSLocalizedString("a11y_milestone_label", comment: ""), rewardName, wordCount)
+    }
+}
+
 struct AdventureRoadUI: View {
     
     // MARK: - PROPERTIES
@@ -176,6 +199,7 @@ struct AdventureRoadUI: View {
                             rowSpacingOfCard: rowSpacingForSideColumns
                         )
                         .frame(width: centerWidth)
+                        .accessibilityHidden(true)
                         
                         Spacer(minLength: 0)
                         
@@ -221,6 +245,7 @@ private extension AdventureRoadUI {
                     .background(Color.white.opacity(0.78))
                     .clipShape(Circle())
             }
+            .accessibilityLabel(String(localized: "a11y_close"))
 
             Spacer()
 
@@ -235,6 +260,7 @@ private extension AdventureRoadUI {
             .padding(.vertical, w * 0.023)
             .background(screenModel.theme.countdownBackgroundColor)
             .clipShape(Capsule())
+            .a11yGroup()
         }
     }
     
@@ -322,6 +348,11 @@ private struct AdventureLaneColumn: View {
                         .foregroundStyle(wordLabelColor)
                 }
                 .frame(height: rowHeight)
+                .a11yTapButton(
+                    milestone.a11yLabel,
+                    value: milestone.a11yStatusText,
+                    hint: milestone.status == .ready ? String(localized: "a11y_claim_hint") : nil
+                )
             }
         }
     }

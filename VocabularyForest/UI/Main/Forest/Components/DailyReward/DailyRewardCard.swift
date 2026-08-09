@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+// MARK: - ACCESSIBILITY TEXT
+
+/// Card state is otherwise conveyed only through color, glow and badge icons,
+/// so VoiceOver needs an explicit spoken equivalent.
+private extension WeeklyDailyCardModel {
+
+    var a11yStatusText: String {
+        switch status {
+        case .locked: String(localized: "a11y_status_locked")
+        case .ready: String(localized: "a11y_status_ready")
+        case .claimed: String(localized: "a11y_status_claimed")
+        }
+    }
+}
+
 struct DailyCard: View {
     
     // MARK: - PROPERTIES
@@ -67,6 +82,16 @@ struct DailyCard: View {
         .onTapGesture {
             onClick()
         }
+        .a11yTapButton(
+            String(
+                format: NSLocalizedString("a11y_daily_card_label", comment: ""),
+                model.day,
+                model.bounty.reward.displayName.localized,
+                model.bounty.rewardCount
+            ),
+            value: model.a11yStatusText,
+            hint: model.status == .ready ? String(localized: "a11y_claim_hint") : nil
+        )
     }
 }
 

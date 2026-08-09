@@ -68,12 +68,14 @@ private extension BookcaseFeedUI {
             } label: {
                 Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
+            .accessibilityLabel(String(localized: "Hazır kütüphaneler"))
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kitaplık ara")).focused($searchBarIsFocused)
             Button {
                 bookcaseRouter.navigate(to: .createBookcase)
             } label: {
                 Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 28).foregroundStyle(.clickableButton)
             }
+            .accessibilityLabel(String(localized: "Kitaplık oluştur"))
         }.padding(.horizontal,32)
     }
     var noneDataView: some View {
@@ -121,6 +123,13 @@ private extension BookcaseFeedUI {
                     bookcaseRouter.navigate(
                         to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.bookcaseName, learning: bookcaseDisplayItem.bookcase.learningLanguage,meaning: bookcaseDisplayItem.bookcase.meaningLanguage)
                     )
+                }
+                .a11yTapButton(hint: String(localized: "a11y_open_bookcase_hint"))
+                .accessibilityAction(named: Text("Düzenle")) {
+                    viewModel.prepareForEdit(item: bookcaseDisplayItem)
+                }
+                .accessibilityAction(named: Text("Sil")) {
+                    viewModel.deleteBookcase(item: bookcaseDisplayItem)
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)

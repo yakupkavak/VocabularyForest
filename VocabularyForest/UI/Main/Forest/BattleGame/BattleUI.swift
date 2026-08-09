@@ -71,6 +71,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
         ZStack() {
             SpriteView(scene: scene)
                 .ignoresSafeArea()
+                .accessibilityHidden(true)
             VStack {
                 headerView.padding(.top, safeAreaInsets.top)
                 Spacer()
@@ -129,8 +130,10 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                     case .checkAnswer:
                         if viewModel.questionStation == .correct {
                             Text("correct")
+                                .onAppear { A11yAnnouncer.announce(String(localized: "a11y_correct_announce")) }
                         }else if viewModel.questionStation == .wrong {
                             Text("wrong")
+                                .onAppear { A11yAnnouncer.announce(String(localized: "a11y_wrong_announce")) }
                         }
                     case .gameOver:
                         gameOverView
@@ -184,7 +187,9 @@ private extension BattleUI {
                                     showMagics = false
                                     viewModel.startMagic(magicType: magic)
                                 }
+                                .a11yTapButton(magicModel.name)
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
+                                .accessibilityHidden(true)
                             Spacer()
                         }.padding(.horizontal, 12)
                     }
@@ -197,7 +202,9 @@ private extension BattleUI {
                                 showMagics = false
                                 viewModel.startMagic(magicType: magic)
                             }
+                            .a11yTapButton(magicModel.name)
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
+                                .accessibilityHidden(true)
                         }.padding(.horizontal, 16)
                     }
                 }
@@ -241,6 +248,11 @@ private extension BattleUI {
                         Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
                     }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.08)
                 }
+                .task(id: question.questionNumber) {
+                    A11yAnnouncer.announce(
+                        String(format: NSLocalizedString("a11y_question_announce", comment: ""), question.questionNumber, question.questionTitle)
+                    )
+                }
                 Spacer()
                 VStack() {
                     HStack{
@@ -283,6 +295,7 @@ private extension BattleUI {
                             .foregroundStyle(.yellow)
                             .font(.headline)
                     }.padding(.top, 8)
+                        .a11yGroup(String(format: NSLocalizedString("a11y_earned_gold", comment: ""), viewModel.gameStatus.earnedGold))
                 }
                 VStack{
                     if viewModel.gameStatus.wrongWords.isEmpty {
@@ -297,6 +310,7 @@ private extension BattleUI {
                                     Image(.addListIcon).resizable().scaledToFit().frame(width: 24, height: 24).onTapGesture {
                                         addWordTapped(book: book)
                                     }
+                                    .a11yTapButton(String(format: NSLocalizedString("a11y_add_to_bookcase", comment: ""), book.learningWord))
                                 }
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
@@ -321,6 +335,10 @@ private extension BattleUI {
                 Text(viewModel.gameStatus.userWon ?? true ? "Fantastic!" : "So Close!").foregroundStyle(.white).multilineTextAlignment(.center)
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.078)
         }
+        .onAppear {
+            let resultKey = (viewModel.gameStatus.userWon ?? true) ? "a11y_game_won_announce" : "a11y_game_lost_announce"
+            A11yAnnouncer.announce(String(localized: String.LocalizationValue(resultKey)))
+        }
     }
     
     var headerView: some View {
@@ -342,6 +360,10 @@ private extension BattleUI {
                             }.zIndex(2.0)
                         }
                     }
+                    .a11yGroup(
+                        viewModel.playerName,
+                        value: String(format: NSLocalizedString("a11y_energy_value", comment: ""), playerAnger.currentLevel, playerAnger.totalLevel)
+                    )
                 }
                 Spacer()
                 if let enemyAnger = viewModel.enemyAnger {
@@ -358,6 +380,10 @@ private extension BattleUI {
                             }.zIndex(2.0)
                         }
                     }
+                    .a11yGroup(
+                        enemyAnger.name,
+                        value: String(format: NSLocalizedString("a11y_energy_value", comment: ""), enemyAnger.currentLevel, enemyAnger.totalLevel)
+                    )
                 }
             }
             HStack {
@@ -365,6 +391,7 @@ private extension BattleUI {
                 Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36).onTapGesture {
                     showOption = true
                 }
+                .a11yTapButton(String(localized: "a11y_menu"))
             }
         }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
     }
@@ -421,6 +448,7 @@ private extension BattleUI {
                 )
                 .multilineTextAlignment(.center)
         }
+        .a11yTapButton()
     }
 }
 

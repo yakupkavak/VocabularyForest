@@ -50,6 +50,10 @@ struct ForestAnnouncementUI: View {
                             onClick(model.type)
                             isVisible = false
                         }
+                        .a11yTapButton(
+                            model.title,
+                            value: claimableTypes.contains(model.type) ? String(localized: "a11y_reward_ready") : nil
+                        )
                     }
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)

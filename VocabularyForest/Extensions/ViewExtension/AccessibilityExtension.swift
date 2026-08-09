@@ -1,0 +1,76 @@
+//
+//  AccessibilityExtension.swift
+//  VocabularyForest
+//
+//  Created by Yakup Kavak on 9.08.2026.
+//
+
+import SwiftUI
+
+// MARK: - VOICEOVER MODIFIERS
+
+extension View {
+
+    /// Collapses children into a single VoiceOver element that reads and activates as a button.
+    /// Designed for tappable views built with `.onTapGesture`: VoiceOver's activate gesture
+    /// taps the element's center, which still triggers the original gesture.
+    /// Pass no label to let the merged child texts speak for themselves.
+    func a11yTapButton(
+        _ label: String? = nil,
+        value: String? = nil,
+        hint: String? = nil,
+        isSelected: Bool = false
+    ) -> some View {
+        accessibilityElement(children: .combine)
+            .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+            .a11yOptionalLabel(label)
+            .a11yOptionalValue(value)
+            .a11yOptionalHint(hint)
+    }
+
+    /// Collapses children into a single readable, non-interactive element.
+    /// Use for rows whose meaning is spread across icons and short texts.
+    func a11yGroup(_ label: String? = nil, value: String? = nil) -> some View {
+        accessibilityElement(children: .combine)
+            .a11yOptionalLabel(label)
+            .a11yOptionalValue(value)
+    }
+}
+
+// MARK: - HELPERS
+
+private extension View {
+
+    @ViewBuilder
+    func a11yOptionalLabel(_ label: String?) -> some View {
+        if let label { accessibilityLabel(label) } else { self }
+    }
+
+    @ViewBuilder
+    func a11yOptionalValue(_ value: String?) -> some View {
+        if let value { accessibilityValue(value) } else { self }
+    }
+
+    @ViewBuilder
+    func a11yOptionalHint(_ hint: String?) -> some View {
+        if let hint { accessibilityHint(hint) } else { self }
+    }
+}
+
+// MARK: - ANNOUNCER
+
+/// Posts spoken VoiceOver announcements for asynchronous state changes
+/// (spin results, rewards, quiz feedback) that are otherwise only visual.
+enum A11yAnnouncer {
+
+    static var isVoiceOverOn: Bool { UIAccessibility.isVoiceOverRunning }
+
+    static func announce(_ message: String) {
+        guard isVoiceOverOn else { return }
+        if #available(iOS 17.0, *) {
+            AccessibilityNotification.Announcement(message).post()
+        } else {
+            UIAccessibility.post(notification: .announcement, argument: message)
+        }
+    }
+}

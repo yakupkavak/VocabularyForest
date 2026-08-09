@@ -112,6 +112,7 @@ struct QuestProgressBar: View {
             }
             .frame(height: 12)
         }
+        .a11yGroup()
     }
 }
 
@@ -393,6 +394,7 @@ struct QuestRow: View {
             }
             .buttonStyle(.plain)
             .disabled(quest.status == .locked)
+            .accessibilityValue(String(localized: isExpanded ? "a11y_expanded" : "a11y_collapsed"))
 
             if isExpanded {
                 detailView
@@ -677,6 +679,7 @@ struct ForestQuestUI: View {
                 .scaledToFit()
                 .frame(width: 36, height: 36)
                 .offset(x: 12, y: -12)
+                .accessibilityLabel(String(localized: "a11y_close"))
         }
     }
 

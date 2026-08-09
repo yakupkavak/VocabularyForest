@@ -172,6 +172,7 @@ struct GameSelectUI: View {
             } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
         .sheet(isPresented: $showSelectBookcase) {
@@ -253,6 +254,7 @@ struct TagView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(isSelected ? Color.yellow : Color.clear, lineWidth: 2)
         ).padding(3)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

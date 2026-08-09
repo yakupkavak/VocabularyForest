@@ -22,6 +22,10 @@ protocol ForestUIProtocol {
 
 private extension ForestUI {
     enum Constant {
+        static let a11yMenuButtonSize: CGFloat = 44
+        static let a11yMenuTopPadding: CGFloat = 60
+        static let a11yMenuSpacing: CGFloat = 16
+        static let a11yMenuTrailingPadding: CGFloat = 16
         static let optionsList: [SettingsModel] = [
             SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "right_icon", color: .brown500, type: .resume),
             SettingsModel(title: String(localized: "Settings"), icon: "settings_button", color: .brown500, type: .settings),
@@ -72,7 +76,12 @@ struct ForestUI: View {
                 .ignoresSafeArea(.all)
                 .navigationBarBackButtonHidden()
                 .zIndex(1.0)
-            
+                .accessibilityHidden(true)
+
+            if uiState == .empty && userClaimedFirtReward && forestSeen {
+                sceneAccessibilityOverlay.zIndex(1.05)
+            }
+
             if !userClaimedFirtReward {
                 ForestFirstRewardUI(rewards: ForestConstant.firstForestRewards) { selectedReward in
                     viewModel.claimLocalReward(model: selectedReward) {
@@ -92,7 +101,7 @@ struct ForestUI: View {
                 if uiState != .market {
                     Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
                 }
-                userMenu.zIndex(5.0)
+                userMenu.zIndex(5.0).accessibilityAddTraits(.isModal)
             }
             
             if viewModel.showRainButton {
@@ -350,6 +359,7 @@ private extension ForestUI {
                     uiState = .empty
                 } label: {
                     Image(.closeButton).resizable().scaledToFit().frame(maxWidth: 32)
+                        .accessibilityLabel(String(localized: "a11y_close"))
                 }
                 TextField("Name", text: $componentName)
                     .frame(maxWidth: 180).padding(.vertical,8).padding(.horizontal)
@@ -359,6 +369,7 @@ private extension ForestUI {
                     uiState = .empty
                 } label: {
                     Image(.acceptButton).resizable().scaledToFit().frame(maxWidth: 32)
+                        .accessibilityLabel(String(localized: "a11y_confirm"))
                 }
                 Spacer()
             }
@@ -366,6 +377,32 @@ private extension ForestUI {
         .compositingGroup()
     }
     
+    /// VoiceOver bridge for the SpriteKit menu column: the scene resolves taps with
+    /// `nodes(at:)`, which VoiceOver users can never reach, so invisible accessible
+    /// buttons mirror the same actions along the scene's right-edge button column.
+    var sceneAccessibilityOverlay: some View {
+        VStack(spacing: Constant.a11yMenuSpacing) {
+            sceneAccessibilityButton(String(localized: "a11y_menu"), action: showOptions)
+            sceneAccessibilityButton(String(localized: "a11y_adventure_board"), action: showAnnouncement)
+            sceneAccessibilityButton(String(localized: "a11y_play_game"), action: showGameSelection)
+            sceneAccessibilityButton(String(localized: "a11y_forest_info"), action: showForestInfo)
+            sceneAccessibilityButton(String(localized: "a11y_market"), action: showMarket)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        .padding(.top, Constant.a11yMenuTopPadding)
+        .padding(.trailing, Constant.a11yMenuTrailingPadding)
+    }
+
+    func sceneAccessibilityButton(_ label: String, action: @escaping () -> Void) -> some View {
+        Color.clear
+            .frame(width: Constant.a11yMenuButtonSize, height: Constant.a11yMenuButtonSize)
+            .accessibilityElement()
+            .accessibilityLabel(label)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction(.default, action)
+            .allowsHitTesting(false)
+    }
+
     var gameScene: SKScene {
         forestScene.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         forestScene.scaleMode = .fill
@@ -395,6 +432,7 @@ private extension ForestUI {
                         forestSeen = false
                     }
                 }
+                .a11yTapButton(model.title)
             }
         }
         .padding().background(.brown.opacity(0.8)).cornerRadius(16).frame(width: UIScreen.main.bounds.width * 0.6)
@@ -404,6 +442,7 @@ private extension ForestUI {
             } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
     }
@@ -449,6 +488,7 @@ private extension ForestUI {
             } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
     }

@@ -11095,6 +11095,1441 @@
         }
       }
     },
+    "a11y_add_to_bookcase": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add %@ to a bookcase"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agregar %@ a una biblioteca"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar %@ a uma estante"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Добавить слово %@ в словарь"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ kelimesini kitaplığa ekle"
+          }
+        }
+      }
+    },
+    "a11y_adventure_board": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adventure board"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tablero de aventuras"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadro de aventuras"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Доска приключений"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Macera panosu"
+          }
+        }
+      }
+    },
+    "a11y_claim_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claims the reward"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reclama la recompensa"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resgata a recompensa"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Забирает награду"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ödülü alır"
+          }
+        }
+      }
+    },
+    "a11y_close": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerrar"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Закрыть"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapat"
+          }
+        }
+      }
+    },
+    "a11y_collapsed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collapsed"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contraído"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recolhido"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Свёрнуто"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı"
+          }
+        }
+      }
+    },
+    "a11y_confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmar"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Подтвердить"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onayla"
+          }
+        }
+      }
+    },
+    "a11y_correct_announce": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correct!"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Correcto!"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correto!"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Правильно!"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doğru!"
+          }
+        }
+      }
+    },
+    "a11y_daily_card_label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day %1$lld, %2$@ x%3$lld"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Día %1$lld, %2$@ x%3$lld"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dia %1$lld, %2$@ x%3$lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "День %1$lld, %2$@ x%3$lld"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gün %1$lld, %2$@ x%3$lld"
+          }
+        }
+      }
+    },
+    "a11y_download_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloads this ready-made bookcase"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Descarga esta biblioteca lista"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baixa esta estante pronta"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Загружает готовый словарь"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu hazır kitaplığı indirir"
+          }
+        }
+      }
+    },
+    "a11y_earned_gold": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You earned %lld gold"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganaste %lld de oro"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você ganhou %lld de ouro"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вы получили %lld золота"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld altın kazandın"
+          }
+        }
+      }
+    },
+    "a11y_energy_value": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld de %2$lld"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld de %2$lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld из %2$lld"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "a11y_expanded": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expanded"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expandido"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expandido"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Развёрнуто"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık"
+          }
+        }
+      }
+    },
+    "a11y_forest_info": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forest information"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Información del bosque"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informações da floresta"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Информация о лесе"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Orman bilgileri"
+          }
+        }
+      }
+    },
+    "a11y_game_lost_announce": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "So close! You lost this one."
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Casi! Perdiste esta vez."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quase! Você perdeu desta vez."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Почти! В этот раз не вышло."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çok yaklaştın! Bu sefer olmadı."
+          }
+        }
+      }
+    },
+    "a11y_game_won_announce": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fantastic! You won the game."
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Fantástico! Ganaste el juego."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fantástico! Você venceu o jogo."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Фантастика! Вы выиграли."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harika! Oyunu kazandın."
+          }
+        }
+      }
+    },
+    "a11y_hide_meanings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide meanings"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocultar significados"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocultar significados"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Скрыть значения"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anlamları gizle"
+          }
+        }
+      }
+    },
+    "a11y_long_memory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In long-term memory"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En memoria a largo plazo"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na memória de longo prazo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В долговременной памяти"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzun hafızada"
+          }
+        }
+      }
+    },
+    "a11y_long_memory_progress": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Long-term memory progress"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progreso de memoria a largo plazo"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progresso da memória de longo prazo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Прогресс долговременной памяти"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uzun hafıza ilerlemesi"
+          }
+        }
+      }
+    },
+    "a11y_market": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Market"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mercado"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mercado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Магазин"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Market"
+          }
+        }
+      }
+    },
+    "a11y_memory_counts": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld words in long-term memory, %2$lld words in short-term memory"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld palabras en memoria a largo plazo, %2$lld palabras en memoria a corto plazo"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld palavras na memória de longo prazo, %2$lld palavras na memória de curto prazo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld слов в долговременной памяти, %2$lld слов в кратковременной памяти"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld kelime uzun hafızada, %2$lld kelime kısa hafızada"
+          }
+        }
+      }
+    },
+    "a11y_menu": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menú"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Меню"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menü"
+          }
+        }
+      }
+    },
+    "a11y_milestone_label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, reward at %2$lld words"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, recompensa a las %2$lld palabras"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, recompensa em %2$lld palavras"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, награда за %2$lld слов"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%2$lld kelime hedefindeki ödül: %1$@"
+          }
+        }
+      }
+    },
+    "a11y_more_options": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More options"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Más opciones"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mais opções"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Дополнительные действия"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diğer seçenekler"
+          }
+        }
+      }
+    },
+    "a11y_open_bookcase_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the word list"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre la lista de palabras"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre a lista de palavras"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открывает список слов"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kelime listesini açar"
+          }
+        }
+      }
+    },
+    "a11y_open_chest": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the chest"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir el cofre"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir o baú"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Открыть сундук"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sandığı aç"
+          }
+        }
+      }
+    },
+    "a11y_packet_row_label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ bookcase, %2$@ to %3$@, %4$lld words"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biblioteca %1$@, %2$@ a %3$@, %4$lld palabras"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estante %1$@, %2$@ para %3$@, %4$lld palavras"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Словарь %1$@, %2$@ – %3$@, %4$lld слов"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ kitaplığı, %2$@ - %3$@, %4$lld kelime"
+          }
+        }
+      }
+    },
+    "a11y_page_of": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page %1$lld of %2$lld"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Página %1$lld de %2$lld"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Página %1$lld de %2$lld"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Страница %1$lld из %2$lld"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sayfa %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "a11y_percent_value": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld percent"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld por ciento"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld por cento"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld процентов"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yüzde %lld"
+          }
+        }
+      }
+    },
+    "a11y_play_game": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play word game"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jugar al juego de palabras"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar o jogo de palavras"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Играть в словесную игру"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kelime oyunu oyna"
+          }
+        }
+      }
+    },
+    "a11y_question_announce": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Question %1$lld: %2$@"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pregunta %1$lld: %2$@"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pergunta %1$lld: %2$@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вопрос %1$lld: %2$@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soru %1$lld: %2$@"
+          }
+        }
+      }
+    },
+    "a11y_reward_ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reward ready to claim"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recompensa lista para reclamar"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recompensa pronta para resgatar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Награда готова к получению"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ödül alınmaya hazır"
+          }
+        }
+      }
+    },
+    "a11y_reward_won": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You won: %@"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganaste: %@"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você ganhou: %@"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Вы выиграли: %@"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kazandın: %@"
+          }
+        }
+      }
+    },
+    "a11y_short_memory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In short-term memory"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En memoria a corto plazo"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na memória de curto prazo"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "В кратковременной памяти"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kısa hafızada"
+          }
+        }
+      }
+    },
+    "a11y_show_meanings": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show meanings"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar significados"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar significados"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Показать значения"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anlamları göster"
+          }
+        }
+      }
+    },
+    "a11y_spin_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spins the wheel and awards your daily prize"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gira la rueda y otorga tu premio diario"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gira a roda e concede seu prêmio diário"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Крутит колесо и выдаёт ежедневный приз"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çarkı çevirir ve günlük ödülünü verir"
+          }
+        }
+      }
+    },
+    "a11y_spin_started": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The wheel is spinning"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La rueda está girando"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A roda está girando"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Колесо крутится"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Çark dönüyor"
+          }
+        }
+      }
+    },
+    "a11y_spin_wheel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prize wheel"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rueda de premios"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roda de prêmios"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Колесо призов"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ödül çarkı"
+          }
+        }
+      }
+    },
+    "a11y_status_claimed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claimed"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reclamado"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resgatado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Получено"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alındı"
+          }
+        }
+      }
+    },
+    "a11y_status_locked": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloqueado"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bloqueado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Заблокировано"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kilitli"
+          }
+        }
+      }
+    },
+    "a11y_status_ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready to claim"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo para reclamar"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pronto para resgatar"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Можно получить"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alınabilir"
+          }
+        }
+      }
+    },
+    "a11y_wrong_announce": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incorrecto"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Errado"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Неверно"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yanlış"
+          }
+        }
+      }
+    },
     "added_to_bookcase_toast": {
       "comment": "Toast shown when a word is added to a bookcase",
       "localizations": {

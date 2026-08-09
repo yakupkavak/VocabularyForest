@@ -21,6 +21,7 @@ struct DailySpinUI: View {
     
     // MARK: - PROPERTIES
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @StateObject var controller: YKSpinController
     @Binding var isVisible: Bool
     @Binding var nextSpinTime: Date?
@@ -108,6 +109,7 @@ private extension DailySpinUI {
                     .shadow(color: .black.opacity(0.3), radius: 1)
             }
             .offset(x: -size.width * 0.13, y: size.height * 0.01)
+            .accessibilityLabel(String(localized: "a11y_close"))
         }
         .frame(width: size.width * 0.96)
     }
@@ -130,6 +132,8 @@ private extension DailySpinUI {
         .ykPointerWidth(radius * 0.2)
         .ykPointerOffset(-radius * 0.065)
         .frame(width: size.width * 0.68, height: size.height * 0.4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(localized: "a11y_spin_wheel"))
     }
     
     var actionSection: some View {
@@ -143,7 +147,10 @@ private extension DailySpinUI {
             } else {
                 Button {
                     Task {
-                        if let rewardModel = await controller.startSpin(spinTime: 4, spinTurns: 5) {
+                        A11yAnnouncer.announce(String(localized: "a11y_spin_started"))
+                        // Long decorative spins frustrate VoiceOver and reduce-motion users
+                        let quickSpin = reduceMotion || A11yAnnouncer.isVoiceOverOn
+                        if let rewardModel = await controller.startSpin(spinTime: quickSpin ? 1 : 4, spinTurns: quickSpin ? 1 : 5) {
                             onRewardClaimed(rewardModel)
                         }
                     }
@@ -154,6 +161,7 @@ private extension DailySpinUI {
                         .foregroundStyle(.title.opacity(0.95))
                         .shadow(color: .white.opacity(0.5), radius: 1, x: 0, y: 2)
                 }
+                .accessibilityHint(String(localized: "a11y_spin_hint"))
             }
         }
     }

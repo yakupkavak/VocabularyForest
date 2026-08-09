@@ -75,6 +75,10 @@ private extension ClaimRewardUI {
         switch claimReward.reward {
         case .standart(let model):
             standartRewardView(model: model, size: size)
+                .a11yGroup()
+                .task {
+                    A11yAnnouncer.announce(String(format: NSLocalizedString("a11y_reward_won", comment: ""), model.displayName.localized))
+                }
         case .chest(let chestModel):
             chestRewardView(chestModel: chestModel, size: size)
                 .task {
@@ -82,6 +86,7 @@ private extension ClaimRewardUI {
                 }.onTapGesture {
                     openChest()
                 }
+                .a11yTapButton(chestStation == .close ? String(localized: "a11y_open_chest") : nil)
         }
     }
     
@@ -181,8 +186,11 @@ private extension ClaimRewardUI {
                 .shadow(color: .black.opacity(0.3), radius: 5)
             rewardCountText(count: model.rewardCount, fontSize: rewardTextSize * 0.75, color: model.reward.textColorHex?.color ?? .white)
         }
+        .onAppear {
+            A11yAnnouncer.announce(String(format: NSLocalizedString("a11y_reward_won", comment: ""), model.reward.displayName.localized))
+        }
     }
-    
+
     func actionButton(size: CGSize) -> some View {
         let buttonMaxWidth = isPad ? CGFloat(400) : .infinity
         

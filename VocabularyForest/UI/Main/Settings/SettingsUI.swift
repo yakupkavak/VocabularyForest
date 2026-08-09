@@ -130,6 +130,7 @@ struct SettingsUI: View {
                             .onTapGesture {
                                 showSignIn = false
                             }
+                            .a11yTapButton(String(localized: "a11y_close"))
                 BottomSheet(title: nil, isVisible: $showSignIn) {
                     VStack {
                         GoogleSignInButton(scheme: .light, style: .standard, state: .normal) {

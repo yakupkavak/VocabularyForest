@@ -40,6 +40,7 @@ struct GameOptionsUI: View {
                                     break
                                 }
                             }
+                            .a11yTapButton(model.title)
                     }
                 }
             }
