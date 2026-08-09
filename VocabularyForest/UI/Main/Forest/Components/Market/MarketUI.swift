@@ -172,12 +172,13 @@ private extension MarketUI {
                         .background(Color.white.opacity(0.82))
                         .clipShape(Circle())
                 }
+                .accessibilityLabel(String(localized: "a11y_close"))
                 
                 Spacer()
                 
                 HStack(spacing: width * 0.025) {
-                    balanceBadge(iconName: MarketCurrency.gold.iconName, amount: goldBalance, width: width)
-                    balanceBadge(iconName: MarketCurrency.diamond.iconName, amount: diamondBalance, width: width)
+                    balanceBadge(currency: .gold, amount: goldBalance, width: width)
+                    balanceBadge(currency: .diamond, amount: diamondBalance, width: width)
                 }
             }
             
@@ -195,9 +196,9 @@ private extension MarketUI {
         }
     }
     
-    func balanceBadge(iconName: String, amount: Int, width: CGFloat) -> some View {
+    func balanceBadge(currency: MarketCurrency, amount: Int, width: CGFloat) -> some View {
         HStack(spacing: width * 0.015) {
-            Image(iconName)
+            Image(currency.iconName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: width * 0.045, height: width * 0.045)
@@ -215,6 +216,13 @@ private extension MarketUI {
                 .stroke(Color.white.opacity(0.35), lineWidth: 1)
         )
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: amount)
+        .a11yGroup(String(
+            format: NSLocalizedString(
+                currency == .gold ? "a11y_balance_gold" : "a11y_balance_diamond",
+                comment: ""
+            ),
+            "\(amount)"
+        ))
     }
     
     func errorBanner(message: String, width: CGFloat) -> some View {
@@ -418,6 +426,7 @@ private struct ChestDropInfoCard: View {
                     .frame(width: 36, height: 36)
                     .offset(x: 12, y: -12)
             }
+            .accessibilityLabel(String(localized: "a11y_close"))
         }
     }
     
@@ -461,6 +470,7 @@ private struct ChestDropInfoCard: View {
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
             }
+            .a11yGroup()
             
             VStack(spacing: 6) {
                 ForEach(drops) { drop in
@@ -503,6 +513,7 @@ private struct ChestDropInfoCard: View {
         .padding(.horizontal, 8)
         .background(Color.white.opacity(0.08))
         .cornerRadius(12)
+        .a11yGroup()
     }
     
     @ViewBuilder
@@ -628,6 +639,15 @@ struct MarketItemCard: View {
         }
         .buttonStyle(ScaleButtonStyle())
         .disabled(!canAfford)
+        .a11yTapButton(
+            String(
+                format: NSLocalizedString("a11y_market_item", comment: ""),
+                item.reward.reward.displayName.localized,
+                priceA11yText
+            ),
+            value: canAfford ? nil : String(localized: "a11y_insufficient_balance"),
+            hint: String(localized: "a11y_buy_hint")
+        )
         .overlay(alignment: .topLeading) {
             if let chestModel, let onInfoTap {
                 Button {
@@ -641,10 +661,22 @@ struct MarketItemCard: View {
                 }
                 /// Keep the info button tappable even when the purchase button is disabled
                 .disabled(false)
+                .accessibilityLabel(String(localized: "a11y_chest_info"))
             }
         }
     }
     
+    /// Spoken price ("1500 gold") — the currency is otherwise icon-only.
+    private var priceA11yText: String {
+        String(
+            format: NSLocalizedString(
+                item.price.currency == .gold ? "a11y_price_gold" : "a11y_price_diamond",
+                comment: ""
+            ),
+            "\(item.price.amount)"
+        )
+    }
+
     private var priceTag: some View {
         HStack(spacing: cardWidth * 0.04) {
             Image(item.price.currency.iconName)

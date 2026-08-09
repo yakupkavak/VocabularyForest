@@ -9,16 +9,6 @@ import SwiftUI
 import SpriteKit
 internal import CoreData
 
-// MARK: - CONSTANTS
-
-private enum BattleConstantUI {
-    static let optionsList: [SettingsModel<SettingType>] = [
-        SettingsModel(title: "Resume", icon: "right_icon", color: .brown500, type: .resume),
-        SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
-        SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
-    ]
-}
-
 struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     // MARK: - PROPERTIES
@@ -394,39 +384,6 @@ private extension BattleUI {
                 .a11yTapButton(String(localized: "a11y_menu"))
             }
         }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
-    }
-    
-    var options: some View {
-        VStack {
-            ZStack {
-                Image("title_header").resizable().scaledToFit()
-                Text("Options").foregroundStyle(.white).font(.system(size: 24))
-            }
-            ForEach(BattleConstantUI.optionsList, id: \.self) { model in
-                settingsRow(model: model).onTapGesture {
-                    switch model.type {
-                    case .resume:
-                        showOption = false
-                    case .settings:
-                        showOption = false
-                        showSetting = true
-                    case .home:
-                        showOption = false
-                        showExistAlert = true
-                    case .info:
-                        break
-                    }
-                }
-            }
-        }.padding().background(.brown.opacity(0.8)).cornerRadius(16).zIndex(3.0).frame(width: UIScreen.main.bounds.width * 0.6)
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    showOption = false
-                } label: {
-                    Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
-                        .offset(x: 12, y: -12)
-                }
-            }
     }
     
     func answerComponent(text: String) -> some View {

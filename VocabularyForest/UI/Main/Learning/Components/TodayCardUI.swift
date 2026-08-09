@@ -56,6 +56,7 @@ struct CardFront : View {
                     .resizable()
                     .frame(width: width / 3, height: height / 3)
                     .foregroundColor(Color(hex: "#F2CB05"))
+                    .accessibilityHidden(true)
                 if !meaningWord.isEmpty {
                     Text(meaningWord).font(.system(size: meaningFontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                         RoundedRectangle(cornerRadius: 16)
@@ -150,6 +151,7 @@ struct CardBack : View {
                         .frame(width: width * 17 / 24, height: height * 13 / 24)
                         .foregroundColor(Color(hex: "#010D00").opacity(0.7))
                 }.padding(.top, 8)
+                    .accessibilityHidden(true)
                 Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).font(.system(size: titleFontSize)).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).padding(.top, -12)
             }
 
@@ -182,6 +184,8 @@ struct TodayCardUI: View {
     
     func flipCard () {
         isFlipped = !isFlipped
+        /// The 3D flip is purely visual; speak which side is now facing the user
+        A11yAnnouncer.announce(String(localized: isFlipped ? "a11y_card_front" : "a11y_card_back"))
         if isFlipped {
             withAnimation(.linear(duration: durationAndDelay)) {
                 backDegree = 90
@@ -209,6 +213,8 @@ struct TodayCardUI: View {
                 height: height,
                 degree: $backDegree
             )
+            /// Both faces stay in the view tree; expose only the visible one
+            .accessibilityHidden(isFlipped)
             CardFront(
                 meaningWord: meaningWord,
                 exampleSentence: exampleSentence,
@@ -221,10 +227,15 @@ struct TodayCardUI: View {
                 },
                 degree: $frontDegree
             )
+            .accessibilityHidden(!isFlipped)
         }
         .onTapGesture {
             flipCard()
         }
+        .a11yTapButton(
+            value: String(localized: isFlipped ? "a11y_card_front" : "a11y_card_back"),
+            hint: String(localized: "a11y_flip_card_hint")
+        )
     }
 }
 

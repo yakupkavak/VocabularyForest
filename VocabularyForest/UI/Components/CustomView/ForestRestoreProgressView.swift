@@ -48,6 +48,8 @@ struct ForestRestoreProgressView: View {
             } else {
                 ProgressView()
                     .controlSize(.large)
+                    /// Indeterminate spinner has no spoken equivalent by default
+                    .accessibilityLabel(String(localized: "a11y_downloading"))
                 Text("Preparing your forest…")
                     .font(.headline)
                     .foregroundColor(.primary)
@@ -81,6 +83,8 @@ struct ForestRestoreProgressView: View {
             guard !isDismissed else { return }
             // Waiting timeout: the download keeps running in the background, we just stop holding the user here.
             withAnimation { timedOut = true }
+            /// State change is otherwise only visual; tell VoiceOver users the screen is not stuck
+            A11yAnnouncer.announce(String(localized: "Remaining items will be downloaded in the background."))
             try? await Task.sleep(nanoseconds: UInt64(Constants.infoMessageDuration * 1_000_000_000))
             finish()
         }

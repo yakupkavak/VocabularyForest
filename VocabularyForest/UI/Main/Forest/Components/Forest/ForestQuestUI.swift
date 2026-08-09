@@ -225,6 +225,7 @@ struct QuestRewardView: View {
         .padding(8)
         .background(Color.white.opacity(0.3))
         .cornerRadius(12)
+        .a11yGroup()
     }
 }
 
@@ -251,6 +252,7 @@ private struct QuestInfoBadge: View {
                 .bold()
                 .foregroundStyle(color)
         }
+        .a11yGroup()
     }
 }
 
@@ -455,6 +457,7 @@ struct QuestRow: View {
             HStack(alignment: .top) {
                 Image(systemName: "scroll.fill")
                     .foregroundStyle(statusColor)
+                    .accessibilityHidden(true)
 
                 Text(LocalizedStringKey(quest.description))
                     .font(.subheadline)
@@ -528,6 +531,7 @@ private struct ForestQuestSectionHeader: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)
+                .accessibilityHidden(true)
 
             Text(title)
                 .foregroundStyle(.white)
@@ -546,6 +550,7 @@ private struct ForestQuestEmptyStateView: View {
             Image(systemName: "clipboard")
                 .font(.system(size: 50))
                 .foregroundStyle(.white.opacity(0.4))
+                .accessibilityHidden(true)
 
             Text("No quests available.")
                 .foregroundStyle(.white.opacity(0.7))
@@ -691,6 +696,7 @@ struct ForestQuestUI: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 60)
+                        .accessibilityHidden(true)
                 }
 
                 Text("Quests")

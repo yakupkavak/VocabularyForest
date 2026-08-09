@@ -18,9 +18,12 @@ struct CustomSearchBar: View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
-                
+                .accessibilityHidden(true)
+
             TextField(placeholder, text: $searchText)
                 .textFieldStyle(.plain)
+                /// Placeholder disappears while typing; keep it as the permanent label
+                .accessibilityLabel(placeholder)
                 .focused($isFocused)
                 .onSubmit { isFocused = false }
 
@@ -32,6 +35,7 @@ struct CustomSearchBar: View {
                         .foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "a11y_clear_search"))
             }
         }
         .padding(.horizontal)

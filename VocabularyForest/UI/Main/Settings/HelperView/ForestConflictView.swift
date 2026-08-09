@@ -122,6 +122,10 @@ private extension ForestConflictView {
                 .foregroundColor(.primary)
             
             TextField(expectedKeyword, text: $confirmText)
+                .accessibilityLabel(String(
+                    format: NSLocalizedString("a11y_confirm_keyword", comment: ""),
+                    expectedKeyword
+                ))
                 .focused($isInputFocused)
                 .textFieldStyle(.roundedBorder)
                 .multilineTextAlignment(.center)
@@ -160,7 +164,9 @@ private extension ForestConflictView {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(isSelected ? .logoGreen : .gray)
-            
+                /// Decorative: local/cloud distinction is already in the card title
+                .accessibilityHidden(true)
+
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
@@ -168,10 +174,27 @@ private extension ForestConflictView {
                 .minimumScaleFactor(0.8)
             
             VStack(alignment: .leading, spacing: 6) {
-                customStatRow(assetIcon: "gold_icon", text: "\(forest.moneyValue)")
-                customStatRow(assetIcon: "diamond_icon", text: "\(forest.diamondValue)")
-                customStatRow(assetIcon: "water_icon", text: "\(forest.rainValue)")
-                statRow(icon: "heart.fill", color: .red, text: "%\(forest.landHealthPercent)")
+                customStatRow(
+                    assetIcon: "gold_icon",
+                    text: "\(forest.moneyValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_balance_gold", comment: ""), "\(forest.moneyValue)")
+                )
+                customStatRow(
+                    assetIcon: "diamond_icon",
+                    text: "\(forest.diamondValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_balance_diamond", comment: ""), "\(forest.diamondValue)")
+                )
+                customStatRow(
+                    assetIcon: "water_icon",
+                    text: "\(forest.rainValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_stat_water", comment: ""), "\(forest.rainValue)")
+                )
+                statRow(
+                    icon: "heart.fill",
+                    color: .red,
+                    text: "%\(forest.landHealthPercent)",
+                    a11yText: String(format: NSLocalizedString("a11y_stat_health", comment: ""), "\(forest.landHealthPercent)")
+                )
                 
                 Divider().padding(.vertical, 2)
                 
@@ -206,22 +229,26 @@ private extension ForestConflictView {
                 selectedSource = source
             }
         }
+        /// One selectable element: title + spoken stats, selection state via `.isSelected`
+        .a11yTapButton(isSelected: isSelected)
     }
-    
+
     @ViewBuilder
-    private func statRow(icon: String, color: Color, text: String) -> some View {
+    private func statRow(icon: String, color: Color, text: String, a11yText: String? = nil) -> some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .foregroundColor(color)
                 .frame(width: 16, alignment: .center)
+                .accessibilityHidden(true)
             Text(text)
                 .foregroundColor(.secondary)
                 .fontWeight(.medium)
         }
+        .a11yGroup(a11yText)
     }
-    
+
     @ViewBuilder
-    private func customStatRow(assetIcon: String, text: String) -> some View {
+    private func customStatRow(assetIcon: String, text: String, a11yText: String) -> some View {
         HStack(spacing: 8) {
             Image(assetIcon)
                 .resizable()
@@ -231,6 +258,7 @@ private extension ForestConflictView {
                 .foregroundColor(.secondary)
                 .fontWeight(.medium)
         }
+        .a11yGroup(a11yText)
     }
 }
 

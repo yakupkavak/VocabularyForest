@@ -33,6 +33,7 @@ struct QuizRowUI: View {
         .onTapGesture {
             onClick(quizModel.quizType)
         }
+        .a11yTapButton()
         .frame(width: height * 8 / 9)
     }
 }
