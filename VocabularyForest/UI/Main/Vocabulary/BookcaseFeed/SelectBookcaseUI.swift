@@ -18,6 +18,7 @@ struct SelectBookcaseUI: View {
     @State private var searchText = ""
     @State private var showCreateBookcase = false
     @State private var bookcases: [BookcaseModel]
+    @State private var editingBookcaseItem: BookcaseDisplayItem?
 
     private var coreDataManager: CoreDataManagerProtocol {
         DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
@@ -61,8 +62,15 @@ struct SelectBookcaseUI: View {
                         bookcase: bookcase,
                         animalModel: getRandomAnimalModel(),
                         onEdit: {
+                            editingBookcaseItem = BookcaseDisplayItem(
+                                id: bookcase.id,
+                                bookcase: bookcase,
+                                animalModel: getRandomAnimalModel()
+                            )
                         },
-                        onDelete: {})
+                        onDelete: {
+                            deleteBookcase(bookcase)
+                        })
                         .foregroundStyle(.primary)
                 }.listRowSeparator(.hidden).listRowInsets(.init())
             }.background(.backgroundSystem)
@@ -90,6 +98,21 @@ struct SelectBookcaseUI: View {
                     }
                 }
             }
+            .sheet(item: $editingBookcaseItem) { item in
+                BookcaseEditSheet(item: item) { (newName, newLearningLang, newMeaningLang) in
+                    coreDataManager.updateBookcase(
+                        item: item,
+                        newName: newName,
+                        learningLang: newLearningLang,
+                        meaningLang: newMeaningLang,
+                        onComplete: {
+                            refreshBookcases()
+                            editingBookcaseItem = nil
+                        },
+                        contextType: .main
+                    )
+                }
+            }
             .sheet(isPresented: $showCreateBookcase) {
                 NavigationStack {
                     CreateBookcaseUI(
@@ -112,5 +135,14 @@ struct SelectBookcaseUI: View {
             sortDescriptors: nil,
             contextType: .main
         ) ?? []
+    }
+
+    private func deleteBookcase(_ bookcase: BookcaseModel) {
+        coreDataManager.deleteBookcase(bookcase: bookcase, contextType: .main)
+        // A deleted bookcase must not stay selected in the parent screen
+        if selectedBookcase?.id == bookcase.id {
+            selectedBookcase = nil
+        }
+        refreshBookcases()
     }
 }

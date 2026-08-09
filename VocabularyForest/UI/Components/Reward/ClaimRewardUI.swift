@@ -18,14 +18,12 @@ struct ClaimRewardUI: View {
     var claimReward: LocalRewardModel
     var onClaim: ([LocalRewardModel]) -> Void
     @State private var shakeOffset: CGFloat = 0
-    @State private var showClaim = true
     @State private var chestStation: ChestStatus = .close
     @State private var isChestLidOpen = false
     @State private var chestScale: CGFloat = 1.0
     @State private var chestRewardIndex = 0
     private let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     private let isPad = UIDevice.current.userInterfaceIdiom == .pad
-    private let claimedRewards: [LocalRewardModel] = []
 
     // MARK: - BODY
     
@@ -38,7 +36,7 @@ struct ClaimRewardUI: View {
                     Spacer()
                     mainContentSection(size: geometry.size)
                     Spacer()
-                    actionButton(size: geometry.size).opacity(showClaim ? 1 : 0)
+                    actionButton(size: geometry.size).opacity(showClaim && isClaimActionReady ? 1 : 0)
                 }
             }.task {
                 if case .chest(let model) = claimReward.reward {
@@ -81,9 +79,7 @@ private extension ClaimRewardUI {
                 }
         case .chest(let chestModel):
             chestRewardView(chestModel: chestModel, size: size)
-                .task {
-                    showClaim = false
-                }.onTapGesture {
+                .onTapGesture {
                     openChest()
                 }
                 .a11yTapButton(chestStation == .close ? String(localized: "a11y_open_chest") : nil)
@@ -224,6 +220,21 @@ private extension ClaimRewardUI {
 
 private extension ClaimRewardUI {
     
+    // Derived instead of stored: the dynamic a11y label on the chest flips the
+    // subtree's structural identity when it opens, which re-fires any .task/.onAppear
+    // there — a stored flag reset inside such a task kept the button hidden forever.
+    var showClaim: Bool {
+        if case .chest = claimReward.reward { return chestStation == .open }
+        return true
+    }
+
+    // An opened chest has nothing to claim until its rewards arrive from the
+    // repository; hiding the button meanwhile prevents a dead "Claim reward" tap.
+    var isClaimActionReady: Bool {
+        guard case .chest = claimReward.reward, chestStation == .open else { return true }
+        return viewModel.chestRewards != nil || viewModel.errorMessage != nil
+    }
+
     func openChest() {
         guard chestStation == .close, !isChestLidOpen else { return }
 
@@ -239,23 +250,26 @@ private extension ClaimRewardUI {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                 chestStation = .open
-                showClaim = true
             }
         }
     }
     
     func handleClaim() {
         if case .chest = claimReward.reward {
-            if let chestRewards = viewModel.chestRewards {
-                if chestRewardIndex < chestRewards.count {
-                    withAnimation(.spring()) {
-                        chestRewardIndex += 1
-                    }
-                } else {
-                    onClaim(chestRewards)
+            guard let chestRewards = viewModel.chestRewards else {
+                // Rewards are still loading; closing now would swallow the chest
+                // content. Only bail out when the open request actually failed.
+                if viewModel.errorMessage != nil {
+                    onClaim([])
+                }
+                return
+            }
+            if chestRewardIndex < chestRewards.count {
+                withAnimation(.spring()) {
+                    chestRewardIndex += 1
                 }
             } else {
-                onClaim(claimedRewards)
+                onClaim(chestRewards)
             }
         } else {
             onClaim([claimReward])
@@ -322,8 +336,7 @@ private extension ClaimRewardUI {
 #Preview("Chest") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()),
-            rewardRepository: RewardRepository(assetManager: OfflineAssetManager(), apiService: APIService(), chestRepository: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()), forestManager: ForestDataManager(mainContext: CoreDataManager().viewContext, backgroundContext: CoreDataManager().backgroundContext))
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())
         ),
         claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))
     ) { _ in }
@@ -332,8 +345,7 @@ private extension ClaimRewardUI {
 #Preview("Cat") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()),
-            rewardRepository: RewardRepository(assetManager: OfflineAssetManager(), apiService: APIService(), chestRepository: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService()), forestManager: ForestDataManager(mainContext: CoreDataManager().viewContext, backgroundContext: CoreDataManager().backgroundContext))
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())
         ),
         claimReward: LocalRewardModel(
             rewardCount: 1,

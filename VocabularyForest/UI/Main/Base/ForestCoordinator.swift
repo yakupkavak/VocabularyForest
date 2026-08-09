@@ -250,8 +250,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     
     func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView {
         let chestRepository = resolver.resolve(type: .singleInstance, for: ChestRepositoryProtocol.self)
-        let rewardRepository = resolver.resolve(type: .singleInstance, for: RewardRepositoryProtocol.self)
-        let viewModel = ClaimRewardViewModel(chestManager: chestRepository,rewardRepository: rewardRepository)
+        let viewModel = ClaimRewardViewModel(chestManager: chestRepository)
         return AnyView(ClaimRewardUI(viewModel: viewModel, claimReward: claimReward, onClaim: onClaim))
     }
 }

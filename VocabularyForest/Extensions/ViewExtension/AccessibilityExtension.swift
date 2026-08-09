@@ -15,6 +15,9 @@ extension View {
     /// Designed for tappable views built with `.onTapGesture`: VoiceOver's activate gesture
     /// taps the element's center, which still triggers the original gesture.
     /// Pass no label to let the merged child texts speak for themselves.
+    /// WARNING: the optional parameters branch the view tree, so switching one
+    /// between nil and non-nil at runtime changes the subtree's structural
+    /// identity and re-fires its .task/.onAppear — don't gate state on those.
     func a11yTapButton(
         _ label: String? = nil,
         value: String? = nil,
