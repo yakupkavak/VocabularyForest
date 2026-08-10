@@ -39,6 +39,7 @@ class LanguageData {
         Language(id: "tr",    name: String(localized: "Türkçe")),
         Language(id: "fr",    name: String(localized: "Fransızca")),
         Language(id: "de",    name: String(localized: "Almanca")),
+        Language(id: "it",    name: String(localized: "İtalyanca")),
         Language(id: "ja",    name: String(localized: "Japonca")),
         Language(id: "ko",    name: String(localized: "Korece"))
     ]
