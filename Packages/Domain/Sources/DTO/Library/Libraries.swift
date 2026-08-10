@@ -55,7 +55,8 @@ public extension String {
             "fr":    String(localized: "Fransızca"),
             "ja":    String(localized: "Japonca"),
             "ko":    String(localized: "Korece"),
-            "de":    String(localized: "Almanca")
+            "de":    String(localized: "Almanca"),
+            "it":    String(localized: "İtalyanca"),
         ]
         return languages[self] ?? self
     }
