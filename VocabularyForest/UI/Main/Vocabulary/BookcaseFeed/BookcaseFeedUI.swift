@@ -16,6 +16,7 @@ struct BookcaseFeedUI: View {
     @ObservedObject var viewModel: BookcaseFeedViewModel
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @State private var showEmptyText = false
+    @State private var pendingDeleteBookcase: BookcaseModel?
     @FocusState private var searchBarIsFocused: Bool
     
     // MARK: - VIEWS
@@ -44,6 +45,9 @@ struct BookcaseFeedUI: View {
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.bookcases.isEmpty)
         .onAppear {
             viewModel.fetchBookcases()
+        }
+        .bookcaseDeleteConfirmation(pendingBookcase: $pendingDeleteBookcase) { bookcase in
+            viewModel.deleteBookcase(bookcase: bookcase)
         }
         .sheet(item: $viewModel.editingBookcaseItem) { item in
             BookcaseEditSheet(item: item) { (newName, newLearningLang, newMeaningLang) in
@@ -116,7 +120,7 @@ private extension BookcaseFeedUI {
                 BookcaseRow(bookcase: bookcaseDisplayItem.bookcase, animalModel: bookcaseDisplayItem.animalModel, onEdit: {
                     viewModel.prepareForEdit(item: bookcaseDisplayItem)
                 }, onDelete: {
-                    viewModel.deleteBookcase(item: bookcaseDisplayItem)
+                    pendingDeleteBookcase = bookcaseDisplayItem.bookcase
                 })
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -129,7 +133,7 @@ private extension BookcaseFeedUI {
                     viewModel.prepareForEdit(item: bookcaseDisplayItem)
                 }
                 .accessibilityAction(named: Text("Sil")) {
-                    viewModel.deleteBookcase(item: bookcaseDisplayItem)
+                    pendingDeleteBookcase = bookcaseDisplayItem.bookcase
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)

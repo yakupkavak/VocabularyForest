@@ -19,6 +19,7 @@ struct SelectBookcaseUI: View {
     @State private var showCreateBookcase = false
     @State private var bookcases: [BookcaseModel]
     @State private var editingBookcaseItem: BookcaseDisplayItem?
+    @State private var pendingDeleteBookcase: BookcaseModel?
 
     private var coreDataManager: CoreDataManagerProtocol {
         DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
@@ -69,7 +70,7 @@ struct SelectBookcaseUI: View {
                             )
                         },
                         onDelete: {
-                            deleteBookcase(bookcase)
+                            pendingDeleteBookcase = bookcase
                         })
                         .foregroundStyle(.primary)
                 }.listRowSeparator(.hidden).listRowInsets(.init())
@@ -97,6 +98,9 @@ struct SelectBookcaseUI: View {
                         Image(systemName: "plus")
                     }
                 }
+            }
+            .bookcaseDeleteConfirmation(pendingBookcase: $pendingDeleteBookcase) { bookcase in
+                deleteBookcase(bookcase)
             }
             .sheet(item: $editingBookcaseItem) { item in
                 BookcaseEditSheet(item: item) { (newName, newLearningLang, newMeaningLang) in

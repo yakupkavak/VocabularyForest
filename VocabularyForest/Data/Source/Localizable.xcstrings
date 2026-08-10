@@ -104,6 +104,40 @@
         }
       }
     },
+    "%@ kitaplığı ve içindeki tüm kelimeler kalıcı olarak silinecek. Bu işlem geri alınamaz.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ and every word inside it will be deleted permanently. This action cannot be undone."
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ y todas las palabras que contiene se eliminarán permanentemente. Esta acción no se puede deshacer."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ e todas as palavras dentro dela serão excluídas permanentemente. Esta ação não pode ser desfeita."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "«%@» и все слова внутри будут удалены безвозвратно. Это действие нельзя отменить."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ kitaplığı ve içindeki tüm kelimeler kalıcı olarak silinecek. Bu işlem geri alınamaz."
+          }
+        }
+      }
+    },
     "%lld": {
       "localizations": {
         "en": {
@@ -6227,6 +6261,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kitaplık seçiniz"
+          }
+        }
+      }
+    },
+    "Kitaplık silinsin mi?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this bookcase?"
+          }
+        },
+        "es-419": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar esta estantería?"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir esta estante?"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Удалить книжный шкаф?"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kitaplık silinsin mi?"
           }
         }
       }

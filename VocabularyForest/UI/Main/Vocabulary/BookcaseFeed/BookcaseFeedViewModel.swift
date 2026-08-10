@@ -90,10 +90,11 @@ class BookcaseFeedViewModel: ObservableObject {
         filterBookcases(searchText: self.searchText)
     }
 
-    func deleteBookcase(item: BookcaseDisplayItem) {
-        coreDataManager.deleteBookcase(bookcase: item.bookcase, contextType: .main)
-        if let index = allBookcases.firstIndex(of: item) {
-            allBookcases.remove(at: index)
+    func deleteBookcase(bookcase: BookcaseModel) {
+        coreDataManager.deleteBookcase(bookcase: bookcase, contextType: .main)
+        allBookcases.removeAll { $0.bookcase.id == bookcase.id }
+        if allBookcases.isEmpty {
+            createdAnyBookcase = false
         }
         filterBookcases(searchText: self.searchText)
     }
