@@ -11,7 +11,7 @@ import SwiftUI
 struct CustomSearchBar: View {
     
     @Binding var searchText: String
-    var placeholder: String = "Ara..."
+    var placeholder: String = String(localized: "Ara...")
     @FocusState private var isFocused: Bool
 
     var body: some View {
@@ -58,9 +58,9 @@ struct CustomSearchBar: View {
         
         var body: some View {
             VStack {
-                Text("Aranan: \(query)")
-                
-                CustomSearchBar(searchText: $query, placeholder: "Ürün veya hizmet ara...")
+                Text(verbatim: "Query: \(query)")
+
+                CustomSearchBar(searchText: $query, placeholder: String(localized: "Kelime ara"))
                     .padding()
                 
                 Spacer()

@@ -27,6 +27,12 @@
             "state" : "translated",
             "value" : "VocabForest"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
         }
       }
     },
@@ -56,6 +62,12 @@
             "state" : "translated",
             "value" : "VocabForest"
           }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
         }
       }
     },
@@ -67,6 +79,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "We use your data to deliver better ads."
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نستخدم بياناتك لتقديم إعلانات أفضل."
           }
         }
       }

@@ -587,7 +587,7 @@ private struct ForestQuestMenuRow: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.headline)
                     .foregroundStyle(.white.opacity(0.6))
             }
