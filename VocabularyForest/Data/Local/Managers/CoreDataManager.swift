@@ -61,7 +61,6 @@ protocol CoreDataManagerProtocol: AnyObject {
     func importBookcase(_ request: BookcaseRequest, overwrite: Bool, contextType: CoreDataManager.ContextType, completion: @escaping (Result<Bookcase, CoreDataManager.ImportBookcaseError>) -> Void)
     func deleteBookcase(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType)
     func deleteBookcase(bookcase: Bookcase, contextType: CoreDataManager.ContextType)
-    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookcaseStatus?
     func fetchSafeBookcases(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookcaseModel]?
     func fetchSafeBookcase(book: BookModel, contextType: CoreDataManager.ContextType) -> BookcaseModel?
     func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
@@ -80,7 +79,6 @@ class CoreDataManager: CoreDataManagerProtocol {
     lazy var backgroundContext: NSManagedObjectContext = {
         let context = container.newBackgroundContext()
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        // Main context'te yapilan kayitlar (or. market satin alimi) aninda bu context'e yansisin
         context.automaticallyMergesChangesFromParent = true
         return context
     }()
@@ -707,37 +705,7 @@ extension CoreDataManager {
     }
     
     // MARK: - FETCH HELPERS
-    
-    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: ContextType) -> BookcaseStatus? {
-        let context = getContext(for: contextType)
-        return context.performAndWait {
-            let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType)
-            if let bookcase {
-                do {
-                    let status = BookcaseStatus(
-                        bookList: try bookcase.booksArray.map({ book in
-                            try book.safeObject(context: context)
-                        }),
-                        longMemoryCount: bookcase.longMemoryBooksCount,
-                        shortMemoryCount: bookcase.shortMemoryBooksCount,
-                        totalBooksCount: bookcase.totalBooksCount,
-                        longMemoryBooks: try bookcase.longMemoryBooks.map({ book in
-                            try book.safeObject(context: context)
-                        }),
-                        shortMemoryBooks: try bookcase.shortMemoryBooks.map({ book in
-                            try book.safeObject(context: context)
-                        })
-                    )
-                    return status
-                }catch {
-                    return nil
-                }
-            }else {
-                return nil
-            }
-        }
-    }
-    
+
     func fetchSafeBookcases(
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType

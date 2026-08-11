@@ -4,6 +4,18 @@
     "CFBundleDisplayName" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14,6 +26,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vocabosque"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
           }
         },
         "pt-BR" : {
@@ -34,49 +76,7 @@
             "value" : "VocabForest"
           }
         },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
         "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "hi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "VocabForest"
@@ -87,6 +87,18 @@
     "CFBundleName" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -97,6 +109,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vocabosque"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocabForest"
           }
         },
         "pt-BR" : {
@@ -117,49 +159,7 @@
             "value" : "VocabForest"
           }
         },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
         "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VocabForest"
-          }
-        },
-        "hi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "VocabForest"
@@ -171,18 +171,6 @@
       "comment" : "Privacy - Tracking Usage Description",
       "extractionState" : "extracted_with_value",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "We use your data to deliver better ads."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usamos seus dados para oferecer anúncios melhores."
-          }
-        },
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
@@ -195,22 +183,34 @@
             "value" : "Wir verwenden deine Daten, um dir bessere Werbung zu zeigen."
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "We use your data to deliver better ads."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usamos tus datos para ofrecerte anuncios más relevantes."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nous utilisons tes données pour te proposer de meilleures publicités."
           }
         },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "हम आपको बेहतर विज्ञापन दिखाने के लिए आपके डेटा का उपयोग करते हैं।"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usiamo i tuoi dati per mostrarti pubblicità migliori."
-          }
-        },
-        "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "我们使用你的数据来提供更合适的广告。"
           }
         },
         "ja" : {
@@ -225,10 +225,28 @@
             "value" : "더 알맞은 광고를 제공하기 위해 데이터를 사용합니다."
           }
         },
-        "hi" : {
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "हम आपको बेहतर विज्ञापन दिखाने के लिए आपके डेटा का उपयोग करते हैं।"
+            "value" : "Usamos seus dados para oferecer anúncios melhores."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мы используем ваши данные для показа более релевантной рекламы."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verilerinizi, size daha iyi reklamlar sunmak için kullanıyoruz."
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我们使用你的数据来提供更合适的广告。"
           }
         }
       }

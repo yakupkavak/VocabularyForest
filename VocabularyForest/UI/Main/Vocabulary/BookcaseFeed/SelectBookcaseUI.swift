@@ -58,6 +58,9 @@ struct SelectBookcaseUI: View {
                             createdDate: bookcase.createdDate,
                             learningLanguage: bookcase.learningLanguage,
                             meaningLanguage: bookcase.meaningLanguage,
+                            totalBooksCount: bookcase.totalBooksCount,
+                            longMemoryCount: bookcase.longMemoryCount,
+                            shortMemoryCount: bookcase.shortMemoryCount
                         )
                         setBookcaseDefault(bookcase: bookcase)
                     dismiss()

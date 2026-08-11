@@ -118,9 +118,13 @@ private extension BookcaseFeedUI {
     var bookcaseList: some View {
         List{
             ForEach(viewModel.bookcases, id: \.id) { bookcaseDisplayItem in
-                BookcaseRow(bookcase: bookcaseDisplayItem.bookcase, animalModel: bookcaseDisplayItem.animalModel, onEdit: {
-                    viewModel.prepareForEdit(item: bookcaseDisplayItem)
-                }, onDelete: {
+                BookcaseRow(
+                    bookcase: bookcaseDisplayItem.bookcase,
+                    animalModel: bookcaseDisplayItem.animalModel,
+                    onEdit: {
+                        viewModel.prepareForEdit(item: bookcaseDisplayItem)
+                    },
+                    onDelete: {
                     pendingDeleteBookcase = bookcaseDisplayItem.bookcase
                 })
                 .contentShape(Rectangle())

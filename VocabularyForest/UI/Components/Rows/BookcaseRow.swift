@@ -26,11 +26,7 @@ struct BookcaseRow: View {
             languageLine
             bottomLine
         }.padding().borderRadius(borderColor: .gray).padding().overlay(alignment: .bottomTrailing) {
-            if let longCount = bookcase.longMemoryBooksCount, let totalCount = bookcase.totalBooksCount, longCount > 0 {
-                MemoryProgressBar(percentage: Int(Double(longCount) / Double(totalCount) * 100), width: 45).offset(x: -32, y: -32)
-            }else {
-                MemoryProgressBar(percentage: 0, width: 45).offset(x: -32, y: -32)
-            }
+            MemoryProgressBar(percentage: Int(Double(bookcase.longMemoryCount) / Double(bookcase.totalBooksCount) * 100), width: 45).offset(x: -32, y: -32)
         }
         .overlay(alignment: .topTrailing) {
             Image(animalModel.head)
@@ -73,19 +69,17 @@ private extension BookcaseRow {
     }
     var bottomLine: some View {
         HStack(alignment: .center){
-            if let longMemoryCount = bookcase.longMemoryBooksCount, let shortMemoryCount = bookcase.shortMemoryBooksCount {
-                tvDefault(text: "\(longMemoryCount)")
-                Image("longMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26).padding(.trailing)
-                tvDefault(text: "\(shortMemoryCount)")
-                Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
-            }
+            tvDefault(text: "\(bookcase.longMemoryCount)")
+            Image("longMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26).padding(.trailing)
+            tvDefault(text: "\(bookcase.shortMemoryCount)")
+            Image("shortMemoryIcon").resizable().scaledToFit().frame(maxWidth: 26)
             Spacer()
         }.padding(.top, -8)
             .a11yGroup(
                 String(
                     format: NSLocalizedString("a11y_memory_counts", comment: ""),
-                    bookcase.longMemoryBooksCount ?? 0,
-                    bookcase.shortMemoryBooksCount ?? 0
+                    bookcase.longMemoryCount,
+                    bookcase.shortMemoryCount
                 )
             )
     }

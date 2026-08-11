@@ -63,7 +63,8 @@ class BookcaseFeedViewModel: ObservableObject {
             contextType: .main
         ) ?? []
         bookcases = fetchedBookcases.map { bookcase in
-            BookcaseDisplayItem(
+            
+            return BookcaseDisplayItem(
                 id: bookcase.id,
                 bookcase: bookcase,
                 animalModel: getRandomAnimalModel()
