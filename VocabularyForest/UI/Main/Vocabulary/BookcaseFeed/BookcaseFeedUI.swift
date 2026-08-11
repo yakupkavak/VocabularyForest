@@ -130,7 +130,11 @@ private extension BookcaseFeedUI {
                 .contentShape(Rectangle())
                 .onTapGesture {
                     bookcaseRouter.navigate(
-                        to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.bookcaseName, learning: bookcaseDisplayItem.bookcase.learningLanguage,meaning: bookcaseDisplayItem.bookcase.meaningLanguage)
+                        to: .bookcaseDetail(
+                            bookcase: bookcaseDisplayItem.bookcase.bookcaseName,
+                            learning: bookcaseDisplayItem.bookcase.learningLanguage,
+                            meaning: bookcaseDisplayItem.bookcase.meaningLanguage
+                        )
                     )
                 }
                 .a11yTapButton(hint: String(localized: "a11y_open_bookcase_hint"))

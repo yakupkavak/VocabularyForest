@@ -32,7 +32,6 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     private var cachedBattleViewModel: BattleViewModel?
     private var cachedLearningFeedViewModel: LearningFeedViewModel?
     private var cachedSettingsViewModel: SettingsViewModel?
-    private var cachedBookcaseDetailViewModel: BookcaseDetailViewModel?
     private var cachedBookcaseFeedViewModel: BookcaseFeedViewModel?
     private var cachedBookcasePacketsViewModel: BookcasePacketsViewModel?
     private var cachedCreateBookViewModel: CreateBookViewModel?
@@ -178,9 +177,6 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     }
     
     func startBookcaseDetailUI(bookcaseName: String, learningLanguage: String, meaningLanguage: String) -> AnyView {
-        if let cachedVM = cachedBookcaseDetailViewModel {
-            return AnyView(BookcaseDetailUI(viewModel: cachedVM))
-        }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
@@ -192,7 +188,6 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             analyticsService: analyticsService
         )
         
-        self.cachedBookcaseDetailViewModel = viewModel
         return AnyView(
             BookcaseDetailUI(viewModel: viewModel)
         )
