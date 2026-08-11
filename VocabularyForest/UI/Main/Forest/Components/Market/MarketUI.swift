@@ -129,6 +129,7 @@ struct MarketUI: View {
             }
         }
         .ignoresSafeArea()
+        .trackScreen(.market)
     }
 }
 

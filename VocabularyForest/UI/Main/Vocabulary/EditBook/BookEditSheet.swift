@@ -61,6 +61,7 @@ struct BookEditSheet: View {
                 }
             }
             .navigationTitle("Kelimeyi Düzenle")
+            .trackScreen(.editBook)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

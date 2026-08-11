@@ -32,17 +32,20 @@ final class CloudRestorePromptService {
     private let syncManager: ForestSyncManagerProtocol
     private let forestManager: ForestDataManagerProtocol
     private let assetHydrationService: RewardAssetHydrationServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
 
     init(
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
         forestManager: ForestDataManagerProtocol,
-        assetHydrationService: RewardAssetHydrationServiceProtocol
+        assetHydrationService: RewardAssetHydrationServiceProtocol,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()
     ) {
         self.authManager = authManager
         self.syncManager = syncManager
         self.forestManager = forestManager
         self.assetHydrationService = assetHydrationService
+        self.analyticsService = analyticsService
     }
 }
 
@@ -87,6 +90,7 @@ extension CloudRestorePromptService: CloudRestorePromptServiceProtocol {
 private extension CloudRestorePromptService {
     
     func presentConflictPopup(localForest: SafeForestModel, cloudForest: SafeForestModel) {
+        analyticsService.log(.cloudRestorePromptShown)
         PopupManager.shared.show { [weak self] in
             ForestConflictView(
                 localForest: localForest,
@@ -115,6 +119,7 @@ private extension CloudRestorePromptService {
         
         // On failure the popup stays open so the user can retry.
         if result.status == .success {
+            analyticsService.log(.cloudRestorePromptResult(choice: source == .cloud ? .restore : .keepLocal))
             if source == .cloud {
                 markFirstRewardAsClaimed()
                 // The restore is already written to CoreData; asset downloads continue in the background.

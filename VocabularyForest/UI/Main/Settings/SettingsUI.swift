@@ -85,6 +85,7 @@ struct SettingsUI: View {
         .padding(.horizontal)
         .background(Color.backgroundSystem.ignoresSafeArea())
         .navigationTitle("Ayarlar")
+        .trackScreen(.settings)
         .alert("Bir Sorun Oluştu", isPresented: $viewModel.showConflictError) {
             Button("Tamam", role: .cancel) { }
         } message: {

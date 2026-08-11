@@ -667,6 +667,7 @@ struct ForestQuestUI: View {
                 }
             }
         }
+        .trackScreen(.questList)
     }
 
     private var closeButton: some View {

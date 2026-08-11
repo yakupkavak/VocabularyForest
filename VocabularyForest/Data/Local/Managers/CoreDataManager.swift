@@ -51,6 +51,7 @@ protocol CoreDataManagerProtocol: AnyObject {
     func fetchSafeBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func countAllBooks(contextType: CoreDataManager.ContextType) -> Int
     func fetchSafeBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchSafeBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     // MARK: Bookcase Operations
@@ -560,6 +561,14 @@ extension CoreDataManager {
                 logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
+        }
+    }
+
+    func countAllBooks(contextType: ContextType) -> Int {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
+            return (try? context.count(for: request)) ?? 0
         }
     }
 }

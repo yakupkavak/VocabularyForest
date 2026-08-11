@@ -12,9 +12,10 @@ internal import CoreData
 class BookcaseFeedViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
-    
+
     private let coreDataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var bookcases: [BookcaseDisplayItem] = []
@@ -26,8 +27,9 @@ class BookcaseFeedViewModel: ObservableObject {
 
     // MARK: - INIT
   
-    init(coreDataManager: CoreDataManagerProtocol) {
+    init(coreDataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.coreDataManager = coreDataManager
+        self.analyticsService = analyticsService
         fetchBookcases()
         setListener()
     }
@@ -74,6 +76,8 @@ class BookcaseFeedViewModel: ObservableObject {
             allBookcases = bookcases
             createdAnyBookcase = true
         }
+        analyticsService.set(.bookcaseCount(bookcases.count))
+        analyticsService.set(.wordCount(coreDataManager.countAllBooks(contextType: .main)))
     }
     
     func deleteBookcaseIndex(offsets: IndexSet) {

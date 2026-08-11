@@ -32,7 +32,8 @@ class SettingsViewModel: ObservableObject {
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let restorePromptService: CloudRestorePromptServiceProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     private var cancellables = Set<AnyCancellable>()
@@ -55,7 +56,8 @@ class SettingsViewModel: ObservableObject {
         forestManager: ForestDataManagerProtocol,
         playerManager: PlayerDataManagerProtocol,
         restorePromptService: CloudRestorePromptServiceProtocol,
-        logger: AppLoggerProtocol = AppLogger.shared
+        logger: AppLoggerProtocol = AppLogger.shared,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
@@ -65,6 +67,7 @@ class SettingsViewModel: ObservableObject {
         self.playerManager = playerManager
         self.restorePromptService = restorePromptService
         self.logger = logger
+        self.analyticsService = analyticsService
         setupInit()
     }
     
@@ -142,11 +145,14 @@ class SettingsViewModel: ObservableObject {
                 await notificationManager.requestDisable()
             }
             await notificationManager.checkNotificationStatus()
+            analyticsService.set(.notificationsEnabled(notificationManager.notificationsEnabled))
         }
     }
     
     func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            self.analyticsService.log(.notificationPermissionResult(status: granted ? .authorized : .denied))
+            self.analyticsService.set(.notificationsEnabled(granted))
             DispatchQueue.main.async {
                 if !granted {
                     self.notificationsEnabled = false

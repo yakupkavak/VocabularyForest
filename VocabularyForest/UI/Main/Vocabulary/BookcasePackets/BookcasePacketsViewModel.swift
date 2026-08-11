@@ -51,16 +51,18 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
     
     let networkService: APIServiceProtocol
     let coreDataService: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     private var rewardedAd: RewardedAd?
-    
+
     // MARK: - INIT
-    
-    init(networkService: APIServiceProtocol, dataManager: CoreDataManagerProtocol) {
+
+    init(networkService: APIServiceProtocol, dataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.networkService = networkService
         self.coreDataService = dataManager
+        self.analyticsService = analyticsService
         super.init()
-        
+
         refreshData()
     }
     
@@ -91,11 +93,18 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
     }
     
     func downloadLibrary(model: Library) {
+        downloadLibrary(model: model, unlockMethod: .free)
+    }
+    
+    // MARK: - PRIVATE HELPERS
+
+    private func downloadLibrary(model: Library, unlockMethod: PacketUnlockMethod) {
         downloadState = .downloading
         guard let path = model.id else {
             downloadState = .error(String(localized: "Kitaplık bulunamadı"))
             return
         }
+        analyticsService.log(.packetDownloadStarted(packetID: path, unlockMethod: unlockMethod))
         networkService.fetchBookcaseRequest(values: GetBookcaseRequestModel(bookcaseID: path)) { [weak self] result in
             guard let self else { return }
             switch result {
@@ -104,21 +113,32 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
                     switch result {
                     case .success(_):
                         self.downloadState = .success
+                        self.analyticsService.log(.packetDownloadCompleted(
+                            packetID: path,
+                            wordCount: requestResult.wordCount ?? requestResult.words?.count ?? 0
+                        ))
+                        self.analyticsService.log(.bookcaseCreated(
+                            languagePair: "\(requestResult.sourceLanguage ?? "")_\(requestResult.targetLanguage ?? "")",
+                            source: .packet
+                        ))
                     case .failure(let failure):
                         switch failure {
                         case .alreadyExist:
                             self.downloadState = .error("Bu isim kullanılıyor. İsmini değiştir ya da silmelisin")
+                            self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.alreadyExist))
                         case .missingRequiredFields:
                             self.downloadState = .error("Bilinmeyen bir hata oluştu")
+                            self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.missingFields))
                         }
                     }
                 }
             case .failure(let error):
                 downloadState = .error(error.message)
+                analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.network))
             }
         }
     }
-    
+
     // MARK: - ADMOB HELPERS
     
     func loadRewardedAd() {
@@ -140,7 +160,7 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
     func showAdAndDownload(from rootViewController: UIViewController, library: Library) {
         if let ad = rewardedAd {
             ad.present(from: rootViewController) {
-                self.downloadLibrary(model: library)
+                self.downloadLibrary(model: library, unlockMethod: .rewardedAd)
             }
         } else {
             uiState = .error(String(localized: "Reklam henüz hazır değil."))

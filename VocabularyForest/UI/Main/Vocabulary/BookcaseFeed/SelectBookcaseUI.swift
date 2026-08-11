@@ -24,6 +24,9 @@ struct SelectBookcaseUI: View {
     private var coreDataManager: CoreDataManagerProtocol {
         DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
     }
+    private var analyticsService: AnalyticsServiceProtocol {
+        DC.shared.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+    }
 
     // MARK: - INIT
 
@@ -120,7 +123,7 @@ struct SelectBookcaseUI: View {
             .sheet(isPresented: $showCreateBookcase) {
                 NavigationStack {
                     CreateBookcaseUI(
-                        viewModel: CreateBookcaseViewModel(coreDataManager: coreDataManager),
+                        viewModel: CreateBookcaseViewModel(coreDataManager: coreDataManager, analyticsService: analyticsService),
                         onCreated: {
                             refreshBookcases()
                             showCreateBookcase = false

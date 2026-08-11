@@ -73,6 +73,7 @@ struct BookcaseEditSheet: View {
                 }
             }
             .navigationTitle("Kitaplığı Düzenle")
+            .trackScreen(.editBookcase)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

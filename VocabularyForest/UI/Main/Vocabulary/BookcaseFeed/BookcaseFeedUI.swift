@@ -43,6 +43,7 @@ struct BookcaseFeedUI: View {
         }
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBookcase)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.bookcases.isEmpty)
+        .trackScreen(.bookcaseFeed)
         .onAppear {
             viewModel.fetchBookcases()
         }
@@ -164,7 +165,7 @@ private extension BookcaseFeedUI {
         
         try? context.save()
         
-        return BookcaseFeedViewModel(coreDataManager: previewManager)
+        return BookcaseFeedViewModel(coreDataManager: previewManager, analyticsService: NoopAnalyticsService())
     }()
     
     NavigationStack {

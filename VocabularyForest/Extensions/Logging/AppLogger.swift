@@ -9,7 +9,7 @@ import Foundation
 import os
 
 enum LogCategory: String {
-    case forest, sync, asset, auth, reward, ui, data
+    case forest, sync, asset, auth, reward, ui, data, analytics
 }
 
 protocol AppLoggerProtocol: AnyObject {

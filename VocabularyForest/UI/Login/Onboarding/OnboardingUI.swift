@@ -12,6 +12,7 @@ struct OnboardingUI: View {
     // MARK: PROPERTIES
     
     @GestureState private var isDragging: Bool = false
+    @Environment(\.analyticsService) private var analyticsService
     @State private var currentPage = 0
     @State private var fakeIndex = 0
     @State private var models = OnboardingConstants.onboardingModels
@@ -35,6 +36,10 @@ struct OnboardingUI: View {
             alignment: .topTrailing
         )
         .safeAreaInset(edge: .bottom) { bottomBar }
+        .trackScreen(.onboarding)
+        .onChange(of: currentPage) { page in
+            analyticsService.log(.onboardingStepViewed(stepIndex: page))
+        }
         .onAppear {
             var base = OnboardingConstants.onboardingModels
             guard let first = base.first, var last = base.last else { return }
@@ -45,6 +50,7 @@ struct OnboardingUI: View {
             fakeIndex = 1
             currentPage = 0
             isPulseAnimating = true
+            analyticsService.log(.tutorialBegin)
         }
     }
 }
@@ -238,6 +244,7 @@ private extension OnboardingUI {
     }
     
     private func openApp() {
+        analyticsService.log(.tutorialComplete)
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
     }
 }

@@ -43,6 +43,7 @@ struct ClaimRewardUI: View {
                     viewModel.openChest(chestID: model.id)
                 }
             }
+            .trackScreen(.claimReward)
             .onReceive(timer) { _ in
                 triggerShake()
             }

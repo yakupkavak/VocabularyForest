@@ -48,6 +48,7 @@ struct BookcaseDetailUI: View {
         .padding(.top, 8)
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBook)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.books.isEmpty)
+        .trackScreen(.bookcaseDetail)
         .navigationTitle(viewModel.bookcaseName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -171,6 +172,6 @@ private extension BookcaseDetailUI {
 
 #Preview {
     let mockCoreData = CoreDataManager.preview
-    let vm = BookcaseDetailViewModel(bookcaseName: "Japonca Kelimeler", learningLanguage: "ja", meaningLanguage: "tr", dataManager: mockCoreData)
+    let vm = BookcaseDetailViewModel(bookcaseName: "Japonca Kelimeler", learningLanguage: "ja", meaningLanguage: "tr", dataManager: mockCoreData, analyticsService: NoopAnalyticsService())
     NavigationStack { BookcaseDetailUI(viewModel: vm) }
 }

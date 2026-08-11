@@ -48,7 +48,7 @@ struct LearningFeedUI: View {
             }
         }.task {
             viewModel.fetchDailyWord()
-        }
+        }.trackScreen(.learningFeed)
     }
 }
 

@@ -8,8 +8,21 @@
 import DependencyContainer
 import Foundation
 
+// MARK: - CONSTANTS
+
+private extension AppDependencyConfigurer {
+    enum Constants {
+        static let uiTestLaunchArgument = "-UITEST"
+    }
+}
+
 enum AppDependencyConfigurer {
     static func configure() {
+        // UI tests must not pollute production analytics data.
+        let isUITestRun = ProcessInfo.processInfo.arguments.contains(Constants.uiTestLaunchArgument)
+        let analyticsService: AnalyticsServiceProtocol = isUITestRun
+            ? NoopAnalyticsService()
+            : FirebaseAnalyticsService(logger: AppLogger.shared)
         let vocabularyBaseURLProvider = VocabularyBaseURLProvider()
         let networkManager = APIService(vocabularyBaseURLProvider: vocabularyBaseURLProvider)
         let coreData = CoreDataManager()
@@ -17,8 +30,8 @@ enum AppDependencyConfigurer {
         let forestEntityService = ForestEntityServiceAdapter(coreDataManager: coreData)
         let audioManager = ForestAudioService()
         let notificationManager = NotificationManager()
-        let authManager = AuthManager()
-        let cloudSyncManager = ForestSyncManager()
+        let authManager = AuthManager(analyticsService: analyticsService)
+        let cloudSyncManager = ForestSyncManager(analyticsService: analyticsService)
         let playerDataManager = PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext)
         let remoteConfigRepository = RemoteConfigRepository()
         let documentRepository = DocumentaryRepository()
@@ -33,14 +46,15 @@ enum AppDependencyConfigurer {
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
         let rewardNotificationService = RewardNotificationService(forestManager: forestData, adventureRoadService: adventureRoadService)
-        let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData, assetHydrationService: rewardAssetHydrationService)
+        let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData, assetHydrationService: rewardAssetHydrationService, analyticsService: analyticsService)
         let gameManager = GameManager()
-        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager)
+        let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager, analyticsService: analyticsService)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
         cloudSyncManager.remoteConfigRepository = remoteConfigRepository
         cloudSyncManager.assetHydrationService = rewardAssetHydrationService
         forestData.notificationManager = notificationManager
+        DC.shared.register(type: .singleInstance(analyticsService), for: AnalyticsServiceProtocol.self)
         DC.shared.register(type: .singleInstance(coreData), for: CoreDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)
         DC.shared.register(type: .singleInstance(audioManager), for: AudioServiceProtocol.self)

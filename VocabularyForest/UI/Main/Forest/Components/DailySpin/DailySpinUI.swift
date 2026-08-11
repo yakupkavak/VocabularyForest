@@ -49,6 +49,7 @@ struct DailySpinUI: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
+        .trackScreen(.dailySpin)
     }
 }
 

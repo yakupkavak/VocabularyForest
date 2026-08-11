@@ -11,9 +11,10 @@ import Foundation
 final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
-    
+
     private let dataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var books: [BookModel] = []
@@ -29,14 +30,16 @@ final class BookcaseDetailViewModel: ObservableObject {
     
     // MARK: - INIT
     
-    init(bookcaseName: String, learningLanguage: String, meaningLanguage: String, dataManager: CoreDataManagerProtocol) {
+    init(bookcaseName: String, learningLanguage: String, meaningLanguage: String, dataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.bookcaseName = bookcaseName
         self.learningLanguage = learningLanguage
         self.meaningLanguage = meaningLanguage
         self.dataManager = dataManager
+        self.analyticsService = analyticsService
         fetchBookcase(bookcaseName: bookcaseName, learningLanguage: learningLanguage, meaningLanguage: meaningLanguage)
         if let bookcase {
             fetchBooks(bookcase: bookcase)
+            analyticsService.log(.bookcaseSelected(bookcaseID: bookcase.id.uuidString))
         }
         setListener()
     }
@@ -82,6 +85,7 @@ final class BookcaseDetailViewModel: ObservableObject {
         let booksToDelete = offsets.map { self.books[$0] }
         for book in booksToDelete {
             dataManager.deleteBook(book: book, contextType: .main)
+            logBookDeleted()
             if let index = allBooks.firstIndex(of: book) {
                 allBooks.remove(at: index)
             }
@@ -93,6 +97,7 @@ final class BookcaseDetailViewModel: ObservableObject {
     }
     func deleteBookModel(at book: BookModel) {
         dataManager.deleteBook(book: book, contextType: .main)
+        logBookDeleted()
         if let index = allBooks.firstIndex(of: book) {
             allBooks.remove(at: index)
         }
@@ -142,9 +147,20 @@ final class BookcaseDetailViewModel: ObservableObject {
             onComplete: {
                 if let bookcase = self.bookcase {
                     fetchBooks(bookcase: bookcase)
+                    analyticsService.log(.bookEdited(bookcaseID: bookcase.id.uuidString))
                 }
                 self.editingBook = nil
             },
             contextType: .main)
+    }
+}
+
+// MARK: - ANALYTICS HELPERS
+
+private extension BookcaseDetailViewModel {
+
+    func logBookDeleted() {
+        guard let bookcase else { return }
+        analyticsService.log(.bookDeleted(bookcaseID: bookcase.id.uuidString))
     }
 }

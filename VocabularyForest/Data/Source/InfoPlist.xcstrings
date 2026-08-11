@@ -16,6 +16,12 @@
             "value" : "Vocabosque"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -93,6 +99,12 @@
             "value" : "Vocabosque"
           }
         },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -163,6 +175,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "We use your data to deliver better ads."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usamos seus dados para oferecer anúncios melhores."
           }
         },
         "ar" : {

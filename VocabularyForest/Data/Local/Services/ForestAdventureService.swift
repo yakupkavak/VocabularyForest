@@ -78,6 +78,7 @@ class ForestAdventureService {
     private let chestService: ChestRepositoryProtocol
     private let gameManager: GameManagerProtocol
     private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
@@ -96,7 +97,8 @@ class ForestAdventureService {
         marketService: MarketServiceProtocol,
         chestService: ChestRepositoryProtocol,
         gameManager: GameManagerProtocol,
-        logger: AppLoggerProtocol = AppLogger.shared
+        logger: AppLoggerProtocol = AppLogger.shared,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()
     ) {
         self.forestManager = forestManager
         self.playerManager = playerManager
@@ -112,6 +114,7 @@ class ForestAdventureService {
         self.chestService = chestService
         self.gameManager = gameManager
         self.logger = logger
+        self.analyticsService = analyticsService
         setupParameters()
     }
 }
@@ -219,40 +222,87 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
         /// Lock the spin with network time first so the reward can not be claimed without a saved lock
         try await dailySpinService.claimDailySpinReward()
         try await rewardRepository.claimLocalReward(reward: model)
+        analyticsService.log(.dailySpinClaimed(rewardID: rewardID(of: model)))
+        logGoldRewards([model], source: AnalyticsGoldSource.dailySpin)
     }
-    
+
     func claimWeeklyReward(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) async throws {
         /// Lock the streak with network time first so the reward can not be claimed without a saved lock
         try await weeklyRewardService.claimWeeklyReward(model: weeklyModel)
         for model in models {
             try await rewardRepository.claimLocalReward(reward: model)
         }
+        analyticsService.log(.weeklyRewardClaimed(dayIndex: weeklyModel.day))
+        logGoldRewards(models, source: AnalyticsGoldSource.weeklyReward)
     }
-    
+
     func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws {
         /// Lock the tier with network time first so the reward can not be claimed without a saved lock
         try await adventureRoadService.claimAdventureReward(milestone: milestone)
         for model in models {
             try await rewardRepository.claimLocalReward(reward: model)
         }
+        analyticsService.log(.adventureRewardClaimed(milestoneID: milestone.id, seasonID: milestone.track.rawValue))
+        logGoldRewards(models, source: AnalyticsGoldSource.adventureRoad)
     }
-    
+
     func claimLocalReward(model: LocalRewardModel) async throws {
         try await rewardRepository.claimLocalReward(reward: model)
     }
-    
+
     func purchaseMarketItem(item: MarketItemModel) async throws {
         /// Deduct the currency first so the reward can not be claimed without a paid purchase
         try await marketService.purchaseItem(item: item)
+        analyticsService.log(.marketItemPurchased(itemID: item.id, price: item.price.amount))
+        analyticsService.log(.virtualCurrencySpent(
+            itemName: item.id,
+            currencyName: currencyName(of: item.price.currency),
+            value: item.price.amount
+        ))
     }
-    
+
     func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
-        try await chestService.fetchChestDropInfo(chestId: chestId)
+        analyticsService.log(.chestOpened(chestID: chestId))
+        return try await chestService.fetchChestDropInfo(chestId: chestId)
     }
-    
+
     func claimQuestReward(quest: QuestModel) async throws {
         try await rewardRepository.claimLocalReward(reward: quest.reward)
         try questService.claimQuestReward(quest: quest)
+        analyticsService.log(.achievementUnlocked(achievementID: quest.id))
+        logGoldRewards([quest.reward], source: AnalyticsGoldSource.quest)
+    }
+}
+
+// MARK: - ANALYTICS HELPERS
+
+private extension ForestAdventureService {
+
+    func rewardID(of model: LocalRewardModel) -> String {
+        switch model.reward {
+        case let .standart(reward): return reward.id
+        case let .chest(chest): return chest.id
+        }
+    }
+
+    func currencyName(of currency: MarketCurrency) -> String {
+        switch currency {
+        case .gold: return AnalyticsVirtualCurrency.gold
+        case .diamond: return AnalyticsVirtualCurrency.diamond
+        }
+    }
+
+    /// The earn/spend pair must be logged completely or the gold-economy reports
+    /// become one-sided and useless; every claimed gold reward passes through here.
+    func logGoldRewards(_ models: [LocalRewardModel], source: String) {
+        for model in models {
+            guard case let .standart(reward) = model.reward, reward.category == .gold else { continue }
+            analyticsService.log(.virtualCurrencyEarned(
+                currencyName: AnalyticsVirtualCurrency.gold,
+                value: model.rewardCount,
+                source: source
+            ))
+        }
     }
 }
 

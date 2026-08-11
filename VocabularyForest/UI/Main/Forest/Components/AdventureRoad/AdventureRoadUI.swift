@@ -219,6 +219,7 @@ struct AdventureRoadUI: View {
                 .padding(.bottom, safeBottomInset + (w * 0.06))
             }
             .padding(.top, globalSafeArea.top > 0 ? globalSafeArea.top : w * 0.04)        .background(backgroundGradient)
+            .trackScreen(.adventureRoad)
         }
     }
 }

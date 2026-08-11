@@ -158,11 +158,14 @@ class ForestSyncManager: ForestSyncManagerProtocol {
     }
     
     private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol
 
     // MARK: - INIT
 
-    init(logger: AppLoggerProtocol = AppLogger.shared) {
+    init(logger: AppLoggerProtocol = AppLogger.shared,
+         analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()) {
         self.logger = logger
+        self.analyticsService = analyticsService
     }
     
     // MARK: - PUBLIC METHODS
@@ -448,8 +451,14 @@ class ForestSyncManager: ForestSyncManagerProtocol {
         do {
             try checkCooldown(hoursRequired: ForestSyncConstants.manualSyncCooldownHours)
             try await performDeltaSync()
+            analyticsService.log(.cloudSyncCompleted(result: .success, trigger: .manual))
             return .success(true)
         } catch {
+            let syncResult: CloudSyncResult = switch error as? ForestSyncError {
+            case .ownershipMismatch, .cloudForestMismatch: .conflict
+            default: .failed
+            }
+            analyticsService.log(.cloudSyncCompleted(result: syncResult, trigger: .manual))
             return .error(error: error)
         }
     }
@@ -491,7 +500,11 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             do {
                 try await checkCooldown(hoursRequired: ForestSyncConstants.backgroundSyncCooldownHours)
                 try await performDeltaSync()
+                analyticsService.log(.cloudSyncCompleted(result: .success, trigger: .auto))
             } catch {
+                // Cooldown skips are routine, not failures — logging them would drown the report.
+                if let syncError = error as? ForestSyncError, case .cooldownActive = syncError { return }
+                analyticsService.log(.cloudSyncCompleted(result: .failed, trigger: .auto))
                 logger.error("Background delta sync failed: \(error.localizedDescription)", category: .sync)
             }
         }

@@ -141,6 +141,7 @@ struct ForestUI: View {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
             viewModel.startGameMusic()
         }
+        .trackScreen(.forest)
         .onChange(of: musicVolume) { newValue in
             viewModel.updateAudioSettings(music: newValue, sfx: sfxVolume, isMuted: isMuted)
         }

@@ -70,6 +70,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             if showOption {
                 if showExistAlert {
                     GameConfirmationUI(title: String(localized: "Are you sure?"), message: String(localized: "Your progress won't be saved")) {
+                        viewModel.abandonGame()
                         forestRouter.navigateBack()
                     } onCancel: {
                         showExistAlert = false
@@ -131,6 +132,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                 }.ignoresSafeArea(.all)
             }
         }
+        .trackScreen(.battle)
         .sheet(isPresented: $showSelectWordBookcase) {
             SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $wordTargetBookcase)
         }

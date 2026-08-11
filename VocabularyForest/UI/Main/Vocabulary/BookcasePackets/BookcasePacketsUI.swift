@@ -50,7 +50,7 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
             }
         }.task {
             viewModel.loadRewardedAd()
-        }
+        }.trackScreen(.bookcasePackets)
     }
 }
 
@@ -109,6 +109,8 @@ extension BookcasePacketsUI {
                     } else {
                         ForEach(sortedGroups, id: \.language) { group in
                             BookcasePacketRow(language: group.language, libraries: group.libs) { library in
+                                viewModel.downloadLibrary(model: library)
+                                /*
                                 PopupManager.shared.show {
                                     LibraryPopUp(
                                         titleText: String(localized: "Download Vocabulary"),
@@ -120,6 +122,7 @@ extension BookcasePacketsUI {
                                         onClose: { PopupManager.shared.dismiss() },
                                         confirmText: String(localized: "Watch the Video"))
                                 }
+                                 */
                             }
                         }
                     }

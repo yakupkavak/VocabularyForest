@@ -115,6 +115,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
         let gameManager = resolver.resolve(type: .singleInstance, for: GameManagerProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
@@ -122,6 +123,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             playerDataManager: playerManager,
             questService: questService,
             gameManager: gameManager,
+            analyticsService: analyticsService,
         )
         
         self.cachedBattleViewModel = viewModel
@@ -136,7 +138,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = LearningFeedViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = LearningFeedViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedLearningFeedViewModel = viewModel
         return AnyView(
@@ -156,6 +159,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
@@ -163,7 +167,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             syncManager: sync,
             forestManager: forestData,
             playerManager: playerManager,
-            restorePromptService: restorePromptService
+            restorePromptService: restorePromptService,
+            analyticsService: analyticsService
         )
         
         self.cachedSettingsViewModel = viewModel
@@ -178,11 +183,13 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let viewModel = BookcaseDetailViewModel(
             bookcaseName: bookcaseName,
             learningLanguage: learningLanguage,
             meaningLanguage: meaningLanguage,
-            dataManager: coreData
+            dataManager: coreData,
+            analyticsService: analyticsService
         )
         
         self.cachedBookcaseDetailViewModel = viewModel
@@ -197,7 +204,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = BookcaseFeedViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = BookcaseFeedViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedBookcaseFeedViewModel = viewModel
         return AnyView(
@@ -212,7 +220,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         
         let networkService = resolver.resolve(type: .singleInstance, for: APIServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData, analyticsService: analyticsService)
         
         self.cachedBookcasePacketsViewModel = viewModel
         return AnyView(
@@ -226,7 +235,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = CreateBookViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = CreateBookViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedCreateBookViewModel = viewModel
         return AnyView(
@@ -240,7 +250,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = CreateBookcaseViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = CreateBookcaseViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedCreateBookcaseViewModel = viewModel
         return AnyView(

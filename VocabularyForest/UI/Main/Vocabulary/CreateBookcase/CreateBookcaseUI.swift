@@ -35,6 +35,7 @@ struct CreateBookcaseUI: View {
         .background(.backgroundSystem)
         .navigationTitle("Kitaplık oluştur")
         .navigationBarTitleDisplayMode(.inline)
+        .trackScreen(.createBookcase)
     }
 }
 
@@ -118,5 +119,5 @@ private extension CreateBookcaseUI {
 }
 
 #Preview {
-    CreateBookcaseUI(viewModel: CreateBookcaseViewModel(coreDataManager: CoreDataManager()))
+    CreateBookcaseUI(viewModel: CreateBookcaseViewModel(coreDataManager: CoreDataManager(), analyticsService: NoopAnalyticsService()))
 }

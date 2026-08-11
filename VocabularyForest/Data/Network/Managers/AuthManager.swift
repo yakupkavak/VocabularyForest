@@ -41,11 +41,14 @@ class AuthManager: AuthManagerProtocol {
         $isUserSignedIn.eraseToAnyPublisher()
     }
     private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol
 
     // MARK: INIT
 
-    init(logger: AppLoggerProtocol = AppLogger.shared) {
+    init(logger: AppLoggerProtocol = AppLogger.shared,
+         analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()) {
         self.logger = logger
+        self.analyticsService = analyticsService
         checkPreviousSign()
         verifySignInWithAppleID()
     }
@@ -58,8 +61,9 @@ class AuthManager: AuthManagerProtocol {
 
             let result = try await googleAuth(user)
             if let result = result, let authUser = Auth.auth().currentUser {
-                
+
                 setupCurrentUser(user: authUser)
+                logSignIn(method: .google, isNewUser: result.additionalUserInfo?.isNewUser == true)
             }
         }
         catch {
@@ -88,7 +92,11 @@ class AuthManager: AuthManagerProtocol {
                                                        rawNonce: nonce,
                                                        fullName: appleIDCredential.fullName)
         do {
-            return try await authenticateUser(credentials: credentials)
+            let result = try await authenticateUser(credentials: credentials)
+            if let result {
+                logSignIn(method: .apple, isNewUser: result.additionalUserInfo?.isNewUser == true)
+            }
+            return result
         }
         catch {
             logger.error("Apple authentication failed: \(error.localizedDescription)", category: .auth)
@@ -104,6 +112,9 @@ class AuthManager: AuthManagerProtocol {
         try auth.signOut()
         currentUser = nil
         isUserSignedIn = false
+        analyticsService.log(.signOut)
+        analyticsService.setUserID(nil)
+        analyticsService.set(.hasCloudAccount(false))
     }
     
     // MARK: - DELETE ACCOUNT
@@ -140,6 +151,9 @@ class AuthManager: AuthManagerProtocol {
         }
         
         try await user.delete()
+        analyticsService.log(.accountDeleted)
+        analyticsService.setUserID(nil)
+        analyticsService.set(.hasCloudAccount(false))
         await MainActor.run {
             currentUser = nil
             isUserSignedIn = false
@@ -221,5 +235,13 @@ private extension AuthManager {
     func setupCurrentUser(user: User) {
         currentUser = user
         isUserSignedIn = true
+        // Firebase Auth UID is a pseudonymous id; it enables cross-device user
+        // stitching in GA4 without exposing personal data.
+        analyticsService.setUserID(user.uid)
+        analyticsService.set(.hasCloudAccount(true))
+    }
+
+    func logSignIn(method: AnalyticsAuthMethod, isNewUser: Bool) {
+        analyticsService.log(isNewUser ? .signUp(method: method) : .login(method: method))
     }
 }

@@ -159,6 +159,7 @@ struct GameSelectUI: View {
         }
         .padding(16)
         .background(Color.brown.opacity(0.95))
+        .trackScreen(.gameSelect)
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)

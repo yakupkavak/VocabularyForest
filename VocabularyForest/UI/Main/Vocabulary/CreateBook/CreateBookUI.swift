@@ -95,6 +95,7 @@ struct CreateBookUI: View {
         .onTapGesture {
             hideKeyboard()
         }
+        .trackScreen(.createBook)
     }
 }
 

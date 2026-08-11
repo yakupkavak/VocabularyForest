@@ -21,6 +21,7 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     )
     func checkAnswer(answerNumber: Int)
     func startMagic(magicType: MagicType)
+    func abandonGame()
     func nextQuestion()
     func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool)
     func playSoundEffect(name: String)
@@ -60,7 +61,8 @@ class BattleViewModel: ObservableObject {
     private let playerDataManager: any PlayerDataManagerProtocol
     private let questService: any QuestServiceProtocol
     private let gameManager: any GameManagerProtocol
-    
+    private let analyticsService: any AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     private var questionList: [QuestionModel] = []
@@ -98,6 +100,7 @@ class BattleViewModel: ObservableObject {
         playerDataManager: PlayerDataManagerProtocol,
         questService: QuestServiceProtocol,
         gameManager: GameManagerProtocol,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
@@ -105,6 +108,7 @@ class BattleViewModel: ObservableObject {
         self.playerDataManager = playerDataManager
         self.questService = questService
         self.gameManager = gameManager
+        self.analyticsService = analyticsService
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
@@ -263,6 +267,11 @@ private extension BattleViewModel {
             contextType: .background
         ) {
             gameStatus.earnedGold += grantedGold
+            analyticsService.log(.virtualCurrencyEarned(
+                currencyName: AnalyticsVirtualCurrency.gold,
+                value: grantedGold,
+                source: AnalyticsGoldSource.battleKill
+            ))
         }
     }
     
@@ -375,6 +384,10 @@ extension BattleViewModel: BattleViewModelProtocol {
             setLongBooks(books: books, bookCount: minBook)
         }
         uiStation = .notDetermined
+        analyticsService.log(.levelStart(
+            levelName: gameLevel.valueForCoreData,
+            character: battleMode.valueForCoreData
+        ))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.askQuestion()
         }
@@ -426,7 +439,16 @@ extension BattleViewModel: BattleViewModelProtocol {
     
     func startMagic(magicType: MagicType) {
         uiStation = .notDetermined
+        analyticsService.log(.magicUsed(magicType: String(describing: magicType)))
         output?.startMagic(magic: magicType)
+    }
+
+    func abandonGame() {
+        guard let gameLevel else { return }
+        analyticsService.log(.gameAbandoned(
+            levelName: gameLevel.valueForCoreData,
+            questionIndex: currentQuestionId
+        ))
     }
     
     func nextQuestion() {
@@ -509,6 +531,7 @@ extension BattleViewModel: BattleSceneProtocol {
     func playerDead() {
         gameStatus.userWon = false
         uiStation = .gameOver
+        logLevelEnd(isWon: false)
     }
     func playerWon() {
         grantKillGold()
@@ -517,5 +540,15 @@ extension BattleViewModel: BattleSceneProtocol {
         }
         gameStatus.userWon = true
         uiStation = .gameOver
+        logLevelEnd(isWon: true)
+    }
+
+    private func logLevelEnd(isWon: Bool) {
+        guard let gameLevel else { return }
+        analyticsService.log(.levelEnd(
+            levelName: gameLevel.valueForCoreData,
+            isWon: isWon,
+            score: gameStatus.trueCount
+        ))
     }
 }

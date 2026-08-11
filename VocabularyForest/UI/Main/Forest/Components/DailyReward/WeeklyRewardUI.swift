@@ -31,6 +31,7 @@ struct WeeklyRewardUI: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
+        .trackScreen(.weeklyReward)
     }
 }
 
