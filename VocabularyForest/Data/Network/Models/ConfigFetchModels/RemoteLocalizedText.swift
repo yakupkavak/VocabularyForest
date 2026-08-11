@@ -13,6 +13,27 @@ public struct RemoteLocalizedText: Decodable, Hashable {
     public let ru, ar, hi: String?
     public let ja, ko, zh: String?
 
+    public init(
+        tr: String? = nil, en: String? = nil, es: String? = nil, fr: String? = nil,
+        de: String? = nil, pt: String? = nil, it: String? = nil,
+        ru: String? = nil, ar: String? = nil, hi: String? = nil,
+        ja: String? = nil, ko: String? = nil, zh: String? = nil
+    ) {
+        self.tr = tr
+        self.en = en
+        self.es = es
+        self.fr = fr
+        self.de = de
+        self.pt = pt
+        self.it = it
+        self.ru = ru
+        self.ar = ar
+        self.hi = hi
+        self.ja = ja
+        self.ko = ko
+        self.zh = zh
+    }
+
     public var localized: String {
         let preferredLanguage = Locale.preferredLanguages.first ?? "en"
         let languageCode = String(preferredLanguage.prefix(2)).lowercased()
@@ -29,6 +50,7 @@ public struct RemoteLocalizedText: Decodable, Hashable {
         case "ja": return ja ?? en ?? ""
         case "ko": return ko ?? en ?? ""
         case "zh": return zh ?? en ?? ""
+        case "it": return it ?? en ?? ""
         default:   return en ?? tr ?? ""
         }
     }
