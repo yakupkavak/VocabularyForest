@@ -75,6 +75,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                     } onCancel: {
                         showExistAlert = false
                     }.transition(.scale)
+                        .a11yModal(onEscape: { showExistAlert = false })
                         .zIndex(3.0)
                 }else {
                     GameOptionsUI(

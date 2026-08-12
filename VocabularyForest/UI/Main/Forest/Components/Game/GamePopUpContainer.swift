@@ -49,5 +49,6 @@ struct GamePopUpContainer<Content: View>: View {
             }
         }
         .zIndex(4.0)
+        .a11yModal(onEscape: onClose)
     }
 }

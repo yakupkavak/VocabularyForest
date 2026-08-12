@@ -85,13 +85,17 @@ struct ForestUI: View {
                     viewModel.claimLocalReward(model: selectedReward) {
                         userClaimedFirtReward = true
                     }
-                }.zIndex(1.2)
+                }
+                // Claiming the first reward is mandatory, so the modal has no escape action.
+                .accessibilityAddTraits(.isModal)
+                .zIndex(1.2)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }else if !forestSeen {
                 GameInfoUI(showForestPopUp: Binding(
                     get: { !forestSeen },
                     set: { if !$0 { forestSeen = true } }
                 ))
+                .a11yModal(onEscape: { forestSeen = true })
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
             }
             
@@ -129,7 +133,9 @@ struct ForestUI: View {
                     confirmText: String(localized: "Kütüphane"),
                     deniedText: String(localized: "Orman"),
                     showForestPopUp: $viewModel.showBookThreshold
-                ).zIndex(4.0)
+                )
+                .a11yModal(onEscape: { viewModel.closeBookError() })
+                .zIndex(4.0)
             }
         }
         // Game overlays sit on fixed-size artwork; AX3 (~235%) is the largest size their

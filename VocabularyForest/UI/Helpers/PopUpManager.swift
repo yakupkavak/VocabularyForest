@@ -48,7 +48,10 @@ struct GlobalPopupModifier: ViewModifier {
         ZStack {
             content
                 .disabled(manager.isPresented)
-            
+                // .disabled does not stop VoiceOver from reading the background;
+                // hiding it keeps the cursor inside the popup.
+                .accessibilityHidden(manager.isPresented)
+
             if manager.isPresented, let popup = manager.currentPopup {
                 Color.black
                     .opacity(0.6)
@@ -56,6 +59,7 @@ struct GlobalPopupModifier: ViewModifier {
                     .transition(.opacity)
                     .zIndex(1)
                 popup
+                    .a11yModal(onEscape: { manager.dismiss() })
                     // .container only: keyboard safe area stays active so popups avoid the keyboard
                     .ignoresSafeArea(.container)
                     .zIndex(2)
