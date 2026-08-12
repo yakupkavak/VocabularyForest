@@ -95,6 +95,7 @@ private extension DailySpinUI {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)
+                    .frame(minWidth: 0, maxWidth: size.width * 0.75)
                 Spacer()
             }.offset(y: size.height * 0.01)
             

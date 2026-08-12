@@ -46,11 +46,12 @@ protocol CoreDataManagerProtocol: AnyObject {
     func updateBook(bookToUpdate: BookModel, learningWord: String, meaningWord: String, descriptionWord: String?, exampleSentence: String?, onComplete: () -> (), contextType: CoreDataManager.ContextType)
     func deleteBook(book: BookModel, contextType: CoreDataManager.ContextType)
     func fetchBookHelperProperties(book model: BookModel, contextType: CoreDataManager.ContextType) -> BookHelperModel?
-    func fetchAllSafeBooks(contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func askIsEnoughtLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> Bool?
     func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchSafeBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
-    func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchAllBooksWithExampleDescription(bookLimit: Int, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func countAllBooks(contextType: CoreDataManager.ContextType) -> Int
     func fetchSafeBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchSafeBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
@@ -365,15 +366,21 @@ extension CoreDataManager {
         }
     }
     
-    func fetchAllSafeBooks(
-        contextType: ContextType
-    ) -> [BookModel]? {
+    func fetchLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> [BookModel]? {
         let context = getContext(for: contextType)
+        let isShort = (memoryType == .short)
+
         return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
+            request.fetchLimit = bookCount
+            if isShort {
+                request.predicate = NSPredicate(format: "shortMemory == YES")
+            } else {
+                request.predicate = NSPredicate(format: "longMemory == YES")
+            }
             var results: [BookModel]?
             context.performAndWait {
                 do {
@@ -385,6 +392,28 @@ extension CoreDataManager {
                 }
             }
             return results
+        }
+    }
+    
+    func askIsEnoughtLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType, contextType: CoreDataManager.ContextType) -> Bool? {
+        let context = getContext(for: contextType)
+        let isShort = (memoryType == .short)
+        
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
+            if isShort {
+                request.predicate = NSPredicate(format: "shortMemory == YES")
+            } else {
+                request.predicate = NSPredicate(format: "longMemory == YES")
+            }
+            
+            do {
+                let count = try context.count(for: request)
+                return count >= bookCount
+            } catch {
+                logger.error("Count fetch failed: \(error.localizedDescription)", category: .data)
+                return nil
+            }
         }
     }
     
@@ -472,6 +501,7 @@ extension CoreDataManager {
     }
     
     func fetchAllBooksWithExampleDescription(
+        bookLimit: Int,
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
@@ -481,6 +511,7 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
+            request.fetchLimit = bookLimit
             request.predicate = NSPredicate(format: "(exampleSentence != nil OR descriptionWord != nil)")
             do {
                 let bookList = try context.fetch(request)

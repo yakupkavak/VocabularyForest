@@ -186,19 +186,29 @@ private extension BattleViewModel {
     
     //Learning modunu seçerken kitapların example ya da descriptionu olan halini veriyoruz.
     func setShortBooks(books: [BookModel], bookCount: Int) {
-        let shortBooks = books.filter { (book: BookModel) -> Bool in
-            return book.shortMemory == true
-        }
+        let shortBooks = books.filter { $0.shortMemory == true }
         var questionNumber = 1
+        
+        let allBookcases = coreData.fetchSafeBookcases(sortDescriptors: nil, contextType: .background) ?? []
+        var bookcaseDict: [UUID: BookcaseModel] = [:]
+        for bookcase in allBookcases {
+            bookcaseDict[bookcase.id] = bookcase
+        }
+        
         for book in shortBooks.shuffled().prefix(bookCount){
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
+            let answerBookcase = bookcaseDict[book.bookcaseId]
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
-                return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
+                let indexBookcase = bookcaseDict[indexBook.bookcaseId]
+                
+                return indexBook != book &&
+                       indexBookcase?.learningLanguage == answerBookcase?.learningLanguage &&
+                       indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
+            
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, book.learningWord.firstUppercased)
+            
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
@@ -209,8 +219,9 @@ private extension BattleViewModel {
                 ].shuffled(), partOfSpeech: book.partOfSpeech,
                 questionNumber: questionNumber,
                 description: book.learningWord,
-                example: book.exampleSentence,
+                example: book.exampleSentence
             )
+            
             questionList.append(model)
             answerBooks.append(book)
             questionNumber += 1
@@ -222,26 +233,35 @@ private extension BattleViewModel {
             return book.longMemory == true
         }
         var questionNumber = 1
-        for book in longBooks.shuffled().prefix(bookCount){
+        
+        let allBookcases = coreData.fetchSafeBookcases(sortDescriptors: nil, contextType: .background) ?? []
+        var bookcaseDict: [UUID: BookcaseModel] = [:]
+        for bookcase in allBookcases {
+            bookcaseDict[bookcase.id] = bookcase
+        }
+        
+        for book in longBooks.shuffled().prefix(bookCount) {
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
+            let answerBookcase = bookcaseDict[book.bookcaseId]
+            
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
+                let indexBookcase = bookcaseDict[indexBook.bookcaseId]
                 return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
             }).shuffled().prefix(3)
+            
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, answer)
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
-                    AnswerModel(book: book,answer: book.meaningWord, isTrue: true),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
+                    AnswerModel(book: book, answer: book.meaningWord, isTrue: true),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
                 ].shuffled(), partOfSpeech: book.partOfSpeech,
                 questionNumber: questionNumber,
                 description: nil,
-                example: nil,
+                example: nil
             )
             questionList.append(model)
             answerBooks.append(book)
@@ -311,7 +331,8 @@ extension BattleViewModel: BattleViewModelProtocol {
         gameLevel: GameLevel,
     ) {
         var books: [BookModel] = []
-        
+        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
+
         if questionType == .learning {
             if let bookcaseModel {
                 guard let bookcase = coreData.fetchBookcase(
@@ -329,7 +350,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(sortDescriptors: nil, contextType: .background) else {
+                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(bookLimit: minBook, sortDescriptors: nil, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -355,7 +376,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllSafeBooks(contextType: .background) else {
+                guard let allBooks = coreData.fetchLimitedSafeBooks(bookCount: minBook, memoryType: questionType == .remainder ? .long : .short, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -364,7 +385,6 @@ extension BattleViewModel: BattleViewModelProtocol {
         }
         let safePlayerModel = playerDataManager.fetchSafePlayer(contextType: .main)
         playerName = safePlayerModel?.name ?? String(localized: "Ichigo")
-        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         self.gameLevel = gameLevel
         self.questionType = questionType
         self.battleMode = battleMode

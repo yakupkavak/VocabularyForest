@@ -47,16 +47,11 @@ struct CardFront : View {
                         .foregroundStyle(Color.brown700)
                 }
                 .contentShape(Rectangle())
-                .padding(.top, 16)
+                .padding(.top, 8)
                 .padding(.trailing, 16)
             }
             
             VStack(spacing: 8){
-                Image(systemName: "suit.club.fill")
-                    .resizable()
-                    .frame(width: width / 3, height: height / 3)
-                    .foregroundColor(Color(hex: "#F2CB05"))
-                    .accessibilityHidden(true)
                 if !meaningWord.isEmpty {
                     Text(meaningWord).font(.system(size: meaningFontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                         RoundedRectangle(cornerRadius: 16)
@@ -88,12 +83,12 @@ private extension CardFront {
         var fontSize: CGFloat
         
         var body: some View {
-            Text(text).font(.system(size: fontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+            Text(text).font(.system(size: fontSize)).frame(maxWidth: width * 3 / 4).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                 RoundedRectangle(cornerRadius: 16)
             ).overlay {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
-            }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2)
+            }.foregroundStyle(Color(hex:"#F2CB05"))
         }
     }
 }

@@ -161,7 +161,7 @@ extension ForestViewModel {
             switch bookcaseSelection {
             case .allBookcases:
                 guard let books = coreDataManager.fetchAllBooksWithExampleDescription(
-                    sortDescriptors: nil,
+                    bookLimit: minBook, sortDescriptors: nil,
                     contextType: .background
                 ) else {
                     showBookThreshold = true
@@ -187,16 +187,21 @@ extension ForestViewModel {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = coreDataManager.fetchAllSafeBooks(contextType: .background) else {
-                    showBookThreshold = true
-                    return false }
                 if type == .competitive {
-                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                    guard let isEnoughBook = coreDataManager.askIsEnoughtLimitedSafeBooks(bookCount: minBook, memoryType: .short, contextType: .background) else {
+                        showBookThreshold = true
+                        return false
+                    }
+                    if !isEnoughBook {
                         showBookThreshold = true
                         return false
                     }
                 }else { // remainder
-                    if books.filter({ $0.longMemory == true }).count < minBook {
+                    guard let isEnoughBook = coreDataManager.askIsEnoughtLimitedSafeBooks(bookCount: minBook, memoryType: .long, contextType: .background) else {
+                        showBookThreshold = true
+                        return false
+                    }
+                    if !isEnoughBook {
                         showBookThreshold = true
                         return false
                     }

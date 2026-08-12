@@ -17,10 +17,6 @@ struct BookcaseModel: Equatable, Codable, Hashable, Identifiable {
     let totalBooksCount: Int
     let longMemoryCount: Int
     let shortMemoryCount: Int
-    
-    private var coreDataManager: CoreDataManagerProtocol {
-        DC.shared.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-    }
 }
 
 /*
