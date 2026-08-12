@@ -11994,6 +11994,18 @@
             "value" : "Der Wald in der Cloud unterscheidet sich von dem auf diesem Gerät. Bitte wähle aus, welchen Wald du verwenden möchtest."
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El bosque en la nube es diferente del que está en este dispositivo. Elige qué bosque quieres usar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The forest in the cloud is different from the one on this device. Please choose which forest you want to use."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12022,6 +12034,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "클라우드의 숲이 이 기기의 숲과 달라요. 어떤 숲을 사용할지 선택해 주세요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A floresta na nuvem é diferente da que está neste dispositivo. Escolha qual floresta você quer usar."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лес в облаке отличается от леса на этом устройстве. Пожалуйста, выберите, какой лес использовать."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buluttaki orman bu cihazdakinden farklı. Lütfen hangi ormanı kullanmak istediğinizi seçin."
           }
         },
         "zh-CN" : {
@@ -12210,6 +12240,18 @@
             "value" : "Cambridge Dictionary"
           }
         },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambridge Dictionary"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambridge Dictionary"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12235,6 +12277,24 @@
           }
         },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambridge Dictionary"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambridge Dictionary"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambridge Dictionary"
+          }
+        },
+        "tr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cambridge Dictionary"
