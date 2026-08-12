@@ -18,4 +18,13 @@ struct ForestComponentSummary: Identifiable, Equatable {
     /// implement (they roam on their own), so the list only offers it
     /// for plants and sculptures.
     var supportsMove: Bool { type != .animal }
+
+    /// Spoken kind, so VoiceOver users hear what a named component is.
+    var localizedTypeName: String {
+        switch type {
+        case .plant: String(localized: "a11y_type_plant")
+        case .animal: String(localized: "a11y_type_animal")
+        case .sculpture: String(localized: "a11y_type_sculpture")
+        }
+    }
 }

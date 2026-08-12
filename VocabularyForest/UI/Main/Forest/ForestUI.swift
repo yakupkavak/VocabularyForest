@@ -76,7 +76,7 @@ struct ForestUI: View {
                 .zIndex(1.0)
                 .accessibilityHidden(true)
 
-            if uiState == .empty && userClaimedFirtReward && forestSeen {
+            if uiState == .empty {
                 sceneAccessibilityOverlay.zIndex(1.05)
             }
 
@@ -403,6 +403,7 @@ private extension ForestUI {
                     .multilineTextAlignment(.center)
                     .padding()
             } else {
+                forestSummaryText
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(viewModel.forestComponents) { component in
@@ -431,6 +432,8 @@ private extension ForestUI {
             Text(component.name)
                 .foregroundStyle(.white).scaledFont(size: 16)
                 .lineLimit(2)
+                .accessibilityLabel(component.name)
+                .accessibilityValue(component.localizedTypeName)
             Spacer()
             componentRowAction(String(localized: "Adını değiştir")) {
                 componentName = component.name
@@ -446,6 +449,15 @@ private extension ForestUI {
             }
         }
         .padding(.horizontal, 4)
+    }
+
+    var forestSummaryText: some View {
+        let plants = viewModel.forestComponents.filter { $0.type == .plant }.count
+        let animals = viewModel.forestComponents.filter { $0.type == .animal }.count
+        let sculptures = viewModel.forestComponents.filter { $0.type == .sculpture }.count
+        return Text(String(format: NSLocalizedString("a11y_forest_summary", comment: ""), plants, animals, sculptures))
+            .foregroundStyle(.white).scaledFont(size: 14)
+            .multilineTextAlignment(.center)
     }
 
     func componentRowAction(_ title: String, action: @escaping () -> Void) -> some View {
@@ -475,10 +487,12 @@ private extension ForestUI {
                     moveControlButton(ForestConstant.refuseIconName, label: String(localized: "a11y_close")) {
                         forestScene.cancelPositionChange()
                         uiState = .empty
+                        A11yAnnouncer.announce(String(localized: "a11y_move_cancelled"))
                     }
                     moveControlButton(ForestConstant.confirmIconName, label: String(localized: "a11y_confirm")) {
                         forestScene.confirmPositionChange()
                         uiState = .empty
+                        A11yAnnouncer.announce(String(localized: "a11y_move_saved"))
                     }
                 }
             }
@@ -492,6 +506,7 @@ private extension ForestUI {
     func moveStepButton(_ icon: String, label: String, direction: Directions) -> some View {
         moveControlButton(icon, label: label) {
             forestScene.applyMoveStep(direction)
+            A11yAnnouncer.announce(String(format: NSLocalizedString("a11y_moved_direction", comment: ""), label))
         }
     }
 
