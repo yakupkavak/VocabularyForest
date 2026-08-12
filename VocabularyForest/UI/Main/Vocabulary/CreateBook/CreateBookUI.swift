@@ -211,9 +211,9 @@ private extension CreateBookUI {
                 .frame(maxWidth: 200)
                 Text(
                     "\(viewModel.currentBookcase?.learningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.meaningLanguage.toLanguageDisplayName() ?? "")"
-                ) .font(.system(size: 14, weight: .medium))
+                ) .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(.brown300)
-            }
+            }.padding(.top, 8)
             Spacer()
         }
         .overlay(alignment: .trailing) {
