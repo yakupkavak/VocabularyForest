@@ -19,7 +19,22 @@ struct BaseTabViewUI: View {
     @EnvironmentObject private var coordinator: VocabularyForestCoordinator
     @StateObject private var viewModel = BaseTabViewModel()
     @State private var isAddLibraryPresented = false
-    
+
+    // MARK: - INIT
+
+    init() {
+        // UIKit only uses the transparent scroll-edge appearance once a list is scrolled to its
+        // bottom; while content passes under the bar it falls back to a translucent material that
+        // reads lighter than the page. Pinning both appearances to the app background keeps the
+        // tab bar flush with it at every scroll offset.
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = .backgroundSystem
+        tabBarAppearance.shadowColor = .clear
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+    }
+
     // MARK: - VIEW
 
     var body: some View {
