@@ -42,6 +42,25 @@ extension View {
             .a11yOptionalLabel(label)
             .a11yOptionalValue(value)
     }
+
+    /// Hides purely decorative imagery from assistive technologies so VoiceOver
+    /// never reads raw asset names ("bambuuLeft", "elephanthead").
+    func a11yDecorative() -> some View {
+        accessibilityHidden(true)
+    }
+
+    /// Marks an in-app popup as a modal for VoiceOver (focus stays inside)
+    /// and wires the two-finger scrub gesture to the popup's close action.
+    func a11yModal(onEscape: @escaping () -> Void) -> some View {
+        accessibilityAddTraits(.isModal)
+            .accessibilityAction(.escape, onEscape)
+    }
+
+    /// Marks a title as a header so it appears in the VoiceOver rotor's
+    /// "Headings" navigation.
+    func a11yHeader() -> some View {
+        accessibilityAddTraits(.isHeader)
+    }
 }
 
 // MARK: - HELPERS
