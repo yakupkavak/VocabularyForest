@@ -65,7 +65,7 @@ private extension WeeklyRewardUI {
     
     func titleView(size: CGSize) -> some View {
         Text("Daily Reward")
-            .font(.system(size: isPad ? 40 : 22, weight: .heavy, design: .rounded))
+            .scaledFont(size: isPad ? 40 : 22, weight: .heavy, design: .rounded)
             .foregroundStyle(.white.opacity(0.95))
             .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 3)
     }
@@ -75,7 +75,7 @@ private extension WeeklyRewardUI {
             HStack {
                 Spacer()
                 Text("Play everyday and get additional bonuses")
-                    .font(.system(size: isPad ? 32 : 18, weight: .heavy, design: .rounded))
+                    .scaledFont(size: isPad ? 32 : 18, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)

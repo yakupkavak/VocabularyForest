@@ -48,6 +48,9 @@ struct ClaimRewardUI: View {
                 triggerShake()
             }
         }
+        // Reward artwork and prize text share a fixed card; AX3 (~235%) still exceeds
+        // the 200% Larger Text requirement while keeping the layout intact.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
     }
 }
 
@@ -96,7 +99,7 @@ private extension ClaimRewardUI {
                 .scaledToFit()
                 .frame(width: mainImageWidth)
             Text(LocalizedStringKey(model.displayName.localized))
-                .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
                 .foregroundColor(model.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
             rewardCountText(count: claimReward.rewardCount, fontSize: rewardTextSize * 0.75, color: model.textColorHex?.color ?? .white)
@@ -107,7 +110,7 @@ private extension ClaimRewardUI {
     func rewardCountText(count: Int, fontSize: CGFloat, color: Color) -> some View {
         if count > 1 {
             Text("x\(count)")
-                .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                .scaledFont(size: fontSize, weight: .bold, design: .rounded)
                 .foregroundColor(color)
                 .shadow(color: .black.opacity(0.3), radius: 5)
         }
@@ -144,7 +147,7 @@ private extension ClaimRewardUI {
         
         return VStack(spacing: 20) {
             Text(LocalizedStringKey("Kazanılan Ödüller"))
-                .font(.system(size: isPad ? 36 : 24, weight: .bold, design: .rounded))
+                .scaledFont(size: isPad ? 36 : 24, weight: .bold, design: .rounded)
                 .foregroundColor(.white)
                 .shadow(radius: 2)
             
@@ -156,7 +159,7 @@ private extension ClaimRewardUI {
                             .frame(height: isPad ? 120 : 80)
                         
                         Text(LocalizedStringKey(rewards[index].reward.displayName.localized))
-                            .font(.system(size: isPad ? 20 : 14, weight: .bold, design: .rounded))
+                            .scaledFont(size: isPad ? 20 : 14, weight: .bold, design: .rounded)
                             .foregroundColor(rewards[index].reward.textColorHex?.color ?? .white)
                         rewardCountText(count: rewards[index].rewardCount, fontSize: isPad ? 18 : 12, color: rewards[index].reward.textColorHex?.color ?? .white)
                     }
@@ -178,7 +181,7 @@ private extension ClaimRewardUI {
                 .scaledToFit()
                 .frame(width: mainImageWidth)
             Text(LocalizedStringKey(model.reward.displayName.localized))
-                .font(.system(size: rewardTextSize, weight: .medium, design: .rounded))
+                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
                 .foregroundColor(model.reward.textColorHex?.color ?? .white)
                 .shadow(color: .black.opacity(0.3), radius: 5)
             rewardCountText(count: model.rewardCount, fontSize: rewardTextSize * 0.75, color: model.reward.textColorHex?.color ?? .white)
@@ -203,7 +206,7 @@ private extension ClaimRewardUI {
             handleClaim()
         }) {
             Text(buttonTitleKey)
-                .font(.system(size: isPad ? 38 : 28, weight: .black, design: .rounded))
+                .scaledFont(size: isPad ? 38 : 28, weight: .black, design: .rounded)
                 .foregroundColor(.white)
                 .padding(.horizontal, 6)
                 .padding(.vertical, isPad ? 24 : 20)

@@ -170,7 +170,7 @@ private extension ForestConflictView {
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
-                .lineLimit(1)
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
             
             VStack(alignment: .leading, spacing: 6) {

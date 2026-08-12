@@ -202,21 +202,21 @@ struct QuestRewardView: View {
                     switch rewardModel.category {
                     case .animal, .plant, .sculpture:
                         Text(rewardModel.displayName.localized)
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
                             .foregroundStyle(.white)
                             .minimumScaleFactor(0.8)
                             .lineLimit(1)
                     case .water:
                         Text(String(localized: "\(reward.rewardCount) Water Drops"))
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
                             .foregroundStyle(.blue)
                     case .gold:
                         Text("\(reward.rewardCount) Gold")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
                             .foregroundStyle(.white)
                     case .diamond:
                         Text("\(reward.rewardCount) Diamond")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
                             .foregroundStyle(.blue)
                     }
                 }
@@ -436,7 +436,7 @@ struct QuestRow: View {
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(LocalizedStringKey(quest.title))
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .scaledFont(size: 13, weight: .semibold, design: .rounded)
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
@@ -535,7 +535,7 @@ private struct ForestQuestSectionHeader: View {
 
             Text(title)
                 .foregroundStyle(.white)
-                .font(.system(size: 20, weight: .bold))
+                .scaledFont(size: 20, weight: .bold)
                 .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
         }
         .padding(.bottom)
@@ -548,7 +548,7 @@ private struct ForestQuestEmptyStateView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "clipboard")
-                .font(.system(size: 50))
+                .scaledFont(size: 50)
                 .foregroundStyle(.white.opacity(0.4))
                 .accessibilityHidden(true)
 
@@ -702,7 +702,7 @@ struct ForestQuestUI: View {
 
                 Text("Quests")
                     .foregroundStyle(.white)
-                    .font(.system(size: 28, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 28, weight: .heavy, design: .rounded)
                     .shadow(color: .black.opacity(0.6), radius: 2, x: 0, y: 2)
             }
             .padding(.bottom, 10)

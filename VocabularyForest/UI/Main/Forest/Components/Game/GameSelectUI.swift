@@ -44,7 +44,7 @@ struct GameSelectUI: View {
 
     var body: some View {
         VStack {
-            Text("Oyunlar").foregroundStyle(.white).font(.system(size: 24, weight: .bold)).padding(.horizontal, 12).padding(.vertical, 8).background(
+            Text("Oyunlar").foregroundStyle(.white).scaledFont(size: 24, weight: .bold).padding(.horizontal, 12).padding(.vertical, 8).background(
                 Image("title_header").resizable()
             )
             ZStack(alignment: .center) {
@@ -84,7 +84,7 @@ struct GameSelectUI: View {
                         return !model.isBoss
                     }) ? "Düşmanları \(selectedLevel.enemyLevel), Patronu ise \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
                     : "Düşmanı \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
-                ).frame(maxWidth: .infinity, alignment: .leading ).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
+                ).frame(maxWidth: .infinity, alignment: .leading ).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).scaledFont(size: 14)
                     .multilineTextAlignment(.leading)
                 
                 Text("Oyun Modu").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
@@ -100,12 +100,12 @@ struct GameSelectUI: View {
                         ))
                     }
                 }
-                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
+                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).scaledFont(size: 14).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.leading)
                 
                 Text("Kitaplık").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.vertical, 4)
                 Text(selectedType == .learning ? "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var." : "Oyuna başlayabilmek için en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var.").frame(maxWidth: .infinity, alignment: .leading)
-                    .fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
+                    .fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).scaledFont(size: 14)
                     .multilineTextAlignment(.leading)
                 
                 HStack {
@@ -130,7 +130,7 @@ struct GameSelectUI: View {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(emptyBookcase ? Color.red : Color.yellow, lineWidth: 2)
                     )
-                    Toggle("Tüm kitaplarla oyna", isOn: $selectAllBookcase).toggleStyle(MyToggleStyle3()).foregroundColor(.white).font(.system(size: 13, weight: .medium))
+                    Toggle("Tüm kitaplarla oyna", isOn: $selectAllBookcase).toggleStyle(MyToggleStyle3()).foregroundColor(.white).scaledFont(size: 13, weight: .medium)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.leading, 1)
                 

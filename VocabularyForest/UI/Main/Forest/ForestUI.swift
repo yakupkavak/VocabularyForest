@@ -132,6 +132,9 @@ struct ForestUI: View {
                 ).zIndex(4.0)
             }
         }
+        // Game overlays sit on fixed-size artwork; AX3 (~235%) is the largest size their
+        // layouts can absorb while still exceeding the 200% Larger Text requirement.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
         .task {
             self.viewModel.output = forestScene
             self.forestScene.helper = viewModel
@@ -353,7 +356,7 @@ private extension ForestUI {
     
     var updateNameView: some View {
         VStack {
-            Text("Update name").foregroundStyle(.white).font(.system(size: 20))
+            Text("Update name").foregroundStyle(.white).scaledFont(size: 20)
             HStack {
                 Spacer()
                 Button {
@@ -416,7 +419,7 @@ private extension ForestUI {
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit()
-                Text("Options").foregroundStyle(.white).font(.system(size: 24))
+                Text("Options").foregroundStyle(.white).scaledFont(size: 24)
             }
             ForEach(Constant.optionsList, id: \.self) { model in
                 settingsRow(model: model).onTapGesture {
@@ -452,7 +455,7 @@ private extension ForestUI {
         VStack(spacing: 20) {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
-                Text("Settings").foregroundStyle(.white).font(.system(size: 24, weight: .bold))
+                Text("Settings").foregroundStyle(.white).scaledFont(size: 24, weight: .bold)
             }
             .padding(.bottom, 10)
             

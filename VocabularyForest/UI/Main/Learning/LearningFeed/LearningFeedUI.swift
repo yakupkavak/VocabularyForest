@@ -14,41 +14,55 @@ struct LearningFeedUI: View {
     
     @ObservedObject var viewModel: LearningFeedViewModel
     @EnvironmentObject var router: LearningRouter
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // MARK: - VIEW
-    
+
     var body: some View {
         ZStack{
             Color.backgroundSystem.ignoresSafeArea()
-            VStack{
-                Spacer()
-                Text("Your Forest").font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300).padding(.bottom)
-                ForEach(Constant.quizList, id: \.self) { quiz in
-                    QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
-                        switch type {
-                        case .flashCard:
-                            router.navigate(to: .forest)
-                        case .forest:
-                            router.navigate(to: .forest)
-                        }
-                    }.listRowInsets(.init())
-                        .listRowSeparator(.hidden, edges: .all)
+            // Accessibility text sizes overflow the fixed layout; let it scroll instead
+            if dynamicTypeSize.isAccessibilitySize {
+                ScrollView(showsIndicators: false) {
+                    feedContent
                 }
-                Spacer()
-                Text("Daily Card").font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300)
-                TodayCardUI(
-                    height: UIScreen.main.bounds.height * 0.3,
-                    learningWord: viewModel.todaysLearningWord,
-                    meaningWord: viewModel.todaysMeaning,
-                    exampleSentence: viewModel.todaysExample,
-                    descriptionSentence: viewModel.todaysDescription,
-                    onRefreshClick: viewModel.forceFetchNewWord
-                )
-                Spacer()
+            } else {
+                feedContent
             }
         }.task {
             viewModel.fetchDailyWord()
         }.trackScreen(.learningFeed)
+    }
+
+    // MARK: - UI COMPONENTS
+
+    private var feedContent: some View {
+        VStack{
+            Spacer()
+            Text("Your Forest").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300).padding(.bottom)
+            ForEach(Constant.quizList, id: \.self) { quiz in
+                QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
+                    switch type {
+                    case .flashCard:
+                        router.navigate(to: .forest)
+                    case .forest:
+                        router.navigate(to: .forest)
+                    }
+                }.listRowInsets(.init())
+                    .listRowSeparator(.hidden, edges: .all)
+            }
+            Spacer()
+            Text("Daily Card").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300)
+            TodayCardUI(
+                height: UIScreen.main.bounds.height * 0.3,
+                learningWord: viewModel.todaysLearningWord,
+                meaningWord: viewModel.todaysMeaning,
+                exampleSentence: viewModel.todaysExample,
+                descriptionSentence: viewModel.todaysDescription,
+                onRefreshClick: viewModel.forceFetchNewWord
+            )
+            Spacer()
+        }
     }
 }
 

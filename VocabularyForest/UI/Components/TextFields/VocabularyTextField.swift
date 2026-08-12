@@ -37,7 +37,7 @@ struct VocabularyTextField: View {
             .overlay(alignment: .topLeading){
                 if let title {
                     Text(title)
-                        .font(.system(size: 20, weight: .bold))
+                        .scaledFont(size: 20, weight: .bold)
                         .foregroundStyle(.textfieldHeader)
                         .background(
                             VStack(spacing: 0) {

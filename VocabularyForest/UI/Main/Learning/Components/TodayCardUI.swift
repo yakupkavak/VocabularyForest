@@ -53,12 +53,12 @@ struct CardFront : View {
             
             VStack(spacing: 8){
                 if !meaningWord.isEmpty {
-                    Text(meaningWord).font(.system(size: meaningFontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+                    Text(meaningWord).scaledFont(size: meaningFontSize).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                         RoundedRectangle(cornerRadius: 16)
                     ).overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
-                    }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2).zIndex(2.0)
+                    }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2).minimumScaleFactor(0.6).zIndex(2.0)
                 }
                 if !descriptionSentence.isEmpty {
                     FrontCardText(text: descriptionSentence, width: width, fontSize: descriptionFontSize).zIndex(2.0)
@@ -83,7 +83,7 @@ private extension CardFront {
         var fontSize: CGFloat
         
         var body: some View {
-            Text(text).font(.system(size: fontSize)).frame(maxWidth: width * 3 / 4).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+            Text(text).scaledFont(size: fontSize).frame(maxWidth: width * 3 / 4).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                 RoundedRectangle(cornerRadius: 16)
             ).overlay {
                 RoundedRectangle(cornerRadius: 16)
@@ -147,7 +147,7 @@ struct CardBack : View {
                         .foregroundColor(Color(hex: "#010D00").opacity(0.7))
                 }.padding(.top, 8)
                     .accessibilityHidden(true)
-                Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).font(.system(size: titleFontSize)).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).padding(.top, -12)
+                Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).scaledFont(size: titleFontSize).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).minimumScaleFactor(0.6).padding(.top, -12)
             }
 
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))

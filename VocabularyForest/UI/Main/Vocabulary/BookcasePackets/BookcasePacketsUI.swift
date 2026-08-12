@@ -58,7 +58,7 @@ extension BookcasePacketsUI {
     var defaultHeader: some View {
         HStack {
             Spacer()
-            Text("Hazır Kütüphaneler").font(.system(size: 24)).fontWeight(.medium).foregroundStyle(.title)
+            Text("Hazır Kütüphaneler").scaledFont(size: 24).fontWeight(.medium).foregroundStyle(.title)
             Spacer()
         }.overlay(alignment: .leading) {
             Button {

@@ -27,62 +27,64 @@ struct SettingsUI: View {
     // MARK: - VIEW
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            
-            Text("Account")
-                .font(.callout)
-                .foregroundColor(.gray)
-                .padding(.top)
-                .padding(.top, -16)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                
+                Text("Account")
+                    .font(.callout)
+                    .foregroundColor(.gray)
+                    .padding(.top)
+                    .padding(.top, -16)
 
-            userHeader
-            
-            Divider()
-            
-            notificationView
-            
-            Divider()
+                userHeader
+                
+                Divider()
+                
+                notificationView
+                
+                Divider()
 
-            Text("Hakkında")
-                .font(.callout)
-                .foregroundColor(.gray)
+                Text("Hakkında")
+                    .font(.callout)
+                    .foregroundColor(.gray)
 
-            aboutPage
-            
-            Divider()
+                aboutPage
+                
+                Divider()
 
-            Text("Tehlikeli Alan")
-                .font(.callout)
-                .foregroundColor(.gray)
-            
-            Button("Tüm Verileri Sıfırla") {
-                showingDeleteAlert = true
-            }
-            .padding(.horizontal)
-            .tint(.red)
-            .cornerRadius(10)
-            .accessibilityIdentifier("reset_all_data_button")
-            
-            Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
-                .font(.caption)
-                .foregroundColor(.gray)
-            
-            if viewModel.userSignIn {
-                Button("Hesabı Sil") {
-                    showingDeleteAccountAlert = true
+                Text("Tehlikeli Alan")
+                    .font(.callout)
+                    .foregroundColor(.gray)
+                
+                Button("Tüm Verileri Sıfırla") {
+                    showingDeleteAlert = true
                 }
                 .padding(.horizontal)
                 .tint(.red)
                 .cornerRadius(10)
-                .accessibilityIdentifier("delete_account_button")
+                .accessibilityIdentifier("reset_all_data_button")
                 
-                Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
+                Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
                     .font(.caption)
                     .foregroundColor(.gray)
+                
+                if viewModel.userSignIn {
+                    Button("Hesabı Sil") {
+                        showingDeleteAccountAlert = true
+                    }
+                    .padding(.horizontal)
+                    .tint(.red)
+                    .cornerRadius(10)
+                    .accessibilityIdentifier("delete_account_button")
+                    
+                    Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                Spacer()
             }
-            Spacer()
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
         .background(Color.backgroundSystem.ignoresSafeArea())
         .navigationTitle("Ayarlar")
         .trackScreen(.settings)
@@ -295,7 +297,7 @@ private extension SettingsUI {
                     }
                     Spacer()
                     Image(systemName: "cloud.moon.fill")
-                        .font(.system(size: 35))
+                        .scaledFont(size: 35)
                         .foregroundColor(.logoBrown)
                 }.padding(.horizontal)
                 Text("Ormanını buluta kaydetmek için giriş yap.")

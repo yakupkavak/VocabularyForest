@@ -27,7 +27,7 @@ struct BottomSheet<Content: View>: View {
                 HStack {
                     if let title {
                         Text(title)
-                            .font(.system(size: 24, weight: .heavy, design: .rounded)).multilineTextAlignment(.center)
+                            .scaledFont(size: 24, weight: .heavy, design: .rounded).multilineTextAlignment(.center)
                             .foregroundStyle(.title)
                             .padding(.horizontal, 48)
                     }
@@ -41,7 +41,7 @@ struct BottomSheet<Content: View>: View {
                     isVisible = false
                 } label: {
                     Image(systemName: "xmark").resizable().scaledToFit()
-                        .font(.system(size: 100, weight: .heavy, design: .rounded))
+                        .scaledFont(size: 100, weight: .heavy, design: .rounded)
                         .foregroundStyle(.title)
                         .frame(width: geo.size.width * 0.06)
                 }.offset(x: geo.size.width * -0.07)

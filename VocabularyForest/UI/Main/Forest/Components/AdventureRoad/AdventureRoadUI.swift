@@ -240,7 +240,7 @@ private extension AdventureRoadUI {
                 isVisible = false
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: w * 0.06, weight: .regular))
+                    .scaledFont(size: w * 0.06, weight: .regular)
                     .foregroundStyle(Color.black.opacity(0.72))
                     .frame(width: w * 0.14, height: w * 0.14)
                     .background(Color.white.opacity(0.78))
@@ -252,9 +252,9 @@ private extension AdventureRoadUI {
 
             HStack(spacing: w * 0.015) {
                 Image(systemName: "hourglass")
-                    .font(.system(size: w * 0.04, weight: .semibold))
+                    .scaledFont(size: w * 0.04, weight: .semibold)
                 Text(screenModel.countdownText)
-                    .font(.system(size: w * 0.04, weight: .medium, design: .rounded))
+                    .scaledFont(size: w * 0.04, weight: .medium, design: .rounded)
             }
             .foregroundStyle(screenModel.theme.countdownTextColor)
             .padding(.horizontal, w * 0.035)
@@ -268,14 +268,14 @@ private extension AdventureRoadUI {
     func titleSection(w: CGFloat) -> some View {
         VStack(spacing: w * 0.025) {
             Text(screenModel.title)
-                .font(.system(size: w * 0.1, weight: .heavy, design: .rounded))
+                .scaledFont(size: w * 0.1, weight: .heavy, design: .rounded)
                 .foregroundStyle(screenModel.theme.titleTextColor)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
 
             if !screenModel.subtitle.isEmpty {
                 Text(screenModel.subtitle)
-                    .font(.system(size: w * 0.042, weight: .medium, design: .rounded))
+                    .scaledFont(size: w * 0.042, weight: .medium, design: .rounded)
                     .foregroundStyle(screenModel.theme.subtitleTextColor)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .multilineTextAlignment(.center)
@@ -308,7 +308,7 @@ private struct AdventurePassBadge: View {
                     .stroke(Color.white.opacity(0.85), lineWidth: proxy.size.width * 0.015)
 
                 Text(title)
-                    .font(.system(size: proxy.size.width * 0.15, weight: .heavy, design: .rounded))
+                    .scaledFont(size: proxy.size.width * 0.15, weight: .heavy, design: .rounded)
                     .padding(.horizontal, 2)
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.5)
@@ -345,7 +345,7 @@ private struct AdventureLaneColumn: View {
                         }
 
                     Text(String(localized: "\(milestone.wordCount) words"))
-                        .font(.system(size: max(cardWidth * 0.1, 11), weight: .bold, design: .rounded))
+                        .scaledFont(size: max(cardWidth * 0.1, 11), weight: .bold, design: .rounded)
                         .foregroundStyle(wordLabelColor)
                 }
                 .frame(height: rowHeight)
@@ -520,7 +520,7 @@ private struct AdventureRewardCard: View {
                 }
 
                 Text(rewardName)
-                    .font(.system(size: cardWidth * 0.105, weight: .bold, design: .rounded))
+                    .scaledFont(size: cardWidth * 0.105, weight: .bold, design: .rounded)
                     .foregroundStyle(rewardValueColor)
                     .shadow(color: Color.white.opacity(0.65), radius: 1, x: 0, y: 0)
                     .opacity(isClaimed ? 0.6 : 1)
@@ -532,7 +532,7 @@ private struct AdventureRewardCard: View {
 
                 if let amountText {
                     Text(amountText)
-                        .font(.system(size: cardWidth * 0.12, weight: .heavy, design: .rounded))
+                        .scaledFont(size: cardWidth * 0.12, weight: .heavy, design: .rounded)
                         .foregroundStyle(rewardValueColor)
                         .shadow(color: Color.white.opacity(0.65), radius: 1, x: 0, y: 0)
                         .opacity(isClaimed ? 0.55 : 1)
@@ -601,7 +601,7 @@ private struct AdventureRewardCard: View {
     private var claimedBadge: some View {
         ZStack {
             Image(systemName: "checkmark")
-                .font(.system(size: cardWidth * 0.2, weight: .black))
+                .scaledFont(size: cardWidth * 0.2, weight: .black)
                 .foregroundStyle(.white.opacity(0.9))
         }
     }

@@ -27,7 +27,7 @@ struct ForestPopUp: View{
                 .modifier(TitleBackground())
             .padding(.bottom, 10)
             if let descriptionText {
-                Text(descriptionText).foregroundStyle(.white).font(.system(size: 14)).multilineTextAlignment(.center)
+                Text(descriptionText).foregroundStyle(.white).scaledFont(size: 14).multilineTextAlignment(.center)
             }
             HStack(alignment: .center) {
                 if let deniedText, let onDenied {

@@ -132,6 +132,9 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                 }.ignoresSafeArea(.all)
             }
         }
+        // Battle HUD sits on fixed-size artwork; AX3 (~235%) still exceeds the 200%
+        // Larger Text requirement while keeping the layout intact.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
         .trackScreen(.battle)
         .sheet(isPresented: $showSelectWordBookcase) {
             SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $wordTargetBookcase)
@@ -219,15 +222,15 @@ private extension BattleUI {
                     Spacer()
                     VStack(alignment: .center) {
                         Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
-                        Text("Word Class: \(question.partOfSpeech.localizedText)").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12))
+                        Text("Word Class: \(question.partOfSpeech.localizedText)").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12)
                         if gameType == .learning {
                             if let example = question.example, !example.isEmpty {
-                                Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(.top, 4)
-                                Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12).padding(.top, 4)
+                                Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 13)
                             } else {
                                 if let description = question.description, !description.isEmpty {
-                                    Text("Description").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(2)
-                                    Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                    Text("Description").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12).padding(2)
+                                    Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 13)
                                 }
                             }
                         }
@@ -398,7 +401,7 @@ private extension BattleUI {
                 )
                 .opacity(0.9)
             Text(text.firstUppercased)
-                .font(.system(size: 13))
+                .scaledFont(size: 13)
                 .foregroundStyle(.white)
                 .minimumScaleFactor(0.7)
                 .frame(

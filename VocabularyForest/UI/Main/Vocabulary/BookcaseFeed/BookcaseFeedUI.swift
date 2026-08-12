@@ -88,6 +88,8 @@ private extension BookcaseFeedUI {
             Spacer()
             Spacer()
             tvDefault(text: String(localized: "Hiçbir kitaplık bulamadık"), color: .brown300)
+                // Keep the ideal text height so a compressed VStack wraps instead of truncating
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(24)
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)
@@ -99,12 +101,12 @@ private extension BookcaseFeedUI {
             Button {
                 bookcaseRouter.navigate(to: .bookcasePacket)
             } label: {
-                Text("Hazır kütüphaneler").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+                Text("Hazır kütüphaneler").fixedSize(horizontal: false, vertical: true).padding().background(Color.clickableButton).foregroundStyle(.white).scaledFont(size: 20).borderRadius(borderColor: .clickableButton)
             }.buttonStyle(.plain)
             Button {
                 bookcaseRouter.navigate(to: .createBookcase)
             } label: {
-                Text("Kitaplık oluştur").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+                Text("Kitaplık oluştur").fixedSize(horizontal: false, vertical: true).padding().background(Color.clickableButton).foregroundStyle(.white).scaledFont(size: 20).borderRadius(borderColor: .clickableButton)
             }
             Spacer()
 

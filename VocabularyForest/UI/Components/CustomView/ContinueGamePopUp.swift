@@ -27,7 +27,7 @@ struct ContinueGamePopUp: View{
                 .frame(minWidth: 0,maxWidth: .infinity,alignment: .leading)
                 .fontWeight(.bold)
             if let descriptionText {
-                Text(descriptionText).foregroundStyle(.forestText).font(.system(size: 14)).multilineTextAlignment(.leading)
+                Text(descriptionText).foregroundStyle(.forestText).scaledFont(size: 14).multilineTextAlignment(.leading)
             }
             HStack(alignment: .center) {
                 Button {

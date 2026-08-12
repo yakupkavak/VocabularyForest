@@ -11,7 +11,7 @@ import SwiftUI
 struct TitleBackground: ViewModifier {
     func body(content: Content) -> some View {
         content.foregroundStyle(.white)
-            .font(.system(size: 20, weight: .bold))
+            .scaledFont(size: 20, weight: .bold)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(Image("title_header").resizable())
@@ -24,7 +24,7 @@ struct ForestButtonBackground: ViewModifier {
     
     func body(content: Content) -> some View {
         content.foregroundStyle(.white)
-            .font(.system(size: 14, weight: .medium))
+            .scaledFont(size: 14, weight: .medium)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
@@ -40,7 +40,7 @@ struct tvMainTitle: View {
     var text: String
     
     var body: some View{
-        Text(text).font(.system(size: 28, weight: .bold)).foregroundStyle(.brown300)
+        Text(text).scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300)
     }
 }
 
@@ -48,7 +48,7 @@ struct tvTitle: View {
     var text: String
     
     var body: some View{
-        Text(text).font(.system(size: 20, weight: .bold)).foregroundStyle(.brown300)
+        Text(text).scaledFont(size: 20, weight: .bold).foregroundStyle(.brown300)
     }
 }
  
@@ -64,7 +64,7 @@ struct tvSubtitle: View {
     var text: String
     
     var body: some View{
-        Text(text).font(.system(size: 20, weight: .regular))
+        Text(text).scaledFont(size: 20, weight: .regular)
     }
 }
 

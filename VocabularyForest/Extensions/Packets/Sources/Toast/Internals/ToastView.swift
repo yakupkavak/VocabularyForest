@@ -44,7 +44,7 @@ internal struct ToastView: View {
           .frame(width: 14)
       }
     }
-    .font(.system(size: 16, weight: .medium))
+    .scaledFont(size: 16, weight: .medium)
   }
 
   private func buttonView(_ button: ToastButton) -> some View {

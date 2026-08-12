@@ -106,7 +106,7 @@ struct DailyHeader: View {
             .shadow(color: .white, radius: 0.7)
             .frame(width: (isPad ? 120 : 80))
             .overlay(alignment: .center) {
-                Text(text).font(.system(size: (isPad ? 32 : 24), weight: .bold)).foregroundStyle(goldGradient)
+                Text(text).scaledFont(size: (isPad ? 32 : 24), weight: .bold).foregroundStyle(goldGradient)
                     
                 .outlinedLine(radius: 0.2, color: .black.opacity(0.1))
                 .offset(y: -2)

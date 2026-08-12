@@ -84,12 +84,12 @@ private extension ForestInfoUI {
             VStack(alignment: .leading) {
                 Text(title)
                     .foregroundStyle(.white)
-                    .font(.system(size: Constants.titleFontSize))
+                    .scaledFont(size: Constants.titleFontSize)
                     .fixedSize(horizontal: false, vertical: true)
                     .minimumScaleFactor(Constants.minimumScaleFactor)
                 Text(detail)
                     .foregroundStyle(.white)
-                    .font(.system(size: Constants.detailFontSize))
+                    .scaledFont(size: Constants.detailFontSize)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()

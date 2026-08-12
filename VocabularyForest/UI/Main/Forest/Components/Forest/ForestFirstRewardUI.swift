@@ -24,13 +24,13 @@ struct ForestFirstRewardUI: View {
     var body: some View {
         VStack {
             Text("Welcome to your forest")
-                .lineLimit(1)
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.darkGren)
                 .fontWeight(.heavy)
                 .padding(.vertical, 4)
-                .font(.system(size: 20))
+                .scaledFont(size: 20)
             Text("Chose your best friend to start the adventure!")
                 .minimumScaleFactor(0.8)
                 .multilineTextAlignment(.center)
@@ -59,7 +59,7 @@ private extension ForestFirstRewardUI {
     func rewardView(reward: LocalRewardModel) -> some View {
         VStack(spacing: 20) {
             RewardImageView(asset: reward.reward.posterImage).scaledToFit()
-            Text(reward.reward.displayName.localized).lineLimit(1)
+            Text(reward.reward.displayName.localized).lineLimit(2)
                 .minimumScaleFactor(0.6)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)

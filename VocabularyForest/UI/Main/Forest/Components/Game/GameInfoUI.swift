@@ -33,16 +33,18 @@ struct GameInfoUI: View {
                 ForEach(0..<gameInfoText.count, id: \.self) { index in
                     VStack(spacing: 8) {
                         Text(LocalizedStringKey(gameInfoText[index].title))
+                            .fixedSize(horizontal: false, vertical: true)
                             .modifier(TitleBackground()).padding()
                         Image(gameInfoText[index].image).resizable().scaledToFill().frame(maxWidth: min(UIScreen.main.bounds.width * 0.75 ,400), maxHeight: 150).cornerRadius(20)
-                        Spacer()
-                        Text(LocalizedStringKey(gameInfoText[index].description))
-                            .foregroundStyle(.white)
-                            .font(.system(size: 13, weight: .medium))
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
-                        Spacer()
-                        Spacer()
+                        // Scroll keeps large accessibility text reachable inside the fixed card
+                        ScrollView(showsIndicators: false) {
+                            Text(LocalizedStringKey(gameInfoText[index].description))
+                                .foregroundStyle(.white)
+                                .scaledFont(size: 13, weight: .medium)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(.bottom, 24)
                     }
                     .tag(index)
                 }

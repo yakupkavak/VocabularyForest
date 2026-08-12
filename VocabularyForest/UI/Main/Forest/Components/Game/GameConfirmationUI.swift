@@ -24,12 +24,12 @@ struct GameConfirmationUI: View {
                 Image("title_header").resizable().scaledToFit().frame(height: 50)
                 Text(LocalizedStringKey(title))
                     .foregroundStyle(.white)
-                    .font(.system(size: 24, weight: .bold))
+                    .scaledFont(size: 24, weight: .bold)
             }
             Text(LocalizedStringKey(message ?? ""))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.center)
-                .font(.system(size: 18, weight: .medium))
+                .scaledFont(size: 18, weight: .medium)
                 .padding()
             HStack(spacing: 20) {
                 Button {

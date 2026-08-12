@@ -81,7 +81,7 @@ private extension DailySpinUI {
     
     var titleView: some View {
         Text("Daily Spin")
-            .font(.system(size: 22, weight: .heavy, design: .rounded))
+            .scaledFont(size: 22, weight: .heavy, design: .rounded)
             .foregroundStyle(.white.opacity(0.95))
             .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 3)
     }
@@ -91,7 +91,7 @@ private extension DailySpinUI {
             HStack {
                 Spacer()
                 Text("Play everyday and get additional bonuses")
-                    .font(.system(size: 20, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 20, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)
@@ -142,7 +142,7 @@ private extension DailySpinUI {
         Group {
             if let nextSpinTime {
                 Text("Wait until \n \(String(describing: nextSpinTime.toFriendlyRemaintime()))")
-                    .font(.system(size: 20, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 20, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.orange.opacity(0.95))
                     .shadow(color: .white.opacity(0.5), radius: 1, x: 0, y: 2)
@@ -158,7 +158,7 @@ private extension DailySpinUI {
                     }
                 } label: {
                     Text("Start Spin")
-                        .font(.system(size: 28, weight: .heavy, design: .rounded))
+                        .scaledFont(size: 28, weight: .heavy, design: .rounded)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.title.opacity(0.95))
                         .shadow(color: .white.opacity(0.5), radius: 1, x: 0, y: 2)

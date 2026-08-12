@@ -167,7 +167,7 @@ private extension MarketUI {
                     isVisible = false
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: width * 0.045, weight: .semibold))
+                        .scaledFont(size: width * 0.045, weight: .semibold)
                         .foregroundStyle(Color.black.opacity(0.72))
                         .frame(width: width * 0.11, height: width * 0.11)
                         .background(Color.white.opacity(0.82))
@@ -190,7 +190,7 @@ private extension MarketUI {
                     .frame(height: width * 0.14)
                 
                 Text(screenModel.title)
-                    .font(.system(size: width * 0.065, weight: .heavy, design: .rounded))
+                    .scaledFont(size: width * 0.065, weight: .heavy, design: .rounded)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.5), radius: 2, x: 0, y: 2)
             }
@@ -204,7 +204,7 @@ private extension MarketUI {
                 .scaledToFit()
                 .frame(width: width * 0.045, height: width * 0.045)
             Text("\(amount)")
-                .font(.system(size: width * 0.035, weight: .bold, design: .rounded))
+                .scaledFont(size: width * 0.035, weight: .bold, design: .rounded)
                 .foregroundStyle(.white)
                 .contentTransition(.numericText())
         }
@@ -231,7 +231,7 @@ private extension MarketUI {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.yellow)
             Text(message)
-                .font(.system(size: width * 0.034, weight: .semibold, design: .rounded))
+                .scaledFont(size: width * 0.034, weight: .semibold, design: .rounded)
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.leading)
             Spacer()
@@ -251,7 +251,7 @@ private extension MarketUI {
                     .frame(height: width * 0.1)
                 
                 Text(section.title)
-                    .font(.system(size: width * 0.042, weight: .bold, design: .rounded))
+                    .scaledFont(size: width * 0.042, weight: .bold, design: .rounded)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.45), radius: 1, x: 0, y: 1)
             }
@@ -440,12 +440,12 @@ private struct ChestDropInfoCard: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(chest.displayName.localized)
-                    .font(.system(size: 19, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 19, weight: .heavy, design: .rounded)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 1)
                 
                 Text(String(localized: "Sandık içeriği ve çıkma oranları"))
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .scaledFont(size: 12, weight: .medium, design: .rounded)
                     .foregroundStyle(.white.opacity(0.85))
             }
             
@@ -465,10 +465,10 @@ private struct ChestDropInfoCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 14, weight: .bold))
+                    .scaledFont(size: 14, weight: .bold)
                     .foregroundStyle(iconColor)
                 Text(title)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .scaledFont(size: 15, weight: .bold, design: .rounded)
                     .foregroundStyle(.white)
             }
             .a11yGroup()
@@ -496,13 +496,13 @@ private struct ChestDropInfoCard: View {
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(drop.reward.reward.displayName.localized)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .scaledFont(size: 14, weight: .bold, design: .rounded)
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 
                 Text(drop.amountText)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    .scaledFont(size: 12, weight: .semibold, design: .rounded)
                     .foregroundStyle(.white.opacity(0.75))
             }
             
@@ -521,7 +521,7 @@ private struct ChestDropInfoCard: View {
     private func chanceBadge(percent: Int?) -> some View {
         if let percent {
             Text("%\(percent)")
-                .font(.system(size: 13, weight: .black, design: .rounded))
+                .scaledFont(size: 13, weight: .black, design: .rounded)
                 .foregroundStyle(.white)
                 .padding(.vertical, 4)
                 .padding(.horizontal, 10)
@@ -592,7 +592,7 @@ struct MarketItemCard: View {
                     
                     if item.reward.rewardCount > 1 {
                         Text("x\(item.reward.rewardCount)")
-                            .font(.system(size: cardWidth * 0.09, weight: .black, design: .rounded))
+                            .scaledFont(size: cardWidth * 0.09, weight: .black, design: .rounded)
                             .foregroundStyle(.white)
                             .padding(.vertical, 2)
                             .padding(.horizontal, 6)
@@ -603,12 +603,12 @@ struct MarketItemCard: View {
                 }
                 
                 Text(item.reward.reward.displayName.localized)
-                    .font(.system(size: cardWidth * 0.1, weight: .bold, design: .rounded))
+                    .scaledFont(size: cardWidth * 0.1, weight: .bold, design: .rounded)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 1)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.5)
                     .frame(height: cardWidth * 0.26)
                 
                 priceTag
@@ -655,7 +655,7 @@ struct MarketItemCard: View {
                     onInfoTap(chestModel)
                 } label: {
                     Image(systemName: "info.circle.fill")
-                        .font(.system(size: cardWidth * 0.15, weight: .semibold))
+                        .scaledFont(size: cardWidth * 0.15, weight: .semibold)
                         .foregroundStyle(.white, Color.black.opacity(0.45))
                         .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
                         .padding(cardWidth * 0.05)
@@ -685,8 +685,10 @@ struct MarketItemCard: View {
                 .scaledToFit()
                 .frame(width: cardWidth * 0.12, height: cardWidth * 0.12)
             Text("\(item.price.amount)")
-                .font(.system(size: cardWidth * 0.11, weight: .black, design: .rounded))
+                .scaledFont(size: cardWidth * 0.11, weight: .black, design: .rounded)
                 .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
         }
         .padding(.vertical, cardWidth * 0.04)
         .frame(maxWidth: .infinity)

@@ -31,7 +31,7 @@ struct MemoryProgressBar: View {
             
             // TODO: - LOCALIZE HERE
             
-            Text("%\(percentage)").font(.system(size: textSize))
+            Text("%\(percentage)").scaledFont(size: textSize)
         }.frame(maxWidth: width)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(String(localized: "a11y_long_memory_progress"))

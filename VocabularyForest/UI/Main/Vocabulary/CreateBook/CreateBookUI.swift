@@ -112,7 +112,7 @@ struct PartOfSpeechTag: View {
             }
         } label: {
             Text(partOfSpeech.localizedText)
-                .font(.system(size: 14))
+                .scaledFont(size: 14)
                 .fixedSize()
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
@@ -177,7 +177,7 @@ private extension CreateBookUI {
                     UIApplication.shared.open(url)
                 }
             } label: {
-                Text("Cambridge Dictionary").frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing).foregroundStyle(.clickableButton).font(.system(size: 14))
+                Text("Cambridge Dictionary").frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing).foregroundStyle(.clickableButton).scaledFont(size: 14)
             }.padding(.vertical, -8)
             
             partOfSpeechPicker
@@ -206,12 +206,12 @@ private extension CreateBookUI {
                     selectBookcase()
                 } label: {
                     Text(viewModel.currentBookcase?.bookcaseName ?? String(localized: "Kitaplık seçilmedi"))
-                        .font(.system(size: 20, weight: .bold))
+                        .scaledFont(size: 20, weight: .bold)
                 }
                 .frame(maxWidth: 200)
                 Text(
                     "\(viewModel.currentBookcase?.learningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.meaningLanguage.toLanguageDisplayName() ?? "")"
-                ) .font(.system(size: 12, weight: .medium))
+                ) .scaledFont(size: 12, weight: .medium)
                     .foregroundStyle(.brown300)
             }.padding(.top, 8)
             Spacer()

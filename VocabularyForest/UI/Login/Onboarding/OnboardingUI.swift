@@ -131,7 +131,7 @@ private extension OnboardingUI {
                 if currentPage == dotCount - 1 {
                     Text("Başla")
                         .foregroundStyle(.white)
-                        .font(.system(size: 24))
+                        .scaledFont(size: 24)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 8)
                         .background(.brown.opacity(0.5))
@@ -139,7 +139,7 @@ private extension OnboardingUI {
                 } else {
                     Text("Diğer")
                         .foregroundStyle(.white)
-                        .font(.system(size: 24))
+                        .scaledFont(size: 24)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 8)
                         .background(.white.opacity(0.2))
