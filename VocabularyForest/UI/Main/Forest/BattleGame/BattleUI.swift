@@ -171,7 +171,7 @@ private extension BattleUI {
     
     var magicSelectionView: some View {
         ZStack {
-            Image("pop_up_background").resizable()
+            Image("pop_up_background").resizable().a11yDecorative()
             Spacer()
             VStack(alignment: .center) {
                 HStack {
@@ -208,7 +208,7 @@ private extension BattleUI {
                 
         }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.3).overlay(alignment: .top) {
             ZStack {
-                Image("pop_up_title_window").resizable().scaledToFit()
+                Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                 Text("Select your \nMagic").foregroundStyle(.white).multilineTextAlignment(.center)
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
         }
@@ -219,7 +219,7 @@ private extension BattleUI {
             Spacer()
             if let question = viewModel.currentQuestion {
                 ZStack {
-                    Image("pop_up_background").resizable()
+                    Image("pop_up_background").resizable().a11yDecorative()
                     Spacer()
                     VStack(alignment: .center) {
                         Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
@@ -238,7 +238,7 @@ private extension BattleUI {
                     }.frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * (gameType == .learning ? 0.25 : 0.2))
                 }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
                     ZStack {
-                        Image("pop_up_title_window").resizable().scaledToFit()
+                        Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                         let questionString = NSLocalizedString("question_number", comment: "")
                         let finalString = String(format: questionString, question.questionNumber)
                         Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
@@ -281,7 +281,7 @@ private extension BattleUI {
     
     var gameOverView: some View {
         ZStack {
-            Image("pop_up_background").resizable()
+            Image("pop_up_background").resizable().a11yDecorative()
             Spacer()
             VStack(alignment: .center) {
                 if viewModel.gameStatus.earnedGold > 0 {
@@ -330,7 +330,7 @@ private extension BattleUI {
                 
         }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.3).overlay(alignment: .top) {
             ZStack {
-                Image("pop_up_title_window").resizable().scaledToFit()
+                Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                 Text(viewModel.gameStatus.userWon ?? true ? "Fantastic!" : "So Close!").foregroundStyle(.white).multilineTextAlignment(.center)
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.078)
         }
@@ -351,7 +351,7 @@ private extension BattleUI {
                                 .minimumScaleFactor(0.5)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
-                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0).a11yDecorative()
                             Image("loading_bar_fill_blue").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
                                 GeometryReader { geo in
                                     Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.playerAnger?.currentLevel ?? 1) / CGFloat( viewModel.playerAnger?.totalLevel ?? 1)))
@@ -371,7 +371,7 @@ private extension BattleUI {
                             Text(enemyAnger.name).foregroundStyle(.white).padding(4)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
-                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0).a11yDecorative()
                             Image("loading_bar_fill_red").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
                                 GeometryReader { geo in
                                     Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.enemyAnger?.currentLevel ?? 1) / CGFloat( viewModel.enemyAnger?.totalLevel ?? 1)))
@@ -404,6 +404,7 @@ private extension BattleUI {
                     height: UIScreen.main.bounds.width * 0.2
                 )
                 .opacity(0.9)
+                .a11yDecorative()
             Text(text.firstUppercased)
                 .scaledFont(size: 13)
                 .foregroundStyle(.white)

@@ -14,7 +14,7 @@ struct TitleBackground: ViewModifier {
             .scaledFont(size: 20, weight: .bold)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .background(Image("title_header").resizable())
+            .background(Image("title_header").resizable().a11yDecorative())
     }
 }
 

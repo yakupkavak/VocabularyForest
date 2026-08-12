@@ -61,6 +61,7 @@ private extension DailySpinUI {
         ZStack(alignment: .top) {
             Image("krem")
                 .resizable()
+                .a11yDecorative()
                 .frame(width: size.width * 0.96, height: size.height * DailySpinUI.backgroundHeight)
             
             VStack(spacing: 0) {
@@ -122,10 +123,10 @@ private extension DailySpinUI {
         return YKSpinWheel(
             controller: controller,
             center: {
-                Image("daliy_spin_center").resizable()
+                Image("daliy_spin_center").resizable().a11yDecorative()
             },
             wheelTopPointer: {
-                Image("çarkıfelek_ok").resizable().scaleEffect(y: -1)
+                Image("çarkıfelek_ok").resizable().scaleEffect(y: -1).a11yDecorative()
             }
         )
         .ykPieceVerticalSpacing(4)

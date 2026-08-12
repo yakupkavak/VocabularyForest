@@ -142,7 +142,7 @@ struct QuestRewardView: View {
 
                 switch reward.reward {
                     case .chest(let chest):
-                    RewardImageView(asset: chest.closeLocalImagePath)
+                    RewardImageView(asset: chest.closeLocalImagePath, label: chest.displayName.localized)
                         .scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
@@ -157,6 +157,7 @@ struct QuestRewardView: View {
                     case .water:
                         Image("water_icon")
                             .resizable()
+                            .accessibilityLabel(String(localized: "a11y_water"))
                             .scaledToFit()
                             .frame(
                                 width: QuestRewardSizing.waterDropSize(
@@ -175,12 +176,14 @@ struct QuestRewardView: View {
                     case .gold:
                         Image("gold_icon")
                             .resizable()
+                            .accessibilityLabel(String(localized: "a11y_gold"))
                             .scaledToFit()
                             .frame(width: smallIconSize, height: smallIconSize)
                             .foregroundStyle(.yellow)
                     case .diamond:
                         Image("diamond_icon")
                             .resizable()
+                            .accessibilityLabel(String(localized: "a11y_diamond"))
                             .scaledToFit()
                             .frame(width: smallIconSize, height: smallIconSize)
                     }
@@ -194,7 +197,7 @@ struct QuestRewardView: View {
                     .foregroundStyle(.white.opacity(0.8))
                 switch reward.reward {
                     case .chest(let chest):
-                    RewardImageView(asset: chest.closeLocalImagePath)
+                    RewardImageView(asset: chest.closeLocalImagePath, label: chest.displayName.localized)
                         .scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
@@ -533,6 +536,7 @@ private struct ForestQuestSectionHeader: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)
+                .a11yDecorative()
                 .accessibilityHidden(true)
 
             Text(title)
@@ -699,6 +703,7 @@ struct ForestQuestUI: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 60)
+                        .a11yDecorative()
                         .accessibilityHidden(true)
                 }
 

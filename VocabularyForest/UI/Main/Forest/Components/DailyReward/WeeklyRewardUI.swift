@@ -43,6 +43,7 @@ private extension WeeklyRewardUI {
         ZStack(alignment: .top) {
             Image("krem")
                 .resizable()
+                .a11yDecorative()
                 .frame(width: size.width * (isPad ? 0.8 : 0.98), height: size.height * backgroundHeight)
             
             VStack(spacing: 0) {

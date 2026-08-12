@@ -188,6 +188,7 @@ private extension MarketUI {
                     .resizable()
                     .scaledToFit()
                     .frame(height: width * 0.14)
+                    .a11yDecorative()
                 
                 Text(screenModel.title)
                     .scaledFont(size: width * 0.065, weight: .heavy, design: .rounded)
@@ -249,6 +250,7 @@ private extension MarketUI {
                     .resizable()
                     .scaledToFit()
                     .frame(height: width * 0.1)
+                    .a11yDecorative()
                 
                 Text(section.title)
                     .scaledFont(size: width * 0.042, weight: .bold, design: .rounded)

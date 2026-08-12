@@ -49,13 +49,13 @@ struct ForestInfoUI: View {
                             title: "Altın: \(forestModel.gold)",
                             detail: "Gelecek güncelleme ile mağazada kullanabileceksin."
                         ) {
-                            Image("gold_icon").resizable().scaledToFit().frame(width: Constants.iconWidth)
+                            Image("gold_icon").resizable().scaledToFit().frame(width: Constants.iconWidth).a11yDecorative()
                         }
                         infoRow(
                             title: "Elmas: \(forestModel.diamond)",
                             detail: "Nadir bulunur, özel eşyalar için harcayabilirsin."
                         ) {
-                            Image("diamond_icon").resizable().scaledToFit().frame(width: Constants.iconWidth)
+                            Image("diamond_icon").resizable().scaledToFit().frame(width: Constants.iconWidth).a11yDecorative()
                         }
                         infoRow(
                             title: "Toprak sağlığı: %\(forestModel.landHealthPercentage)",

@@ -21,7 +21,7 @@ struct GameConfirmationUI: View {
     var body: some View {
         VStack() {
             ZStack {
-                Image("title_header").resizable().scaledToFit().frame(height: 50)
+                Image("title_header").resizable().scaledToFit().frame(height: 50).a11yDecorative()
                 Text(LocalizedStringKey(title))
                     .foregroundStyle(.white)
                     .scaledFont(size: 24, weight: .bold)

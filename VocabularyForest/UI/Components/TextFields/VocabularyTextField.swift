@@ -53,11 +53,13 @@ struct VocabularyTextField: View {
                 Image(imageHead ?? "")
                     .resizable().scaledToFit().frame(width: 50)
                     .offset(x: -20,y: -23)
+                    .a11yDecorative()
             }
             .overlay(alignment: .bottomTrailing) {
                 Image(imageFoot ?? "")
                     .resizable().scaledToFit().frame(width: 30)
                     .offset(x: -30,y: 7)
+                    .a11yDecorative()
             }
     }
 }

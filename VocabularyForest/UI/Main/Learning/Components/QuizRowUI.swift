@@ -23,7 +23,7 @@ struct QuizRowUI: View {
             Spacer()
             // Decorative bamboos yield their width to the label at accessibility sizes
             if !dynamicTypeSize.isAccessibilitySize {
-                Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3)
+                Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3).a11yDecorative()
                 Spacer()
             }
             Text("Maceraya Atıl").scaledFont(size: 22, weight: .bold).foregroundStyle(.brown300).multilineTextAlignment(.center)
@@ -31,7 +31,7 @@ struct QuizRowUI: View {
                 .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
             Spacer()
             if !dynamicTypeSize.isAccessibilitySize {
-                Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3)
+                Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3).a11yDecorative()
                 Spacer()
             }
         }.padding()

@@ -9,7 +9,10 @@ import SwiftUI
 
 struct RewardImageView: View {
     let asset: RewardAssetReference
-    
+    /// Spoken description of the reward; without it VoiceOver would read the
+    /// remote-config asset key, so unlabeled instances are hidden instead.
+    var label: String? = nil
+
     var body: some View {
         Group {
             switch asset.source {
@@ -27,6 +30,7 @@ struct RewardImageView: View {
                 }
             }
         }
+        .modifier(RewardImageAccessibility(label: label))
     }
     
     private func loadOfflineImage(named imageName: String) -> UIImage? {
@@ -43,4 +47,20 @@ struct RewardImageView: View {
                 return nil
             }
         }
+}
+
+// MARK: - HELPERS
+
+private struct RewardImageAccessibility: ViewModifier {
+    let label: String?
+
+    func body(content: Content) -> some View {
+        if let label {
+            content
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(label)
+        } else {
+            content.a11yDecorative()
+        }
+    }
 }

@@ -23,6 +23,7 @@ struct SplashUI: View {
             }else {
                 Image("splash-logo")
                     .resizable()
+                    .accessibilityLabel("Vocabulary Forest")
                     .scaledToFit()
                     .frame(maxWidth: UIScreen.main.bounds.width * 2 / 3, maxHeight: UIScreen.main.bounds.height * 2 / 3)
             }

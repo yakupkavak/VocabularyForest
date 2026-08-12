@@ -45,12 +45,12 @@ struct GameSelectUI: View {
     var body: some View {
         VStack {
             Text("Oyunlar").foregroundStyle(.white).scaledFont(size: 24, weight: .bold).padding(.horizontal, 12).padding(.vertical, 8).background(
-                Image("title_header").resizable()
+                Image("title_header").resizable().a11yDecorative()
             )
             ZStack(alignment: .center) {
                 // TODO: - PLAY IDLE ANIMATION
                 Image(selectedMode.background).resizable().scaledToFill().frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.18).borderRadius(borderColor: .white)
-                Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
+                Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).a11yDecorative().frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
             }
             ScrollView(showsIndicators: false) {
                 Text("Oyun çeşitleri").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
@@ -125,6 +125,7 @@ struct GameSelectUI: View {
                         .resizable()
                         .colorMultiply(.green)
                         .cornerRadius(16)
+                        .a11yDecorative()
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
@@ -154,6 +155,7 @@ struct GameSelectUI: View {
                     .resizable()
                     .colorMultiply(.yellow)
                     .opacity(0.5)
+                    .a11yDecorative()
                 )
             }
         }
@@ -250,6 +252,7 @@ struct TagView: View {
             .resizable()
             .colorMultiply(isSelected ? .green : .white)
             .opacity(isSelected ? 1.0 : 0.7)
+            .a11yDecorative()
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)

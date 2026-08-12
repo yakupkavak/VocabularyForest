@@ -394,7 +394,7 @@ private extension ForestUI {
     var componentListView: some View {
         VStack {
             ZStack {
-                Image("title_header").resizable().scaledToFit()
+                Image("title_header").resizable().scaledToFit().a11yDecorative()
                 Text("Orman bileşenleri").foregroundStyle(.white).scaledFont(size: 20)
             }
             if viewModel.forestComponents.isEmpty {
@@ -547,7 +547,7 @@ private extension ForestUI {
     var options: some View {
         VStack {
             ZStack {
-                Image("title_header").resizable().scaledToFit()
+                Image("title_header").resizable().scaledToFit().a11yDecorative()
                 Text("Options").foregroundStyle(.white).scaledFont(size: 24)
             }
             ForEach(Constant.optionsList, id: \.self) { model in
@@ -585,7 +585,7 @@ private extension ForestUI {
     var settings: some View {
         VStack(spacing: 20) {
             ZStack {
-                Image("title_header").resizable().scaledToFit().frame(height: 50)
+                Image("title_header").resizable().scaledToFit().frame(height: 50).a11yDecorative()
                 Text("Settings").foregroundStyle(.white).scaledFont(size: 24, weight: .bold)
             }
             .padding(.bottom, 10)

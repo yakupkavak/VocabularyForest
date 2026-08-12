@@ -37,6 +37,7 @@ struct ContinueGamePopUp: View{
                     HStack {
                         Image("watch_icon")
                             .resizable()
+                            .a11yDecorative()
                             .frame(maxWidth: 36, maxHeight: 36)
                         Spacer()
                         Text(confirmText)
