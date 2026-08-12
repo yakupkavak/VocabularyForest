@@ -102,6 +102,7 @@ struct SelectBookcaseUI: View {
                         showCreateBookcase = true
                     } label: {
                         Image(systemName: "plus")
+                            .accessibilityLabel(String(localized: "a11y_create_bookcase"))
                     }
                 }
             }

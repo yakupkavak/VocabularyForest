@@ -44,6 +44,7 @@ struct BottomSheet<Content: View>: View {
                         .scaledFont(size: 100, weight: .heavy, design: .rounded)
                         .foregroundStyle(.title)
                         .frame(width: geo.size.width * 0.06)
+                        .accessibilityLabel(String(localized: "a11y_close"))
                 }.offset(x: geo.size.width * -0.07)
             }
             .padding(.top)

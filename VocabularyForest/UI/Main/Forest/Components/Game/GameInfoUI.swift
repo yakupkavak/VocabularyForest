@@ -67,6 +67,7 @@ struct GameInfoUI: View {
                     .resizable()
                     .frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
         .frame(maxWidth: UIScreen.main.bounds.width * 0.85)

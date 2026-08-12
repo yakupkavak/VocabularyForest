@@ -95,6 +95,7 @@ private extension BookcaseDetailUI {
                 onClickBookcaseIcon()
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
+                    .accessibilityLabel(String(localized: "a11y_select_bookcase"))
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kelime ara"))
                 .focused($searchBarIsFocused)

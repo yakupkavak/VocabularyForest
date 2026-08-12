@@ -305,7 +305,10 @@ private extension BattleUI {
                                     Image(.addListIcon).resizable().scaledToFit().frame(width: 24, height: 24).onTapGesture {
                                         addWordTapped(book: book)
                                     }
-                                    .a11yTapButton(String(format: NSLocalizedString("a11y_add_to_bookcase", comment: ""), book.learningWord))
+                                    .a11yTapButton(
+                                        String(format: NSLocalizedString("a11y_add_to_bookcase", comment: ""), book.learningWord),
+                                        inputLabels: [book.learningWord]
+                                    )
                                 }
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)

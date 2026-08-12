@@ -424,6 +424,8 @@ struct QuestRow: View {
                 .scaledToFit()
                 .frame(maxWidth: dynamicImageSize, maxHeight: dynamicImageSize)
                 .shadow(radius: 2)
+                // Keep the asset name out of the row's accessibility/Voice Control name.
+                .accessibilityHidden(true)
             if quest.status == .locked {
                 Image(systemName: "lock.fill")
                     .font(.title3)

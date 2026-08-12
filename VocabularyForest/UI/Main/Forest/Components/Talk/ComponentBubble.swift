@@ -264,6 +264,9 @@ struct ComponentBubble {
     // MARK: - ANIMATION HELPERS
     
     static func applyAutoCloseAnimation(to bubble: SKNode, onComplete: @escaping () -> Void) {
+        // Assistive-tech users dismiss the bubble explicitly by re-tapping the
+        // component; a timed close would race their interaction.
+        guard !A11yAnnouncer.prefersPersistentTimedUI else { return }
         let waitAction = SKAction.wait(forDuration: Constants.waitDuration)
         let fadeOut = SKAction.fadeOut(withDuration: Constants.fadeOutDuration)
         let remove = SKAction.removeFromParent()
@@ -275,6 +278,7 @@ struct ComponentBubble {
     }
     
     static func applyTalkAutoCloseAnimation(to bubble: SKNode) {
+        guard !A11yAnnouncer.prefersPersistentTimedUI else { return }
         let waitAction = SKAction.wait(forDuration: Constants.talkWaitDuration)
         let fadeOut = SKAction.fadeOut(withDuration: Constants.fadeOutDuration)
         let remove = SKAction.removeFromParent()

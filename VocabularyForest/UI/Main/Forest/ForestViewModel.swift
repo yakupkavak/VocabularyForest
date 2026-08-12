@@ -80,6 +80,7 @@ class ForestViewModel: BaseViewModel {
     @Published var marketScreenModel: MarketScreenModel? = nil
     @Published var marketErrorMessage: String? = nil
     @Published private(set) var isDailySpinClaimable = false
+    @Published private(set) var forestComponents: [ForestComponentSummary] = []
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -384,7 +385,9 @@ extension ForestViewModel {
                 for tree in newTrees {
                     output?.setupPlant(plant: tree)
                 }
-                
+
+                refreshForestComponents()
+
                 forestStatus = ForestStatusModel(
                     rainValue: forestData.rainValue,
                     landHealthPercentage: forestData.landHealthPercentage,
@@ -480,15 +483,25 @@ extension ForestViewModel: ForestViewModelProtocol {
                 if let model = forestEntityService.fetchAnimal(id: componentUUID, contextType: .background) {
                     self.output?.setupAnimal(animal: model)
                 }
+                if let index = animalList.firstIndex(where: { $0.id == componentUUID }) {
+                    animalList[index].characterName = name
+                }
             case .plant:
                 if let model = forestEntityService.fetchPlant(id: componentUUID, contextType: .background) {
                     self.output?.setupPlant(plant: model)
+                }
+                if let index = treeList.firstIndex(where: { $0.id == componentUUID }) {
+                    treeList[index].characterName = name
                 }
             case .sculpture:
                 if let model = forestEntityService.fetchSculpture(id: componentUUID, contextType: .background) {
                     self.output?.setupSculpture(sculpture: model)
                 }
+                if let index = sculptureList.firstIndex(where: { $0.id == componentUUID }) {
+                    sculptureList[index].characterName = name
+                }
             }
+            refreshForestComponents()
         }
         self.selectedModel = nil
         self.componentUUID = nil
@@ -621,10 +634,44 @@ extension ForestViewModel: ForectSceneProtocol {
     }
 }
 
+// MARK: - COMPONENT SUMMARY HELPERS
+
+private extension ForestViewModel {
+
+    func refreshForestComponents() {
+        func displayName(_ characterName: String, _ assetName: String, fallback: String) -> String {
+            if !characterName.isEmpty { return characterName }
+            return assetName.isEmpty ? fallback : assetName
+        }
+        var summaries = treeList.map {
+            ForestComponentSummary(
+                id: $0.id,
+                name: displayName($0.characterName, $0.assetName, fallback: String(localized: "Bitki")),
+                type: .plant
+            )
+        }
+        summaries += animalList.map {
+            ForestComponentSummary(
+                id: $0.id,
+                name: displayName($0.characterName, $0.assetName, fallback: String(localized: "Animal")),
+                type: .animal
+            )
+        }
+        summaries += sculptureList.map {
+            ForestComponentSummary(
+                id: $0.id,
+                name: displayName($0.characterName, $0.assetName, fallback: String(localized: "Heykel")),
+                type: .sculpture
+            )
+        }
+        forestComponents = summaries
+    }
+}
+
 // MARK: - RANDOM TALK HELPERS
 
 private extension ForestViewModel {
-    
+
     func startRandomTalking() {
         stopRandomTalking()
         

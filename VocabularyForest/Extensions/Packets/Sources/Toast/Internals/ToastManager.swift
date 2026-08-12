@@ -43,6 +43,9 @@ internal final class ToastManager: ObservableObject {
   }
 
   internal func startRemovalTask(for model: ToastModel) async {
+    // Assistive-tech users can't be expected to react within a timed window;
+    // the toast then stays until dismissed via its close button or a drag.
+    guard !A11yAnnouncer.prefersPersistentTimedUI else { return }
     if let duration = model.value.duration {
       do {
         try await Task.sleep(seconds: duration)

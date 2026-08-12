@@ -22,14 +22,11 @@ protocol ForestUIProtocol {
 
 private extension ForestUI {
     enum Constant {
-        static let a11yMenuButtonSize: CGFloat = 44
-        static let a11yMenuTopPadding: CGFloat = 60
-        static let a11yMenuSpacing: CGFloat = 16
-        static let a11yMenuTrailingPadding: CGFloat = 16
         static let optionsList: [SettingsModel] = [
             SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "right_icon", color: .brown500, type: .resume),
             SettingsModel(title: String(localized: "Settings"), icon: "settings_button", color: .brown500, type: .settings),
             SettingsModel(title: String(localized: "Orman Bilgileri"), icon: "FAQ", color: .brown500, type: .info),
+            SettingsModel(title: String(localized: "Orman bileşenleri"), icon: "forest_button", color: .brown500, type: .components),
             SettingsModel(title: String(localized: "Home"), icon: "exit_button", color: .brown500, type: .home)
         ]
     }
@@ -38,6 +35,7 @@ private extension ForestUI {
         case announce, forest, quest
         case updateName, empty, dailySpin
         case dailyTrack, userRoad, market
+        case componentList, componentMove
         
         var id: Self { self }
     }
@@ -98,7 +96,9 @@ struct ForestUI: View {
             }
             
             if uiState != .empty {
-                if uiState != .market {
+                // componentMove leaves the scene visible so the user can watch
+                // the component follow the direction buttons; market dims itself.
+                if uiState != .market && uiState != .componentMove {
                     Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
                 }
                 userMenu.zIndex(5.0).accessibilityAddTraits(.isModal)
@@ -190,6 +190,10 @@ private extension ForestUI {
             userRoadView
         case .market:
             marketView
+        case .componentList:
+            componentListView
+        case .componentMove:
+            componentMoveView
         }
     }
     
@@ -381,30 +385,149 @@ private extension ForestUI {
         .compositingGroup()
     }
     
-    /// VoiceOver bridge for the SpriteKit menu column: the scene resolves taps with
-    /// `nodes(at:)`, which VoiceOver users can never reach, so invisible accessible
-    /// buttons mirror the same actions along the scene's right-edge button column.
-    var sceneAccessibilityOverlay: some View {
-        VStack(spacing: Constant.a11yMenuSpacing) {
-            sceneAccessibilityButton(String(localized: "a11y_menu"), action: showOptions)
-            sceneAccessibilityButton(String(localized: "a11y_adventure_board"), action: showAnnouncement)
-            sceneAccessibilityButton(String(localized: "a11y_play_game"), action: showGameSelection)
-            sceneAccessibilityButton(String(localized: "a11y_forest_info"), action: showForestInfo)
-            sceneAccessibilityButton(String(localized: "a11y_market"), action: showMarket)
+    var componentListView: some View {
+        VStack {
+            ZStack {
+                Image("title_header").resizable().scaledToFit()
+                Text("Orman bileşenleri").foregroundStyle(.white).scaledFont(size: 20)
+            }
+            if viewModel.forestComponents.isEmpty {
+                Text("Ormanda yönetilecek bileşen yok")
+                    .foregroundStyle(.white).scaledFont(size: 16)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            } else {
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(viewModel.forestComponents) { component in
+                            componentRow(component)
+                        }
+                    }
+                }
+                .frame(maxHeight: UIScreen.main.bounds.height * 0.5)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-        .padding(.top, Constant.a11yMenuTopPadding)
-        .padding(.trailing, Constant.a11yMenuTrailingPadding)
+        .padding().background(.brown.opacity(0.8)).cornerRadius(16)
+        .frame(width: UIScreen.main.bounds.width * 0.8)
+        .overlay(alignment: .topTrailing) {
+            Button {
+                uiState = .empty
+            } label: {
+                Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
+                    .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
+            }
+        }
     }
 
-    func sceneAccessibilityButton(_ label: String, action: @escaping () -> Void) -> some View {
-        Color.clear
-            .frame(width: Constant.a11yMenuButtonSize, height: Constant.a11yMenuButtonSize)
-            .accessibilityElement()
-            .accessibilityLabel(label)
-            .accessibilityAddTraits(.isButton)
-            .accessibilityAction(.default, action)
-            .allowsHitTesting(false)
+    func componentRow(_ component: ForestComponentSummary) -> some View {
+        HStack(spacing: 8) {
+            Text(component.name)
+                .foregroundStyle(.white).scaledFont(size: 16)
+                .lineLimit(2)
+            Spacer()
+            componentRowAction(String(localized: "Adını değiştir")) {
+                componentName = component.name
+                viewModel.setComponent(uuid: component.id, for: component.type)
+                uiState = .updateName
+            }
+            if component.supportsMove {
+                componentRowAction(String(localized: "Taşı")) {
+                    if forestScene.beginPositionChange(id: component.id, type: component.type) {
+                        uiState = .componentMove
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 4)
+    }
+
+    func componentRowAction(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .foregroundStyle(.white).scaledFont(size: 14)
+                .padding(.horizontal, 12)
+                .frame(minHeight: 44)
+                .background(.brown300.opacity(0.9))
+                .cornerRadius(12)
+        }
+    }
+
+    /// Direction pad for moving a component without touching the scene —
+    /// binds 1:1 to the same scene calls the arrow sprites used to trigger.
+    var componentMoveView: some View {
+        VStack {
+            Spacer()
+            VStack(spacing: 12) {
+                moveStepButton(ForestConstant.upIconName, label: String(localized: "a11y_move_up"), direction: .up)
+                HStack(spacing: 24) {
+                    moveStepButton(ForestConstant.leftIconName, label: String(localized: "a11y_move_left"), direction: .left)
+                    moveStepButton(ForestConstant.downIconName, label: String(localized: "a11y_move_down"), direction: .down)
+                    moveStepButton(ForestConstant.rightIconName, label: String(localized: "a11y_move_right"), direction: .right)
+                }
+                HStack(spacing: 48) {
+                    moveControlButton(ForestConstant.refuseIconName, label: String(localized: "a11y_close")) {
+                        forestScene.cancelPositionChange()
+                        uiState = .empty
+                    }
+                    moveControlButton(ForestConstant.confirmIconName, label: String(localized: "a11y_confirm")) {
+                        forestScene.confirmPositionChange()
+                        uiState = .empty
+                    }
+                }
+            }
+            .padding()
+            .background(.brown.opacity(0.8))
+            .cornerRadius(16)
+            .padding(.bottom, 24)
+        }
+    }
+
+    func moveStepButton(_ icon: String, label: String, direction: Directions) -> some View {
+        moveControlButton(icon, label: label) {
+            forestScene.applyMoveStep(direction)
+        }
+    }
+
+    func moveControlButton(_ icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(icon).resizable().scaledToFit().frame(width: 44, height: 44)
+        }
+        .accessibilityLabel(label)
+    }
+
+    /// Bridge for the SpriteKit menu column: real (transparent) buttons sit exactly
+    /// over the scene sprites using the shared ForestConstant geometry, so finger
+    /// taps, VoiceOver activation and Voice Control's synthetic taps all travel the
+    /// same path. The sprites stay purely visual.
+    var sceneAccessibilityOverlay: some View {
+        GeometryReader { geo in
+            let side = max(geo.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
+            ForEach(Array(sceneMenuEntries.enumerated()), id: \.offset) { index, entry in
+                Button(action: entry.action) {
+                    Color.clear
+                        .frame(width: side, height: side)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel(entry.label)
+                .position(
+                    x: geo.size.width * ForestConstant.menuButtonRelativeX,
+                    // SpriteKit's origin is bottom-left, SwiftUI's is top-left.
+                    y: geo.size.height * (1 - ForestConstant.menuButtonRelativeYs[index])
+                )
+            }
+        }
+        .ignoresSafeArea()
+    }
+
+    var sceneMenuEntries: [(label: String, action: () -> Void)] {
+        [
+            (String(localized: "a11y_menu"), showOptions),
+            (String(localized: "a11y_adventure_board"), showAnnouncement),
+            (String(localized: "a11y_play_game"), showGameSelection),
+            (String(localized: "a11y_forest_info"), showForestInfo),
+            (String(localized: "a11y_market"), showMarket)
+        ]
     }
 
     var gameScene: SKScene {
@@ -434,6 +557,8 @@ private extension ForestUI {
                     case .info:
                         uiState = .empty
                         forestSeen = false
+                    case .components:
+                        uiState = .componentList
                     }
                 }
                 .a11yTapButton(model.title)
@@ -461,18 +586,18 @@ private extension ForestUI {
             
             VStack(spacing: 24) {
                 Group {
-                    customSliderRow(title: "Music", icon: "music.note", value: $musicVolume)
+                    customSliderRow(title: String(localized: "Music"), icon: "music.note", value: $musicVolume)
                         .disabled(isMuted)
                         .opacity(isMuted ? 0.5 : 1.0)
-                    customSliderRow(title: "SFX", icon: "speaker.wave.2.fill", value: $sfxVolume)
+                    customSliderRow(title: String(localized: "SFX"), icon: "speaker.wave.2.fill", value: $sfxVolume)
                         .disabled(isMuted)
                         .opacity(isMuted ? 0.5 : 1.0)
-                    customToggleRow(title: "Mute All", icon: "speaker.slash.fill", isOn: $isMuted)
+                    customToggleRow(title: String(localized: "Mute All"), icon: "speaker.slash.fill", isOn: $isMuted)
                 }
                 
                 Divider().background(Color.white.opacity(0.5))
                 Group {
-                    customToggleRow(title: "Haptics", icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
+                    customToggleRow(title: String(localized: "Haptics"), icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
                 }
             }
             .padding(.horizontal, 8)

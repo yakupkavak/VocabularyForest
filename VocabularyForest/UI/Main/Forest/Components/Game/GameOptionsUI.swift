@@ -36,7 +36,7 @@ struct GameOptionsUI: View {
                                 case .resume:   onResume()
                                 case .settings: onSettings()
                                 case .home:     onHome()
-                                case .info:
+                                case .info, .components:
                                     break
                                 }
                             }

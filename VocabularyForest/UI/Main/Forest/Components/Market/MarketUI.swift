@@ -647,7 +647,8 @@ struct MarketItemCard: View {
                 priceA11yText
             ),
             value: canAfford ? nil : String(localized: "a11y_insufficient_balance"),
-            hint: String(localized: "a11y_buy_hint")
+            hint: String(localized: "a11y_buy_hint"),
+            inputLabels: [item.reward.reward.displayName.localized]
         )
         .overlay(alignment: .topLeading) {
             if let chestModel, let onInfoTap {

@@ -235,6 +235,7 @@ private extension CreateBookUI {
                     .foregroundColor(.brown300)
                     .scaledToFit()
                     .frame(minWidth: 24, maxWidth: 36)
+                    .accessibilityLabel(String(localized: "a11y_select_bookcase"))
             }
             .offset(x: 24)
         }

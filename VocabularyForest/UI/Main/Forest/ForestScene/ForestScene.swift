@@ -289,10 +289,79 @@ private extension ForestScene {
     }
     
     func clearSelection() {
-        selectedModel = nil
+        selectedManager = nil
         selectedModel = nil
         previewDirectionList = []
         environmentManager?.closePositionArrows()
+    }
+
+    func positionChangeTarget(id: UUID, type: ComponentType) -> (manager: UpdatePositionProtocol, model: ComponentModelProtocol)? {
+        switch type {
+        case .plant:
+            guard let manager = plantManagers.first(where: { $0.model?.id == id }),
+                  let model = manager.model else { return nil }
+            return (manager, model)
+        case .sculpture:
+            guard let manager = sculptureManagers.first(where: { $0.model?.id == id }),
+                  let model = manager.model else { return nil }
+            return (manager, model)
+        case .animal:
+            return nil
+        }
+    }
+}
+
+// MARK: - ACCESSIBILITY DRIVE
+
+/// Entry points for the SwiftUI component-management flow — the Voice Control
+/// alternative to tapping SpriteKit nodes. They reuse the exact state and code
+/// paths of the touch-driven bubble/arrow flow, so game logic stays unchanged.
+extension ForestScene {
+
+    /// Scrolls the side-scrolling forest so the component is on screen —
+    /// the alternative to walking the character there.
+    func focusComponent(id: UUID, type: ComponentType) {
+        let node: SKNode?
+        switch type {
+        case .plant:
+            node = plantManagers.first(where: { $0.model?.id == id })?.node
+        case .animal:
+            node = animalManagers.first(where: { $0.model?.id == id })?.node
+        case .sculpture:
+            node = sculptureManagers.first(where: { $0.model?.id == id })?.sculptureNode
+        }
+        guard let node else { return }
+        environmentManager.focus(on: node)
+    }
+
+    /// Returns false when the component can't be moved (animals, missing model).
+    /// The scene's arrow sprites stay hidden: SwiftUI provides the buttons.
+    func beginPositionChange(id: UUID, type: ComponentType) -> Bool {
+        guard let target = positionChangeTarget(id: id, type: type) else { return false }
+        selectedManager = target.manager
+        selectedModel = target.model
+        previewDirectionList = []
+        environmentManager.focus(on: target.manager.node)
+        target.manager.startPositionChange()
+        return true
+    }
+
+    func applyMoveStep(_ direction: Directions) {
+        updateDirectionList(direction)
+    }
+
+    func confirmPositionChange() {
+        guard let selectedModel else { return }
+        helper?.updatePosition(model: selectedModel, directionList: previewDirectionList)
+        selectedManager?.confirmeChange()
+        clearSelection()
+    }
+
+    func cancelPositionChange() {
+        if let selectedModel {
+            selectedManager?.removeChange(x: selectedModel.xPosition, y: selectedModel.yPosition)
+        }
+        clearSelection()
     }
 }
 

@@ -12,6 +12,7 @@ protocol EnvironmentManagerProtocol: AnyObject {
     func setupEnvironment()
     func moveBackground(direction: HorizontalDirection)
     func stopBackground()
+    func focus(on node: SKNode)
     func update()
     func startRain()
     func stopRain()
@@ -25,6 +26,8 @@ protocol EnvironmentManagerProtocol: AnyObject {
 private extension EnvironmentManager {
     enum Constant {
         static let menuButtonName = "menu_button"
+        static let focusScrollDuration: TimeInterval = 0.4
+        static let focusMinDelta: CGFloat = 1
     }
 }
 class EnvironmentManager {
@@ -140,6 +143,11 @@ private extension EnvironmentManager {
         }
     }
 
+    func isScrollingNode(_ node: SKNode) -> Bool {
+        node == floorNode || node == waterStatue || node == grassStatue ||
+        node.name == "Animal" || node.name == "sculpture" || node.name == "plant"
+    }
+
     func checkInfinitySky() {
         guard let scene else { return }
         scene.enumerateChildNodes(withName: "clouds") { node, _ in
@@ -173,26 +181,23 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         scoreLabel.position = CGPoint(x: scene.size.width / 2, y: scene.size.height - 80)
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = .white
-        menuButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.90)
-        menuButton.zPosition = 4
-        menuButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        menuButton.name = Constant.menuButtonName
-        announcementButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.83)
-        announcementButton.zPosition = 4
-        announcementButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        announcementButton.name = "announcementButton"
-        playButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.76)
-        playButton.zPosition = 4
-        playButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        playButton.name = "play_button"
-        forestButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.69)
-        forestButton.zPosition = 4
-        forestButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        forestButton.name = "forest_button"
-        marketButton.position = CGPoint(x: scene.size.width * 0.90, y: scene.size.height * 0.62)
-        marketButton.zPosition = 4
-        marketButton.size = CGSize(width: scene.size.height * 0.05, height: scene.size.height * 0.05)
-        marketButton.name = "market_button"
+        let menuColumn: [(button: SKSpriteNode, name: String)] = [
+            (menuButton, Constant.menuButtonName),
+            (announcementButton, "announcementButton"),
+            (playButton, "play_button"),
+            (forestButton, "forest_button"),
+            (marketButton, "market_button")
+        ]
+        let buttonSide = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
+        for (index, entry) in menuColumn.enumerated() {
+            entry.button.position = CGPoint(
+                x: scene.size.width * ForestConstant.menuButtonRelativeX,
+                y: scene.size.height * ForestConstant.menuButtonRelativeYs[index]
+            )
+            entry.button.zPosition = 4
+            entry.button.size = CGSize(width: buttonSide, height: buttonSide)
+            entry.button.name = entry.name
+        }
         rightIcon.name = ForestConstant.rightIconName
         leftIcon.name = ForestConstant.leftIconName
         downIcon.name = ForestConstant.downIconName
@@ -220,16 +225,28 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     
     func moveBackground(direction: HorizontalDirection) {
         guard let scene = scene else { return }
-        
-        for node in scene.children {
-            if node == floorNode || node == waterStatue || node == grassStatue || node.name == "Animal" || node.name == "sculpture" || node.name == "plant" {
-                let moveAction = SKAction.moveBy(x: direction == .left ? 100 : -100, y: 0, duration: 1.0)
-                let repeatAction = SKAction.repeatForever(moveAction)
-                
-                if node.action(forKey: GameConstant.backgroundAction) == nil {
-                    node.run(repeatAction, withKey: GameConstant.backgroundAction)
-                }
+
+        for node in scene.children where isScrollingNode(node) {
+            let moveAction = SKAction.moveBy(x: direction == .left ? 100 : -100, y: 0, duration: 1.0)
+            let repeatAction = SKAction.repeatForever(moveAction)
+
+            if node.action(forKey: GameConstant.backgroundAction) == nil {
+                node.run(repeatAction, withKey: GameConstant.backgroundAction)
             }
+        }
+    }
+
+    /// One-shot scroll that horizontally centers the node, clamped to the floor
+    /// bounds — the voice-friendly alternative to walking the character there.
+    func focus(on node: SKNode) {
+        guard let scene else { return }
+        let targetDx = scene.size.width / 2 - node.position.x
+        let minDx = scene.size.width - floorNode.frame.maxX
+        let maxDx = -floorNode.frame.minX
+        let dx = min(max(targetDx, minDx), maxDx)
+        guard abs(dx) > Constant.focusMinDelta else { return }
+        for child in scene.children where isScrollingNode(child) {
+            child.run(.moveBy(x: dx, y: 0, duration: Constant.focusScrollDuration))
         }
     }
     
@@ -314,7 +331,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     
     private func setupAnnouncementIndicatorsIfNeeded() {
         guard let scene, announcementBadgeNode == nil else { return }
-        let buttonSize = scene.size.height * 0.05
+        let buttonSize = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
         
         // "!" badge on the top-right corner of the button (kept as a sibling node
         // because changing the sprite's size also scales its children)

@@ -18,17 +18,21 @@ extension View {
     /// WARNING: the optional parameters branch the view tree, so switching one
     /// between nil and non-nil at runtime changes the subtree's structural
     /// identity and re-fires its .task/.onAppear — don't gate state on those.
+    /// `inputLabels` gives Voice Control users short spoken alternatives
+    /// ("Tap <name>") when the accessibility label is a long composed sentence.
     func a11yTapButton(
         _ label: String? = nil,
         value: String? = nil,
         hint: String? = nil,
-        isSelected: Bool = false
+        isSelected: Bool = false,
+        inputLabels: [String]? = nil
     ) -> some View {
         accessibilityElement(children: .combine)
             .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
             .a11yOptionalLabel(label)
             .a11yOptionalValue(value)
             .a11yOptionalHint(hint)
+            .a11yOptionalInputLabels(inputLabels)
     }
 
     /// Collapses children into a single readable, non-interactive element.
@@ -58,6 +62,11 @@ private extension View {
     func a11yOptionalHint(_ hint: String?) -> some View {
         if let hint { accessibilityHint(hint) } else { self }
     }
+
+    @ViewBuilder
+    func a11yOptionalInputLabels(_ labels: [String]?) -> some View {
+        if let labels { accessibilityInputLabels(labels) } else { self }
+    }
 }
 
 // MARK: - ANNOUNCER
@@ -67,6 +76,14 @@ private extension View {
 enum A11yAnnouncer {
 
     static var isVoiceOverOn: Bool { UIAccessibility.isVoiceOverRunning }
+
+    /// Timed UI (toasts, scene bubbles) must not auto-dismiss for assistive-tech
+    /// users. Voice Control has no public detection API, so this keys off the
+    /// detectable technologies; Voice Control users rely on the visible close
+    /// affordances added alongside this flag.
+    static var prefersPersistentTimedUI: Bool {
+        UIAccessibility.isVoiceOverRunning || UIAccessibility.isSwitchControlRunning
+    }
 
     static func announce(_ message: String) {
         guard isVoiceOverOn else { return }

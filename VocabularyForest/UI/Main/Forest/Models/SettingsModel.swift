@@ -18,5 +18,6 @@ enum SettingType {
     case resume
     case settings
     case info
+    case components
     case home
 }

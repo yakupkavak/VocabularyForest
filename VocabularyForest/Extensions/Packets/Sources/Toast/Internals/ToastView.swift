@@ -2,6 +2,7 @@ import SwiftUI
 
 internal struct ToastView: View {
   @ObservedObject var model: ToastModel
+  var onClose: (() -> Void)? = nil
   @Environment(\.colorScheme) private var colorScheme
 
   private var isDark: Bool { colorScheme == .dark }
@@ -43,8 +44,24 @@ internal struct ToastView: View {
         Color.clear
           .frame(width: 14)
       }
+      // Auto-dismiss is disabled while assistive tech runs, so the toast
+      // needs an explicit, visible way out.
+      if let onClose, A11yAnnouncer.prefersPersistentTimedUI {
+        closeButton(onClose)
+      }
     }
     .scaledFont(size: 16, weight: .medium)
+  }
+
+  private func closeButton(_ action: @escaping () -> Void) -> some View {
+    Button(action: action) {
+      Image(systemName: "xmark.circle.fill")
+        .font(.system(size: 20))
+        .foregroundStyle(.secondary)
+        .frame(width: 44, height: 44)
+    }
+    .buttonStyle(.plain)
+    .accessibilityLabel(String(localized: "a11y_close"))
   }
 
   private func buttonView(_ button: ToastButton) -> some View {

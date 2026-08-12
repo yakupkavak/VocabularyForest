@@ -8,6 +8,16 @@
 import Foundation
 
 enum ForestConstant {
+    /// Scene menu column geometry — single source shared by EnvironmentManager
+    /// (SpriteKit, bottom-left origin) and ForestUI's tap/accessibility overlay
+    /// (SwiftUI, top-left origin: y = 1 - value). Keeping both layers on the
+    /// same fractions is what makes Voice Control's synthetic taps land on the
+    /// real buttons on every screen size.
+    static let menuButtonRelativeX: CGFloat = 0.90
+    static let menuButtonRelativeYs: [CGFloat] = [0.90, 0.83, 0.76, 0.69, 0.62]
+    static let menuButtonRelativeSize: CGFloat = 0.05
+    /// Minimum 44x44pt touch target; 0.05*H drops below it on small phones.
+    static let menuButtonMinSize: CGFloat = 44
     static let rightIconName = "right_icon"
     static let leftIconName = "left_icon"
     static let downIconName = "down_icon"
