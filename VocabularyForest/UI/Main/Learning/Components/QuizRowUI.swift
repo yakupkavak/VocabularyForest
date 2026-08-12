@@ -14,20 +14,26 @@ struct QuizRowUI: View {
     var quizModel: QuizRowModel
     var height: CGFloat
     var onClick: (QuizType) -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // MARK: - UI
-    
+
     var body: some View {
         HStack{
             Spacer()
-            Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3)
-            Spacer()
+            // Decorative bamboos yield their width to the label at accessibility sizes
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3)
+                Spacer()
+            }
             Text("Maceraya Atıl").scaledFont(size: 22, weight: .bold).foregroundStyle(.brown300).multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .layoutPriority(1)
+                // Grow vertically only at accessibility sizes; default layout stays untouched
+                .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
             Spacer()
-            Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3)
-            Spacer()
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3)
+                Spacer()
+            }
         }.padding()
         .padding(.vertical)
         .background(.backgroundSystem)
