@@ -90,7 +90,7 @@ private extension CreateBookcaseUI {
                 }
             } label: {
                 Text("Oluştur").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
-            }.tint(Color.clickableButton).buttonStyle(.bordered)
+            }.tint(Color.brown300).buttonStyle(.borderedProminent)
 
             Spacer()
         }.padding(24)

@@ -22,11 +22,13 @@ struct VocabularyTextField: View {
     // MARK: - VIEW
     
     var body: some View {
-        TextField(placeholder, text: $userInput)
+        // Vertical axis lets long placeholders and accessibility text sizes wrap
+        // instead of clipping inside the fixed single-line height.
+        TextField(placeholder, text: $userInput, axis: .vertical)
             .a11yFieldLabel(title)
             .padding(.vertical, 16)
             .padding(.horizontal)
-            .lineLimit(1)
+            .lineLimit(1...3)
             .foregroundStyle(.logoGreen)
             .textFieldStyle(PlainTextFieldStyle())
             .background(Color.textfieldBackground)

@@ -33,7 +33,7 @@ struct SettingsUI: View {
                 Text("Account")
                     .a11yHeader()
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                     .padding(.top)
                     .padding(.top, -16)
 
@@ -48,7 +48,7 @@ struct SettingsUI: View {
                 Text("Hakkında")
                     .a11yHeader()
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
 
                 aboutPage
                 
@@ -57,32 +57,32 @@ struct SettingsUI: View {
                 Text("Tehlikeli Alan")
                     .a11yHeader()
                     .font(.callout)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                 
                 Button("Tüm Verileri Sıfırla") {
                     showingDeleteAlert = true
                 }
                 .padding(.horizontal)
-                .tint(.red)
+                .tint(.dangerText)
                 .cornerRadius(10)
                 .accessibilityIdentifier("reset_all_data_button")
                 
                 Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                 
                 if viewModel.userSignIn {
                     Button("Hesabı Sil") {
                         showingDeleteAccountAlert = true
                     }
                     .padding(.horizontal)
-                    .tint(.red)
+                    .tint(.dangerText)
                     .cornerRadius(10)
                     .accessibilityIdentifier("delete_account_button")
                     
                     Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
                         .font(.caption)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondaryText)
                 }
                 Spacer()
             }
@@ -181,7 +181,7 @@ private extension SettingsUI {
         Text("Bildirimler")
             .a11yHeader()
             .font(.callout)
-            .foregroundColor(.gray)
+            .foregroundColor(.secondaryText)
             .padding(.top)
 
         VStack(alignment: .leading) {
@@ -201,7 +201,7 @@ private extension SettingsUI {
         
         Text("Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir.")
             .font(.caption)
-            .foregroundColor(.gray)
+            .foregroundColor(.secondaryText)
     }
     
     @ViewBuilder
@@ -272,7 +272,7 @@ private extension SettingsUI {
                         Text("Son eşitleme: \(viewModel.lastSyncDate)")
                             .font(.caption)
                     }
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                 }
                 Spacer()
                 Button {
@@ -314,7 +314,7 @@ private extension SettingsUI {
                 Text("Ormanını buluta kaydetmek için giriş yap.")
                     .frame(minWidth: 0, maxWidth: .greatestFiniteMagnitude, alignment: .leading)
                     .font(.footnote)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                     .multilineTextAlignment(.leading)
             }
             .background(Color.backgroundSystem)

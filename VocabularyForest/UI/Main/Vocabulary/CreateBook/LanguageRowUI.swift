@@ -19,12 +19,16 @@ struct LanguageRowUI: View {
     
     var body: some View {
         HStack {
+            // fixedSize lets the label wrap and grow vertically at accessibility
+            // text sizes instead of clipping.
             if let language {
                 Text(language.localizedName)
                     .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text(placeholder)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.secondaryText)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
             Image(systemName: "chevron.up.chevron.down")

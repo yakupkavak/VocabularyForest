@@ -56,7 +56,10 @@ struct tvDefault: View {
     var text: String
     var color: Color = .primary
     var body: some View{
+        // fixedSize lets the label grow vertically at accessibility text sizes
+        // instead of clipping inside fixed parent layouts.
         Text(text).font(.callout).foregroundStyle(color)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
