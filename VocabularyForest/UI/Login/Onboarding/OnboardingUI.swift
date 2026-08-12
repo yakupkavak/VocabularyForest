@@ -7,23 +7,37 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
+private extension OnboardingUI {
+    enum Constants {
+        static let waveCenterRatio: CGFloat = 0.15
+        static let waveCurrentPoint: CGFloat = 50
+        static let handleEdgeInset: CGFloat = 30
+        static let nextPagePeekWidth: CGFloat = 15
+        static let offscreenWidthRatio: CGFloat = 1.5
+        static let advanceThresholdRatio: CGFloat = 0.5
+    }
+}
+
 struct OnboardingUI: View {
-    
-    // MARK: PROPERTIES
-    
+
+    // MARK: - PROPERTIES
+
     @GestureState private var isDragging: Bool = false
     @Environment(\.analyticsService) private var analyticsService
+    @Environment(\.layoutDirection) private var layoutDirection
     @State private var currentPage = 0
     @State private var fakeIndex = 0
     @State private var models = OnboardingConstants.onboardingModels
     @State private var isPulseAnimating = false
-    
+
     private var waveCenterY: CGFloat {
-        UIScreen.main.bounds.height * 0.15
+        UIScreen.main.bounds.height * Constants.waveCenterRatio
     }
-    
-    // MARK: VIEW
-    
+
+    // MARK: - VIEW
+
     var body: some View {
         ZStack {
             backPage.ignoresSafeArea()
@@ -43,7 +57,7 @@ struct OnboardingUI: View {
         .onAppear {
             var base = OnboardingConstants.onboardingModels
             guard let first = base.first, var last = base.last else { return }
-            last.offSet.width = -getRect().width * 1.5
+            last.offSet.width = offscreenWidth
             base.append(first)
             base.insert(last, at: 0)
             models = base
@@ -79,11 +93,12 @@ private extension OnboardingUI {
                     .clipShape(
                         LiquidShape(
                             offset: model.offSet,
-                            currentPoint: 50,
-                            curveCenterY: waveCenterY
+                            currentPoint: Constants.waveCurrentPoint,
+                            curveCenterY: waveCenterY,
+                            layoutDirection: layoutDirection
                         )
                     )
-                    .padding(.trailing, 15)
+                    .padding(.trailing, Constants.nextPagePeekWidth)
                     .zIndex(1)
             } else {
                 Color.clear
@@ -178,17 +193,17 @@ private extension OnboardingUI {
                                 blendDuration: 0.6
                             )
                         ) {
-                            models[fakeIndex].offSet = value.translation
+                            models[fakeIndex].offSet = logicalTranslation(of: value.translation)
                         }
                     }
                 }
                 .onEnded { _ in
                     guard models.indices.contains(fakeIndex) else { return }
-                    let threshold = getRect().width / 2
-                    
+                    let threshold = getRect().width * Constants.advanceThresholdRatio
+
                     withAnimation(.spring()) {
                         if -(models[fakeIndex].offSet.width) > threshold {
-                            models[fakeIndex].offSet.width = -getRect().width * 1.5
+                            models[fakeIndex].offSet.width = offscreenWidth
                             fakeIndex += 1
                             
                             let realCount = max(models.count - 2, 1)
@@ -211,19 +226,44 @@ private extension OnboardingUI {
                     }
                 }
         )
-        .position(x: UIScreen.main.bounds.width - 30, y: waveCenterY)
+        .position(x: handleCenterX, y: waveCenterY)
+        // `position` resolves its x against the layout direction; pinning it to LTR keeps the
+        // handle on the edge `handleCenterX` names, so it can never drift away from the curve.
+        .environment(\.layoutDirection, .leftToRight)
         // Purely decorative swipe affordance; the "next" button covers navigation
         .accessibilityHidden(true)
     }
 }
 
-// MARK: - Functions
+// MARK: - HELPERS
 
 private extension OnboardingUI {
-    
+
+    /// Physical x the drag handle sits at: the trailing edge, resolved here rather than left to
+    /// `position`, so the handle and the carved curve share one source of truth.
+    var handleCenterX: CGFloat {
+        layoutDirection == .rightToLeft
+        ? Constants.handleEdgeInset
+        : UIScreen.main.bounds.width - Constants.handleEdgeInset
+    }
+
+    /// Logical width of a page parked off-screen, past the edge it is dragged toward.
+    var offscreenWidth: CGFloat {
+        -getRect().width * Constants.offscreenWidthRatio
+    }
+
+    /// Maps a physical drag onto the logical axis the page math runs on, where a negative width
+    /// always means "toward the next page" — leftward in LTR, rightward in RTL.
+    func logicalTranslation(of translation: CGSize) -> CGSize {
+        CGSize(
+            width: layoutDirection == .rightToLeft ? -translation.width : translation.width,
+            height: translation.height
+        )
+    }
+
     private func nextPage() {
         withAnimation(.spring()) {
-            models[fakeIndex].offSet.width = -getRect().width * 1.5
+            models[fakeIndex].offSet.width = offscreenWidth
             fakeIndex += 1
             
             let realCount = max(models.count - 2, 1)
