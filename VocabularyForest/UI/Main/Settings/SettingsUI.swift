@@ -243,6 +243,7 @@ private extension SettingsUI {
                     .scaledToFit()
                     .frame(width: 45, height: 30)
                     .foregroundColor(.logoGreen)
+                    .a11yDecorative()
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Text(viewModel.playerName)
@@ -251,7 +252,9 @@ private extension SettingsUI {
                             showNameEditAlert = true
                         } label: {
                             Image(systemName: "pencil")
-                        }.accessibilityIdentifier("edit_username_button")
+                        }
+                        .accessibilityLabel(String(localized: "a11y_edit_name"))
+                        .accessibilityIdentifier("edit_username_button")
 
                     }
                     HStack(spacing: 4) {
@@ -259,7 +262,9 @@ private extension SettingsUI {
                             viewModel.trySyncManuel()
                         } label: {
                             Image(systemName: "arrow.triangle.2.circlepath").font(.caption2)
-                        }.foregroundStyle(.clickableText)
+                        }
+                        .accessibilityLabel(String(localized: "a11y_sync_now"))
+                        .foregroundStyle(.clickableText)
                         Text("Son eşitleme: \(viewModel.lastSyncDate)")
                             .font(.caption)
                     }
@@ -273,6 +278,7 @@ private extension SettingsUI {
                         .foregroundColor(.red)
                         .font(.title3)
                 }
+                .accessibilityLabel(String(localized: "a11y_sign_out"))
             }
             .padding(.horizontal)
             .background(Color.backgroundSystem)
@@ -299,6 +305,7 @@ private extension SettingsUI {
                     Image(systemName: "cloud.moon.fill")
                         .scaledFont(size: 35)
                         .foregroundColor(.logoBrown)
+                        .a11yDecorative()
                 }.padding(.horizontal)
                 Text("Ormanını buluta kaydetmek için giriş yap.")
                     .frame(minWidth: 0, maxWidth: .greatestFiniteMagnitude, alignment: .leading)

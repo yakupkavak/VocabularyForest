@@ -77,6 +77,7 @@ private extension CreateBookcaseUI {
                 Spacer()
                 LottieView(animation: .named("meditationSloth"))
                     .playing(loopMode: .loop).resizable().frame(maxWidth: 250)
+                    .a11yDecorative()
                 Spacer()
             }
             Button {

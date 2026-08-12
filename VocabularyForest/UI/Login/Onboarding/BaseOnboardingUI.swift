@@ -29,13 +29,13 @@ private extension BaseOnboardingUI {
     func animalTalking(animal: String, title: String, color: Color, backgroundImageName: String? = nil) -> some View {
         ZStack {
             if let image = backgroundImageName {
-                Image(image).resizable().scaledToFill().frame(minHeight: 0, maxHeight: .infinity)
+                Image(image).resizable().scaledToFill().frame(minHeight: 0, maxHeight: .infinity).a11yDecorative()
             }
             VStack(alignment: .center){
                 Spacer()
                 talkingBox(message: title).offset(y: -120)
                 if backgroundImageName == nil {
-                    Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit()
+                    Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
                 }
                 Spacer()
             }.frame(maxWidth: .infinity, maxHeight: .infinity).background(.clear)
@@ -61,7 +61,7 @@ private extension BaseOnboardingUI {
                     }
             }
             if showBallon {
-                TalkingBallons()
+                TalkingBallons().a11yDecorative()
             }
         }
     }

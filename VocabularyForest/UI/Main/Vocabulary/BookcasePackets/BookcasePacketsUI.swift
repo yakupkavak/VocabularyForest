@@ -65,7 +65,9 @@ extension BookcasePacketsUI {
                 router.navigateBack()
             } label: {
                 Image(systemName: "chevron.backward").resizable().scaledToFit().frame(width: 32).foregroundStyle(.clickableButton)
-            }.offset(x: 32)
+            }
+            .accessibilityLabel(String(localized: "a11y_back"))
+            .offset(x: 32)
         }
     }
     var horizontalBookcaseList: some View {

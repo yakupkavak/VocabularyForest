@@ -53,6 +53,7 @@ struct BottomSheet<Content: View>: View {
             .customCornerRadius(16, corners: [.topLeft, .topRight])
             .overlay(alignment: .topLeading) {
                 Image(currentAnimal).resizable().scaledToFit().frame(height: horizontalSizeClass == .regular ? 100 : 50).offset(x: 40 ,y: horizontalSizeClass == .regular ? -50 : -25)
+                    .a11yDecorative()
             }
         }
     }

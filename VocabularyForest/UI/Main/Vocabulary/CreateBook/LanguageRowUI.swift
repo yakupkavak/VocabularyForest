@@ -29,9 +29,11 @@ struct LanguageRowUI: View {
             Spacer()
             Image(systemName: "chevron.up.chevron.down")
                 .foregroundStyle(.gray)
+                .a11yDecorative()
         }
         .padding()
         .background(Color.white)
         .borderRadius(borderColor: isEmpty ? .errorBorder : .gray, lineWidth: 1.5)
+        .a11yGroup()
     }
 }
