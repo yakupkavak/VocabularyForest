@@ -12,6 +12,7 @@ func customToggleRow(title: String, icon: String, isOn: Binding<Bool>) -> some V
         Image(systemName: icon)
             .foregroundStyle(.white)
             .frame(width: 24)
+            .a11yDecorative()
         Text(title)
             .foregroundStyle(.white)
             .font(.headline)
@@ -19,5 +20,6 @@ func customToggleRow(title: String, icon: String, isOn: Binding<Bool>) -> some V
         Toggle("", isOn: isOn)
             .labelsHidden()
             .tint(Color.green)
+            .accessibilityLabel(title)
     }
 }

@@ -395,7 +395,7 @@ private extension ForestUI {
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().a11yDecorative()
-                Text("Orman bileşenleri").foregroundStyle(.white).scaledFont(size: 20)
+                Text("Orman bileşenleri").foregroundStyle(.white).scaledFont(size: 20).a11yHeader()
             }
             if viewModel.forestComponents.isEmpty {
                 Text("Ormanda yönetilecek bileşen yok")
@@ -548,7 +548,7 @@ private extension ForestUI {
         VStack {
             ZStack {
                 Image("title_header").resizable().scaledToFit().a11yDecorative()
-                Text("Options").foregroundStyle(.white).scaledFont(size: 24)
+                Text("Options").foregroundStyle(.white).scaledFont(size: 24).a11yHeader()
             }
             ForEach(Constant.optionsList, id: \.self) { model in
                 settingsRow(model: model).onTapGesture {
@@ -586,7 +586,7 @@ private extension ForestUI {
         VStack(spacing: 20) {
             ZStack {
                 Image("title_header").resizable().scaledToFit().frame(height: 50).a11yDecorative()
-                Text("Settings").foregroundStyle(.white).scaledFont(size: 24, weight: .bold)
+                Text("Settings").foregroundStyle(.white).scaledFont(size: 24, weight: .bold).a11yHeader()
             }
             .padding(.bottom, 10)
             

@@ -61,6 +61,13 @@ extension View {
     func a11yHeader() -> some View {
         accessibilityAddTraits(.isHeader)
     }
+
+    /// Binds a text field's visual title as the field's own accessibility label;
+    /// hide the visual title with `a11yDecorative` so it is not read twice.
+    @ViewBuilder
+    func a11yFieldLabel(_ label: String?) -> some View {
+        if let label { accessibilityLabel(label) } else { self }
+    }
 }
 
 // MARK: - HELPERS

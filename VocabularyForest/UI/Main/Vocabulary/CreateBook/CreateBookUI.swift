@@ -121,6 +121,7 @@ struct PartOfSpeechTag: View {
         }
         .background(partOfSpeech.pasterColor).cornerRadius(16)
             .opacity(isSelected ? 1.0 : 0.6).padding(6)
+            .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
 

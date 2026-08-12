@@ -39,7 +39,7 @@ struct LearningFeedUI: View {
     private var feedContent: some View {
         VStack{
             Spacer()
-            Text("Your Forest").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300).padding(.bottom)
+            Text("Your Forest").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300).padding(.bottom).a11yHeader()
             ForEach(Constant.quizList, id: \.self) { quiz in
                 QuizRowUI(quizModel: quiz, height: UIScreen.main.bounds.height * 0.4) { type in
                     switch type {
@@ -52,7 +52,7 @@ struct LearningFeedUI: View {
                     .listRowSeparator(.hidden, edges: .all)
             }
             Spacer()
-            Text("Daily Card").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300)
+            Text("Daily Card").scaledFont(size: 28, weight: .bold).foregroundStyle(.brown300).a11yHeader()
             TodayCardUI(
                 height: UIScreen.main.bounds.height * 0.3,
                 learningWord: viewModel.todaysLearningWord,

@@ -25,6 +25,7 @@ struct GamePopUpContainer<Content: View>: View {
         VStack(spacing: 20) {
             Text(title)
                 .modifier(TitleBackground())
+                .a11yHeader()
             .padding(.bottom, 10)
             content
         }

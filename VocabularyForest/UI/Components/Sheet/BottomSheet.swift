@@ -27,6 +27,7 @@ struct BottomSheet<Content: View>: View {
                 HStack {
                     if let title {
                         Text(title)
+                            .a11yHeader()
                             .scaledFont(size: 24, weight: .heavy, design: .rounded).multilineTextAlignment(.center)
                             .foregroundStyle(.title)
                             .padding(.horizontal, 48)

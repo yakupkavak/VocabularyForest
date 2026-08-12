@@ -23,6 +23,7 @@ struct VocabularyTextField: View {
     
     var body: some View {
         TextField(placeholder, text: $userInput)
+            .a11yFieldLabel(title)
             .padding(.vertical, 16)
             .padding(.horizontal)
             .lineLimit(1)
@@ -37,6 +38,7 @@ struct VocabularyTextField: View {
             .overlay(alignment: .topLeading){
                 if let title {
                     Text(title)
+                        .a11yDecorative()
                         .scaledFont(size: 20, weight: .bold)
                         .foregroundStyle(.textfieldHeader)
                         .background(

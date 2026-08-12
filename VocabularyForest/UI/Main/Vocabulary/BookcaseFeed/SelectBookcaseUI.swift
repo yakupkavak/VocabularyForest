@@ -79,7 +79,9 @@ struct SelectBookcaseUI: View {
                             pendingDeleteBookcase = bookcase
                         })
                         .foregroundStyle(.primary)
-                }.listRowSeparator(.hidden).listRowInsets(.init())
+                }
+                .accessibilityAddTraits(selectedBookcase?.id == bookcase.id ? [.isSelected] : [])
+                .listRowSeparator(.hidden).listRowInsets(.init())
             }.background(.backgroundSystem)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)

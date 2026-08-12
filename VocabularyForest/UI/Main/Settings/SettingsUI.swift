@@ -31,6 +31,7 @@ struct SettingsUI: View {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text("Account")
+                    .a11yHeader()
                     .font(.callout)
                     .foregroundColor(.gray)
                     .padding(.top)
@@ -45,6 +46,7 @@ struct SettingsUI: View {
                 Divider()
 
                 Text("Hakkında")
+                    .a11yHeader()
                     .font(.callout)
                     .foregroundColor(.gray)
 
@@ -53,6 +55,7 @@ struct SettingsUI: View {
                 Divider()
 
                 Text("Tehlikeli Alan")
+                    .a11yHeader()
                     .font(.callout)
                     .foregroundColor(.gray)
                 
@@ -176,6 +179,7 @@ private extension SettingsUI {
     @ViewBuilder
     var notificationView: some View {
         Text("Bildirimler")
+            .a11yHeader()
             .font(.callout)
             .foregroundColor(.gray)
             .padding(.top)
