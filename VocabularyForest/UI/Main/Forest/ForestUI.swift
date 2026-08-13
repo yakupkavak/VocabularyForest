@@ -26,7 +26,6 @@ private extension ForestUI {
             SettingsModel<SettingType>(title: String(localized: "Resume"), icon: "right_icon", color: .brown500, type: .resume),
             SettingsModel(title: String(localized: "Settings"), icon: "settings_button", color: .brown500, type: .settings),
             SettingsModel(title: String(localized: "Orman Bilgileri"), icon: "FAQ", color: .brown500, type: .info),
-            SettingsModel(title: String(localized: "Orman bileşenleri"), icon: "forest_button", color: .brown500, type: .components),
             SettingsModel(title: String(localized: "Home"), icon: "exit_button", color: .brown500, type: .home)
         ]
     }
@@ -35,8 +34,7 @@ private extension ForestUI {
         case announce, forest, quest
         case updateName, empty, dailySpin
         case dailyTrack, userRoad, market
-        case componentList, componentMove
-        
+
         var id: Self { self }
     }
 }
@@ -100,9 +98,8 @@ struct ForestUI: View {
             }
             
             if uiState != .empty {
-                // componentMove leaves the scene visible so the user can watch
-                // the component follow the direction buttons; market dims itself.
-                if uiState != .market && uiState != .componentMove {
+                // Market dims itself, so the shared scrim would double up on it.
+                if uiState != .market {
                     Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
                 }
                 userMenu.zIndex(5.0).accessibilityAddTraits(.isModal)
@@ -196,10 +193,6 @@ private extension ForestUI {
             userRoadView
         case .market:
             marketView
-        case .componentList:
-            componentListView
-        case .componentMove:
-            componentMoveView
         }
     }
     
@@ -391,132 +384,6 @@ private extension ForestUI {
         .compositingGroup()
     }
     
-    var componentListView: some View {
-        VStack {
-            ZStack {
-                Image("title_header").resizable().scaledToFit().a11yDecorative()
-                Text("Orman bileşenleri").foregroundStyle(.white).scaledFont(size: 20).a11yHeader()
-            }
-            if viewModel.forestComponents.isEmpty {
-                Text("Ormanda yönetilecek bileşen yok")
-                    .foregroundStyle(.white).scaledFont(size: 16)
-                    .multilineTextAlignment(.center)
-                    .padding()
-            } else {
-                forestSummaryText
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(viewModel.forestComponents) { component in
-                            componentRow(component)
-                        }
-                    }
-                }
-                .frame(maxHeight: UIScreen.main.bounds.height * 0.5)
-            }
-        }
-        .padding().background(.brown.opacity(0.8)).cornerRadius(16)
-        .frame(width: UIScreen.main.bounds.width * 0.8)
-        .overlay(alignment: .topTrailing) {
-            Button {
-                uiState = .empty
-            } label: {
-                Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
-                    .offset(x: 12, y: -12)
-                    .accessibilityLabel(String(localized: "a11y_close"))
-            }
-        }
-    }
-
-    func componentRow(_ component: ForestComponentSummary) -> some View {
-        HStack(spacing: 8) {
-            Text(component.name)
-                .foregroundStyle(.white).scaledFont(size: 16)
-                .lineLimit(2)
-                .accessibilityLabel(component.name)
-                .accessibilityValue(component.localizedTypeName)
-            Spacer()
-            componentRowAction(String(localized: "Adını değiştir")) {
-                componentName = component.name
-                viewModel.setComponent(uuid: component.id, for: component.type)
-                uiState = .updateName
-            }
-            if component.supportsMove {
-                componentRowAction(String(localized: "Taşı")) {
-                    if forestScene.beginPositionChange(id: component.id, type: component.type) {
-                        uiState = .componentMove
-                    }
-                }
-            }
-        }
-        .padding(.horizontal, 4)
-    }
-
-    var forestSummaryText: some View {
-        let plants = viewModel.forestComponents.filter { $0.type == .plant }.count
-        let animals = viewModel.forestComponents.filter { $0.type == .animal }.count
-        let sculptures = viewModel.forestComponents.filter { $0.type == .sculpture }.count
-        return Text(String(format: NSLocalizedString("a11y_forest_summary", comment: ""), plants, animals, sculptures))
-            .foregroundStyle(.white).scaledFont(size: 14)
-            .multilineTextAlignment(.center)
-    }
-
-    func componentRowAction(_ title: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .foregroundStyle(.white).scaledFont(size: 14)
-                .padding(.horizontal, 12)
-                .frame(minHeight: 44)
-                .background(.brown300.opacity(0.9))
-                .cornerRadius(12)
-        }
-    }
-
-    /// Direction pad for moving a component without touching the scene —
-    /// binds 1:1 to the same scene calls the arrow sprites used to trigger.
-    var componentMoveView: some View {
-        VStack {
-            Spacer()
-            VStack(spacing: 12) {
-                moveStepButton(ForestConstant.upIconName, label: String(localized: "a11y_move_up"), direction: .up)
-                HStack(spacing: 24) {
-                    moveStepButton(ForestConstant.leftIconName, label: String(localized: "a11y_move_left"), direction: .left)
-                    moveStepButton(ForestConstant.downIconName, label: String(localized: "a11y_move_down"), direction: .down)
-                    moveStepButton(ForestConstant.rightIconName, label: String(localized: "a11y_move_right"), direction: .right)
-                }
-                HStack(spacing: 48) {
-                    moveControlButton(ForestConstant.refuseIconName, label: String(localized: "a11y_close")) {
-                        forestScene.cancelPositionChange()
-                        uiState = .empty
-                        A11yAnnouncer.announce(String(localized: "a11y_move_cancelled"))
-                    }
-                    moveControlButton(ForestConstant.confirmIconName, label: String(localized: "a11y_confirm")) {
-                        forestScene.confirmPositionChange()
-                        uiState = .empty
-                        A11yAnnouncer.announce(String(localized: "a11y_move_saved"))
-                    }
-                }
-            }
-            .padding()
-            .background(.brown.opacity(0.8))
-            .cornerRadius(16)
-            .padding(.bottom, 24)
-        }
-    }
-
-    func moveStepButton(_ icon: String, label: String, direction: Directions) -> some View {
-        moveControlButton(icon, label: label) {
-            forestScene.applyMoveStep(direction)
-            A11yAnnouncer.announce(String(format: NSLocalizedString("a11y_moved_direction", comment: ""), label))
-        }
-    }
-
-    func moveControlButton(_ icon: String, label: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(icon).resizable().scaledToFit().frame(width: 44, height: 44)
-        }
-        .accessibilityLabel(label)
-    }
-
     /// Bridge for the SpriteKit menu column: real (transparent) buttons sit exactly
     /// over the scene sprites using the shared ForestConstant geometry, so finger
     /// taps, VoiceOver activation and Voice Control's synthetic taps all travel the
@@ -578,8 +445,6 @@ private extension ForestUI {
                     case .info:
                         uiState = .empty
                         forestSeen = false
-                    case .components:
-                        uiState = .componentList
                     }
                 }
                 .a11yTapButton(model.title)

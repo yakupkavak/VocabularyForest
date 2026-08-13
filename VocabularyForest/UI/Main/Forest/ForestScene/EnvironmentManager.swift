@@ -12,7 +12,6 @@ protocol EnvironmentManagerProtocol: AnyObject {
     func setupEnvironment()
     func moveBackground(direction: HorizontalDirection)
     func stopBackground()
-    func focus(on node: SKNode)
     func update()
     func startRain()
     func stopRain()
@@ -26,8 +25,6 @@ protocol EnvironmentManagerProtocol: AnyObject {
 private extension EnvironmentManager {
     enum Constant {
         static let menuButtonName = "menu_button"
-        static let focusScrollDuration: TimeInterval = 0.4
-        static let focusMinDelta: CGFloat = 1
     }
 }
 class EnvironmentManager {
@@ -236,20 +233,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         }
     }
 
-    /// One-shot scroll that horizontally centers the node, clamped to the floor
-    /// bounds — the voice-friendly alternative to walking the character there.
-    func focus(on node: SKNode) {
-        guard let scene else { return }
-        let targetDx = scene.size.width / 2 - node.position.x
-        let minDx = scene.size.width - floorNode.frame.maxX
-        let maxDx = -floorNode.frame.minX
-        let dx = min(max(targetDx, minDx), maxDx)
-        guard abs(dx) > Constant.focusMinDelta else { return }
-        for child in scene.children where isScrollingNode(child) {
-            child.run(.moveBy(x: dx, y: 0, duration: Constant.focusScrollDuration))
-        }
-    }
-    
     func stopBackground() {
         guard let scene = scene else { return }
         for node in scene.children {
