@@ -43,8 +43,10 @@ public struct Library: Decodable, Identifiable, Hashable {
 public extension String {
     func toLanguageDisplayName() -> String {
         let languages: [String: String] = [
-            "en-US": String(localized: "İngilizce (Amerikan)"),
-            "en-GB": String(localized: "İngilizce (Birleşik Krallık) "),
+            // Keys are shared with `LanguageData.allLanguages`; the catalog only carries that set,
+            // so a key unique to this table would fall back to its untranslated Turkish literal.
+            "en-US": String(localized: "İngilizce (US)"),
+            "en-GB": String(localized: "İngilizce (Birleşik Krallık)"),
             "es":    String(localized: "İspanyolca"),
             "pt-BR": String(localized: "Portekizce (Brezilya)"),
             "zh-CN": String(localized: "Çince (Basitleştirilmiş)"),
