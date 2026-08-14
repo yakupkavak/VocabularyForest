@@ -174,79 +174,79 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "نستخدم بياناتك لتقديم إعلانات أفضل."
+            "value" : "يتيح لنا عرض إعلانات تناسب اهتماماتك. إذا رفضت، ستظل ترى الإعلانات لكنها لن تكون مخصصة."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wir verwenden deine Daten, um dir bessere Werbung zu zeigen."
+            "value" : "Ermöglicht uns, Werbung passend zu deinen Interessen zu zeigen. Lehnst du ab, siehst du weiterhin Werbung, nur nicht personalisiert."
           }
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "We use your data to deliver better ads."
+            "state" : "translated",
+            "value" : "Lets us show ads that match your interests. If you decline, you'll still see ads, just not personalized ones."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usamos tus datos para ofrecerte anuncios más relevantes."
+            "value" : "Nos permite mostrarte anuncios acordes a tus intereses. Si no aceptas, seguirás viendo anuncios, pero no personalizados."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nous utilisons tes données pour te proposer de meilleures publicités."
+            "value" : "Nous permet d'afficher des publicités correspondant à tes centres d'intérêt. Si tu refuses, tu verras toujours des publicités, mais non personnalisées."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "हम आपको बेहतर विज्ञापन दिखाने के लिए आपके डेटा का उपयोग करते हैं।"
+            "value" : "हमें आपकी रुचियों से मेल खाने वाले विज्ञापन दिखाने देता है। मना करने पर भी विज्ञापन दिखेंगे, बस वे वैयक्तिकृत नहीं होंगे।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usiamo i tuoi dati per mostrarti pubblicità migliori."
+            "value" : "Ci permette di mostrarti annunci in linea con i tuoi interessi. Se rifiuti, vedrai comunque gli annunci, ma non personalizzati."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "より適した広告を表示するために、あなたのデータを利用します。"
+            "value" : "あなたの興味に合った広告を表示するために使用します。許可しない場合も広告は表示されますが、パーソナライズはされません。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "더 알맞은 광고를 제공하기 위해 데이터를 사용합니다."
+            "value" : "관심사에 맞는 광고를 표시하는 데 사용합니다. 거부해도 광고는 표시되지만 맞춤 광고는 아닙니다."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usamos seus dados para oferecer anúncios melhores."
+            "value" : "Permite mostrar anúncios que combinem com seus interesses. Se recusar, você ainda verá anúncios, mas não personalizados."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Мы используем ваши данные для показа более релевантной рекламы."
+            "value" : "Позволяет показывать рекламу по вашим интересам. Если вы откажетесь, реклама всё равно будет показываться, но без персонализации."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verilerinizi, size daha iyi reklamlar sunmak için kullanıyoruz."
+            "value" : "İlgi alanlarına uygun reklamlar gösterebilmemizi sağlar. İzin vermezsen reklamları yine görürsün ama kişiselleştirilmez."
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "我们使用你的数据来提供更合适的广告。"
+            "value" : "用于向你展示符合兴趣的广告。若拒绝，你仍会看到广告，但不会个性化。"
           }
         }
       }
