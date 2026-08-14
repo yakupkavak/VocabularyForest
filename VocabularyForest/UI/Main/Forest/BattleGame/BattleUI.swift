@@ -253,22 +253,22 @@ private extension BattleUI {
                 VStack() {
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[0].answer).onTapGesture {
+                        answerComponent(answer: question.answers[0]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 0)
                         }
                         Spacer()
-                        answerComponent(text: question.answers[1].answer).onTapGesture {
+                        answerComponent(answer: question.answers[1]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 1)
                         }
                         Spacer()
                     }
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[2].answer).onTapGesture {
+                        answerComponent(answer: question.answers[2]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 2)
                         }
                         Spacer()
-                        answerComponent(text: question.answers[3].answer).onTapGesture {
+                        answerComponent(answer: question.answers[3]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 3)
                         }
                         Spacer()
@@ -395,7 +395,7 @@ private extension BattleUI {
         }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
     }
     
-    func answerComponent(text: String) -> some View {
+    func answerComponent(answer: AnswerModel) -> some View {
         ZStack {
             Image(.popUpBackground)
                 .resizable()
@@ -405,7 +405,7 @@ private extension BattleUI {
                 )
                 .opacity(0.9)
                 .a11yDecorative()
-            Text(text.firstUppercased)
+            Text(answer.answer.firstUppercased)
                 .scaledFont(size: 13)
                 .foregroundStyle(.white)
                 .minimumScaleFactor(0.7)
@@ -416,6 +416,7 @@ private extension BattleUI {
                 .multilineTextAlignment(.center)
         }
         .a11yTapButton()
+        .accessibilityIdentifier(UITestConstants.answerIdentifier(isCorrect: answer.isTrue))
     }
 }
 

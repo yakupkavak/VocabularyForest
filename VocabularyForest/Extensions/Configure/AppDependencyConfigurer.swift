@@ -8,19 +8,10 @@
 import DependencyContainer
 import Foundation
 
-// MARK: - CONSTANTS
-
-private extension AppDependencyConfigurer {
-    enum Constants {
-        static let uiTestLaunchArgument = "-UITEST"
-    }
-}
-
 enum AppDependencyConfigurer {
     static func configure() {
         // UI tests must not pollute production analytics data.
-        let isUITestRun = ProcessInfo.processInfo.arguments.contains(Constants.uiTestLaunchArgument)
-        let analyticsService: AnalyticsServiceProtocol = isUITestRun
+        let analyticsService: AnalyticsServiceProtocol = UITestConstants.isUITestRun
             ? NoopAnalyticsService()
             : FirebaseAnalyticsService(logger: AppLogger.shared)
         let vocabularyBaseURLProvider = VocabularyBaseURLProvider()
