@@ -12842,7 +12842,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambridge Dictionary"
+            "value" : "कैम्ब्रिज डिक्शनरी"
           }
         },
         "it" : {
@@ -12854,13 +12854,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambridge Dictionary"
+            "value" : "ケンブリッジ辞典"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambridge Dictionary"
+            "value" : "케임브리지 사전"
           }
         },
         "pt-BR" : {
@@ -12872,7 +12872,7 @@
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambridge Dictionary"
+            "value" : "Кембриджский словарь"
           }
         },
         "tr" : {
@@ -12884,7 +12884,7 @@
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambridge Dictionary"
+            "value" : "剑桥词典"
           }
         }
       }
