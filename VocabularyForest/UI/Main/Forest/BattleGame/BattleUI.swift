@@ -385,6 +385,11 @@ private extension BattleUI {
                     )
                 }
             }
+            // The SpriteKit battle scene always draws the player on the left and the enemy on the
+            // right, so this row must not flip in RTL or each name and energy bar would sit above
+            // the wrong character. Pinning the direction also keeps both bars filling from their
+            // own outer edge inwards. Arabic text inside the labels still shapes right-to-left.
+            .environment(\.layoutDirection, .leftToRight)
             HStack {
                 Spacer()
                 Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36).onTapGesture {
