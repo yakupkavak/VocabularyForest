@@ -159,6 +159,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
         let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let analyticsConsentStore = resolver.resolve(type: .singleInstance, for: AnalyticsConsentStoreProtocol.self)
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
@@ -167,7 +168,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestManager: forestData,
             playerManager: playerManager,
             restorePromptService: restorePromptService,
-            analyticsService: analyticsService
+            analyticsService: analyticsService,
+            analyticsConsentStore: analyticsConsentStore
         )
         
         self.cachedSettingsViewModel = viewModel

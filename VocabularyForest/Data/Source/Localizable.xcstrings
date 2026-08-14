@@ -7954,85 +7954,85 @@
         }
       }
     },
-    "a11y_type_sculpture" : {
+    "a11y_type_animal" : {
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تمثال"
+            "value" : "حيوان"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Statue"
+            "value" : "Tier"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Statue"
+            "value" : "Animal"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estatua"
+            "value" : "Animal"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Statue"
+            "value" : "Animal"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "मूर्ति"
+            "value" : "जानवर"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Statua"
+            "value" : "Animale"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "彫像"
+            "value" : "動物"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "조각상"
+            "value" : "동물"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estátua"
+            "value" : "Animal"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Статуя"
+            "value" : "Животное"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Heykel"
+            "value" : "Hayvan"
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "雕像"
+            "value" : "动物"
           }
         }
       }
@@ -8120,85 +8120,85 @@
         }
       }
     },
-    "a11y_type_animal" : {
+    "a11y_type_sculpture" : {
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "حيوان"
+            "value" : "تمثال"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tier"
+            "value" : "Statue"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Animal"
+            "value" : "Statue"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Animal"
+            "value" : "Estatua"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Animal"
+            "value" : "Statue"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "जानवर"
+            "value" : "मूर्ति"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Animale"
+            "value" : "Statua"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "動物"
+            "value" : "彫像"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "동물"
+            "value" : "조각상"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Animal"
+            "value" : "Estátua"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Животное"
+            "value" : "Статуя"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hayvan"
+            "value" : "Heykel"
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "动物"
+            "value" : "雕像"
           }
         }
       }
@@ -8698,6 +8698,89 @@
         }
       }
     },
+    "Adını değiştir" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعادة تسمية"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbenennen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renombrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "नाम बदलें"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rinomina"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名前を変更"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름 변경"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renomear"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переименовать"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adını değiştir"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名"
+          }
+        }
+      }
+    },
     "Adventure Road" : {
       "localizations" : {
         "ar" : {
@@ -9191,89 +9274,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "短期记忆"
-          }
-        }
-      }
-    },
-    "Adını değiştir" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إعادة تسمية"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Umbenennen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rename"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Renombrar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Renommer"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "नाम बदलें"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rinomina"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名前を変更"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이름 변경"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Renomear"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Переименовать"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adını değiştir"
-          }
-        },
-        "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重命名"
           }
         }
       }
@@ -12575,16 +12575,16 @@
             "value" : "Der Wald in der Cloud unterscheidet sich von dem auf diesem Gerät. Bitte wähle aus, welchen Wald du verwenden möchtest."
           }
         },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El bosque en la nube es diferente del que está en este dispositivo. Elige qué bosque quieres usar."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The forest in the cloud is different from the one on this device. Please choose which forest you want to use."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El bosque en la nube es diferente del que está en este dispositivo. Elige qué bosque quieres usar."
           }
         },
         "fr" : {
@@ -12821,13 +12821,13 @@
             "value" : "Cambridge Dictionary"
           }
         },
-        "es-419" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cambridge Dictionary"
           }
         },
-        "en" : {
+        "es-419" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cambridge Dictionary"
@@ -13295,6 +13295,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择你最好的朋友，开始冒险吧！"
+          }
+        }
+      }
+    },
+    "Cihaz tarafından kısıtlandı" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مقيّد بواسطة الجهاز"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vom Gerät eingeschränkt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restricted by device"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restringido por el dispositivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restreint par l'appareil"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "डिवाइस द्वारा प्रतिबंधित"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limitato dal dispositivo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "デバイスにより制限されています"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기에서 제한됨"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restrito pelo dispositivo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ограничено устройством"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihaz tarafından kısıtlandı"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已被设备限制"
           }
         }
       }
@@ -18879,6 +18961,88 @@
         }
       }
     },
+    "Hangi özellikleri kullandığını anonim olarak ölçer ve uygulamayı geliştirmemize yardım eder. Kapatırsan hiçbir kullanım verisi gönderilmez." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يقيس الميزات التي تستخدمها بشكل مجهول ويساعدنا على تحسين التطبيق. عند إيقافه لا تُرسل أي بيانات استخدام."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misst anonym, welche Funktionen du nutzt, und hilft uns, die App zu verbessern. Wenn du das ausschaltest, werden keine Nutzungsdaten gesendet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Measures which features you use, anonymously, and helps us improve the app. Turn it off and no usage data is sent."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mide de forma anónima qué funciones usas y nos ayuda a mejorar la app. Si lo desactivas, no se envía ningún dato de uso."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesure de façon anonyme les fonctionnalités que tu utilises et nous aide à améliorer l'app. Si tu le désactives, aucune donnée d'utilisation n'est envoyée."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "गुमनाम रूप से मापता है कि आप कौन-सी सुविधाएँ इस्तेमाल करते हैं और ऐप को बेहतर बनाने में मदद करता है। बंद करने पर कोई उपयोग डेटा नहीं भेजा जाता।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misura in forma anonima quali funzioni usi e ci aiuta a migliorare l'app. Se lo disattivi, non viene inviato alcun dato di utilizzo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "どの機能を使っているかを匿名で計測し、アプリの改善に役立てます。オフにすると利用データは一切送信されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "어떤 기능을 사용하는지 익명으로 측정해 앱을 개선하는 데 사용합니다. 끄면 사용 데이터가 전혀 전송되지 않습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mede de forma anônima quais recursos você usa e nos ajuda a melhorar o app. Se desativar, nenhum dado de uso é enviado."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Анонимно измеряет, какими функциями вы пользуетесь, и помогает нам улучшать приложение. Если выключить, данные об использовании не отправляются."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hangi özellikleri kullandığını anonim olarak ölçer ve uygulamayı geliştirmemize yardım eder. Kapatırsan hiçbir kullanım verisi gönderilmez."
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "匿名统计你使用了哪些功能，帮助我们改进应用。关闭后不会发送任何使用数据。"
+          }
+        }
+      }
+    },
     "happiness" : {
       "localizations" : {
         "ar" : {
@@ -19532,6 +19696,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "准备好了吗？我们开始吧？"
+          }
+        }
+      }
+    },
+    "Henüz sorulmadı" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يُطلب بعد"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch nicht gefragt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not asked yet"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no solicitado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas encore demandé"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी तक नहीं पूछा गया"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non ancora richiesto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未確認"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아직 묻지 않음"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainda não solicitado"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ещё не запрошено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Henüz sorulmadı"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚未询问"
           }
         }
       }
@@ -21510,19 +21756,19 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إيتشيغو"
+            "value" : "عنترة"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "Siegfried"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "Robin Hood"
           }
         },
         "es-419" : {
@@ -21534,55 +21780,55 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "Roland"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "बीरबल"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "Orlando"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "桃太郎"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "홍길동"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeca"
+            "value" : "Saci"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Я морская звезда"
+            "value" : "Илья Муромец"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maraz Ali"
+            "value" : "Battal Gazi"
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ichigo"
+            "value" : "孙悟空"
           }
         }
       }
@@ -22731,6 +22977,252 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "意大利语"
+          }
+        }
+      }
+    },
+    "İzin verildi" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مسموح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaubt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allowed"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autorisé"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनुमति दी गई"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consentito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "許可済み"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "허용됨"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permitido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разрешено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin verildi"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已允许"
+          }
+        }
+      }
+    },
+    "İzin verilmedi" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير مسموح"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht erlaubt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not allowed"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No permitido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non autorisé"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनुमति नहीं दी गई"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non consentito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "許可されていません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "허용되지 않음"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não permitido"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не разрешено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin verilmedi"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未允许"
+          }
+        }
+      }
+    },
+    "İzinleri Yönet" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إدارة الأذونات"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechtigungen verwalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage Permissions"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Administrar permisos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérer les autorisations"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अनुमतियाँ प्रबंधित करें"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestisci autorizzazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "権限を管理"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "권한 관리"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerenciar permissões"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Управление разрешениями"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzinleri Yönet"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "管理权限"
           }
         }
       }
@@ -23963,6 +24455,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "钥匙"
+          }
+        }
+      }
+    },
+    "Kişiselleştirilmiş Reklamlar" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإعلانات المخصصة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalisierte Werbung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalized Ads"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anuncios personalizados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Publicités personnalisées"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वैयक्तिकृत विज्ञापन"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annunci personalizzati"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パーソナライズ広告"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "맞춤 광고"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anúncios personalizados"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Персонализированная реклама"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kişiselleştirilmiş Reklamlar"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "个性化广告"
           }
         }
       }
@@ -25603,6 +26177,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用条款"
+          }
+        }
+      }
+    },
+    "Kullanım Verileri" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بيانات الاستخدام"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzungsdaten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usage Data"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos de uso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données d'utilisation"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "उपयोग डेटा"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dati di utilizzo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利用データ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용 데이터"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dados de uso"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Данные об использовании"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kullanım Verileri"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用数据"
           }
         }
       }
@@ -30138,6 +30794,89 @@
         }
       }
     },
+    "Orman bileşenleri" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عناصر الغابة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waldelemente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forest components"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementos del bosque"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éléments de la forêt"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "वन घटक"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementi della foresta"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "森のアイテム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "숲 구성 요소"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elementos da floresta"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Элементы леса"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orman bileşenleri"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "森林元素"
+          }
+        }
+      }
+    },
     "Orman Bilgileri" : {
       "localizations" : {
         "ar" : {
@@ -30298,89 +31037,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "关于森林"
-          }
-        }
-      }
-    },
-    "Orman bileşenleri" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عناصر الغابة"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Waldelemente"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forest components"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elementos del bosque"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Éléments de la forêt"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "वन घटक"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elementi della foresta"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "森のアイテム"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "숲 구성 요소"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elementos da floresta"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Элементы леса"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Orman bileşenleri"
-          }
-        },
-        "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "森林元素"
           }
         }
       }
@@ -33175,6 +33831,88 @@
         }
       }
     },
+    "Reklamların ilgi alanlarına göre seçilmesi için kullanılır. Kapalıyken reklamları yine görürsün ama kişiselleştirilmez. Bu izin yalnızca sistem ayarlarından değiştirilebilir." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يُستخدم لاختيار إعلانات تناسب اهتماماتك. عند إيقافه ستظل ترى الإعلانات لكنها لن تكون مخصصة. لا يمكن تغيير هذا الإذن إلا من إعدادات النظام."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird verwendet, um Werbung passend zu deinen Interessen auszuwählen. Ist sie aus, siehst du weiterhin Werbung, aber nicht personalisiert. Diese Berechtigung lässt sich nur in den Systemeinstellungen ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to pick ads that match your interests. When it is off you still see ads, but they are not personalized. This permission can only be changed in system settings."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se usa para elegir anuncios que coincidan con tus intereses. Si está desactivado, seguirás viendo anuncios, pero no personalizados. Este permiso solo se puede cambiar en la configuración del sistema."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sert à choisir des publicités correspondant à tes centres d'intérêt. Désactivé, tu vois toujours des publicités, mais non personnalisées. Cette autorisation se modifie uniquement dans les réglages du système."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आपकी रुचियों से मेल खाने वाले विज्ञापन चुनने के लिए इस्तेमाल होता है। बंद होने पर भी विज्ञापन दिखेंगे, लेकिन वे वैयक्तिकृत नहीं होंगे। यह अनुमति केवल सिस्टम सेटिंग्स से बदली जा सकती है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serve a scegliere annunci in linea con i tuoi interessi. Se è disattivato vedrai comunque gli annunci, ma non personalizzati. Questa autorizzazione si modifica solo dalle impostazioni di sistema."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "あなたの興味に合った広告を選ぶために使われます。オフでも広告は表示されますが、パーソナライズはされません。この許可はシステム設定からのみ変更できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "관심사에 맞는 광고를 선택하는 데 사용됩니다. 꺼져 있어도 광고는 표시되지만 맞춤 광고는 아닙니다. 이 권한은 시스템 설정에서만 변경할 수 있습니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usado para escolher anúncios que combinem com seus interesses. Desativado, você ainda vê anúncios, mas eles não são personalizados. Esta permissão só pode ser alterada nos ajustes do sistema."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Используется, чтобы подбирать рекламу по вашим интересам. Если выключено, реклама всё равно показывается, но не персонализируется. Это разрешение можно изменить только в настройках системы."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reklamların ilgi alanlarına göre seçilmesi için kullanılır. Kapalıyken reklamları yine görürsün ama kişiselleştirilmez. Bu izin yalnızca sistem ayarlarından değiştirilebilir."
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于挑选符合你兴趣的广告。关闭后你仍会看到广告，但不会个性化。此权限只能在系统设置中更改。"
+          }
+        }
+      }
+    },
     "Remaining items will be downloaded in the background." : {
       "localizations" : {
         "ar" : {
@@ -33913,89 +34651,6 @@
         }
       }
     },
-    "SFX" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "المؤثرات الصوتية"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Soundeffekte"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SFX"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Efectos de sonido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effets sonores"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ध्वनि प्रभाव"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effetti sonori"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "効果音"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "효과음"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Efeitos sonoros"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Звуковые эффекты"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ses Efektleri"
-          }
-        },
-        "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "音效"
-          }
-        }
-      }
-    },
     "Sadece kısa süreli hafızandaki kelimelerle; açıklama veya örnek desteğiyle oyna." : {
       "localizations" : {
         "ar" : {
@@ -34652,6 +35307,89 @@
         }
       }
     },
+    "SFX" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المؤثرات الصوتية"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soundeffekte"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SFX"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efectos de sonido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effets sonores"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ध्वनि प्रभाव"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effetti sonori"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "効果音"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "효과음"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efeitos sonoros"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звуковые эффекты"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses Efektleri"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音效"
+          }
+        }
+      }
+    },
     "Shall we begin?" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -34813,6 +35551,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "移除"
+          }
+        }
+      }
+    },
+    "Sistem Ayarlarını Aç" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح إعدادات النظام"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systemeinstellungen öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open System Settings"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir configuración del sistema"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages système"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सिस्टम सेटिंग्स खोलें"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apri impostazioni di sistema"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム設定を開く"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시스템 설정 열기"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir ajustes do sistema"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть настройки системы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Ayarlarını Aç"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开系统设置"
           }
         }
       }
@@ -35884,88 +36704,6 @@
         }
       }
     },
-    "Tasks" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "المهام"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aufgaben"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tasks"
-          }
-        },
-        "es-419" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tareas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tâches"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "काम"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attività"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "タスク"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "과제"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tarefas"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Задания"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Görevler"
-          }
-        },
-        "zh-CN" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "任务"
-          }
-        }
-      }
-    },
     "Taşı" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -36045,6 +36783,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "移动"
+          }
+        }
+      }
+    },
+    "Tasks" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المهام"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufgaben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasks"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tareas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tâches"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "काम"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attività"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タスク"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "과제"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarefas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Задания"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görevler"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任务"
           }
         }
       }
@@ -38262,6 +39082,9 @@
           }
         }
       }
+    },
+    "Vocabulary Forest" : {
+
     },
     "Wait until \n %@" : {
       "localizations" : {

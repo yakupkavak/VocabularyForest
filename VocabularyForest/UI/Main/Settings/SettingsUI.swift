@@ -20,6 +20,7 @@ struct SettingsUI: View {
     @State private var showNameEditAlert = false
     @State private var newUserName = ""
     @State private var showSignIn = false
+    @State private var showManagePermissions = false
     @Environment(\.requestReview) var requestReview
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State private var randomAnimal = getRandomAnimalModel().head
@@ -129,6 +130,24 @@ struct SettingsUI: View {
         .sheet(item: $viewModel.sheetContent) { content in
             PolicySheetView(content: content)
         }
+        .fullScreenCover(isPresented: $showManagePermissions) {
+            ZStack {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture { showManagePermissions = false }
+                    .a11yTapButton(String(localized: "a11y_close"))
+                ManagePermissionsUI(
+                    isAnalyticsEnabled: Binding(
+                        get: { viewModel.analyticsEnabled },
+                        set: viewModel.setAnalyticsEnabled
+                    ),
+                    trackingStatusDescription: viewModel.trackingStatusDescription,
+                    onOpenSystemSettings: viewModel.openAppSettings,
+                    onClose: { showManagePermissions = false }
+                )
+            }
+            .presentationBackground(.clear)
+        }
         .fullScreenCover(isPresented: $showSignIn) {
             VStack {
                 Color.clear.contentShape(Rectangle())
@@ -223,6 +242,16 @@ private extension SettingsUI {
                     Image(systemName: "doc.text.fill")
                         .foregroundColor(.logoBrown).frame(width: 50)
                     Text("Kullanım Koşulları")
+                }
+            }
+            Button {
+                viewModel.refreshTrackingStatus()
+                showManagePermissions = true
+            } label: {
+                HStack {
+                    Image(systemName: "hand.raised.fill")
+                        .foregroundColor(.logoBrown).frame(width: 50)
+                    Text("İzinleri Yönet")
                 }
             }
             Button {

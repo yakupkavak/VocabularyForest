@@ -14,6 +14,10 @@ enum AppDependencyConfigurer {
         let analyticsService: AnalyticsServiceProtocol = UITestConstants.isUITestRun
             ? NoopAnalyticsService()
             : FirebaseAnalyticsService(logger: AppLogger.shared)
+        // The stored opt-out has to be replayed before anything is logged; Firebase keeps
+        // collection enabled across launches otherwise and the first events would leak.
+        let analyticsConsentStore = AnalyticsConsentStore()
+        analyticsService.setCollectionEnabled(analyticsConsentStore.isAnalyticsEnabled)
         let vocabularyBaseURLProvider = VocabularyBaseURLProvider()
         let networkManager = APIService(vocabularyBaseURLProvider: vocabularyBaseURLProvider)
         let coreData = CoreDataManager()
@@ -46,6 +50,7 @@ enum AppDependencyConfigurer {
         cloudSyncManager.assetHydrationService = rewardAssetHydrationService
         forestData.notificationManager = notificationManager
         DC.shared.register(type: .singleInstance(analyticsService), for: AnalyticsServiceProtocol.self)
+        DC.shared.register(type: .singleInstance(analyticsConsentStore), for: AnalyticsConsentStoreProtocol.self)
         DC.shared.register(type: .singleInstance(coreData), for: CoreDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(networkManager), for: APIServiceProtocol.self)
         DC.shared.register(type: .singleInstance(audioManager), for: AudioServiceProtocol.self)

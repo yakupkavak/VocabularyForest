@@ -5,6 +5,7 @@
 //  Created by Yakup Kavak on 5.11.2025.
 //
 
+import AppTrackingTransparency
 import CoreData
 import UserNotifications
 import Combine
@@ -33,6 +34,7 @@ class SettingsViewModel: ObservableObject {
     private let playerManager: PlayerDataManagerProtocol
     private let restorePromptService: CloudRestorePromptServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
+    private let analyticsConsentStore: AnalyticsConsentStoreProtocol
 
     // MARK: - PROPERTIES
     
@@ -44,6 +46,8 @@ class SettingsViewModel: ObservableObject {
     @Published var showConflictError: Bool = false
     @Published var conflictErrorMsg: String = ""
     @Published var playerName: String = ""
+    @Published var analyticsEnabled: Bool = true
+    @Published var trackingStatus: ATTrackingManager.AuthorizationStatus = .notDetermined
     private let logger: AppLoggerProtocol
 
     // MARK: - INIT
@@ -57,7 +61,8 @@ class SettingsViewModel: ObservableObject {
         playerManager: PlayerDataManagerProtocol,
         restorePromptService: CloudRestorePromptServiceProtocol,
         logger: AppLoggerProtocol = AppLogger.shared,
-        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
+        analyticsConsentStore: AnalyticsConsentStoreProtocol = AnalyticsConsentStore()
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
@@ -68,6 +73,7 @@ class SettingsViewModel: ObservableObject {
         self.restorePromptService = restorePromptService
         self.logger = logger
         self.analyticsService = analyticsService
+        self.analyticsConsentStore = analyticsConsentStore
         setupInit()
     }
     
@@ -301,6 +307,7 @@ private extension SettingsViewModel {
         setupNotification()
         setupUserInit()
         setupSync()
+        analyticsEnabled = analyticsConsentStore.isAnalyticsEnabled
     }
     
     func setupPlayer() {
@@ -344,5 +351,32 @@ private extension SettingsViewModel {
                 }
             }
             .store(in: &cancellables)
+    }
+}
+
+// MARK: - PERMISSIONS
+
+extension SettingsViewModel {
+
+    /// The system prompt can only be shown once, so the status is re-read every time the screen
+    /// opens: the user may have changed it in Settings while the app was backgrounded.
+    func refreshTrackingStatus() {
+        trackingStatus = ATTrackingManager.trackingAuthorizationStatus
+    }
+
+    var trackingStatusDescription: String {
+        switch trackingStatus {
+        case .authorized: return String(localized: "İzin verildi")
+        case .denied: return String(localized: "İzin verilmedi")
+        case .restricted: return String(localized: "Cihaz tarafından kısıtlandı")
+        case .notDetermined: return String(localized: "Henüz sorulmadı")
+        @unknown default: return String(localized: "Bilinmiyor")
+        }
+    }
+
+    func setAnalyticsEnabled(_ isEnabled: Bool) {
+        analyticsEnabled = isEnabled
+        analyticsConsentStore.setAnalyticsEnabled(isEnabled)
+        analyticsService.setCollectionEnabled(isEnabled)
     }
 }
