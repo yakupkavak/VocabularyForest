@@ -20028,84 +20028,84 @@
         }
       }
     },
-    "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez." : {
+    "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Güncel ormanınız da silinecektir; hesap silme sonrasında yeni bir orman ile başlayacaksınız." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "سيتم حذف حسابك وجميع بياناتك المحفوظة في السحابة نهائيًا. لن تتأثر البيانات الموجودة على جهازك."
+            "value" : "سيتم حذف حسابك وجميع بياناتك المحفوظة في السحابة نهائيًا. سيتم حذف غابتك الحالية أيضًا، وستبدأ بعد ذلك بغابة جديدة."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Konto und alle in der Cloud gespeicherten Daten werden dauerhaft gelöscht. Die Daten auf deinem Gerät bleiben unberührt."
+            "value" : "Dein Konto und alle in der Cloud gespeicherten Daten werden dauerhaft gelöscht. Auch dein aktueller Wald wird gelöscht; danach startest du mit einem neuen Wald."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your account and all data saved to the cloud will be permanently deleted. Data on your device will not be affected."
+            "value" : "Your account and all data saved to the cloud will be permanently deleted. Your current forest will also be deleted; after deleting your account you will start with a new forest."
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tu cuenta y todos los datos guardados en la nube se eliminarán de forma permanente. Los datos de tu dispositivo no se verán afectados."
+            "value" : "Tu cuenta y todos los datos guardados en la nube se eliminarán de forma permanente. Tu bosque actual también se eliminará; después comenzarás con un bosque nuevo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ton compte et toutes les données enregistrées dans le cloud seront définitivement supprimés. Les données de ton appareil ne seront pas affectées."
+            "value" : "Ton compte et toutes les données enregistrées dans le cloud seront définitivement supprimés. Ta forêt actuelle sera également supprimée ; ensuite, tu repartiras avec une nouvelle forêt."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "आपका खाता और क्लाउड में सहेजा गया सारा डेटा हमेशा के लिए हटा दिया जाएगा। आपके डिवाइस का डेटा प्रभावित नहीं होगा।"
+            "value" : "आपका खाता और क्लाउड में सहेजा गया सारा डेटा हमेशा के लिए हटा दिया जाएगा। आपका मौजूदा जंगल भी हटा दिया जाएगा; इसके बाद आप एक नए जंगल के साथ शुरुआत करेंगे।"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il tuo account e tutti i dati salvati nel cloud verranno eliminati definitivamente. I dati sul tuo dispositivo non verranno toccati."
+            "value" : "Il tuo account e tutti i dati salvati nel cloud verranno eliminati definitivamente. Anche la tua foresta attuale verrà eliminata; dopo ricomincerai con una nuova foresta."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アカウントとクラウドに保存されたすべてのデータが完全に削除されます。端末内のデータは影響を受けません。"
+            "value" : "アカウントとクラウドに保存されたすべてのデータが完全に削除されます。現在の森も削除され、その後は新しい森で最初から始まります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "계정과 클라우드에 저장된 모든 데이터가 영구적으로 삭제됩니다. 기기에 있는 데이터는 영향을 받지 않아요."
+            "value" : "계정과 클라우드에 저장된 모든 데이터가 영구적으로 삭제됩니다. 현재 숲도 함께 삭제되며, 이후 새로운 숲으로 다시 시작하게 돼요."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sua conta e todos os dados salvos na nuvem serão excluídos permanentemente. Os dados no seu dispositivo não serão afetados."
+            "value" : "Sua conta e todos os dados salvos na nuvem serão excluídos permanentemente. Sua floresta atual também será excluída; depois você começará com uma nova floresta."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ваш аккаунт и все данные, сохранённые в облаке, будут удалены навсегда. Данные на вашем устройстве не будут затронуты."
+            "value" : "Ваш аккаунт и все данные, сохранённые в облаке, будут удалены навсегда. Ваш текущий лес также будет удалён; после этого вы начнёте с нового леса."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez."
+            "value" : "Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Güncel ormanınız da silinecektir; hesap silme sonrasında yeni bir orman ile başlayacaksınız."
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "你的账户以及保存在云端的所有数据都将被永久删除。设备上的数据不会受到影响。"
+            "value" : "你的账户以及保存在云端的所有数据都将被永久删除。你当前的森林也会被删除；之后你将以一片新的森林重新开始。"
           }
         }
       }

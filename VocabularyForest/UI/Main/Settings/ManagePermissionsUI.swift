@@ -145,7 +145,7 @@ private extension ManagePermissionsUI {
                 }
             }
             .accessibilityIdentifier("permissions_delete_account_button")
-            Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
+            Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Güncel ormanınız da silinecektir; hesap silme sonrasında yeni bir orman ile başlayacaksınız.")
                 .foregroundStyle(.forestText)
                 .scaledFont(size: Constants.descriptionFontSize)
         }
