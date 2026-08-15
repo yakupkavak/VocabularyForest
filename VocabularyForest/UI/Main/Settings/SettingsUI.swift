@@ -21,6 +21,9 @@ struct SettingsUI: View {
     @State private var newUserName = ""
     @State private var showSignIn = false
     @State private var showManagePermissions = false
+    // The confirmation alert must live inside the fullScreenCover's presentation context;
+    // the root-level delete alert cannot present while the cover is up.
+    @State private var showPermissionsDeleteAlert = false
     @Environment(\.requestReview) var requestReview
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State private var randomAnimal = getRandomAnimalModel().head
@@ -143,10 +146,22 @@ struct SettingsUI: View {
                     ),
                     trackingStatusDescription: viewModel.trackingStatusDescription,
                     onOpenSystemSettings: viewModel.openAppSettings,
+                    onDeleteAccount: viewModel.userSignIn
+                        ? { showPermissionsDeleteAlert = true }
+                        : nil,
                     onClose: { showManagePermissions = false }
                 )
             }
             .presentationBackground(.clear)
+            .alert("Hesabınız Silinsin mi?", isPresented: $showPermissionsDeleteAlert) {
+                Button("Vazgeç", role: .cancel) { }
+                Button("Hesabı Sil", role: .destructive) {
+                    showManagePermissions = false
+                    viewModel.deleteAccount()
+                }
+            } message: {
+                Text("Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir.")
+            }
         }
         .fullScreenCover(isPresented: $showSignIn) {
             VStack {

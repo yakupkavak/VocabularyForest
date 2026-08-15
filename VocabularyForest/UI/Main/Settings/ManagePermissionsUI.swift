@@ -36,6 +36,8 @@ struct ManagePermissionsUI: View {
     @Binding var isAnalyticsEnabled: Bool
     let trackingStatusDescription: String
     let onOpenSystemSettings: () -> Void
+    /// nil when there is no signed-in account; the section is hidden entirely in that case.
+    let onDeleteAccount: (() -> Void)?
     let onClose: () -> Void
 
     @State private var animalHead = getRandomAnimalModel().head
@@ -51,6 +53,10 @@ struct ManagePermissionsUI: View {
             analyticsSection
             Divider()
             trackingSection
+            if onDeleteAccount != nil {
+                Divider()
+                deleteAccountSection
+            }
         }
         .padding(Constants.cardPadding)
         .background(Color.backgroundSystem)
@@ -126,6 +132,25 @@ private extension ManagePermissionsUI {
         }
     }
 
+    var deleteAccountSection: some View {
+        VStack(alignment: .leading, spacing: Constants.rowSpacing) {
+            Button {
+                onDeleteAccount?()
+            } label: {
+                HStack {
+                    Image(systemName: "person.crop.circle.badge.minus")
+                        .foregroundColor(.dangerText).frame(width: Constants.iconWidth)
+                    Text("Hesabı Sil")
+                        .foregroundStyle(.dangerText)
+                }
+            }
+            .accessibilityIdentifier("permissions_delete_account_button")
+            Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Cihazınızdaki veriler etkilenmez.")
+                .foregroundStyle(.forestText)
+                .scaledFont(size: Constants.descriptionFontSize)
+        }
+    }
+
 }
 
 #Preview {
@@ -133,6 +158,7 @@ private extension ManagePermissionsUI {
         isAnalyticsEnabled: .constant(true),
         trackingStatusDescription: "İzin verildi",
         onOpenSystemSettings: { },
+        onDeleteAccount: { },
         onClose: { }
     )
 }
