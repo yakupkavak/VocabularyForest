@@ -13,6 +13,7 @@ private extension ForestFirstRewardUI {
     enum Constants {
         static let visibleRewardCount: Int = 3
         static let cardSpacing: CGFloat = 12
+        static let scrollVerticalPadding: CGFloat = 8
         /// Uniform poster box: with a cap instead, a wide asset (Dog) reports a shorter box
         /// than a tall one (Cat) and the images stop lining up across cards.
         static let posterHeight: CGFloat = 72
@@ -38,6 +39,9 @@ struct ForestFirstRewardUI: View {
 
     // MARK: - PROPERTIES
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
     let rewards: [LocalRewardModel]
     let selectedReward: (LocalRewardModel) -> Void
 
@@ -48,7 +52,13 @@ struct ForestFirstRewardUI: View {
     var body: some View {
         ViewThatFits(in: .vertical) {
             panel
-            ScrollView { panel }
+            // The forest is presented with .ignoresSafeArea, so a GeometryReader in here reads
+            // zero insets; the scrolling panel has to take them from the environment instead.
+            ScrollView {
+                panel.padding(.vertical, Constants.scrollVerticalPadding)
+            }
+            .padding(.top, safeAreaInsets.top)
+            .padding(.bottom, safeAreaInsets.bottom)
         }
     }
 }
@@ -72,21 +82,37 @@ private extension ForestFirstRewardUI {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.brown300)
                 .fontWeight(.bold)
-            // HStack instead of a grid: it sizes to the tallest card and the cards fill that
-            // height, so they stay equal at any Dynamic Type size without pinning a height.
-            HStack(spacing: Constants.cardSpacing) {
-                ForEach(rewards.prefix(Constants.visibleRewardCount), id: \.self) { reward in
-                    rewardView(reward: reward).onTapGesture {
-                        selectedReward(reward)
-                    }
-                }
-            }
-            .padding()
+            cardStack
+                // Without this the cards' maxHeight fill reads as greedy and they stretch to
+                // the whole screen instead of to each other.
+                .fixedSize(horizontal: false, vertical: true)
+                .padding()
         }
         .padding(Constants.containerPadding)
         .background(.white.opacity(Constants.containerOpacity))
         .borderShape(radius: Constants.containerCornerRadius)
         .padding(.horizontal)
+    }
+
+    /// Side by side the three cards share the height of the tallest one. At accessibility text
+    /// sizes that layout leaves each name about a third of the panel — too narrow for a longer
+    /// translation like "Weiße Katze", which then breaks mid-word — so the cards reflow into a
+    /// single column and each name gets the full width.
+    @ViewBuilder
+    var cardStack: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(spacing: Constants.cardSpacing) { cards }
+        } else {
+            HStack(spacing: Constants.cardSpacing) { cards }
+        }
+    }
+
+    var cards: some View {
+        ForEach(rewards.prefix(Constants.visibleRewardCount), id: \.self) { reward in
+            rewardView(reward: reward).onTapGesture {
+                selectedReward(reward)
+            }
+        }
     }
 
     /// All three cards end up the same size: each one fills the HStack, whose height comes from
