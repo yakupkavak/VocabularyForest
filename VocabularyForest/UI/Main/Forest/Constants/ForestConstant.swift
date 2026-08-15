@@ -50,7 +50,14 @@ enum ForestConstant {
                     es: "Perro",
                     fr: "Chien",
                     de: "Hund",
-                    pt: "Cachorro"
+                    pt: "Cachorro",
+                    it: "Cane",
+                    ru: "Собака",
+                    ar: "كلب",
+                    hi: "कुत्ता",
+                    ja: "犬",
+                    ko: "개",
+                    zh: "狗"
                 ),
                 assetName: "Dog",
                 imageSource: .local,
@@ -73,7 +80,14 @@ enum ForestConstant {
                     es: "Gato Blanco",
                     fr: "Chat Blanc",
                     de: "Weiße Katze",
-                    pt: "Gato Branco"
+                    pt: "Gato Branco",
+                    it: "Gatto Bianco",
+                    ru: "Белая кошка",
+                    ar: "قطة بيضاء",
+                    hi: "सफ़ेद बिल्ली",
+                    ja: "白猫",
+                    ko: "흰 고양이",
+                    zh: "白猫"
                 ),
                 assetName: "WhiteCat",
                 imageSource: .local,
@@ -96,7 +110,14 @@ enum ForestConstant {
                     es: "Gato",
                     fr: "Chat",
                     de: "Katze",
-                    pt: "Gato"
+                    pt: "Gato",
+                    it: "Gatto",
+                    ru: "Кошка",
+                    ar: "قطة",
+                    hi: "बिल्ली",
+                    ja: "猫",
+                    ko: "고양이",
+                    zh: "猫"
                 ),
                 assetName: "Cat",
                 imageSource: .local,

@@ -7,10 +7,36 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
+private extension ForestFirstRewardUI {
+    enum Constants {
+        static let visibleRewardCount: Int = 3
+        static let gridSpacing: CGFloat = 12
+        /// Fixed poster box so cards with different image aspect ratios stay the same size
+        static let posterHeight: CGFloat = 72
+        static let cardContentSpacing: CGFloat = 20
+        static let cardCornerRadius: CGFloat = 16
+        static let cardTopInset: CGFloat = -8
+        static let containerCornerRadius: CGFloat = 20
+        static let containerOpacity: Double = 0.4
+        static let containerPadding: CGFloat = 8
+        static let titleFontSize: CGFloat = 20
+        static let titleLineLimit: Int = 2
+        static let titleScaleFactor: CGFloat = 0.8
+        static let nameLineLimit: Int = 2
+        static let nameScaleFactor: CGFloat = 0.6
+        static let titlePadding: CGFloat = 4
+        static let gradientOpacities: [Double] = [0.6, 0.7, 0.8, 0.6]
+    }
+}
+
+// MARK: - VIEW
+
 struct ForestFirstRewardUI: View {
-    
+
     // MARK: - PROPERTIES
-    
+
     let rewards: [LocalRewardModel]
     let columns = [
         GridItem(.flexible()),
@@ -18,26 +44,26 @@ struct ForestFirstRewardUI: View {
         GridItem(.flexible())
     ]
     let selectedReward: (LocalRewardModel) -> Void
-    
+
     // MARK: - VIEW
     
     var body: some View {
         VStack {
             Text("Welcome to your forest")
-                .lineLimit(2)
-                .minimumScaleFactor(0.8)
+                .lineLimit(Constants.titleLineLimit)
+                .minimumScaleFactor(Constants.titleScaleFactor)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.darkGren)
                 .fontWeight(.heavy)
-                .padding(.vertical, 4)
-                .scaledFont(size: 20)
+                .padding(.vertical, Constants.titlePadding)
+                .scaledFont(size: Constants.titleFontSize)
             Text("Chose your best friend to start the adventure!")
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(Constants.titleScaleFactor)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.brown300)
                 .fontWeight(.bold)
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(rewards.prefix(3), id: \.self) { reward in
+            LazyVGrid(columns: columns, spacing: Constants.gridSpacing) {
+                ForEach(rewards.prefix(Constants.visibleRewardCount), id: \.self) { reward in
                     rewardView(reward: reward).onTapGesture {
                         selectedReward(reward)
                     }
@@ -45,29 +71,40 @@ struct ForestFirstRewardUI: View {
             }
             .padding()
         }
-        .padding(8)
-        .background(.white.opacity(0.4))
-        .borderShape(radius: 20)
+        .padding(Constants.containerPadding)
+        .background(.white.opacity(Constants.containerOpacity))
+        .borderShape(radius: Constants.containerCornerRadius)
         .padding(.horizontal)
 
     }
 }
 
+// MARK: - UI COMPONENTS
+
 private extension ForestFirstRewardUI {
-    
+
+    /// Every card is laid out at the same size: the poster sits in a fixed-height box and the
+    /// name always reserves two lines, so a name that wraps (e.g. "White Cat", or a longer
+    /// translation) no longer makes its card taller than its neighbours.
     @ViewBuilder
     func rewardView(reward: LocalRewardModel) -> some View {
-        VStack(spacing: 20) {
-            RewardImageView(asset: reward.reward.posterImage).scaledToFit()
-            Text(reward.reward.displayName.localized).lineLimit(2)
-                .minimumScaleFactor(0.6)
+        VStack(spacing: Constants.cardContentSpacing) {
+            RewardImageView(asset: reward.reward.posterImage)
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .frame(height: Constants.posterHeight)
+            Text(reward.reward.displayName.localized)
+                .lineLimit(Constants.nameLineLimit, reservesSpace: true)
+                .minimumScaleFactor(Constants.nameScaleFactor)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)
                 .fontWeight(.heavy)
-        }.padding().padding(.top, -8)
-            .background(AnimatedGradientView(colors: [.forestText.opacity(0.6), .forestText.opacity(0.7), .forestText.opacity(0.8), .forestText.opacity(0.6)]))
-            .clipShape(RoundedRectangle(cornerRadius: 16)
-            )
+        }
+        .padding()
+        .padding(.top, Constants.cardTopInset)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AnimatedGradientView(colors: Constants.gradientOpacities.map { Color.forestText.opacity($0) }))
+        .clipShape(RoundedRectangle(cornerRadius: Constants.cardCornerRadius))
     }
 }
 
