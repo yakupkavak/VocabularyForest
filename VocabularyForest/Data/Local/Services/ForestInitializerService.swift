@@ -16,6 +16,16 @@ enum ForestInitError: Error {
 
 protocol ForestInitializerServiceProtocol {
     func initializeNewGame() async -> Resource<Bool>
+    func resetLocalGame() async -> Resource<Bool>
+}
+
+// MARK: - CONSTANTS
+
+private extension ForestInitializerService {
+    enum Constants {
+        /// Historical key (typo included) already persisted on user devices; must not be renamed.
+        static let forestInitializedKey = "forestInitalized"
+    }
 }
 
 class ForestInitializerService: ForestInitializerServiceProtocol {
@@ -33,8 +43,20 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
         self.coreDataManager = coreData
     }
     
+    /// Post-account-deletion reset: wipes the local game state and immediately rebuilds a
+    /// fresh empty forest, because ForestUI does not re-run initialization on entry.
+    /// Clearing the first-reward flag makes the starter reward screen show again.
+    func resetLocalGame() async -> Resource<Bool> {
+        coreDataManager.deleteForestData(contextType: .background)
+        await MainActor.run {
+            UserDefaults.standard.set(false, forKey: Constants.forestInitializedKey)
+            UserDefaults.standard.set(false, forKey: AppStorageNames.userClaimedFirtReward.rawValue)
+        }
+        return await initializeNewGame()
+    }
+
     func initializeNewGame() async -> Resource<Bool> {
-        let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
+        let forestInitalized = UserDefaults.standard.bool(forKey: Constants.forestInitializedKey)
         
         if !forestInitalized {
             let playerResult = playerManager.createInitialPlayer(contextType: .background)
@@ -51,7 +73,7 @@ class ForestInitializerService: ForestInitializerServiceProtocol {
             
             coreDataManager.save(type: .background)
             await MainActor.run {
-                UserDefaults.standard.set(true, forKey: "forestInitalized")
+                UserDefaults.standard.set(true, forKey: Constants.forestInitializedKey)
             }
             return Resource.success(true)
         }

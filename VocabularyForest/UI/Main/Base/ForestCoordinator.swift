@@ -160,6 +160,12 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
         let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let analyticsConsentStore = resolver.resolve(type: .singleInstance, for: AnalyticsConsentStoreProtocol.self)
+        // Stateless service; built ad hoc like the splash flow's instance.
+        let forestInitializer = ForestInitializerService(
+            forestManager: forestData,
+            playerManager: playerManager,
+            coreData: coreData
+        )
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
@@ -168,6 +174,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestManager: forestData,
             playerManager: playerManager,
             restorePromptService: restorePromptService,
+            forestInitializer: forestInitializer,
             analyticsService: analyticsService,
             analyticsConsentStore: analyticsConsentStore
         )

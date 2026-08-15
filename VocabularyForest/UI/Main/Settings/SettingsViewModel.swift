@@ -33,6 +33,7 @@ class SettingsViewModel: ObservableObject {
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let restorePromptService: CloudRestorePromptServiceProtocol
+    private let forestInitializer: ForestInitializerServiceProtocol
     private let analyticsService: AnalyticsServiceProtocol
     private let analyticsConsentStore: AnalyticsConsentStoreProtocol
 
@@ -60,6 +61,7 @@ class SettingsViewModel: ObservableObject {
         forestManager: ForestDataManagerProtocol,
         playerManager: PlayerDataManagerProtocol,
         restorePromptService: CloudRestorePromptServiceProtocol,
+        forestInitializer: ForestInitializerServiceProtocol,
         logger: AppLoggerProtocol = AppLogger.shared,
         analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
         analyticsConsentStore: AnalyticsConsentStoreProtocol = AnalyticsConsentStore()
@@ -71,6 +73,7 @@ class SettingsViewModel: ObservableObject {
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.restorePromptService = restorePromptService
+        self.forestInitializer = forestInitializer
         self.logger = logger
         self.analyticsService = analyticsService
         self.analyticsConsentStore = analyticsConsentStore
@@ -292,6 +295,9 @@ class SettingsViewModel: ObservableObject {
                 try await authManager.deleteAccount { [weak self] in
                     try await self?.syncManager.deleteCloudData()
                 }
+                // The account is gone, so the local game resets too: next forest entry
+                // shows a fresh empty forest and offers the first-entry reward again.
+                _ = await forestInitializer.resetLocalGame()
             } catch {
                 logger.error("Account deletion failed: \(error.localizedDescription)", category: .auth)
                 showError(message: String(localized: "Hesap silinemedi. Lütfen tekrar deneyin."))

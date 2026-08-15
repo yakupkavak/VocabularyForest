@@ -37,6 +37,7 @@ protocol CoreDataManagerProtocol: AnyObject {
     func save(in context: NSManagedObjectContext)
     func save(type contextType: CoreDataManager.ContextType)
     func deleteEverything(contextType: CoreDataManager.ContextType)
+    func deleteForestData(contextType: CoreDataManager.ContextType)
     
     // MARK: Book Operations
     
@@ -194,9 +195,18 @@ class CoreDataManager: CoreDataManagerProtocol {
     }
     
     func deleteEverything(contextType: ContextType) {
+        batchDelete(entities: CoreDataConstant.entities, contextType: contextType)
+    }
+
+    /// Wipes only the account-owned game state; Forest relationships use Nullify rules,
+    /// so every forest entity must be deleted explicitly rather than relying on cascade.
+    func deleteForestData(contextType: ContextType) {
+        batchDelete(entities: CoreDataConstant.forestEntities, contextType: contextType)
+    }
+
+    private func batchDelete(entities: [String], contextType: ContextType) {
         let context = getContext(for: contextType)
         context.performAndWait {
-            let entities = CoreDataConstant.entities
             for entity in entities {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)

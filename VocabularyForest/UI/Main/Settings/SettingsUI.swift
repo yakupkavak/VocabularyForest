@@ -410,7 +410,12 @@ private struct PolicySheetView: View {
             syncManager: syncManager,
             forestManager: forestData,
             playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
-            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData, assetHydrationService: hydrationService)
+            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData, assetHydrationService: hydrationService),
+            forestInitializer: ForestInitializerService(
+                forestManager: forestData,
+                playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
+                coreData: coreData
+            )
         )
     )
 }
