@@ -7,13 +7,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "غابة الكلمة"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "Wörterwald"
           }
         },
         "en" : {
@@ -31,31 +31,31 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "VocaForêt"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "शब्द वन"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "VocaBosco"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "ことばの森"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "단어의 숲"
           }
         },
         "pt-BR" : {
@@ -79,7 +79,7 @@
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "单词森林"
           }
         }
       }
@@ -90,13 +90,13 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "غابة الكلمة"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "Wörterwald"
           }
         },
         "en" : {
@@ -114,31 +114,31 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "VocaForêt"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "शब्द वन"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "VocaBosco"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "ことばの森"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "단어의 숲"
           }
         },
         "pt-BR" : {
@@ -162,7 +162,7 @@
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "VocabForest"
+            "value" : "单词森林"
           }
         }
       }
