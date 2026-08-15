@@ -12,8 +12,9 @@ import SwiftUI
 private extension ForestFirstRewardUI {
     enum Constants {
         static let visibleRewardCount: Int = 3
-        static let gridSpacing: CGFloat = 12
-        /// Fixed poster box so cards with different image aspect ratios stay the same size
+        static let cardSpacing: CGFloat = 12
+        /// Uniform poster box: with a cap instead, a wide asset (Dog) reports a shorter box
+        /// than a tall one (Cat) and the images stop lining up across cards.
         static let posterHeight: CGFloat = 72
         static let cardContentSpacing: CGFloat = 20
         static let cardCornerRadius: CGFloat = 16
@@ -38,16 +39,25 @@ struct ForestFirstRewardUI: View {
     // MARK: - PROPERTIES
 
     let rewards: [LocalRewardModel]
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
     let selectedReward: (LocalRewardModel) -> Void
 
     // MARK: - VIEW
-    
+
+    /// The panel grows with Dynamic Type, so at the largest sizes it can outgrow the screen;
+    /// the scrolling variant only kicks in once the plain one no longer fits.
     var body: some View {
+        ViewThatFits(in: .vertical) {
+            panel
+            ScrollView { panel }
+        }
+    }
+}
+
+// MARK: - UI COMPONENTS
+
+private extension ForestFirstRewardUI {
+
+    var panel: some View {
         VStack {
             Text("Welcome to your forest")
                 .lineLimit(Constants.titleLineLimit)
@@ -62,7 +72,9 @@ struct ForestFirstRewardUI: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.brown300)
                 .fontWeight(.bold)
-            LazyVGrid(columns: columns, spacing: Constants.gridSpacing) {
+            // HStack instead of a grid: it sizes to the tallest card and the cards fill that
+            // height, so they stay equal at any Dynamic Type size without pinning a height.
+            HStack(spacing: Constants.cardSpacing) {
                 ForEach(rewards.prefix(Constants.visibleRewardCount), id: \.self) { reward in
                     rewardView(reward: reward).onTapGesture {
                         selectedReward(reward)
@@ -75,17 +87,12 @@ struct ForestFirstRewardUI: View {
         .background(.white.opacity(Constants.containerOpacity))
         .borderShape(radius: Constants.containerCornerRadius)
         .padding(.horizontal)
-
     }
-}
 
-// MARK: - UI COMPONENTS
-
-private extension ForestFirstRewardUI {
-
-    /// Every card is laid out at the same size: the poster sits in a fixed-height box and the
-    /// name always reserves two lines, so a name that wraps (e.g. "White Cat", or a longer
-    /// translation) no longer makes its card taller than its neighbours.
+    /// All three cards end up the same size: each one fills the HStack, whose height comes from
+    /// the tallest card. Only the poster box is fixed — the name is free to take the height it
+    /// needs, so a wrapping name (like "White Cat") grows all three cards together instead of
+    /// just its own, and larger Dynamic Type sizes are absorbed rather than clipped.
     @ViewBuilder
     func rewardView(reward: LocalRewardModel) -> some View {
         VStack(spacing: Constants.cardContentSpacing) {
@@ -94,7 +101,7 @@ private extension ForestFirstRewardUI {
                 .frame(maxWidth: .infinity)
                 .frame(height: Constants.posterHeight)
             Text(reward.reward.displayName.localized)
-                .lineLimit(Constants.nameLineLimit, reservesSpace: true)
+                .lineLimit(Constants.nameLineLimit)
                 .minimumScaleFactor(Constants.nameScaleFactor)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.white)
