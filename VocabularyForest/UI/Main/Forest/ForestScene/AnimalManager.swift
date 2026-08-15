@@ -277,7 +277,7 @@ private extension AnimalManager {
         }
         
         isMenuOpen = true
-        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.characterName : animalModel?.assetName
+        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.localizedCharacterName : animalModel?.assetName
         
         let bubble = ComponentBubble.createAnimalMenuBubble(parentSize: currentAnimalNode.size, displayName: displayName)
         

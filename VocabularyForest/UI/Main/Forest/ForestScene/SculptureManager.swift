@@ -116,7 +116,7 @@ private extension SculptureManager {
         }
         
         isMenuOpen = true
-        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.assetName
+        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.localizedCharacterName : sculptureModel?.assetName
         
         let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: currentSculptureNode.size, displayName: displayName)
         

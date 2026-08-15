@@ -533,7 +533,7 @@ extension ForestUI: ForestUIProtocol {
     }
     
     func updateComponentName(model: any ComponentNameable, type: ComponentType) {
-        componentName = model.characterName
+        componentName = model.localizedCharacterName
         viewModel.setComponent(uuid: model.id, for: type)
         uiState = .updateName
     }

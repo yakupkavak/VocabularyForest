@@ -142,7 +142,7 @@ private extension PlantManager {
         }
         
         isMenuOpen = true
-        let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.characterName : treeModel?.assetName
+        let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.localizedCharacterName : treeModel?.assetName
         let finalName = displayName ?? String(localized: "Bitki")
         
         let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: plant.size, displayName: finalName)
