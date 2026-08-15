@@ -207,7 +207,7 @@ private extension SettingsUI {
             Toggle("Kelime Bildirimleri", isOn: Binding(
                 get: { viewModel.notificationsEnabled },
                 set: { newValue in
-                    viewModel.handleNotificationToggleChange()
+                    viewModel.handleNotificationToggleChange(isOn: newValue)
                 }
             ))
             Button("Bildirim Ayarlarını Aç") {

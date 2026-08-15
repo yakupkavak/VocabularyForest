@@ -142,10 +142,9 @@ class SettingsViewModel: ObservableObject {
         }
     }
     
-    func handleNotificationToggleChange() {
-        let currentStatus = notificationManager.notificationsEnabled
+    func handleNotificationToggleChange(isOn: Bool) {
         Task {
-            if currentStatus {
+            if isOn {
                 await notificationManager.requestEnable()
             } else {
                 await notificationManager.requestDisable()
