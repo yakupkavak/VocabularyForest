@@ -117,7 +117,7 @@ extension PlayerDataManager: PlayerDataManagerProtocol {
         return context.performAndWait {
             let player = getCurrentPlayer(context: context)
             if let name = player?.name, let date = player?.lastUpdatedDate {
-                return PlayerModel(name: name, lastUpdateDate: date)
+                return PlayerModel(name: PlayerHelper.displayName(for: name), lastUpdateDate: date)
             }
             return nil
         }
