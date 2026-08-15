@@ -154,7 +154,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let notification = resolver.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
         let auth = resolver.resolve(type: .singleInstance, for: (any AuthManagerProtocol).self)
-        let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManager.self)
+        let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManagerProtocol.self)
+        let accountCloudDeletion = resolver.resolve(type: .singleInstance, for: AccountCloudDeletionServiceProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
         let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
@@ -171,6 +172,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             coreDataManager: coreData,
             authManager: auth,
             syncManager: sync,
+            accountCloudDeletionService: accountCloudDeletion,
             forestManager: forestData,
             playerManager: playerManager,
             restorePromptService: restorePromptService,

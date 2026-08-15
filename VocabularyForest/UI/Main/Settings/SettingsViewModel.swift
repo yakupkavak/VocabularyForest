@@ -30,6 +30,7 @@ class SettingsViewModel: ObservableObject {
     private let coreDataManager: CoreDataManagerProtocol
     private let authManager: any AuthManagerProtocol
     private let syncManager: ForestSyncManagerProtocol
+    private let accountCloudDeletionService: AccountCloudDeletionServiceProtocol
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
     private let restorePromptService: CloudRestorePromptServiceProtocol
@@ -58,6 +59,7 @@ class SettingsViewModel: ObservableObject {
         coreDataManager: CoreDataManagerProtocol,
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
+        accountCloudDeletionService: AccountCloudDeletionServiceProtocol,
         forestManager: ForestDataManagerProtocol,
         playerManager: PlayerDataManagerProtocol,
         restorePromptService: CloudRestorePromptServiceProtocol,
@@ -70,6 +72,7 @@ class SettingsViewModel: ObservableObject {
         self.coreDataManager = coreDataManager
         self.authManager = authManager
         self.syncManager = syncManager
+        self.accountCloudDeletionService = accountCloudDeletionService
         self.forestManager = forestManager
         self.playerManager = playerManager
         self.restorePromptService = restorePromptService
@@ -293,7 +296,7 @@ class SettingsViewModel: ObservableObject {
         Task {
             do {
                 try await authManager.deleteAccount { [weak self] in
-                    try await self?.syncManager.deleteCloudData()
+                    try await self?.accountCloudDeletionService.deleteCloudData()
                 }
                 // The account is gone, so the local game resets too: next forest entry
                 // shows a fresh empty forest and offers the first-entry reward again.

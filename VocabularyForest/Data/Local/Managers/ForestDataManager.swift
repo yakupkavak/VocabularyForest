@@ -93,6 +93,7 @@ protocol ForestDataManagerProtocol: AnyObject {
     // MARK: Update Helpers
     
     func overwriteLocalForest(with safeForest: SafeForestModel, ownerId: String, contextType: ForestDataManager.ContextType) -> Resource<Bool>
+    func applyRemoteForestChanges(_ changes: RemoteForestChanges, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func bindForestToUser(uid: String?, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func updateLastSyncCloudTime(date: Date, contextType: ForestDataManager.ContextType) -> Resource<Bool>
     func addRainValue(rain: Int, contextType: ForestDataManager.ContextType) throws
@@ -624,6 +625,145 @@ extension ForestDataManager {
         }
     }
     
+    func applyRemoteForestChanges(_ changes: RemoteForestChanges, contextType: ContextType) -> Resource<Bool> {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
+                return .error(error: ForestError.emptyForest)
+            }
+
+            // Remote timestamps are written as-is on purpose: refreshing them here would
+            // make the next delta sync push the same data straight back to the cloud.
+            if let metadata = changes.metadata {
+                forest.moneyValue = Int16(metadata.moneyValue)
+                forest.diamondValue = Int16(metadata.diamondValue)
+                forest.rainValue = Int16(metadata.rainValue)
+                forest.landHealthPercent = Int16(metadata.landHealthPercent)
+                forest.lastUpdatedDate = metadata.lastUpdatedDate
+            }
+
+            let existingTrees = forest.trees as? Set<Tree> ?? []
+            for model in changes.trees {
+                let tree: Tree
+                if let existing = existingTrees.first(where: { $0.id == model.id }) {
+                    tree = existing
+                } else {
+                    tree = Tree(context: context)
+                    tree.id = model.id
+                    tree.createdDate = model.createdDate
+                    forest.addToTrees(tree)
+                }
+                tree.assetName = model.assetName
+                tree.characterName = model.characterName
+                tree.healthValue = Int16(model.treeHealthValue)
+                tree.isAlive = model.isAlive
+                tree.lastUpdatedDate = model.lastUpdatedDate
+                tree.xPosition = model.xPosition
+                tree.yPosition = model.yPosition
+                tree.assetSourceString = model.assetSource.rawValue
+                tree.posterKey = model.poster.key
+                tree.posterSourceString = model.poster.source.rawValue
+                tree.rewardId = model.rewardId
+                tree.assetReady = model.assetReady
+            }
+
+            let existingAnimals = forest.animals as? Set<Animal> ?? []
+            for model in changes.animals {
+                let animal: Animal
+                if let existing = existingAnimals.first(where: { $0.id == model.id }) {
+                    animal = existing
+                } else {
+                    animal = Animal(context: context)
+                    animal.id = model.id
+                    animal.createdDate = model.createdDate
+                    forest.addToAnimals(animal)
+                }
+                animal.assetName = model.assetName
+                animal.characterName = model.characterName
+                animal.healthValue = Int16(model.healthValue)
+                animal.isAlive = model.isAlive
+                animal.lastUpdatedDate = model.lastUpdatedDate
+                animal.xPosition = model.xPosition
+                animal.yPosition = model.yPosition
+                animal.assetSourceString = model.assetSource.rawValue
+                animal.posterKey = model.poster.key
+                animal.posterSourceString = model.poster.source.rawValue
+                animal.rewardId = model.rewardId
+                animal.assetReady = model.assetReady
+            }
+
+            let existingSculptures = forest.sculptures as? Set<Sculpture> ?? []
+            for model in changes.sculptures {
+                let sculpture: Sculpture
+                if let existing = existingSculptures.first(where: { $0.id == model.id }) {
+                    sculpture = existing
+                } else {
+                    sculpture = Sculpture(context: context)
+                    sculpture.id = model.id
+                    sculpture.createdDate = model.createdDate
+                    forest.addToSculptures(sculpture)
+                }
+                sculpture.assetName = model.assetName
+                sculpture.characterName = model.characterName
+                sculpture.lastUpdatedDate = model.lastUpdatedDate
+                sculpture.xPosition = model.xPosition
+                sculpture.yPosition = model.yPosition
+                sculpture.assetSourceString = model.assetSource.rawValue
+                sculpture.posterKey = model.poster.key
+                sculpture.posterSourceString = model.poster.source.rawValue
+                sculpture.rewardId = model.rewardId
+                sculpture.assetReady = model.assetReady
+            }
+
+            let existingQuests = forest.quests as? Set<Quest> ?? []
+            for model in changes.quests {
+                let quest: Quest
+                if let existing = existingQuests.first(where: { $0.id == model.id }) {
+                    quest = existing
+                } else {
+                    quest = Quest(context: context)
+                    quest.id = model.id
+                    forest.addToQuests(quest)
+                }
+                quest.currentProgressCount = Int16(model.currentProgressCount)
+                quest.lastUpdatedDate = model.lastUpdatedDate
+                quest.status = model.status.valueForCoreData
+            }
+
+            if let playerModel = changes.player {
+                let player = forest.player ?? Player(context: context)
+                player.name = playerModel.name
+                player.lastUpdatedDate = playerModel.lastUpdateDate
+                forest.player = player
+            }
+
+            if let dailyModel = changes.dailyActivities {
+                let dailyActivities = forest.dailyActivities ?? DailyActivities(context: context)
+                dailyActivities.adventureSeasonID = dailyModel.adventureSeasonID
+                dailyActivities.claimedLongTiers = dailyModel.claimedLongTiers
+                dailyActivities.claimedShortTiers = dailyModel.claimedShortTiers
+                dailyActivities.monthlyLongLearnedCount = Int16(dailyModel.monthlyLongLearnedCount)
+                dailyActivities.monthlyShortLearnedCount = Int16(dailyModel.monthlyShortLearnedCount)
+                dailyActivities.weeklyStreakLastClaimDate = dailyModel.weeklyStreakLastClaimDate
+                dailyActivities.weeklyStreakCurrentDay = Int16(dailyModel.weeklyStreakCurrentDay)
+                dailyActivities.lastFetchDate = dailyModel.lastFetchDate
+                dailyActivities.fixedTimeZone = dailyModel.fixedTimeZone
+                dailyActivities.dailySpinLastUsedDate = dailyModel.dailySpinLastUsedDate
+                dailyActivities.lastUpdatedDate = dailyModel.lastUpdatedDate
+                dailyActivities.dailyKillGoldCount = Int16(dailyModel.dailyKillGoldCount)
+                dailyActivities.killGoldLastResetDate = dailyModel.killGoldLastResetDate
+                forest.dailyActivities = dailyActivities
+            }
+
+            do {
+                try save(context: context)
+                return .success(true)
+            } catch {
+                return .error(error: ForestError.saveError)
+            }
+        }
+    }
+
     func bindForestToUser(uid: String?, contextType: ContextType) -> Resource<Bool> {
         let context = getContext(for: contextType)
         return context.performAndWait {

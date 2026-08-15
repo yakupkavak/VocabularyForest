@@ -9,6 +9,7 @@ import SwiftUI
 import StoreKit
 import GoogleSignInSwift
 import AuthenticationServices
+import FirebaseFirestore
 
 struct SettingsUI: View {
     
@@ -396,7 +397,12 @@ private struct PolicySheetView: View {
     let coreData = CoreDataManager()
     let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
     let authManager = AuthManager()
-    let syncManager = ForestSyncManager()
+    let syncCursorStore = ForestSyncCursorStore()
+    let syncManager = ForestSyncManager(
+        db: Firestore.firestore(),
+        conflictResolver: LastWriteWinsConflictResolver(),
+        cursorStore: syncCursorStore
+    )
     let offlineAssetManager = OfflineAssetManager()
     let networkManager = APIService(vocabularyBaseURLProvider: VocabularyBaseURLProvider())
     let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
@@ -408,6 +414,11 @@ private struct PolicySheetView: View {
             coreDataManager: coreData,
             authManager: authManager,
             syncManager: syncManager,
+            accountCloudDeletionService: AccountCloudDeletionService(
+                db: Firestore.firestore(),
+                cursorStore: syncCursorStore,
+                dataManager: forestData
+            ),
             forestManager: forestData,
             playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
             restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData, assetHydrationService: hydrationService),

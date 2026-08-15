@@ -6,6 +6,7 @@
 //
 
 import DependencyContainer
+import FirebaseFirestore
 import Foundation
 
 enum AppDependencyConfigurer {
@@ -26,7 +27,18 @@ enum AppDependencyConfigurer {
         let audioManager = ForestAudioService()
         let notificationManager = NotificationManager()
         let authManager = AuthManager(analyticsService: analyticsService)
-        let cloudSyncManager = ForestSyncManager(analyticsService: analyticsService)
+        let syncCursorStore = ForestSyncCursorStore()
+        let cloudSyncManager = ForestSyncManager(
+            db: Firestore.firestore(),
+            conflictResolver: LastWriteWinsConflictResolver(),
+            cursorStore: syncCursorStore,
+            analyticsService: analyticsService
+        )
+        let accountCloudDeletionService = AccountCloudDeletionService(
+            db: Firestore.firestore(),
+            cursorStore: syncCursorStore,
+            dataManager: forestData
+        )
         let playerDataManager = PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext)
         let remoteConfigRepository = RemoteConfigRepository()
         let documentRepository = DocumentaryRepository()
@@ -58,7 +70,8 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(forestData), for: ForestDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(forestEntityService), for: ForestEntityServiceProtocol.self)
         DC.shared.register(type: .singleInstance(authManager), for: (any AuthManagerProtocol).self)
-        DC.shared.register(type: .singleInstance(cloudSyncManager), for: ForestSyncManager.self)
+        DC.shared.register(type: .singleInstance(cloudSyncManager), for: ForestSyncManagerProtocol.self)
+        DC.shared.register(type: .singleInstance(accountCloudDeletionService), for: AccountCloudDeletionServiceProtocol.self)
         DC.shared.register(type: .singleInstance(playerDataManager), for: PlayerDataManagerProtocol.self)
         DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
         DC.shared.register(type: .singleInstance(remoteConfigRepository), for: RemoteConfigRepositoryProtocol.self)
@@ -77,6 +90,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(cloudRestorePromptService), for: CloudRestorePromptServiceProtocol.self)
         DC.shared.register(type: .singleInstance(rewardAssetHydrationService), for: RewardAssetHydrationServiceProtocol.self)
         forestData.checkGame(contextType: .background)
-        cloudSyncManager.backgroundSyncIfNeeded()
+        // Sync is triggered from the scenePhase == .active handler, which also fires
+        // on cold start; a second trigger here would race the same delta batch.
     }
 }

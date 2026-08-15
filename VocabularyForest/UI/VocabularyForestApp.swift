@@ -56,6 +56,10 @@ struct VocabularyForestApp: App {
                 } else if phase == .active {
                     rewardNotificationService.cancelRewardNotifications()
                     requestTrackingThenStartAds()
+                    // Returning to the foreground is the moment another device's changes
+                    // become relevant; the manager's own cooldown paces the actual syncs.
+                    let syncManager = DC.shared.resolve(type: .singleInstance, for: ForestSyncManagerProtocol.self)
+                    syncManager.backgroundSyncIfNeeded()
                 }
             }.environmentObject(routerBookcase).environmentObject(routerCreateBookcase).environmentObject(routerLearning)
                 .environmentObject(tabbarController).environmentObject(coordinator)
