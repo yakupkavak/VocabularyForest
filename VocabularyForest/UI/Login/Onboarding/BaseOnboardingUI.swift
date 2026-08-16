@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
+private extension BaseOnboardingUI {
+    enum Constants {
+        static let talkingBoxCornerRadius: CGFloat = 16
+        static let talkingBoxBorderWidth: CGFloat = 4
+        static let talkingBoxBackgroundOpacity: Double = 0.3
+    }
+}
+
 struct BaseOnboardingUI: View {
     //MARK: Properties
     @State private var showText = false
@@ -55,13 +65,17 @@ private extension BaseOnboardingUI {
         VStack(spacing: 16){
             if showText {
                 Text(message).foregroundStyle(.white).scaledFont(size: 20).frame(maxWidth: 250).padding(24)
+                    .background(
+                        RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
+                            .fill(.title.opacity(Constants.talkingBoxBackgroundOpacity))
+                    )
                     .overlay {
-                        RoundedRectangle(cornerRadius: 16)
-                            .strokeBorder(.white, lineWidth: 4)
+                        RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
+                            .strokeBorder(.title, lineWidth: Constants.talkingBoxBorderWidth)
                     }
             }
             if showBallon {
-                TalkingBallons().a11yDecorative()
+                TalkingBallons(foregroundColor: .title).a11yDecorative()
             }
         }
     }
