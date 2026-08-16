@@ -13,7 +13,7 @@ private extension BaseOnboardingUI {
     enum Constants {
         static let talkingBoxCornerRadius: CGFloat = 16
         static let talkingBoxBorderWidth: CGFloat = 4
-        static let talkingBoxBackgroundOpacity: Double = 0.3
+        static let talkingBoxYOffset: CGFloat = -144
     }
 }
 
@@ -43,7 +43,7 @@ private extension BaseOnboardingUI {
             }
             VStack(alignment: .center){
                 Spacer()
-                talkingBox(message: title).offset(y: -120)
+                talkingBox(message: title).offset(y: Constants.talkingBoxYOffset)
                 if backgroundImageName == nil {
                     Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
                 }
@@ -67,7 +67,7 @@ private extension BaseOnboardingUI {
                 Text(message).foregroundStyle(.white).scaledFont(size: 20).frame(maxWidth: 250).padding(24)
                     .background(
                         RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
-                            .fill(.title.opacity(Constants.talkingBoxBackgroundOpacity))
+                            .fill(.title)
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
