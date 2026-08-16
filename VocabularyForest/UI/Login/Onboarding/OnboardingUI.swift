@@ -90,6 +90,9 @@ private extension OnboardingUI {
             if models.indices.contains(fakeIndex) {
                 let model = models[fakeIndex]
                 BaseOnboardingUI(onboardingModel: model)
+                    // A fresh identity per page restarts the talking-box entrance animation;
+                    // reusing one view would leave its `onAppear` state stuck after the first page.
+                    .id(model.id)
                     .clipShape(
                         LiquidShape(
                             offset: model.offSet,

@@ -10757,6 +10757,7 @@
       }
     },
     "Ay" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -11495,6 +11496,7 @@
       }
     },
     "Bilge" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -12721,6 +12723,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你还记得这个吗？👀"
+          }
+        }
+      }
+    },
+    "Burası da neresi" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وأين أنا؟"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wo bin ich hier gelandet?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where is this place?"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Y dónde estoy?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Où suis-je donc ?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यह कौन सी जगह है?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ma dove sono?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ここはどこだろう？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기는 어디지?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mas onde eu estou?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "И где это я?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Burası da neresi"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里到底是哪儿？"
           }
         }
       }
@@ -18388,6 +18472,7 @@
       }
     },
     "Güneş" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -19044,6 +19129,7 @@
       }
     },
     "happiness" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -20685,6 +20771,7 @@
       }
     },
     "Huzur" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -24376,6 +24463,88 @@
         }
       }
     },
+    "Kendi zihnine hoş geldin. Bizler öğrendiğin kelimelerin yansımalarıyız" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أهلًا بك في عقلك. نحن انعكاسات الكلمات التي تعلّمتها"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen in deinem eigenen Geist. Wir sind die Spiegelungen der Wörter, die du gelernt hast"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to your own mind. We are reflections of the words you have learned"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenido a tu propia mente. Somos los reflejos de las palabras que has aprendido"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bienvenue dans ton propre esprit. Nous sommes les reflets des mots que tu as appris"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अपने ही मन में आपका स्वागत है। हम उन शब्दों के प्रतिबिंब हैं जो आपने सीखे हैं"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benvenuto nella tua mente. Siamo i riflessi delle parole che hai imparato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自分の心へようこそ。私たちはあなたが学んだ言葉の反映です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "너 자신의 마음에 온 걸 환영해. 우리는 네가 배운 단어들의 반영이야"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bem-vindo à sua própria mente. Somos os reflexos das palavras que você aprendeu"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать в твой разум. Мы — отражения слов, которые ты выучил"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kendi zihnine hoş geldin. Bizler öğrendiğin kelimelerin yansımalarıyız"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "欢迎来到你自己的心灵。我们是你学过的词语的倒影"
+          }
+        }
+      }
+    },
     "Key" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -27910,6 +28079,7 @@
       }
     },
     "Mutlu" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -30548,6 +30718,88 @@
         }
       }
     },
+    "Odaklanıyorum" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أنا أركّز"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich konzentriere mich"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I am focusing"
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me estoy concentrando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je me concentre"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "मैं ध्यान लगा रहा हूँ"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mi sto concentrando"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "集中している"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "집중하고 있어"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estou me concentrando"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Я сосредотачиваюсь"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odaklanıyorum"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "我正在集中精神"
+          }
+        }
+      }
+    },
     "Oluştur" : {
       "localizations" : {
         "ar" : {
@@ -32273,6 +32525,7 @@
       }
     },
     "Peace" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -38100,6 +38353,7 @@
       }
     },
     "umut" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -39002,6 +39256,7 @@
       }
     },
     "Venüs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -41058,6 +41313,7 @@
       }
     },
     "Zafer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

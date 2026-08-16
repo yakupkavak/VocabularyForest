@@ -13,6 +13,10 @@ private extension BaseOnboardingUI {
     enum Constants {
         static let talkingBoxCornerRadius: CGFloat = 16
         static let talkingBoxBorderWidth: CGFloat = 4
+        static let talkingBoxSpacing: CGFloat = 16
+        static let talkingBoxPadding: CGFloat = 24
+        static let talkingBoxFontSize: CGFloat = 20
+        static let talkingBoxMaxWidthRatio: CGFloat = 0.6
     }
 }
 
@@ -42,7 +46,10 @@ private extension BaseOnboardingUI {
             }
             GeometryReader { proxy in
                 VStack(alignment: .center){
-                    talkingBox(message: title)
+                    talkingBox(
+                        message: title,
+                        maxWidth: proxy.size.width * Constants.talkingBoxMaxWidthRatio
+                    )
                     if backgroundImageName == nil {
                         Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
                     }
@@ -64,10 +71,10 @@ private extension BaseOnboardingUI {
     }
     
     @ViewBuilder
-    func talkingBox(message: String) -> some View {
-        VStack(spacing: 16){
+    func talkingBox(message: String, maxWidth: CGFloat) -> some View {
+        VStack(spacing: Constants.talkingBoxSpacing){
             if showText {
-                Text(message).foregroundStyle(.white).scaledFont(size: 20).frame(maxWidth: 250).padding(24)
+                Text(message).foregroundStyle(.white).scaledFont(size: Constants.talkingBoxFontSize).padding(Constants.talkingBoxPadding)
                     .background(
                         RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
                             .fill(.title)
@@ -76,6 +83,9 @@ private extension BaseOnboardingUI {
                         RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
                             .strokeBorder(.white, lineWidth: Constants.talkingBoxBorderWidth)
                     }
+                    // Capping outside the background lets the box hug short messages instead of
+                    // padding out to the full allowance.
+                    .frame(maxWidth: maxWidth)
             }
             if showBallon {
                 TalkingBallons().a11yDecorative()
@@ -87,5 +97,5 @@ private extension BaseOnboardingUI {
 
 
 #Preview {
-    BaseOnboardingUI(onboardingModel: OnboardingModel(title: "Uzun zamandır sana ihtiyacımız vardı", animal: "elephant", color: Color.accentColor, backgroundImage: "elephantbackground"))
+    BaseOnboardingUI(onboardingModel: OnboardingModel(title: "Burası da neresi", animal: "elephant", color: Color.accentColor, backgroundImage: "elephantbackground"))
 }
