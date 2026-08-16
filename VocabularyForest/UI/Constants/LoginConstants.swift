@@ -17,8 +17,8 @@ struct LoginConstants {
 
         static var onboardingModels: [OnboardingModel] = [
             OnboardingModel(title: String(localized: "Uzun zamandır sana ihtiyacımız vardı"), animal: "elephant", color: Color.accentColor, backgroundImage: "elephantbackground", talkingBoxCenterRatio: centeredTalkingBoxRatio),
-            OnboardingModel(title: String(localized: "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz"), animal: "elephant", color: Color.accentColor, backgroundImage: "lionbackground", talkingBoxCenterRatio: centeredTalkingBoxRatio),
-            OnboardingModel(title: String(localized: "Hazırsan başlayalım mı ?"), animal: "elephant", color: Color.accentColor, backgroundImage: "pandabackground", talkingBoxCenterRatio: liftedTalkingBoxRatio),
+            OnboardingModel(title: String(localized: "Birlikte öğrenerek ormanımızı baştan yetiştirebiliriz"), animal: "elephant", color: Color.accentColor, backgroundImage: "lionbackground", talkingBoxCenterRatio: liftedTalkingBoxRatio),
+            OnboardingModel(title: String(localized: "Hazırsan başlayalım mı ?"), animal: "elephant", color: Color.accentColor, backgroundImage: "pandabackground", talkingBoxCenterRatio: centeredTalkingBoxRatio),
         ]
     }
 }
