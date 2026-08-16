@@ -13,8 +13,6 @@ private extension BaseOnboardingUI {
     enum Constants {
         static let talkingBoxCornerRadius: CGFloat = 16
         static let talkingBoxBorderWidth: CGFloat = 4
-        /// Measured from the top, so the box sits 70% of the way up the screen.
-        static let talkingBoxCenterRatio: CGFloat = 0.3
     }
 }
 
@@ -51,7 +49,7 @@ private extension BaseOnboardingUI {
                 }
                 .position(
                     x: proxy.size.width / 2,
-                    y: proxy.size.height * Constants.talkingBoxCenterRatio
+                    y: proxy.size.height * onboardingModel.talkingBoxCenterRatio
                 )
             }.frame(maxWidth: .infinity, maxHeight: .infinity).background(.clear)
         }.ignoresSafeArea(.all).frame(minWidth: 0, maxWidth: .infinity)
