@@ -13,7 +13,8 @@ private extension BaseOnboardingUI {
     enum Constants {
         static let talkingBoxCornerRadius: CGFloat = 16
         static let talkingBoxBorderWidth: CGFloat = 4
-        static let talkingBoxYOffset: CGFloat = -144
+        /// Measured from the top, so the box sits 70% of the way up the screen.
+        static let talkingBoxCenterRatio: CGFloat = 0.3
     }
 }
 
@@ -41,13 +42,17 @@ private extension BaseOnboardingUI {
             if let image = backgroundImageName {
                 Image(image).resizable().scaledToFill().frame(minHeight: 0, maxHeight: .infinity).a11yDecorative()
             }
-            VStack(alignment: .center){
-                Spacer()
-                talkingBox(message: title).offset(y: Constants.talkingBoxYOffset)
-                if backgroundImageName == nil {
-                    Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
+            GeometryReader { proxy in
+                VStack(alignment: .center){
+                    talkingBox(message: title)
+                    if backgroundImageName == nil {
+                        Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
+                    }
                 }
-                Spacer()
+                .position(
+                    x: proxy.size.width / 2,
+                    y: proxy.size.height * Constants.talkingBoxCenterRatio
+                )
             }.frame(maxWidth: .infinity, maxHeight: .infinity).background(.clear)
         }.ignoresSafeArea(.all).frame(minWidth: 0, maxWidth: .infinity)
             .onAppear {
@@ -71,11 +76,11 @@ private extension BaseOnboardingUI {
                     )
                     .overlay {
                         RoundedRectangle(cornerRadius: Constants.talkingBoxCornerRadius)
-                            .strokeBorder(.title, lineWidth: Constants.talkingBoxBorderWidth)
+                            .strokeBorder(.white, lineWidth: Constants.talkingBoxBorderWidth)
                     }
             }
             if showBallon {
-                TalkingBallons(foregroundColor: .title).a11yDecorative()
+                TalkingBallons().a11yDecorative()
             }
         }
     }
