@@ -67,6 +67,14 @@ struct ComponentBubble {
         static let buttonPosXOffset: CGFloat = 32
         static let buttonNegXOffset: CGFloat = -32
         
+        static let marketBubbleWidth: CGFloat = 120
+        static let marketBubbleHeight: CGFloat = 100
+        static let marketIconSize: CGFloat = 60
+        /// The balloon texture's tail eats the bottom area; keep the icon above it.
+        static let marketIconYOffset: CGFloat = 10
+        /// Negative so the balloon's tail overlaps the stall's awning instead of floating above it.
+        static let marketBubbleGap: CGFloat = -20
+
         static let hitboxWidth: CGFloat = 70
         static let hitboxHeight: CGFloat = 50
         static let hitboxYOffset: CGFloat = -20
@@ -225,6 +233,34 @@ struct ComponentBubble {
         return bubble
     }
     
+    static func createMarketMenuBubble(parentSize: CGSize) -> SKNode {
+        let texture = SKTexture(imageNamed: "speak_ballon")
+        let bubble = SKSpriteNode(texture: texture)
+        bubble.name = "market_bubble"
+        bubble.size = CGSize(width: Constants.marketBubbleWidth, height: Constants.marketBubbleHeight)
+        bubble.zPosition = Constants.defaultZPosition
+        bubble.position = CGPoint(
+            x: Constants.zero,
+            y: parentSize.height + (Constants.marketBubbleHeight / Constants.halfDivider) + Constants.marketBubbleGap
+        )
+
+        let icon = SKSpriteNode(texture: SKTexture(imageNamed: "market_bubble_icon"))
+        icon.size = CGSize(width: Constants.marketIconSize, height: Constants.marketIconSize)
+        icon.position = CGPoint(x: Constants.zero, y: Constants.marketIconYOffset)
+        icon.zPosition = Constants.buttonLabelZPosition
+        bubble.addChild(icon)
+
+        let hitbox = createInvisibleHitbox(
+            name: "btn_open_market",
+            width: Constants.marketBubbleWidth,
+            height: Constants.marketBubbleHeight,
+            position: CGPoint(x: Constants.zero, y: Constants.zero)
+        )
+        bubble.addChild(hitbox)
+
+        return bubble
+    }
+
     static func createTalkBubble(parentSize: CGSize, parentXScale: CGFloat, text: String, width: CGFloat = Constants.talkBubbleWidth) -> SKNode {
         let texture = SKTexture(imageNamed: "speak_ballon")
         let bubble = SKSpriteNode(texture: texture)

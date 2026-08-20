@@ -118,34 +118,29 @@ private extension OnboardingUI {
                         .fill(currentPage == index ? Colors.selectedButton : Colors.unselectedButton)
                         .frame(width: currentPage == index ? 24 : 16)
                         .animation(.spring(response: 0.5, dampingFraction: 0.85), value: currentPage)
+                        .onTapGesture { jumpToPage(index) }
+                        // Each dot is its own VoiceOver button so assistive users can move
+                        // between pages now that the "next" button is gone.
+                        .a11yTapButton(
+                            String(format: NSLocalizedString("a11y_go_to_page", comment: ""), index + 1),
+                            isSelected: currentPage == index
+                        )
                 }
             }
-            .a11yGroup(String(format: NSLocalizedString("a11y_page_of", comment: ""), currentPage + 1, dotCount))
 
             Spacer()
             
-            Button {
-                if currentPage == dotCount - 1 {
+            // Only the last page shows a button; earlier pages advance with the drag dot.
+            if currentPage == dotCount - 1 {
+                Button {
                     openApp()
-                } else {
-                    nextPage()
-                }
-            } label: {
-                if currentPage == dotCount - 1 {
+                } label: {
                     Text("Başla")
                         .foregroundStyle(.white)
                         .scaledFont(size: 24)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 8)
                         .background(.brown.opacity(0.5))
-                        .borderRadius(borderColor: .white)
-                } else {
-                    Text("Diğer")
-                        .foregroundStyle(.white)
-                        .scaledFont(size: 24)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 8)
-                        .background(.white.opacity(0.2))
                         .borderRadius(borderColor: .white)
                 }
             }
@@ -233,7 +228,7 @@ private extension OnboardingUI {
         // `position` resolves its x against the layout direction; pinning it to LTR keeps the
         // handle on the edge `handleCenterX` names, so it can never drift away from the curve.
         .environment(\.layoutDirection, .leftToRight)
-        // Purely decorative swipe affordance; the "next" button covers navigation
+        // Hidden from VoiceOver: the page dots are accessible buttons and cover navigation.
         .accessibilityHidden(true)
     }
 }
@@ -264,28 +259,17 @@ private extension OnboardingUI {
         )
     }
 
-    private func nextPage() {
-        withAnimation(.spring()) {
-            models[fakeIndex].offSet.width = offscreenWidth
-            fakeIndex += 1
-            
-            let realCount = max(models.count - 2, 1)
-            currentPage = (currentPage + 1) % realCount
-            
-            let idx = fakeIndex
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                if idx == models.count - 2, models.count > 2 {
-                    for i in 0..<(models.count - 2) {
-                        models[i].offSet = .zero
-                    }
-                    fakeIndex = 0
-                } else if models.indices.contains(idx) {
-                    models[idx].offSet = .zero
-                }
-            }
-        }
+    /// Jumps straight to the tapped page. Only `models[fakeIndex]` and the page behind it are
+    /// ever rendered, so an instant index swap (no wave animation) is the correct jump here.
+    private func jumpToPage(_ target: Int) {
+        guard target != currentPage else { return }
+        let idx = target + 1
+        guard models.indices.contains(idx) else { return }
+        models[idx].offSet = .zero
+        fakeIndex = idx
+        currentPage = target
     }
-    
+
     private func openApp() {
         analyticsService.log(.tutorialComplete)
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")

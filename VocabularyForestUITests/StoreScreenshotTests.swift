@@ -21,9 +21,10 @@ private enum Constants {
     static let sceneTimeout: TimeInterval = 90
     static let questionTimeout: TimeInterval = 60
 
-    /// Easy classic needs 4 correct answers before the magic popup interrupts the round and
-    /// 3 wrong ones before the enemy attacks, so 3 + 1 stays inside a single question flow.
-    static let correctAnswerCount = 3
+    /// Correct answers played before the deliberate wrong one. The magic popup interrupts the
+    /// round after a mode-dependent number of correct answers, so this is tuned to the battle
+    /// mode in SHOT_BATTLE_MODE rather than to the classic default.
+    static let correctAnswerCount = 6
 
     static let maxSwipes = 40
     static let maxAlignmentSteps = 8
@@ -58,6 +59,7 @@ private struct ScreenshotConfig {
     let adventureRoadLabel: String
     let selectBookcaseButtonLabel: String
     let startGameLabel: String
+    let battleModeLabel: String
     let selectBookcaseIconLabel: String
     /// Screenshots to capture. Empty means every one.
     let requestedShots: Set<String>
@@ -87,6 +89,7 @@ private struct ScreenshotConfig {
             adventureRoadLabel: try value("SHOT_ADVENTURE_ROAD"),
             selectBookcaseButtonLabel: try value("SHOT_SELECT_BOOKCASE_BUTTON"),
             startGameLabel: try value("SHOT_START_GAME"),
+            battleModeLabel: try value("SHOT_BATTLE_MODE"),
             selectBookcaseIconLabel: try value("SHOT_SELECT_BOOKCASE_ICON"),
             requestedShots: Set(
                 (environment["SHOT_ONLY"] ?? "")
@@ -128,7 +131,9 @@ final class StoreScreenshotTests: XCTestCase {
 
 private extension StoreScreenshotTests {
 
-    /// Classic / Easy / Learning are the game popup's defaults, so only the bookcase is chosen.
+    /// Easy / Learning are the game popup's defaults; the battle mode opens on Classic and is
+    /// switched to the one in SHOT_BATTLE_MODE, so the shot shows a boss rather than the
+    /// rotating classic line-up.
     func captureGame() throws {
         relaunch()
         try openForest()
@@ -139,6 +144,12 @@ private extension StoreScreenshotTests {
 
         let selectBookcase = button(containing: config.selectBookcaseButtonLabel)
         XCTAssertTrue(selectBookcase.waitForExistence(timeout: Constants.uiTimeout), "Game popup never appeared")
+
+        // Picked before the bookcase because the mode drives the minimum word count shown below.
+        let battleMode = button(containing: config.battleModeLabel)
+        XCTAssertTrue(battleMode.waitForExistence(timeout: Constants.uiTimeout), "Battle mode tag missing")
+        battleMode.tap()
+
         selectBookcase.tap()
 
         try pickBookcaseInSheet(name: config.b1BookcaseName, languageLine: config.b1LanguageLine)

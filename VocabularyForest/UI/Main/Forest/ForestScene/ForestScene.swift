@@ -47,6 +47,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     private var selectedManager: UpdatePositionProtocol? = nil
     private var selectedModel: ComponentModelProtocol? = nil
     private var isAnnouncementClaimable = false
+    private weak var marketBubbleNode: SKNode?
     var timer: Timer?
     
     // MARK: - LIFECYCLE
@@ -185,11 +186,33 @@ private extension ForestScene {
     }
     
     func handleMarketTap(nodes: [SKNode]) -> Bool {
-        guard nodes.contains(where: { $0.name == ForestConstant.marketName }) else {
+        if nodes.contains(where: { $0.name == "btn_open_market" }) {
+            marketBubbleNode?.removeFromParent()
+            forestHelper?.showMarket()
+            return true
+        }
+        guard let marketNode = nodes.first(where: { $0.name == ForestConstant.marketName }) as? SKSpriteNode else {
             return false
         }
-        forestHelper?.showMarket()
+        toggleMarketBubble(on: marketNode)
         return true
+    }
+
+    /// Tapping the market building shows an invitation bubble instead of opening the
+    /// market outright; the bubble's cart icon is the actual "open" affordance.
+    func toggleMarketBubble(on marketNode: SKSpriteNode) {
+        if let bubble = marketBubbleNode {
+            bubble.removeFromParent()
+            return
+        }
+
+        let bubble = ComponentBubble.createMarketMenuBubble(parentSize: marketNode.size)
+        bubble.setScale(ComponentBubble.Constants.initialScale)
+        marketNode.addChild(bubble)
+        bubble.run(.scale(to: ComponentBubble.Constants.targetScale, duration: ComponentBubble.Constants.scaleDuration))
+        marketBubbleNode = bubble
+
+        ComponentBubble.applyAutoCloseAnimation(to: bubble) { }
     }
 
     func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {

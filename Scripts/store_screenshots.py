@@ -61,6 +61,8 @@ STRING_KEYS = {
     "SHOT_SELECT_BOOKCASE_BUTTON": "Kitaplık seçiniz",
     "SHOT_START_GAME": "Oyuna Başla",
     "SHOT_SELECT_BOOKCASE_ICON": "a11y_select_bookcase",
+    # BattleEnemyModel.fireDragon.title — the game popup opens on Classic, so it is tapped.
+    "SHOT_BATTLE_MODE": "Ateş Ejderi",
 }
 
 # `Libraries.toLanguageDisplayName()` in Packages/Domain resolves codes through these keys.

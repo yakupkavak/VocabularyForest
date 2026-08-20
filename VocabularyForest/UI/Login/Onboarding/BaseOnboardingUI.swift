@@ -28,8 +28,10 @@ struct BaseOnboardingUI: View {
 
     var body: some View {
         VStack{
-            if let title = onboardingModel.title, let animal = onboardingModel.animal, let backgroundImage = onboardingModel.backgroundImage {
-                animalTalking(animal: animal, title: title, color: onboardingModel.color, backgroundImageName: backgroundImage).ignoresSafeArea(.all)
+            if let animal = onboardingModel.animal, let backgroundImage = onboardingModel.backgroundImage {
+                // Title is optional: a page with a nil title shows only its background;
+                // the whole talking box (text + bubbles) is skipped.
+                animalTalking(animal: animal, title: onboardingModel.title, color: onboardingModel.color, backgroundImageName: backgroundImage).ignoresSafeArea(.all)
             }
         }.ignoresSafeArea(.all)
     }
@@ -39,17 +41,19 @@ struct BaseOnboardingUI: View {
 
 private extension BaseOnboardingUI {
     @ViewBuilder
-    func animalTalking(animal: String, title: String, color: Color, backgroundImageName: String? = nil) -> some View {
+    func animalTalking(animal: String, title: String?, color: Color, backgroundImageName: String? = nil) -> some View {
         ZStack {
             if let image = backgroundImageName {
                 Image(image).resizable().scaledToFill().frame(minHeight: 0, maxHeight: .infinity).a11yDecorative()
             }
             GeometryReader { proxy in
                 VStack(alignment: .center){
-                    talkingBox(
-                        message: title,
-                        maxWidth: proxy.size.width * Constants.talkingBoxMaxWidthRatio
-                    )
+                    if let title {
+                        talkingBox(
+                            message: title,
+                            maxWidth: proxy.size.width * Constants.talkingBoxMaxWidthRatio
+                        )
+                    }
                     if backgroundImageName == nil {
                         Image(animal).resizable().frame(maxWidth:96, maxHeight: 96).scaledToFit().a11yDecorative()
                     }

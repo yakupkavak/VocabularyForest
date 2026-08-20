@@ -21,7 +21,8 @@ struct LoginConstants {
         static var onboardingModels: [OnboardingModel] = [
             OnboardingModel(title: String(localized: "Burası da neresi"), animal: "elephant", color: Color.accentColor, backgroundImage: "elephantbackground", talkingBoxCenterRatio: firstPageTalkingBoxRatio),
             OnboardingModel(title: String(localized: "Kendi zihnine hoş geldin. Bizler öğrendiğin kelimelerin yansımalarıyız"), animal: "elephant", color: Color.accentColor, backgroundImage: "lionbackground", talkingBoxCenterRatio: secondPageTalkingBoxRatio),
-            OnboardingModel(title: String(localized: "Odaklanıyorum"), animal: "elephant", color: Color.accentColor, backgroundImage: "pandabackground", talkingBoxCenterRatio: thirdPageTalkingBoxRatio),
+            // The last page intentionally has no talking box at all (nil title).
+            OnboardingModel(title: nil, animal: "elephant", color: Color.accentColor, backgroundImage: "pandabackground", talkingBoxCenterRatio: thirdPageTalkingBoxRatio),
         ]
     }
 }
