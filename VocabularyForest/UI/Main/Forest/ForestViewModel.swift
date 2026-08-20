@@ -31,6 +31,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func didTapTree(id: UUID)
     func didCollectWater(amount: Int)
     func fetchForest()
+    func refreshForestStatus()
     func claimQuestReward(quest: QuestModel)
     func startRain()
     func checkBookCount(type: BattleQuestionType,
@@ -337,18 +338,31 @@ extension ForestViewModel {
                 // TODO: - CREATE FOREST IF NOT CREATED
             }
             
+            // Status is fetched first so an entity fetch failure below can never leave
+            // forestStatus nil (the info popup shows an error state when it is).
+            let forestData: ForestStatusModel
+            do {
+                forestData = try forestDataManager.fetchForestStatus(contextType: .background)
+            } catch {
+                logger.error("Forest status could not be fetched: \(error.localizedDescription)", category: .forest)
+                return
+            }
+
             // Entities with assetReady == false never enter the scene; once hydration finishes,
             // fetchForest is triggered again and the missing ones appear on their own.
-            let fetchedAnimals = try forestEntityService.fetchAnimals(contextType: .background).filter { $0.assetReady }
-            let fetchedSculptures = try forestEntityService.fetchSculptures(contextType: .background).filter { $0.assetReady }
+            var fetchedAnimals: [AnimalModel] = []
+            var fetchedSculptures: [SculptureModel] = []
+            do {
+                fetchedAnimals = try forestEntityService.fetchAnimals(contextType: .background).filter { $0.assetReady }
+                fetchedSculptures = try forestEntityService.fetchSculptures(contextType: .background).filter { $0.assetReady }
+            } catch {
+                logger.error("Forest entities could not be fetched: \(error.localizedDescription)", category: .forest)
+            }
             let fetchedTrees = (forestEntityService.fetchTrees(contextType: .background).data ?? []).filter { $0.assetReady }
             let fetchedBookcases = coreDataManager.fetchSafeBookcases(
                 sortDescriptors: nil,
                 contextType: .background
             )
-            guard let forestData = try? forestDataManager.fetchForestStatus(contextType: .background) else {
-                return
-            }
 
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
@@ -408,6 +422,20 @@ extension ForestViewModel {
         }
     }
     
+    /// Lightweight refresh used by the info popup; fetchForest may still be in flight
+    /// (or may have failed) when the popup opens, so the status is re-read on demand.
+    func refreshForestStatus() {
+        Task(priority: .userInitiated) { [weak self] in
+            guard let self else { return }
+            do {
+                let status = try forestDataManager.fetchForestStatus(contextType: .background)
+                await MainActor.run { self.forestStatus = status }
+            } catch {
+                logger.error("Forest status refresh failed: \(error.localizedDescription)", category: .forest)
+            }
+        }
+    }
+
     func startRain() {
         showRainButton = false
         output?.startRain()

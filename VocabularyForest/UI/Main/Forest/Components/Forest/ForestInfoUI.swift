@@ -64,7 +64,9 @@ struct ForestInfoUI: View {
                             Image(systemName: "leaf.fill").resizable().scaledToFit().frame(width: Constants.iconWidth).foregroundStyle(.logoGreen)
                         }
                     } else {
-                        Text("Beklenmedik hata").foregroundStyle(.white)
+                        // The status is refreshed on demand when the popup opens; a nil model
+                        // only means the fetch is still in flight, not an error.
+                        ProgressView().tint(.white)
                     }
                 }
                 .padding(.horizontal, Constants.horizontalPadding)

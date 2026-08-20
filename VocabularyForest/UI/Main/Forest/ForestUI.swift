@@ -78,7 +78,7 @@ struct ForestUI: View {
                 sceneAccessibilityOverlay.zIndex(1.05)
             }
 
-            if !userClaimedFirtReward {
+            if !userClaimedFirtReward {/*
                 ForestFirstRewardUI(rewards: ForestConstant.firstForestRewards) { selectedReward in
                     viewModel.claimLocalReward(model: selectedReward) {
                         userClaimedFirtReward = true
@@ -88,6 +88,7 @@ struct ForestUI: View {
                 .accessibilityAddTraits(.isModal)
                 .zIndex(1.2)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
+                                        */
             }else if !forestSeen {
                 GameInfoUI(showForestPopUp: Binding(
                     get: { !forestSeen },
@@ -539,6 +540,7 @@ extension ForestUI: ForestUIProtocol {
     }
     
     func showForestInfo() {
+        viewModel.refreshForestStatus()
         uiState = .forest
     }
     
