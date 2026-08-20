@@ -25,6 +25,12 @@ protocol EnvironmentManagerProtocol: AnyObject {
 private extension EnvironmentManager {
     enum Constant {
         static let menuButtonName = "menu_button"
+        static let marketIdleTimeMultiplier: Double = 0.8
+        static let marketFloorHeightMultiplier: CGFloat = 0.79
+        static let scrollSpeedPerSecond: CGFloat = 100
+        /// Seconds of rightward scrolling before the market's left edge enters the screen
+        static let marketRevealScrollSeconds: CGFloat = 1
+
     }
 }
 class EnvironmentManager {
@@ -39,7 +45,6 @@ class EnvironmentManager {
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let announcementButton = SKSpriteNode(imageNamed: "announcement_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
-    private let marketButton = SKSpriteNode(imageNamed: "market_button")
     private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let rightIcon = SKSpriteNode(imageNamed: "right_icon")
@@ -49,6 +54,8 @@ class EnvironmentManager {
     private let confirmIcon = SKSpriteNode(imageNamed: "accept_button")
     private let refuseIcon = SKSpriteNode(imageNamed: "close_button")
     private var icons: [SKSpriteNode] = []
+    private var marketTextures: [SKTexture] = []
+    private let marketNode = SKSpriteNode()
     private var announcementBadgeNode: SKShapeNode?
 
     private var isRaining = false
@@ -110,6 +117,40 @@ private extension EnvironmentManager {
         }
     }
     
+    func setupMarket() {
+        guard let scene else { return }
+        marketTextures = loadAtlas(named: "MarketSprite", prefix: "market_")
+        // Starts fully off-screen; its left edge enters the view after
+        // marketRevealScrollSeconds of scrolling right at scrollSpeedPerSecond
+        marketNode.position = CGPoint(
+            x: scene.size.width
+                + GameConstant.marketSize.width / 2
+                + Constant.scrollSpeedPerSecond * Constant.marketRevealScrollSeconds,
+            y: GameConstant.floorHeightSize * Constant.marketFloorHeightMultiplier
+        )
+        marketNode.size = GameConstant.marketSize
+        marketNode.zPosition = 1
+        marketNode.anchorPoint = CGPoint(x: 0.5, y: 0)
+        marketNode.name = ForestConstant.marketName
+        idleMarket()
+        scene.addChild(marketNode)
+    }
+    
+    func idleMarket() {
+        guard !marketTextures.isEmpty else { return }
+        let animate = SKAction.animate(with: marketTextures, timePerFrame: GameConstant.waitingTimePerFrame * Constant.marketIdleTimeMultiplier)
+        marketNode.run(SKAction.repeatForever(animate), withKey: GameConstant.marketAnimation )
+    }
+    
+    func loadAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
+        let atlas = SKTextureAtlas(named: atlasName)
+        var textures: [SKTexture] = []
+        for i in 0..<atlas.textureNames.count {
+            textures.append(atlas.textureNamed("\(prefix)\(i)"))
+        }
+        return textures
+    }
+    
     func setupFloor() {
         guard let scene else { return }
         floorNode.position = CGPoint(x: scene.size.width / 2, y: 0)
@@ -141,7 +182,7 @@ private extension EnvironmentManager {
     }
 
     func isScrollingNode(_ node: SKNode) -> Bool {
-        node == floorNode || node == waterStatue || node == grassStatue ||
+        node == floorNode || node == waterStatue || node == grassStatue || node == marketNode ||
         node.name == "Animal" || node.name == "sculpture" || node.name == "plant"
     }
 
@@ -169,6 +210,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         setupFloor()
         setupUI()
         moveSky()
+        setupMarket()
     }
     
     // MARK: - SETUP FUNCTIONS
@@ -182,8 +224,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
             (menuButton, Constant.menuButtonName),
             (announcementButton, "announcementButton"),
             (playButton, "play_button"),
-            (forestButton, "forest_button"),
-            (marketButton, "market_button")
+            (forestButton, "forest_button")
         ]
         let buttonSide = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
         for (index, entry) in menuColumn.enumerated() {
@@ -205,7 +246,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         scene.addChild(playButton)
         scene.addChild(announcementButton)
         scene.addChild(menuButton)
-        scene.addChild(marketButton)
         scene.addChild(scoreLabel)
     }
     
@@ -224,7 +264,11 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         guard let scene = scene else { return }
 
         for node in scene.children where isScrollingNode(node) {
-            let moveAction = SKAction.moveBy(x: direction == .left ? 100 : -100, y: 0, duration: 1.0)
+            let moveAction = SKAction.moveBy(
+                x: direction == .left ? Constant.scrollSpeedPerSecond : -Constant.scrollSpeedPerSecond,
+                y: 0,
+                duration: 1.0
+            )
             let repeatAction = SKAction.repeatForever(moveAction)
 
             if node.action(forKey: GameConstant.backgroundAction) == nil {

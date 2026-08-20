@@ -142,6 +142,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         let nodesAtPoint = nodes(at: location)
         
         if handleMenuTaps(nodes: nodesAtPoint) { return }
+        if handleMarketTap(nodes: nodesAtPoint) { return }
         if handleBubbleButtonTaps(nodes: nodesAtPoint) { return }
         if handleEntityTaps(nodes: nodesAtPoint) { return }
         if handleArrowTaps(nodes: nodesAtPoint) { return }
@@ -183,6 +184,14 @@ private extension ForestScene {
         return false
     }
     
+    func handleMarketTap(nodes: [SKNode]) -> Bool {
+        guard nodes.contains(where: { $0.name == ForestConstant.marketName }) else {
+            return false
+        }
+        forestHelper?.showMarket()
+        return true
+    }
+
     func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {
         guard let btnNode = nodes.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }),
               let bubble = btnNode.parent,

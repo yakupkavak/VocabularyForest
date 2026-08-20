@@ -8,6 +8,7 @@
 import UIKit
 
 enum GameConstant {
+    static let marketAnimation = "marketAnimation"
     static let waitingCharacterAnimation = "waitingCharacterAnimation"
     static let movingCharacterAnimation = "movingCharacterAnimation"
     static let movingCharacterAction = "movingCharacterAction"
@@ -31,6 +32,7 @@ enum GameConstant {
     static let materialHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.6)
     static let sculptureHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.35)
     static let magicSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
+    static let marketSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
     static let flyTime: Double = 1.0
     static let explodeTime: Double = 0.6
     static let walkingTime: Double = 1.5
