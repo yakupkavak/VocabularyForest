@@ -29,7 +29,7 @@ private extension EnvironmentManager {
         static let marketFloorHeightMultiplier: CGFloat = 0.79
         static let scrollSpeedPerSecond: CGFloat = 100
         /// Seconds of rightward scrolling before the market's left edge enters the screen
-        static let marketRevealScrollSeconds: CGFloat = 1
+        static let marketRevealScrollSeconds: CGFloat = 0.5
 
     }
 }
