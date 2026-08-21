@@ -30,6 +30,9 @@ private extension EnvironmentManager {
         static let scrollSpeedPerSecond: CGFloat = 100
         /// Seconds of rightward scrolling before the market's left edge enters the screen
         static let marketRevealScrollSeconds: CGFloat = 0.5
+        /// Sign is on-screen at launch, standing left of the player on the same ground line
+        static let announcementSignRelativeX: CGFloat = 0.22
+        static let announcementSignFloorHeightMultiplier: CGFloat = 0.80
 
     }
 }
@@ -56,6 +59,7 @@ class EnvironmentManager {
     private var icons: [SKSpriteNode] = []
     private var marketTextures: [SKTexture] = []
     private let marketNode = SKSpriteNode()
+    private let announcementSignNode = SKSpriteNode(imageNamed: "announcement_sign")
     private var announcementBadgeNode: SKShapeNode?
 
     private var isRaining = false
@@ -136,6 +140,19 @@ private extension EnvironmentManager {
         scene.addChild(marketNode)
     }
     
+    func setupAnnouncementSign() {
+        guard let scene else { return }
+        announcementSignNode.position = CGPoint(
+            x: scene.size.width * Constant.announcementSignRelativeX,
+            y: GameConstant.floorHeightSize * Constant.announcementSignFloorHeightMultiplier
+        )
+        announcementSignNode.size = GameConstant.announcementSignSize
+        announcementSignNode.zPosition = 1
+        announcementSignNode.anchorPoint = CGPoint(x: 0.5, y: 0)
+        announcementSignNode.name = "announcementButton"
+        scene.addChild(announcementSignNode)
+    }
+
     func idleMarket() {
         guard !marketTextures.isEmpty else { return }
         let animate = SKAction.animate(with: marketTextures, timePerFrame: GameConstant.waitingTimePerFrame * Constant.marketIdleTimeMultiplier)
@@ -183,6 +200,7 @@ private extension EnvironmentManager {
 
     func isScrollingNode(_ node: SKNode) -> Bool {
         node == floorNode || node == waterStatue || node == grassStatue || node == marketNode ||
+        node == announcementSignNode ||
         node.name == "Animal" || node.name == "sculpture" || node.name == "plant"
     }
 
@@ -211,6 +229,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         setupUI()
         moveSky()
         setupMarket()
+        setupAnnouncementSign()
     }
     
     // MARK: - SETUP FUNCTIONS

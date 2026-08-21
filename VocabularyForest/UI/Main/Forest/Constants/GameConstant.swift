@@ -33,6 +33,8 @@ enum GameConstant {
     static let sculptureHeightSize = UIScreen.main.bounds.height * CGFloat(0.4) * CGFloat(0.35)
     static let magicSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
     static let marketSize = CGSize(width: gameHeightSize * 0.2, height: gameHeightSize * 0.2)
+    // Matches the 466x481 announcement_sign asset aspect ratio
+    static let announcementSignSize = CGSize(width: gameHeightSize * 0.2 * (466.0 / 481.0), height: gameHeightSize * 0.2)
     static let flyTime: Double = 1.0
     static let explodeTime: Double = 0.6
     static let walkingTime: Double = 1.5
