@@ -32,7 +32,9 @@ private extension EnvironmentManager {
         static let marketRevealScrollSeconds: CGFloat = 0.5
         /// Sign is on-screen at launch, standing left of the player on the same ground line
         static let announcementSignRelativeX: CGFloat = 0.22
-        static let announcementSignFloorHeightMultiplier: CGFloat = 0.80
+        static let announcementSignFloorHeightMultiplier: CGFloat = 0.845
+        static let announcementAtlasName = "ForestAnnouncement"
+        static let announcementFramePrefix = "forest_announcement_"
 
     }
 }
@@ -59,7 +61,8 @@ class EnvironmentManager {
     private var icons: [SKSpriteNode] = []
     private var marketTextures: [SKTexture] = []
     private let marketNode = SKSpriteNode()
-    private let announcementSignNode = SKSpriteNode(imageNamed: "announcement_sign")
+    private let announcementSignNode = SKSpriteNode()
+    private var announcementSignTextures: [SKTexture] = []
     private var announcementBadgeNode: SKShapeNode?
 
     private var isRaining = false
@@ -142,6 +145,11 @@ private extension EnvironmentManager {
     
     func setupAnnouncementSign() {
         guard let scene else { return }
+        announcementSignTextures = loadAtlas(
+            named: Constant.announcementAtlasName,
+            prefix: Constant.announcementFramePrefix
+        )
+        announcementSignNode.texture = announcementSignTextures.first
         announcementSignNode.position = CGPoint(
             x: scene.size.width * Constant.announcementSignRelativeX,
             y: GameConstant.floorHeightSize * Constant.announcementSignFloorHeightMultiplier
@@ -373,6 +381,19 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
             setupAnnouncementIndicatorsIfNeeded()
         }
         announcementBadgeNode?.isHidden = !isClaimable
+        updateAnnouncementSignAnimation(isClaimable: isClaimable)
+    }
+
+    private func updateAnnouncementSignAnimation(isClaimable: Bool) {
+        guard !announcementSignTextures.isEmpty else { return }
+        if isClaimable {
+            guard announcementSignNode.action(forKey: GameConstant.announcementAnimation) == nil else { return }
+            let animate = SKAction.animate(with: announcementSignTextures, timePerFrame: GameConstant.waitingTimePerFrame)
+            announcementSignNode.run(SKAction.repeatForever(animate), withKey: GameConstant.announcementAnimation)
+        } else {
+            announcementSignNode.removeAction(forKey: GameConstant.announcementAnimation)
+            announcementSignNode.texture = announcementSignTextures.first
+        }
     }
     
     private func setupAnnouncementIndicatorsIfNeeded() {
