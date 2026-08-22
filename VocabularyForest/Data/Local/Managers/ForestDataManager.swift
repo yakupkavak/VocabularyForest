@@ -1084,12 +1084,13 @@ private extension ForestDataManager {
         for _ in 0..<maxAttempts {
             let randomX = Double.random(in: xRange)
             let randomY = Double.random(in: yRange)
+            guard !isInsideReservedStructureBand(randomX) else { continue }
             var hasCollision = false
             for (exX, exY) in existingPositions {
                 let dx = randomX - exX
                 let dy = randomY - exY
                 let distance = sqrt(dx*dx + dy*dy)
-                
+
                 if distance < minDistance {
                     hasCollision = true
                     break
@@ -1099,7 +1100,19 @@ private extension ForestDataManager {
                 return (randomX, randomY)
             }
         }
+        // Fallback drops the spacing rule but still keeps the fixed
+        // structures (market, adventure gate, announcement sign) clear.
+        for _ in 0..<maxAttempts {
+            let randomX = Double.random(in: xRange)
+            if !isInsideReservedStructureBand(randomX) {
+                return (randomX, Double.random(in: yRange))
+            }
+        }
         return (Double.random(in: xRange), Double.random(in: yRange))
+    }
+
+    func isInsideReservedStructureBand(_ x: Double) -> Bool {
+        GameConstant.reservedStructureXRanges.contains { $0.contains(x) }
     }
 }
 

@@ -27,9 +27,6 @@ private extension EnvironmentManager {
         static let menuButtonName = "menu_button"
         static let marketIdleTimeMultiplier: Double = 0.8
         static let marketFloorHeightMultiplier: CGFloat = 0.79
-        static let scrollSpeedPerSecond: CGFloat = 100
-        static let marketRevealScrollSeconds: CGFloat = 0.1
-        static let adventureGateRevealScrollSeconds: CGFloat = 0.5
         static let adventureGateFloorHeightMultiplier: CGFloat = 0.464
         static let adventureGateAtlasName = "AdventureGate"
         static let adventureGateFramePrefix = "adventure_gate_"
@@ -129,9 +126,7 @@ private extension EnvironmentManager {
         // Starts fully off-screen; its left edge enters the view after
         // marketRevealScrollSeconds of scrolling right at scrollSpeedPerSecond
         marketNode.position = CGPoint(
-            x: scene.size.width
-                + GameConstant.marketSize.width / 2
-                + Constant.scrollSpeedPerSecond * Constant.marketRevealScrollSeconds,
+            x: GameConstant.marketCenterX,
             y: GameConstant.floorHeightSize * Constant.marketFloorHeightMultiplier
         )
         marketNode.size = GameConstant.marketSize
@@ -149,8 +144,7 @@ private extension EnvironmentManager {
             prefix: Constant.adventureGateFramePrefix
         )
         adventureGateNode.position = CGPoint(
-            x: -GameConstant.adventureGateSize.width / 2
-                - Constant.scrollSpeedPerSecond * Constant.adventureGateRevealScrollSeconds,
+            x: GameConstant.adventureGateCenterX,
             y: GameConstant.floorHeightSize * Constant.adventureGateFloorHeightMultiplier
         )
         adventureGateNode.size = GameConstant.adventureGateSize
@@ -169,7 +163,7 @@ private extension EnvironmentManager {
         )
         announcementSignNode.texture = announcementSignTextures.first
         announcementSignNode.position = CGPoint(
-            x: scene.size.width * ForestConstant.announcementSignRelativeX,
+            x: GameConstant.announcementSignCenterX,
             y: GameConstant.floorHeightSize * ForestConstant.announcementSignFloorHeightMultiplier
         )
         announcementSignNode.size = GameConstant.announcementSignSize
@@ -313,7 +307,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
 
         for node in scene.children where isScrollingNode(node) {
             let moveAction = SKAction.moveBy(
-                x: direction == .left ? Constant.scrollSpeedPerSecond : -Constant.scrollSpeedPerSecond,
+                x: direction == .left ? GameConstant.scrollSpeedPerSecond : -GameConstant.scrollSpeedPerSecond,
                 y: 0,
                 duration: 1.0
             )

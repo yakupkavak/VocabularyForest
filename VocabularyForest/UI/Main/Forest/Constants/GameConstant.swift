@@ -42,6 +42,33 @@ enum GameConstant {
     static let flyTime: Double = 1.0
     static let explodeTime: Double = 0.6
     static let walkingTime: Double = 1.5
+    static let scrollSpeedPerSecond: CGFloat = 100
+    static let marketRevealScrollSeconds: CGFloat = 0.1
+    static let adventureGateRevealScrollSeconds: CGFloat = 0.5
+    /// Launch-time world-space X centers of the fixed structures (nodes are
+    /// center-anchored on X). Single source shared by EnvironmentManager's
+    /// sprite placement and ForestDataManager's random-spawn exclusion.
+    static let marketCenterX = UIScreen.main.bounds.width
+        + marketSize.width / 2
+        + scrollSpeedPerSecond * marketRevealScrollSeconds
+    static let adventureGateCenterX = -adventureGateSize.width / 2
+        - scrollSpeedPerSecond * adventureGateRevealScrollSeconds
+    static let announcementSignCenterX = UIScreen.main.bounds.width * ForestConstant.announcementSignRelativeX
+    /// Spawned plants/sculptures are center-anchored and at most about one
+    /// plantHeight wide, so half of it keeps their widest half clear of a band.
+    static let structureSpawnMargin = ComponentSizeConstant.plantHeight / 2
+    /// Horizontal bands occupied by the fixed structures, expressed in the
+    /// Tree/Sculpture xPosition unit (fraction of gameWidthSize). Random
+    /// spawn positions must land outside every band.
+    static let reservedStructureXRanges: [ClosedRange<Double>] = [
+        (marketCenterX, marketSize.width),
+        (adventureGateCenterX, adventureGateSize.width),
+        (announcementSignCenterX, announcementSignSize.width)
+    ].map { center, width in
+        let lowerBound = Double((center - width / 2 - structureSpawnMargin) / gameWidthSize)
+        let upperBound = Double((center + width / 2 + structureSpawnMargin) / gameWidthSize)
+        return lowerBound...upperBound
+    }
 }
 
 enum HorizontalDirection {
