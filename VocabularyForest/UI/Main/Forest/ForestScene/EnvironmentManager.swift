@@ -28,9 +28,7 @@ private extension EnvironmentManager {
         static let marketIdleTimeMultiplier: Double = 0.8
         static let marketFloorHeightMultiplier: CGFloat = 0.79
         static let scrollSpeedPerSecond: CGFloat = 100
-        /// Seconds of rightward scrolling before the market's left edge enters the screen
-        static let marketRevealScrollSeconds: CGFloat = 0.5
-        /// Seconds of leftward scrolling before the gate's right edge enters the screen
+        static let marketRevealScrollSeconds: CGFloat = 0.1
         static let adventureGateRevealScrollSeconds: CGFloat = 0.5
         static let adventureGateFloorHeightMultiplier: CGFloat = 0.464
         static let adventureGateAtlasName = "AdventureGate"
