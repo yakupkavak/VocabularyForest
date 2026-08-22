@@ -55,7 +55,6 @@ class EnvironmentManager {
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let announcementButton = SKSpriteNode(imageNamed: "announcement_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
-    private let playButton = SKSpriteNode(imageNamed: "play_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let rightIcon = SKSpriteNode(imageNamed: "right_icon")
     private let leftIcon = SKSpriteNode(imageNamed: "left_icon")
@@ -283,7 +282,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         let menuColumn: [(button: SKSpriteNode, name: String)] = [
             (menuButton, Constant.menuButtonName),
             (announcementButton, "announcementButton"),
-            (playButton, "play_button"),
             (forestButton, "forest_button")
         ]
         let buttonSide = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
@@ -303,7 +301,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         confirmIcon.name = ForestConstant.confirmIconName
         refuseIcon.name = ForestConstant.refuseIconName
         scene.addChild(forestButton)
-        scene.addChild(playButton)
         scene.addChild(announcementButton)
         scene.addChild(menuButton)
         scene.addChild(scoreLabel)

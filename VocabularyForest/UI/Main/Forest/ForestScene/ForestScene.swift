@@ -170,7 +170,7 @@ private extension ForestScene {
             forestHelper?.showAnnouncement()
             return true
         }
-        if nodes.contains(where: { $0.name == "play_button" }) {
+        if nodes.contains(where: { $0.name == ForestConstant.adventureGateName }) {
             forestHelper?.showGameSelection()
             return true
         }
