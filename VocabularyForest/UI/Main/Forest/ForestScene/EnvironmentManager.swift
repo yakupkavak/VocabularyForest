@@ -30,6 +30,12 @@ private extension EnvironmentManager {
         static let scrollSpeedPerSecond: CGFloat = 100
         /// Seconds of rightward scrolling before the market's left edge enters the screen
         static let marketRevealScrollSeconds: CGFloat = 0.5
+        /// Seconds of leftward scrolling before the gate's right edge enters the screen
+        static let adventureGateRevealScrollSeconds: CGFloat = 0.5
+        /// Player ground line (0.83) lowered by 20%
+        static let adventureGateFloorHeightMultiplier: CGFloat = 0.664
+        static let adventureGateAtlasName = "AdventureGate"
+        static let adventureGateFramePrefix = "adventure_gate_"
         /// Sign is on-screen at launch, standing left of the player on the same ground line
         static let announcementSignRelativeX: CGFloat = 0.22
         static let announcementSignFloorHeightMultiplier: CGFloat = 0.845
@@ -61,6 +67,8 @@ class EnvironmentManager {
     private var icons: [SKSpriteNode] = []
     private var marketTextures: [SKTexture] = []
     private let marketNode = SKSpriteNode()
+    private var adventureGateTextures: [SKTexture] = []
+    private let adventureGateNode = SKSpriteNode()
     private let announcementSignNode = SKSpriteNode()
     private var announcementSignTextures: [SKTexture] = []
     private var announcementBadgeNode: SKShapeNode?
@@ -143,6 +151,27 @@ private extension EnvironmentManager {
         scene.addChild(marketNode)
     }
     
+    func setupAdventureGate() {
+        guard let scene else { return }
+        adventureGateTextures = loadAtlas(
+            named: Constant.adventureGateAtlasName,
+            prefix: Constant.adventureGateFramePrefix
+        )
+        // Starts fully off-screen on the left; its right edge enters the view after
+        // adventureGateRevealScrollSeconds of scrolling left at scrollSpeedPerSecond
+        adventureGateNode.position = CGPoint(
+            x: -GameConstant.adventureGateSize.width / 2
+                - Constant.scrollSpeedPerSecond * Constant.adventureGateRevealScrollSeconds,
+            y: GameConstant.floorHeightSize * Constant.adventureGateFloorHeightMultiplier
+        )
+        adventureGateNode.size = GameConstant.adventureGateSize
+        adventureGateNode.zPosition = 1
+        adventureGateNode.anchorPoint = CGPoint(x: 0.5, y: 0)
+        adventureGateNode.name = ForestConstant.adventureGateName
+        idleAdventureGate()
+        scene.addChild(adventureGateNode)
+    }
+
     func setupAnnouncementSign() {
         guard let scene else { return }
         announcementSignTextures = loadAtlas(
@@ -167,6 +196,12 @@ private extension EnvironmentManager {
         marketNode.run(SKAction.repeatForever(animate), withKey: GameConstant.marketAnimation )
     }
     
+    func idleAdventureGate() {
+        guard !adventureGateTextures.isEmpty else { return }
+        let animate = SKAction.animate(with: adventureGateTextures, timePerFrame: GameConstant.waitingTimePerFrame)
+        adventureGateNode.run(SKAction.repeatForever(animate), withKey: GameConstant.adventureGateAnimation)
+    }
+
     func loadAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
         let atlas = SKTextureAtlas(named: atlasName)
         var textures: [SKTexture] = []
@@ -208,7 +243,7 @@ private extension EnvironmentManager {
 
     func isScrollingNode(_ node: SKNode) -> Bool {
         node == floorNode || node == waterStatue || node == grassStatue || node == marketNode ||
-        node == announcementSignNode ||
+        node == announcementSignNode || node == adventureGateNode ||
         node.name == "Animal" || node.name == "sculpture" || node.name == "plant"
     }
 
@@ -237,6 +272,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         setupUI()
         moveSky()
         setupMarket()
+        setupAdventureGate()
         setupAnnouncementSign()
     }
     
