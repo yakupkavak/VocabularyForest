@@ -53,7 +53,6 @@ class EnvironmentManager {
     private let waterStatue = SKSpriteNode(imageNamed: "water_statue")
     private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
-    private let announcementButton = SKSpriteNode(imageNamed: "announcement_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
     private let rightIcon = SKSpriteNode(imageNamed: "right_icon")
@@ -69,7 +68,6 @@ class EnvironmentManager {
     private let adventureGateNode = SKSpriteNode()
     private let announcementSignNode = SKSpriteNode()
     private var announcementSignTextures: [SKTexture] = []
-    private var announcementBadgeNode: SKShapeNode?
 
     private var isRaining = false
     
@@ -281,7 +279,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         scoreLabel.fontColor = .white
         let menuColumn: [(button: SKSpriteNode, name: String)] = [
             (menuButton, Constant.menuButtonName),
-            (announcementButton, "announcementButton"),
             (forestButton, "forest_button")
         ]
         let buttonSide = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
@@ -301,7 +298,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         confirmIcon.name = ForestConstant.confirmIconName
         refuseIcon.name = ForestConstant.refuseIconName
         scene.addChild(forestButton)
-        scene.addChild(announcementButton)
         scene.addChild(menuButton)
         scene.addChild(scoreLabel)
     }
@@ -407,10 +403,6 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
     // MARK: - ANNOUNCEMENT CLAIM INDICATOR
     
     func setAnnouncementClaimable(_ isClaimable: Bool) {
-        if isClaimable {
-            setupAnnouncementIndicatorsIfNeeded()
-        }
-        announcementBadgeNode?.isHidden = !isClaimable
         updateAnnouncementSignAnimation(isClaimable: isClaimable)
     }
 
@@ -424,36 +416,5 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
             announcementSignNode.removeAction(forKey: GameConstant.announcementAnimation)
             announcementSignNode.texture = announcementSignTextures.first
         }
-    }
-    
-    private func setupAnnouncementIndicatorsIfNeeded() {
-        guard let scene, announcementBadgeNode == nil else { return }
-        let buttonSize = max(scene.size.height * ForestConstant.menuButtonRelativeSize, ForestConstant.menuButtonMinSize)
-        
-        // "!" badge on the top-right corner of the button (kept as a sibling node
-        // because changing the sprite's size also scales its children)
-        let badgeRadius = buttonSize * 0.2
-        let badge = SKShapeNode(circleOfRadius: badgeRadius)
-        badge.fillColor = SKColor(red: 0.97, green: 0.94, blue: 0.87, alpha: 1.0)
-        badge.strokeColor = SKColor(red: 0.45, green: 0.31, blue: 0.18, alpha: 1.0)
-        badge.lineWidth = badgeRadius * 0.22
-        badge.position = CGPoint(
-            x: announcementButton.position.x + buttonSize * 0.4,
-            y: announcementButton.position.y + buttonSize * 0.4
-        )
-        badge.zPosition = announcementButton.zPosition + 0.1
-        badge.name = "announcementButton"
-        
-        let exclamation = SKLabelNode(fontNamed: "AvenirNext-Bold")
-        exclamation.text = "!"
-        exclamation.fontSize = badgeRadius * 1.6
-        exclamation.fontColor = SKColor(red: 0.45, green: 0.31, blue: 0.18, alpha: 1.0)
-        exclamation.verticalAlignmentMode = .center
-        exclamation.horizontalAlignmentMode = .center
-        exclamation.name = "announcementButton"
-        badge.addChild(exclamation)
-        
-        scene.addChild(badge)
-        announcementBadgeNode = badge
     }
 }
