@@ -410,12 +410,14 @@ private extension ForestUI {
     }
 
     var sceneMenuEntries: [(label: String, action: () -> Void)] {
+        // The first three mirror the sprite menu column; market and the adventure
+        // gate scroll with the scene, so fixed slots keep them reachable without walking.
         [
             (String(localized: "a11y_menu"), showOptions),
             (String(localized: "a11y_adventure_board"), showAnnouncement),
-            (String(localized: "a11y_play_game"), showGameSelection),
             (String(localized: "a11y_forest_info"), showForestInfo),
-            (String(localized: "a11y_market"), showMarket)
+            (String(localized: "a11y_market"), showMarket),
+            (String(localized: "a11y_play_game"), showGameSelection)
         ]
     }
 
