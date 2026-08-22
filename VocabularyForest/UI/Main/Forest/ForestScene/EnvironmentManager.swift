@@ -32,8 +32,7 @@ private extension EnvironmentManager {
         static let marketRevealScrollSeconds: CGFloat = 0.5
         /// Seconds of leftward scrolling before the gate's right edge enters the screen
         static let adventureGateRevealScrollSeconds: CGFloat = 0.5
-        /// Player ground line (0.83) lowered by 20%
-        static let adventureGateFloorHeightMultiplier: CGFloat = 0.664
+        static let adventureGateFloorHeightMultiplier: CGFloat = 0.464
         static let adventureGateAtlasName = "AdventureGate"
         static let adventureGateFramePrefix = "adventure_gate_"
         /// Sign is on-screen at launch, standing left of the player on the same ground line
@@ -157,15 +156,13 @@ private extension EnvironmentManager {
             named: Constant.adventureGateAtlasName,
             prefix: Constant.adventureGateFramePrefix
         )
-        // Starts fully off-screen on the left; its right edge enters the view after
-        // adventureGateRevealScrollSeconds of scrolling left at scrollSpeedPerSecond
         adventureGateNode.position = CGPoint(
             x: -GameConstant.adventureGateSize.width / 2
                 - Constant.scrollSpeedPerSecond * Constant.adventureGateRevealScrollSeconds,
             y: GameConstant.floorHeightSize * Constant.adventureGateFloorHeightMultiplier
         )
         adventureGateNode.size = GameConstant.adventureGateSize
-        adventureGateNode.zPosition = 1
+        adventureGateNode.zPosition = getZIndex(yPosition: Constant.adventureGateFloorHeightMultiplier)
         adventureGateNode.anchorPoint = CGPoint(x: 0.5, y: 0)
         adventureGateNode.name = ForestConstant.adventureGateName
         idleAdventureGate()
@@ -198,7 +195,7 @@ private extension EnvironmentManager {
     
     func idleAdventureGate() {
         guard !adventureGateTextures.isEmpty else { return }
-        let animate = SKAction.animate(with: adventureGateTextures, timePerFrame: GameConstant.waitingTimePerFrame)
+        let animate = SKAction.animate(with: adventureGateTextures, timePerFrame: GameConstant.adventureGateTimePerFrame)
         adventureGateNode.run(SKAction.repeatForever(animate), withKey: GameConstant.adventureGateAnimation)
     }
 
@@ -424,7 +421,7 @@ extension EnvironmentManager: EnvironmentManagerProtocol {
         guard !announcementSignTextures.isEmpty else { return }
         if isClaimable {
             guard announcementSignNode.action(forKey: GameConstant.announcementAnimation) == nil else { return }
-            let animate = SKAction.animate(with: announcementSignTextures, timePerFrame: GameConstant.waitingTimePerFrame)
+            let animate = SKAction.animate(with: announcementSignTextures, timePerFrame: GameConstant.announcementTimePerFrame)
             announcementSignNode.run(SKAction.repeatForever(animate), withKey: GameConstant.announcementAnimation)
         } else {
             announcementSignNode.removeAction(forKey: GameConstant.announcementAnimation)
