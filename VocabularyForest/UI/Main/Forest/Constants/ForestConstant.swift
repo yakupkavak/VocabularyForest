@@ -18,6 +18,10 @@ enum ForestConstant {
     static let menuButtonRelativeSize: CGFloat = 0.05
     /// Minimum 44x44pt touch target; 0.05*H drops below it on small phones.
     static let menuButtonMinSize: CGFloat = 44
+    /// Announcement sign launch geometry — shared by EnvironmentManager (sprite)
+    /// and ForestUI's tap/accessibility hotspot so both layers stay aligned.
+    static let announcementSignRelativeX: CGFloat = 0.22
+    static let announcementSignFloorHeightMultiplier: CGFloat = 0.845
     static let rightIconName = "right_icon"
     static let leftIconName = "left_icon"
     static let downIconName = "down_icon"

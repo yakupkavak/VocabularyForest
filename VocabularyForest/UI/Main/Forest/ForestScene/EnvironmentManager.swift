@@ -35,9 +35,6 @@ private extension EnvironmentManager {
         static let adventureGateFloorHeightMultiplier: CGFloat = 0.464
         static let adventureGateAtlasName = "AdventureGate"
         static let adventureGateFramePrefix = "adventure_gate_"
-        /// Sign is on-screen at launch, standing left of the player on the same ground line
-        static let announcementSignRelativeX: CGFloat = 0.22
-        static let announcementSignFloorHeightMultiplier: CGFloat = 0.845
         static let announcementAtlasName = "ForestAnnouncement"
         static let announcementFramePrefix = "forest_announcement_"
 
@@ -174,8 +171,8 @@ private extension EnvironmentManager {
         )
         announcementSignNode.texture = announcementSignTextures.first
         announcementSignNode.position = CGPoint(
-            x: scene.size.width * Constant.announcementSignRelativeX,
-            y: GameConstant.floorHeightSize * Constant.announcementSignFloorHeightMultiplier
+            x: scene.size.width * ForestConstant.announcementSignRelativeX,
+            y: GameConstant.floorHeightSize * ForestConstant.announcementSignFloorHeightMultiplier
         )
         announcementSignNode.size = GameConstant.announcementSignSize
         announcementSignNode.zPosition = 1

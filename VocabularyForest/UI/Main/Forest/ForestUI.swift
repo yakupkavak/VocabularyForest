@@ -405,16 +405,40 @@ private extension ForestUI {
                     y: geo.size.height * (1 - ForestConstant.menuButtonRelativeYs[index])
                 )
             }
+            announcementSignHotspot(in: geo.size)
         }
         .ignoresSafeArea()
     }
 
+    /// Tap/VoiceOver target over the animated announcement sign's launch position,
+    /// built from the same shared geometry the sprite uses. VoiceOver also reads
+    /// whether a reward is waiting — the sighted cue for that is the animation.
+    func announcementSignHotspot(in size: CGSize) -> some View {
+        let signSize = GameConstant.announcementSignSize
+        // Sprite is bottom-anchored in SpriteKit; convert its center to top-left origin
+        let centerYFromBottom = GameConstant.floorHeightSize
+            * ForestConstant.announcementSignFloorHeightMultiplier
+            + signSize.height / 2
+        let isRewardReady = !viewModel.claimableAnnouncementTypes.isEmpty
+        return Button(action: showAnnouncement) {
+            Color.clear
+                .frame(width: signSize.width, height: signSize.height)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(String(localized: "a11y_adventure_board"))
+        .accessibilityValue(isRewardReady ? String(localized: "a11y_reward_ready") : "")
+        .position(
+            x: size.width * ForestConstant.announcementSignRelativeX,
+            y: size.height - centerYFromBottom
+        )
+    }
+
     var sceneMenuEntries: [(label: String, action: () -> Void)] {
-        // The first three mirror the sprite menu column; market and the adventure
-        // gate scroll with the scene, so fixed slots keep them reachable without walking.
+        // The first two mirror the sprite menu column; the announcement sign has its
+        // own hotspot over the sprite, and market/game get fixed slots below the
+        // column so they stay reachable without walking.
         [
             (String(localized: "a11y_menu"), showOptions),
-            (String(localized: "a11y_adventure_board"), showAnnouncement),
             (String(localized: "a11y_forest_info"), showForestInfo),
             (String(localized: "a11y_market"), showMarket),
             (String(localized: "a11y_play_game"), showGameSelection)
