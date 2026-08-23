@@ -58,14 +58,17 @@ private extension ForestTourManager {
         static let idleTimeMultiplier: Double = 2.0
         /// The guide should read larger than regular forest animals.
         static let sizeMultiplier: CGFloat = 1.3
-        /// Per-frame chase speed; at 60fps (144pt/s) this still outruns
-        /// scrollSpeedPerSecond (100pt/s) so the rabbit keeps its lead while
-        /// the world scrolls, without reading as teleporting between stops.
-        static let walkSpeedPerFrame: CGFloat = 2.4
+        /// Per-frame chase speed; deliberately a calm stroll (60pt/s at
+        /// 60fps). Slower than the world scroll, so the rabbit may trail its
+        /// anchor during heavy scrolling and catch up when the player stops.
+        static let walkSpeedPerFrame: CGFloat = 1.0
         /// Ease-out zone before a stop; speed scales down linearly inside it
         /// so arrival reads as a landing instead of an abrupt halt.
         static let arrivalEaseDistance: CGFloat = 60.0
-        static let minWalkSpeedPerFrame: CGFloat = 0.6
+        static let minWalkSpeedPerFrame: CGFloat = 0.4
+        /// Idle station-keeping must outpace the scroll drift (1.67pt/frame)
+        /// or the standing rabbit visibly slides off its stop.
+        static let idleDriftSpeedPerFrame: CGFloat = 2.4
         /// Hysteresis pair: the scrolling world drags the anchor a little every
         /// frame, so without a wide re-start band the rabbit stutter-steps
         /// between walk and idle whenever the player moves.
@@ -84,14 +87,11 @@ private extension ForestTourManager {
         static let readyButtonSize: CGFloat = 56.0
         static let readyButtonBottomOffset: CGFloat = 90.0
 
-        /// Bottom-center Next control that pages the tour dialogue; it dims
-        /// and ignores taps while a follow step waits on the player walking.
-        static let nextButtonWidth: CGFloat = 100.0
-        static let nextButtonHeight: CGFloat = 44.0
-        static let nextButtonFontName = "Arial-BoldMT"
-        static let nextButtonFontSize: CGFloat = 16.0
-        static let nextButtonDisabledAlpha: CGFloat = 0.4
-        static let nextButtonEnabledAlpha: CGFloat = 1.0
+        /// Bottom-center Next arrow that pages the tour dialogue; it only
+        /// appears when the player is at the right spot, hiding entirely
+        /// while a follow step waits on the player walking.
+        static let nextButtonImageName = "next_button"
+        static let nextButtonSize: CGFloat = 64.0
 
         /// Spotlight layering: the dim veil sits above every world node, and
         /// the featured structure, rabbit, and player are raised above it.
@@ -110,7 +110,7 @@ final class ForestTourManager {
     private weak var playerNode: SKSpriteNode?
     private let rabbitNode = SKSpriteNode()
     private let dimNode = SKSpriteNode()
-    private let nextButtonNode = SKShapeNode()
+    private let nextButtonNode = SKSpriteNode()
     private var idleTextures: [SKTexture] = []
     private var walkTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
@@ -192,7 +192,7 @@ extension ForestTourManager: ForestTourManagerProtocol {
             if isNextButtonTapped(nodes), !pendingSentences.isEmpty {
                 showNextSentence()
                 if pendingSentences.isEmpty {
-                    setNextButton(enabled: false)
+                    setNextButton(visible: false)
                 }
                 return true
             }
@@ -250,44 +250,20 @@ private extension ForestTourManager {
     }
 
     func setupNextButton(in scene: SKScene) {
-        let rect = CGRect(
-            x: -Constants.nextButtonWidth / Constants.halfDivider,
-            y: -Constants.nextButtonHeight / Constants.halfDivider,
-            width: Constants.nextButtonWidth,
-            height: Constants.nextButtonHeight
-        )
-        nextButtonNode.path = CGPath(
-            roundedRect: rect,
-            cornerWidth: ComponentBubble.Constants.defaultCornerRadius,
-            cornerHeight: ComponentBubble.Constants.defaultCornerRadius,
-            transform: nil
-        )
-        nextButtonNode.fillColor = .brown500.withAlphaComponent(ComponentBubble.Constants.defaultAlpha)
-        nextButtonNode.strokeColor = .black
-        nextButtonNode.lineWidth = ComponentBubble.Constants.defaultLineWidth
+        nextButtonNode.texture = SKTexture(imageNamed: Constants.nextButtonImageName)
+        nextButtonNode.size = CGSize(width: Constants.nextButtonSize, height: Constants.nextButtonSize)
         nextButtonNode.name = ForestConstant.tourNextButtonName
         nextButtonNode.zPosition = Constants.spotlitZPosition
         nextButtonNode.position = CGPoint(
             x: scene.size.width / Constants.halfDivider,
             y: Constants.readyButtonBottomOffset
         )
-
-        let label = SKLabelNode(fontNamed: Constants.nextButtonFontName)
-        label.text = String(localized: "tour_next")
-        label.fontSize = Constants.nextButtonFontSize
-        label.fontColor = .white
-        label.verticalAlignmentMode = .center
-        label.horizontalAlignmentMode = .center
-        // Taps land on the label as often as the plate; both must count.
-        label.name = ForestConstant.tourNextButtonName
-        nextButtonNode.addChild(label)
-
+        nextButtonNode.isHidden = true
         scene.addChild(nextButtonNode)
     }
 
-    func setNextButton(enabled: Bool) {
-        nextButtonNode.isHidden = false
-        nextButtonNode.alpha = enabled ? Constants.nextButtonEnabledAlpha : Constants.nextButtonDisabledAlpha
+    func setNextButton(visible: Bool) {
+        nextButtonNode.isHidden = !visible
     }
 
     func isNextButtonTapped(_ nodes: [SKNode]) -> Bool {
@@ -356,7 +332,7 @@ private extension ForestTourManager {
             // Standing on scrolling ground: chase the drifting anchor with a
             // clamped step so the rabbit stays planted at its stop without
             // ever jumping there in a single frame.
-            let driftX = max(-Constants.walkSpeedPerFrame, min(Constants.walkSpeedPerFrame, dx))
+            let driftX = max(-Constants.idleDriftSpeedPerFrame, min(Constants.idleDriftSpeedPerFrame, dx))
             rabbitNode.position.x += driftX
         }
     }
@@ -400,31 +376,31 @@ private extension ForestTourManager {
         switch newStep {
         case .welcome:
             showSpotlight(on: nil)
-            setNextButton(enabled: true)
+            setNextButton(visible: true)
             talk(String(localized: "tour_welcome"))
         case .board:
             showSpotlight(on: ForestConstant.announcementButtonName)
-            setNextButton(enabled: true)
+            setNextButton(visible: true)
             talk(String(localized: "tour_board_intro"))
         case .followGate:
             hideSpotlight()
             talk(String(localized: "tour_follow_gate"))
-            setNextButton(enabled: !pendingSentences.isEmpty)
+            setNextButton(visible: !pendingSentences.isEmpty)
             onWalkHintChanged?(.left)
         case .gate:
             onWalkHintChanged?(nil)
             showSpotlight(on: ForestConstant.adventureGateName)
-            setNextButton(enabled: true)
+            setNextButton(visible: true)
             talk(String(localized: "tour_gate_intro"))
         case .followMarket:
             hideSpotlight()
             talk(String(localized: "tour_follow_market"))
-            setNextButton(enabled: !pendingSentences.isEmpty)
+            setNextButton(visible: !pendingSentences.isEmpty)
             onWalkHintChanged?(.right)
         case .market:
             onWalkHintChanged?(nil)
             showSpotlight(on: ForestConstant.marketName)
-            setNextButton(enabled: true)
+            setNextButton(visible: true)
             talk(String(localized: "tour_market_intro"))
         case .ready:
             showSpotlight(on: nil)
