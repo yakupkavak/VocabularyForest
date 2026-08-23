@@ -73,6 +73,12 @@ private extension ForestTourManager {
         static let startWalkingDistance: CGFloat = 24.0
         static let stopWalkingDistance: CGFloat = 4.0
         static let anchorGap: CGFloat = 12.0
+        /// Pushes the first stop toward screen center so the rabbit doesn't
+        /// spawn hugging the board at the screen edge.
+        static let welcomeAnchorScreenFraction: CGFloat = 0.10
+        /// Lowers the tour bubble by this fraction of the rabbit's height so
+        /// it hovers beside the head instead of floating high above it.
+        static let bubbleLowerHeightFraction: CGFloat = 0.5
         static let finishFadeDuration: TimeInterval = 0.5
         /// A follow step completes once the target structure is fully on
         /// screen plus this fraction of the screen width further in, so the
@@ -169,10 +175,9 @@ extension ForestTourManager: ForestTourManagerProtocol {
         guard isActive else { return }
         moveTowardAnchor()
         checkFollowProgress()
-        // Invariant: the Next arrow only exists while the rabbit is talking.
-        if nextButtonNode.parent != nil, !isRabbitTalking {
-            nextButtonNode.isHidden = true
-        }
+        // Single source of truth for the arrow: talking, standing still, and
+        // with something left to advance — otherwise it stays hidden.
+        nextButtonNode.isHidden = !shouldShowNextButton
     }
 
     func handleTouch(nodes: [SKNode]) -> Bool {
@@ -211,11 +216,7 @@ extension ForestTourManager: ForestTourManagerProtocol {
             // walking is the lesson; all other touches drive the player.
             if isNextButtonTapped(nodes), !pendingSentences.isEmpty {
                 showNextSentence()
-                if pendingSentences.isEmpty {
-                    setNextButton(visible: false)
-                } else {
-                    pulseNextButton()
-                }
+                pulseNextButton()
                 return true
             }
             return false
@@ -284,10 +285,16 @@ private extension ForestTourManager {
         scene.addChild(nextButtonNode)
     }
 
-    func setNextButton(visible: Bool) {
-        nextButtonNode.removeAction(forKey: Constants.nextButtonCooldownActionKey)
-        nextButtonNode.alpha = Constants.fullAlpha
-        nextButtonNode.isHidden = !visible
+    var shouldShowNextButton: Bool {
+        guard isRabbitTalking, !isWalking else { return false }
+        switch step {
+        case .welcome, .board, .gate, .market:
+            return true
+        case .followGate, .followMarket:
+            return !pendingSentences.isEmpty
+        case .inactive, .entering, .ready, .finished:
+            return false
+        }
     }
 
     func isNextButtonTapped(_ nodes: [SKNode]) -> Bool {
@@ -328,6 +335,7 @@ private extension ForestTourManager {
         case .entering, .welcome, .board:
             guard let board = scene.childNode(withName: ForestConstant.announcementButtonName) as? SKSpriteNode else { return nil }
             return board.position.x + board.size.width / Constants.halfDivider + rabbitHalfWidth + Constants.anchorGap
+                + scene.size.width * Constants.welcomeAnchorScreenFraction
         case .followGate, .gate:
             guard let gate = scene.childNode(withName: ForestConstant.adventureGateName) as? SKSpriteNode else { return nil }
             return gate.position.x + gate.size.width / Constants.halfDivider + rabbitHalfWidth + Constants.anchorGap
@@ -413,36 +421,30 @@ private extension ForestTourManager {
         switch newStep {
         case .welcome:
             showSpotlight(on: nil)
-            setNextButton(visible: true)
             talk(String(localized: "tour_welcome"))
         case .board:
             showSpotlight(on: ForestConstant.announcementButtonName)
-            setNextButton(visible: true)
             talk(String(localized: "tour_board_intro"))
         case .followGate:
             hideSpotlight()
             talk(String(localized: "tour_follow_gate"))
-            setNextButton(visible: !pendingSentences.isEmpty)
             onWalkHintChanged?(.left)
         case .gate:
             onWalkHintChanged?(nil)
             showSpotlight(on: ForestConstant.adventureGateName)
-            setNextButton(visible: true)
             talk(String(localized: "tour_gate_intro"))
         case .followMarket:
             hideSpotlight()
             talk(String(localized: "tour_follow_market"))
-            setNextButton(visible: !pendingSentences.isEmpty)
-            onWalkHintChanged?(.right)
+            // Walking was already taught on the gate leg; once the user has
+            // reached the adventure gate the hint never shows again.
+            onWalkHintChanged?(nil)
         case .market:
             onWalkHintChanged?(nil)
             showSpotlight(on: ForestConstant.marketName)
-            setNextButton(visible: true)
             talk(String(localized: "tour_market_intro"))
         case .ready:
             showSpotlight(on: nil)
-            // The tick takes the Next button's spot as the sole confirm control.
-            nextButtonNode.isHidden = true
             askReadyQuestion()
         case .finished:
             hideSpotlight()
@@ -504,7 +506,8 @@ private extension ForestTourManager {
             text: sentence,
             width: ComponentBubble.Constants.tourBubbleWidth,
             minHeight: ComponentBubble.Constants.tourBubbleMinHeight,
-            gap: ComponentBubble.Constants.tourBubbleGap,
+            gap: ComponentBubble.Constants.tourBubbleGap
+                - rabbitNode.size.height * Constants.bubbleLowerHeightFraction,
             autoClose: false
         )
         rabbitNode.addChild(bubble)
