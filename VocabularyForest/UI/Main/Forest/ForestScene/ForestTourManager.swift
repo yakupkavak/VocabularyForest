@@ -78,8 +78,11 @@ private extension ForestTourManager {
         static let welcomeAnchorScreenFraction: CGFloat = 0.10
         /// Lowers the tour bubble by this fraction of the rabbit's height so
         /// it hovers beside the head instead of floating high above it.
-        static let bubbleLowerHeightFraction: CGFloat = 0.5
+        static let bubbleLowerHeightFraction: CGFloat = 0.45
         static let finishFadeDuration: TimeInterval = 0.5
+        /// How long the farewell thank-you bubble stays up before the rabbit
+        /// jumps away.
+        static let thanksHoldDuration: TimeInterval = 1.5
         /// A follow step completes once the target structure is fully on
         /// screen plus this fraction of the screen width further in, so the
         /// arrival registers just past the moment the structure is revealed.
@@ -286,12 +289,13 @@ private extension ForestTourManager {
     }
 
     var shouldShowNextButton: Bool {
-        guard isRabbitTalking, !isWalking else { return false }
         switch step {
         case .welcome, .board, .gate, .market:
+            // The spotlight veil is up on these steps: the arrow must be
+            // available even while the rabbit is still settling into place.
             return true
         case .followGate, .followMarket:
-            return !pendingSentences.isEmpty
+            return isRabbitTalking && !isWalking && !pendingSentences.isEmpty
         case .inactive, .entering, .ready, .finished:
             return false
         }
@@ -600,12 +604,17 @@ private extension ForestTourManager {
         onWalkHintChanged?(nil)
         removeReadyButton()
         nextButtonNode.removeFromParent()
-        rabbitNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
+        // Farewell: thank the player, hold the bubble a beat, then jump away.
+        talk(String(localized: "tour_thanks"))
+        let hold = SKAction.wait(forDuration: Constants.thanksHoldDuration)
+        let stopIdle = SKAction.run { [weak self] in
+            self?.rabbitNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
+        }
         let jump = SKAction.animate(with: jumpTextures, timePerFrame: GameConstant.jumpTimePerFrame)
         let fade = SKAction.fadeOut(withDuration: Constants.finishFadeDuration)
         let notify = SKAction.run { [weak self] in
             self?.onFinished?()
         }
-        rabbitNode.run(.sequence([jump, fade, notify, .removeFromParent()]))
+        rabbitNode.run(.sequence([hold, stopIdle, jump, fade, notify, .removeFromParent()]))
     }
 }
