@@ -78,12 +78,12 @@ private extension SculptureManager {
             x: GameConstant.gameWidthSize * model.xPosition,
             y: GameConstant.sculptureHeightSize * model.yPosition
         )
-        let originalSize = currentSculptureNode.size
-        if originalSize.height > Constants.zero {
-            let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
-            currentSculptureNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.sculptureHeight)
-        }
+        currentSculptureNode.size = ComponentSizeConstant.nodeSize(
+            textureSize: currentSculptureNode.size,
+            widthRatio: model.widthRatio,
+            heightRatio: model.heightRatio,
+            defaultHeight: ComponentSizeConstant.sculptureHeight
+        )
         currentSculptureNode.name = "sculpture"
         currentSculptureNode.zPosition = getZIndex(yPosition: model.yPosition)
         sculptureModel = model

@@ -23,6 +23,10 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     /// Invariant: an entity with `assetSource == .offlineStorage` and `assetReady == true`
     /// has its file verified on disk. Only such entities are added to the scene.
     var assetReady: Bool = true
+    /// Render size as a fraction of screen height (rewards_config); nil falls back
+    /// to the category default and the texture aspect ratio.
+    var widthRatio: CGFloat? = nil
+    var heightRatio: CGFloat? = nil
 }
 
 let baseSculptureList = [

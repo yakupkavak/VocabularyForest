@@ -90,6 +90,8 @@ class ForestViewModel: BaseViewModel {
     private var directionList: [DirectionWithCount] = []
     private var dailySpinRewardMap: [Int: LocalRewardType] = [:]
     private var fetchForestTask: Task<Void, Error>? = nil
+    /// Latest rewards catalog, kept for resolving entity render sizes (rewards_config ratios).
+    private var rewardCatalogResolver = RewardCatalogResolver(items: [])
     weak var output: ForestViewModelOutputProcotol?
     
     private let logger: AppLoggerProtocol
@@ -363,10 +365,12 @@ extension ForestViewModel {
                 sortDescriptors: nil,
                 contextType: .background
             )
+            let catalogResolver = await fetchRewardCatalogResolver()
 
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
-                
+                self.rewardCatalogResolver = catalogResolver
+
                 let newAnimals = fetchedAnimals.filter { newItem in
                     !animalList.contains(where: { $0 == newItem })
                 }
@@ -388,15 +392,15 @@ extension ForestViewModel {
                 if !newTrees.isEmpty { treeList.append(contentsOf: newTrees) }
 
                 for animal in newAnimals {
-                    output?.setupAnimal(animal: animal)
+                    output?.setupAnimal(animal: applyingRewardSizes(animal))
                 }
-                
+
                 for sculpture in newSculptures {
-                    output?.setupSculpture(sculpture: sculpture)
+                    output?.setupSculpture(sculpture: applyingRewardSizes(sculpture))
                 }
-                
+
                 for tree in newTrees {
-                    output?.setupPlant(plant: tree)
+                    output?.setupPlant(plant: applyingRewardSizes(tree))
                 }
 
                 forestStatus = ForestStatusModel(
@@ -506,21 +510,21 @@ extension ForestViewModel: ForestViewModelProtocol {
             switch selectedModel {
             case .animal:
                 if let model = forestEntityService.fetchAnimal(id: componentUUID, contextType: .background) {
-                    self.output?.setupAnimal(animal: model)
+                    self.output?.setupAnimal(animal: applyingRewardSizes(model))
                 }
                 if let index = animalList.firstIndex(where: { $0.id == componentUUID }) {
                     animalList[index].characterName = name
                 }
             case .plant:
                 if let model = forestEntityService.fetchPlant(id: componentUUID, contextType: .background) {
-                    self.output?.setupPlant(plant: model)
+                    self.output?.setupPlant(plant: applyingRewardSizes(model))
                 }
                 if let index = treeList.firstIndex(where: { $0.id == componentUUID }) {
                     treeList[index].characterName = name
                 }
             case .sculpture:
                 if let model = forestEntityService.fetchSculpture(id: componentUUID, contextType: .background) {
-                    self.output?.setupSculpture(sculpture: model)
+                    self.output?.setupSculpture(sculpture: applyingRewardSizes(model))
                 }
                 if let index = sculptureList.firstIndex(where: { $0.id == componentUUID }) {
                     sculptureList[index].characterName = name
@@ -723,7 +727,29 @@ private extension ForestViewModel {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestViewModel {
-    
+
+    func fetchRewardCatalogResolver() async -> RewardCatalogResolver {
+        do {
+            let response = try await remoteConfigRepository.fetchRewardsCatalog()
+            return RewardCatalogResolver(items: response.model.items ?? [])
+        } catch {
+            logger.error("Rewards catalog could not be fetched for sizing: \(error.localizedDescription)", category: .forest)
+            return RewardCatalogResolver(items: [])
+        }
+    }
+
+    /// Copies the rewards_config size ratios onto the model handed to the scene;
+    /// stored lists stay untouched so Equatable-based dedup keeps working.
+    func applyingRewardSizes<Model: ComponentModelProtocol>(_ model: Model) -> Model {
+        guard let item = rewardCatalogResolver.catalogItem(rewardId: model.rewardId, assetName: model.assetName) else {
+            return model
+        }
+        var sizedModel = model
+        sizedModel.widthRatio = item.widthRatio.map { CGFloat($0) }
+        sizedModel.heightRatio = item.heightRatio.map { CGFloat($0) }
+        return sizedModel
+    }
+
     func bindQuests() {
         questService.questListPublisher.receive(on: DispatchQueue.main)
             .sink { [weak self] updatedQuests in

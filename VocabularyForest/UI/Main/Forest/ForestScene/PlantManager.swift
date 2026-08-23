@@ -116,13 +116,12 @@ private extension PlantManager {
             return
         }
         plant.texture = firstFrame
-        // TODO: - SIZE
-        let originalSize = firstFrame.size()
-        if originalSize.height > Constants.zero {
-            let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
-            plant.size = CGSize(width: targetWidth, height: ComponentSizeConstant.plantHeight)
-        }
+        plant.size = ComponentSizeConstant.nodeSize(
+            textureSize: firstFrame.size(),
+            widthRatio: model.widthRatio,
+            heightRatio: model.heightRatio,
+            defaultHeight: ComponentSizeConstant.plantHeight
+        )
         plant.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         plant.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,

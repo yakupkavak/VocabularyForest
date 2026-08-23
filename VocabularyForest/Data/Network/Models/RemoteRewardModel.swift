@@ -32,6 +32,10 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let roadColorHex: String?
     let cardGradientHexes: [String]?
     let cardTextColorHex: String?
+    /// Forest render size as a fraction of screen height (0-1); when absent the
+    /// category default in `ComponentSizeConstant` and the texture aspect ratio apply
+    let widthRatio: Double?
+    let heightRatio: Double?
 }
 
 // MARK: - SAFE COMPUTED PROPERTIES (UI HELPERS)
