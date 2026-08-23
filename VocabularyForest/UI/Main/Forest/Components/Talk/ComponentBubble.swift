@@ -93,6 +93,11 @@ struct ComponentBubble {
         /// Narrower than talkBubbleWidth: the tour rabbit stops beside screen-edge
         /// structures, where a full-width bubble would clip at the display edge.
         static let tourBubbleWidth: CGFloat = 150.0
+        /// Half the regular talk minimum: tour sentences are short one-liners.
+        static let tourBubbleMinHeight: CGFloat = 30.0
+        /// Negative so the tour bubble hugs the rabbit's head instead of
+        /// floating a full body-height above it.
+        static let tourBubbleGap: CGFloat = -20.0
         static let tourQuestionMinHeight: CGFloat = 110.0
         static let tourAcceptButtonSize: CGFloat = 36.0
         static let tourQuestionLabelYOffset: CGFloat = 22.0
@@ -274,7 +279,15 @@ struct ComponentBubble {
         return bubble
     }
 
-    static func createTalkBubble(parentSize: CGSize, parentXScale: CGFloat, text: String, width: CGFloat = Constants.talkBubbleWidth, autoClose: Bool = true) -> SKNode {
+    static func createTalkBubble(
+        parentSize: CGSize,
+        parentXScale: CGFloat,
+        text: String,
+        width: CGFloat = Constants.talkBubbleWidth,
+        minHeight: CGFloat = Constants.talkBubbleMinHeight,
+        gap: CGFloat = Constants.talkBubbleGap,
+        autoClose: Bool = true
+    ) -> SKNode {
         let texture = SKTexture(imageNamed: "speak_ballon")
         let bubble = SKSpriteNode(texture: texture)
         bubble.name = Constants.talkBubbleName
@@ -282,7 +295,7 @@ struct ComponentBubble {
 
         let label = createTalkLabel(text: text, maxWidth: width - Constants.talkLabelPadding)
 
-        let dynamicHeight = max(Constants.talkBubbleMinHeight, label.frame.height + Constants.talkVerticalPadding)
+        let dynamicHeight = max(minHeight, label.frame.height + Constants.talkVerticalPadding)
         bubble.size = CGSize(width: width, height: dynamicHeight)
 
         if parentXScale < Constants.zero {
@@ -291,7 +304,7 @@ struct ComponentBubble {
 
         bubble.position = CGPoint(
             x: Constants.zero,
-            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.talkBubbleGap
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + gap
         )
         label.position = CGPoint(x: Constants.zero, y: Constants.talkLabelYOffset)
         bubble.addChild(label)
@@ -325,7 +338,7 @@ struct ComponentBubble {
 
         bubble.position = CGPoint(
             x: Constants.zero,
-            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.talkBubbleGap
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.tourBubbleGap
         )
         label.position = CGPoint(x: Constants.zero, y: Constants.tourQuestionLabelYOffset)
         bubble.addChild(label)

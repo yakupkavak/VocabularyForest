@@ -71,9 +71,15 @@ private extension ForestTourManager {
         /// between walk and idle whenever the player moves.
         static let startWalkingDistance: CGFloat = 24.0
         static let stopWalkingDistance: CGFloat = 4.0
-        static let spawnOffscreenOffset: CGFloat = 60.0
         static let anchorGap: CGFloat = 12.0
         static let finishFadeDuration: TimeInterval = 0.5
+
+        /// Spotlight layering: the dim veil sits above every world node, and
+        /// the featured structure, rabbit, and player are raised above it.
+        static let dimNodeName = "tourDim"
+        static let dimAlpha: CGFloat = 0.2
+        static let dimZPosition: CGFloat = 50.0
+        static let spotlitZPosition: CGFloat = 51.0
     }
 }
 
@@ -82,20 +88,26 @@ final class ForestTourManager {
     // MARK: - PROPERTIES
 
     private weak var scene: SKScene?
+    private weak var playerNode: SKSpriteNode?
     private let rabbitNode = SKSpriteNode()
+    private let dimNode = SKSpriteNode()
     private var idleTextures: [SKTexture] = []
     private var walkTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
     private var step: ForestTourStep = .inactive
     private var isWalking = false
     private var pendingSentences: [String] = []
+    private var spotlitNode: SKNode?
+    private var spotlitNodeOriginalZ: CGFloat = Constants.zero
+    private var playerOriginalZ: CGFloat = Constants.zero
     var onWalkHintChanged: ((HorizontalDirection?) -> Void)?
     var onFinished: (() -> Void)?
 
     // MARK: - INIT
 
-    init(scene: SKScene) {
+    init(scene: SKScene, playerNode: SKSpriteNode) {
         self.scene = scene
+        self.playerNode = playerNode
     }
 }
 
@@ -117,7 +129,15 @@ extension ForestTourManager: ForestTourManagerProtocol {
             return
         }
         setupRabbit(in: scene)
+        setupDim(in: scene)
+        // The guide is already waiting at its first stop when the forest
+        // appears; walking in from off-screen read as a glitch, not an entrance.
         step = .entering
+        if let anchorX {
+            rabbitNode.position.x = anchorX
+        }
+        faceScreenCenter()
+        advance(to: .welcome)
     }
 
     func update() {
@@ -194,14 +214,25 @@ private extension ForestTourManager {
             height: rabbitHeight
         )
         rabbitNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
+        // Fallback position only; start() moves the rabbit to its first anchor.
         rabbitNode.position = CGPoint(
-            x: -rabbitNode.size.width - Constants.spawnOffscreenOffset,
+            x: scene.size.width / Constants.halfDivider,
             y: GameConstant.floorHeightSize * Constants.floorHeightMultiplier
         )
         rabbitNode.zPosition = Constants.zPosition
         rabbitNode.name = Constants.rabbitNodeName
         startIdleAnimation()
         scene.addChild(rabbitNode)
+    }
+
+    func setupDim(in scene: SKScene) {
+        dimNode.color = .black
+        dimNode.alpha = Constants.dimAlpha
+        dimNode.size = scene.size
+        dimNode.anchorPoint = CGPoint(x: Constants.zero, y: Constants.zero)
+        dimNode.position = CGPoint(x: Constants.zero, y: Constants.zero)
+        dimNode.zPosition = Constants.dimZPosition
+        dimNode.name = Constants.dimNodeName
     }
 
     // MARK: - MOVEMENT
@@ -251,9 +282,6 @@ private extension ForestTourManager {
                 isWalking = false
                 stopWalkAnimation()
                 faceScreenCenter()
-                if step == .entering {
-                    advance(to: .welcome)
-                }
             }
         } else {
             // Standing on scrolling ground: chase the drifting anchor with a
@@ -301,28 +329,71 @@ private extension ForestTourManager {
         removeBubble()
         switch newStep {
         case .welcome:
+            showSpotlight(on: nil)
             talk(String(localized: "tour_welcome"))
         case .board:
+            showSpotlight(on: ForestConstant.announcementButtonName)
             talk(String(localized: "tour_board_intro"))
         case .followGate:
+            hideSpotlight()
             talk(String(localized: "tour_follow_gate"))
             onWalkHintChanged?(.left)
         case .gate:
             onWalkHintChanged?(nil)
+            showSpotlight(on: ForestConstant.adventureGateName)
             talk(String(localized: "tour_gate_intro"))
         case .followMarket:
+            hideSpotlight()
             talk(String(localized: "tour_follow_market"))
             onWalkHintChanged?(.right)
         case .market:
             onWalkHintChanged?(nil)
+            showSpotlight(on: ForestConstant.marketName)
             talk(String(localized: "tour_market_intro"))
         case .ready:
+            showSpotlight(on: nil)
             askReadyQuestion()
         case .finished:
+            hideSpotlight()
             finishTour()
         case .inactive, .entering:
             break
         }
+    }
+
+    // MARK: - SPOTLIGHT
+
+    /// Dims the whole forest and lifts the featured structure, the rabbit,
+    /// and the player above the veil so only the lesson's actors stay bright.
+    func showSpotlight(on nodeName: String?) {
+        guard let scene else { return }
+        restoreSpotlitNode()
+        if dimNode.parent == nil {
+            scene.addChild(dimNode)
+            if let playerNode {
+                playerOriginalZ = playerNode.zPosition
+                playerNode.zPosition = Constants.spotlitZPosition
+            }
+            rabbitNode.zPosition = Constants.spotlitZPosition
+        }
+        if let nodeName, let node = scene.childNode(withName: nodeName) {
+            spotlitNode = node
+            spotlitNodeOriginalZ = node.zPosition
+            node.zPosition = Constants.spotlitZPosition
+        }
+    }
+
+    func hideSpotlight() {
+        restoreSpotlitNode()
+        guard dimNode.parent != nil else { return }
+        dimNode.removeFromParent()
+        playerNode?.zPosition = playerOriginalZ
+        rabbitNode.zPosition = Constants.zPosition
+    }
+
+    func restoreSpotlitNode() {
+        spotlitNode?.zPosition = spotlitNodeOriginalZ
+        spotlitNode = nil
     }
 
     // MARK: - TALK
@@ -341,6 +412,8 @@ private extension ForestTourManager {
             parentXScale: rabbitNode.xScale,
             text: sentence,
             width: ComponentBubble.Constants.tourBubbleWidth,
+            minHeight: ComponentBubble.Constants.tourBubbleMinHeight,
+            gap: ComponentBubble.Constants.tourBubbleGap,
             autoClose: false
         )
         rabbitNode.addChild(bubble)

@@ -181,7 +181,7 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 
 private extension ForestScene {
     func startTour() {
-        let tour = ForestTourManager(scene: self)
+        let tour = ForestTourManager(scene: self, playerNode: playerManager.playerNode)
         tour.onWalkHintChanged = { [weak self] direction in
             self?.forestHelper?.setTourWalkHint(direction: direction)
         }
