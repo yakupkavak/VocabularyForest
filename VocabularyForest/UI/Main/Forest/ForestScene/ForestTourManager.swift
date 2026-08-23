@@ -37,7 +37,6 @@ private enum ForestTourStep {
 private extension ForestTourManager {
     enum Constants {
         static let rabbitAssetType = "Rabbit"
-        static let rabbitNodeName = "tourRabbit"
         static let idleAtlasSuffix = "Idle"
         static let walkAtlasSuffix = "Walk"
         static let jumpAtlasSuffix = "Jump"
@@ -58,20 +57,19 @@ private extension ForestTourManager {
         static let idleTimeMultiplier: Double = 2.0
         /// The guide should read larger than regular forest animals.
         static let sizeMultiplier: CGFloat = 1.3
-        /// Per-frame chase speed; deliberately a calm stroll (60pt/s at
-        /// 60fps). Slower than the world scroll, so the rabbit may trail its
-        /// anchor during heavy scrolling and catch up when the player stops.
+        /// Calm stroll speed (60pt/s at 60fps) relative to the scrolling
+        /// world; the world scroll moves the rabbit like any planted animal,
+        /// so the player's walking no longer distorts the rabbit's pace.
         static let walkSpeedPerFrame: CGFloat = 1.0
         /// Ease-out zone before a stop; speed scales down linearly inside it
         /// so arrival reads as a landing instead of an abrupt halt.
         static let arrivalEaseDistance: CGFloat = 60.0
         static let minWalkSpeedPerFrame: CGFloat = 0.4
-        /// Idle station-keeping must outpace the scroll drift (1.67pt/frame)
-        /// or the standing rabbit visibly slides off its stop.
+        /// Catch-up clamp for residual offset while standing (e.g. from the
+        /// beat before the scroll action attached to the rabbit).
         static let idleDriftSpeedPerFrame: CGFloat = 2.4
-        /// Hysteresis pair: the scrolling world drags the anchor a little every
-        /// frame, so without a wide re-start band the rabbit stutter-steps
-        /// between walk and idle whenever the player moves.
+        /// Hysteresis pair keeping small anchor jitter from flip-flopping the
+        /// rabbit between walk and idle animations.
         static let startWalkingDistance: CGFloat = 24.0
         static let stopWalkingDistance: CGFloat = 4.0
         static let anchorGap: CGFloat = 12.0
@@ -92,6 +90,12 @@ private extension ForestTourManager {
         /// while a follow step waits on the player walking.
         static let nextButtonImageName = "next_button"
         static let nextButtonSize: CGFloat = 64.0
+        /// One-second dip after every tap: the arrow fades away and returns,
+        /// pacing taps so each new sentence gets read before the next one.
+        static let nextButtonCooldownActionKey = "tourNextCooldown"
+        static let nextButtonCooldownFade: TimeInterval = 0.2
+        static let nextButtonCooldownHold: TimeInterval = 0.6
+        static let fullAlpha: CGFloat = 1.0
 
         /// Spotlight layering: the dim veil sits above every world node, and
         /// the featured structure, rabbit, and player are raised above it.
@@ -165,21 +169,37 @@ extension ForestTourManager: ForestTourManagerProtocol {
         guard isActive else { return }
         moveTowardAnchor()
         checkFollowProgress()
+        // Invariant: the Next arrow only exists while the rabbit is talking.
+        if nextButtonNode.parent != nil, !isRabbitTalking {
+            nextButtonNode.isHidden = true
+        }
     }
 
     func handleTouch(nodes: [SKNode]) -> Bool {
         switch step {
         case .welcome:
-            if isNextButtonTapped(nodes) { advanceSentenceOrStep(to: .board) }
+            if isNextButtonTapped(nodes) {
+                advanceSentenceOrStep(to: .board)
+                pulseNextButton()
+            }
             return true
         case .board:
-            if isNextButtonTapped(nodes) { advanceSentenceOrStep(to: .followGate) }
+            if isNextButtonTapped(nodes) {
+                advanceSentenceOrStep(to: .followGate)
+                pulseNextButton()
+            }
             return true
         case .gate:
-            if isNextButtonTapped(nodes) { advanceSentenceOrStep(to: .followMarket) }
+            if isNextButtonTapped(nodes) {
+                advanceSentenceOrStep(to: .followMarket)
+                pulseNextButton()
+            }
             return true
         case .market:
-            if isNextButtonTapped(nodes) { advanceSentenceOrStep(to: .ready) }
+            if isNextButtonTapped(nodes) {
+                advanceSentenceOrStep(to: .ready)
+                pulseNextButton()
+            }
             return true
         case .ready:
             if nodes.contains(where: { $0.name == ForestConstant.tourAcceptButtonName }) {
@@ -193,6 +213,8 @@ extension ForestTourManager: ForestTourManagerProtocol {
                 showNextSentence()
                 if pendingSentences.isEmpty {
                     setNextButton(visible: false)
+                } else {
+                    pulseNextButton()
                 }
                 return true
             }
@@ -244,7 +266,7 @@ private extension ForestTourManager {
             y: GameConstant.floorHeightSize * Constants.floorHeightMultiplier
         )
         rabbitNode.zPosition = Constants.zPosition
-        rabbitNode.name = Constants.rabbitNodeName
+        rabbitNode.name = ForestConstant.tourRabbitName
         startIdleAnimation()
         scene.addChild(rabbitNode)
     }
@@ -263,11 +285,26 @@ private extension ForestTourManager {
     }
 
     func setNextButton(visible: Bool) {
+        nextButtonNode.removeAction(forKey: Constants.nextButtonCooldownActionKey)
+        nextButtonNode.alpha = Constants.fullAlpha
         nextButtonNode.isHidden = !visible
     }
 
     func isNextButtonTapped(_ nodes: [SKNode]) -> Bool {
-        nodes.contains { $0.name == ForestConstant.tourNextButtonName }
+        // Ignore taps while the post-tap dip animation is still running.
+        guard nextButtonNode.action(forKey: Constants.nextButtonCooldownActionKey) == nil else { return false }
+        return nodes.contains { $0.name == ForestConstant.tourNextButtonName }
+    }
+
+    func pulseNextButton() {
+        guard !nextButtonNode.isHidden else { return }
+        let fadeOut = SKAction.fadeOut(withDuration: Constants.nextButtonCooldownFade)
+        let hold = SKAction.wait(forDuration: Constants.nextButtonCooldownHold)
+        let fadeIn = SKAction.fadeIn(withDuration: Constants.nextButtonCooldownFade)
+        nextButtonNode.run(
+            .sequence([fadeOut, hold, fadeIn]),
+            withKey: Constants.nextButtonCooldownActionKey
+        )
     }
 
     func setupDim(in scene: SKScene) {
@@ -511,6 +548,10 @@ private extension ForestTourManager {
 
     func removeBubble() {
         rabbitNode.childNode(withName: ComponentBubble.Constants.talkBubbleName)?.removeFromParent()
+    }
+
+    var isRabbitTalking: Bool {
+        rabbitNode.childNode(withName: ComponentBubble.Constants.talkBubbleName) != nil
     }
 
     // MARK: - ANIMATIONS

@@ -227,7 +227,8 @@ private extension EnvironmentManager {
     func isScrollingNode(_ node: SKNode) -> Bool {
         node == floorNode || node == waterStatue || node == grassStatue || node == marketNode ||
         node == announcementSignNode || node == adventureGateNode ||
-        node.name == "Animal" || node.name == "sculpture" || node.name == "plant"
+        node.name == "Animal" || node.name == "sculpture" || node.name == "plant" ||
+        node.name == ForestConstant.tourRabbitName
     }
 
     func checkInfinitySky() {
