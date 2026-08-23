@@ -85,6 +85,19 @@ struct ComponentBubble {
         static let animalHitboxHeight: CGFloat = 50
         static let animalHitboxYOffset: CGFloat = -20
         
+        static let talkBubbleName = "talk_bubble"
+        static let talkLabelYOffset: CGFloat = 5.0
+        static let talkBubbleGap: CGFloat = 2.0
+        static let talkBubbleMinHeight: CGFloat = 60.0
+
+        /// Narrower than talkBubbleWidth: the tour rabbit stops beside screen-edge
+        /// structures, where a full-width bubble would clip at the display edge.
+        static let tourBubbleWidth: CGFloat = 150.0
+        static let tourQuestionMinHeight: CGFloat = 110.0
+        static let tourAcceptButtonSize: CGFloat = 36.0
+        static let tourQuestionLabelYOffset: CGFloat = 22.0
+        static let tourQuestionButtonYOffset: CGFloat = -14.0
+
         static let initialScale: CGFloat = 0.0
         static let scaleDuration: TimeInterval = 0.2
         static let waitDuration: TimeInterval = 3.0
@@ -261,40 +274,93 @@ struct ComponentBubble {
         return bubble
     }
 
-    static func createTalkBubble(parentSize: CGSize, parentXScale: CGFloat, text: String, width: CGFloat = Constants.talkBubbleWidth) -> SKNode {
+    static func createTalkBubble(parentSize: CGSize, parentXScale: CGFloat, text: String, width: CGFloat = Constants.talkBubbleWidth, autoClose: Bool = true) -> SKNode {
         let texture = SKTexture(imageNamed: "speak_ballon")
         let bubble = SKSpriteNode(texture: texture)
-        bubble.name = "talk_bubble"
+        bubble.name = Constants.talkBubbleName
         bubble.zPosition = Constants.defaultZPosition
-        
-        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
-        label.text = text
-        label.fontSize = Constants.talkFontSize
-        label.fontColor = .darkGray
-        label.numberOfLines = Int(Constants.zero)
-        label.preferredMaxLayoutWidth = width - Constants.talkLabelPadding
-        label.lineBreakMode = .byWordWrapping
-        label.verticalAlignmentMode = .center
-        label.horizontalAlignmentMode = .center
-        label.zPosition = 1
-        
-        let dynamicHeight = max(60, label.frame.height + Constants.talkVerticalPadding)
+
+        let label = createTalkLabel(text: text, maxWidth: width - Constants.talkLabelPadding)
+
+        let dynamicHeight = max(Constants.talkBubbleMinHeight, label.frame.height + Constants.talkVerticalPadding)
         bubble.size = CGSize(width: width, height: dynamicHeight)
 
         if parentXScale < Constants.zero {
             bubble.xScale = Constants.flippedScaleX
         }
-        
+
         bubble.position = CGPoint(
             x: Constants.zero,
-            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + 2
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.talkBubbleGap
         )
-        label.position = CGPoint(x: Constants.zero, y: 5)
+        label.position = CGPoint(x: Constants.zero, y: Constants.talkLabelYOffset)
         bubble.addChild(label)
-        
-        applyTalkAutoCloseAnimation(to: bubble)
-        
+
+        if autoClose {
+            applyTalkAutoCloseAnimation(to: bubble)
+        }
+
         return bubble
+    }
+
+    /// Guided-tour question bubble: a talk bubble with a confirm button the
+    /// tour advances on. Stays on screen until the button is tapped.
+    static func createTourQuestionBubble(parentSize: CGSize, parentXScale: CGFloat, text: String) -> SKNode {
+        let texture = SKTexture(imageNamed: "speak_ballon")
+        let bubble = SKSpriteNode(texture: texture)
+        bubble.name = Constants.talkBubbleName
+        bubble.zPosition = Constants.defaultZPosition
+
+        let label = createTalkLabel(text: text, maxWidth: Constants.tourBubbleWidth - Constants.talkLabelPadding)
+
+        let dynamicHeight = max(
+            Constants.tourQuestionMinHeight,
+            label.frame.height + Constants.tourAcceptButtonSize + Constants.talkVerticalPadding * Constants.halfDivider
+        )
+        bubble.size = CGSize(width: Constants.tourBubbleWidth, height: dynamicHeight)
+
+        if parentXScale < Constants.zero {
+            bubble.xScale = Constants.flippedScaleX
+        }
+
+        bubble.position = CGPoint(
+            x: Constants.zero,
+            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.talkBubbleGap
+        )
+        label.position = CGPoint(x: Constants.zero, y: Constants.tourQuestionLabelYOffset)
+        bubble.addChild(label)
+
+        let acceptButton = SKSpriteNode(imageNamed: "accept_button")
+        acceptButton.name = ForestConstant.tourAcceptButtonName
+        acceptButton.size = CGSize(width: Constants.tourAcceptButtonSize, height: Constants.tourAcceptButtonSize)
+        acceptButton.position = CGPoint(x: Constants.zero, y: Constants.tourQuestionButtonYOffset)
+        acceptButton.zPosition = Constants.buttonLabelZPosition
+        bubble.addChild(acceptButton)
+
+        // Widen the tappable area past the icon to keep a comfortable touch target.
+        let hitbox = createInvisibleHitbox(
+            name: ForestConstant.tourAcceptButtonName,
+            width: Constants.hitboxWidth,
+            height: Constants.hitboxHeight,
+            position: acceptButton.position
+        )
+        bubble.addChild(hitbox)
+
+        return bubble
+    }
+
+    static func createTalkLabel(text: String, maxWidth: CGFloat) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed: "Arial-BoldMT")
+        label.text = text
+        label.fontSize = Constants.talkFontSize
+        label.fontColor = .darkGray
+        label.numberOfLines = Int(Constants.zero)
+        label.preferredMaxLayoutWidth = maxWidth
+        label.lineBreakMode = .byWordWrapping
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.zPosition = Constants.buttonLabelZPosition
+        return label
     }
     
     // MARK: - ANIMATION HELPERS

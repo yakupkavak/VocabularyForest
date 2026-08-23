@@ -16,6 +16,8 @@ protocol ForestUIProtocol {
     func showForestInfo()
     func showMarket()
     func updateComponentName(model: ComponentNameable, type: ComponentType)
+    func setTourWalkHint(direction: HorizontalDirection?)
+    func tourDidFinish()
 }
 
 // MARK: - CONSTANTS
@@ -62,7 +64,10 @@ struct ForestUI: View {
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
     @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     @AppStorage(AppStorageNames.shownForestInfo.rawValue) private var forestSeen: Bool = false
+    @AppStorage(AppStorageNames.shownForestTour.rawValue) private var shownForestTour: Bool = false
     @AppStorage(AppStorageNames.userClaimedFirtReward.rawValue) private var userClaimedFirtReward: Bool = false
+    @State private var walkHintDirection: HorizontalDirection? = nil
+    @State private var walkHintPulse = false
     
     // MARK: - UI
     
@@ -74,11 +79,21 @@ struct ForestUI: View {
                 .zIndex(1.0)
                 .accessibilityHidden(true)
 
-            if uiState == .empty {
+            // During the guided tour the scene owns every tap, so the overlay
+            // buttons stay hidden until the rabbit finishes the introduction.
+            if uiState == .empty && shownForestTour {
                 sceneAccessibilityOverlay.zIndex(1.05)
             }
 
-            if !userClaimedFirtReward {/*
+            if let walkHintDirection {
+                walkHint(direction: walkHintDirection)
+                    .zIndex(1.3)
+                    .allowsHitTesting(false)
+            }
+
+            // Both first-launch popups wait for the rabbit tour to finish;
+            // the animal pick is the tour's closing beat, not its opener.
+            if shownForestTour && !userClaimedFirtReward {
                 ForestFirstRewardUI(rewards: ForestConstant.firstForestRewards) { selectedReward in
                     viewModel.claimLocalReward(model: selectedReward) {
                         userClaimedFirtReward = true
@@ -88,8 +103,7 @@ struct ForestUI: View {
                 .accessibilityAddTraits(.isModal)
                 .zIndex(1.2)
                 Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
-                                        */
-            }else if !forestSeen {
+            }else if shownForestTour && !forestSeen {
                 GameInfoUI(showForestPopUp: Binding(
                     get: { !forestSeen },
                     set: { if !$0 { forestSeen = true } }
@@ -450,7 +464,38 @@ private extension ForestUI {
         forestScene.scaleMode = .fill
         forestScene.helper = viewModel
         forestScene.forestHelper = self
+        forestScene.tourRequested = !shownForestTour
         return forestScene
+    }
+
+    /// First-walk teaching aid shown while the rabbit waits for the user to
+    /// follow it; purely visual, so touches pass through to the scene.
+    func walkHint(direction: HorizontalDirection) -> some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 12) {
+                if direction == .left {
+                    Image(systemName: "arrow.left")
+                }
+                Image(systemName: "hand.tap.fill")
+                Text("tour_walk_hint")
+                if direction == .right {
+                    Image(systemName: "arrow.right")
+                }
+            }
+            .foregroundStyle(.white)
+            .scaledFont(size: 16, weight: .bold)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(.black.opacity(0.6))
+            .cornerRadius(24)
+            .scaleEffect(walkHintPulse ? 1.05 : 0.95)
+            .animation(.easeInOut(duration: 0.7).repeatForever(autoreverses: true), value: walkHintPulse)
+            .padding(.bottom, 48)
+        }
+        .frame(maxWidth: .infinity)
+        .onAppear { walkHintPulse = true }
+        .onDisappear { walkHintPulse = false }
     }
     
     var options: some View {
@@ -583,6 +628,17 @@ extension ForestUI: ForestUIProtocol {
     }
     func showOptions() {
         uiState = .option
+    }
+
+    func setTourWalkHint(direction: HorizontalDirection?) {
+        walkHintDirection = direction
+    }
+
+    func tourDidFinish() {
+        walkHintDirection = nil
+        shownForestTour = true
+        // The tour already introduced the forest, so skip the legacy info card.
+        forestSeen = true
     }
 }
 

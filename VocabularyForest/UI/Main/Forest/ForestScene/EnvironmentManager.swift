@@ -169,7 +169,7 @@ private extension EnvironmentManager {
         announcementSignNode.size = GameConstant.announcementSignSize
         announcementSignNode.zPosition = 1
         announcementSignNode.anchorPoint = CGPoint(x: 0.5, y: 0)
-        announcementSignNode.name = "announcementButton"
+        announcementSignNode.name = ForestConstant.announcementButtonName
         scene.addChild(announcementSignNode)
     }
 

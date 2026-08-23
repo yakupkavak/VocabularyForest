@@ -32,6 +32,8 @@ enum ForestConstant {
     static let perVerticalMove: CGFloat = 0.04
     static let allButtons = [rightIconName, leftIconName, downIconName, upIconName, confirmIconName, refuseIconName]
     static let floorName = "floorNode"
+    static let announcementButtonName = "announcementButton"
+    static let tourAcceptButtonName = "btn_tour_accept"
     static let marketName = "marketNode"
     static let adventureGateName = "adventureGateNode"
     static let sculptureName = "sculptureNode"

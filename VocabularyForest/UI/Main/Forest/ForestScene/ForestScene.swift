@@ -42,6 +42,9 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var animalManagers: [AnimalManagerProtocol] = []
     var plantManagers: [PlantManagerProtocol] = []
     var sculptureManagers: [SculptureManagerProtocol] = []
+    var tourManager: ForestTourManagerProtocol?
+    /// Set by ForestUI before the scene is presented; didMove reads it once.
+    var tourRequested = false
     private var isTouching = false
     private var previewDirectionList: [DirectionWithCount] = []
     private var selectedManager: UpdatePositionProtocol? = nil
@@ -59,10 +62,14 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
         environmentManager.setAnnouncementClaimable(isAnnouncementClaimable)
+        if tourRequested {
+            startTour()
+        }
     }
-    
+
     override func update(_ currentTime: TimeInterval) {
         environmentManager.update()
+        tourManager?.update()
         handleAnimalsCoordination()
         guard isTouching else { return }
         handlePlayerCoordination()
@@ -141,7 +148,19 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
-        
+
+        // The guided tour owns all interaction: taps either advance the tour
+        // or walk the player; menus and entity bubbles stay closed until it ends.
+        if let tourManager, tourManager.isActive {
+            if tourManager.handleTouch(nodes: nodesAtPoint) {
+                isTouching = false
+                return
+            }
+            let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
+            playerManager.startWalking(direction: direction)
+            return
+        }
+
         if handleMenuTaps(nodes: nodesAtPoint) { return }
         if handleMarketTap(nodes: nodesAtPoint) { return }
         if handleBubbleButtonTaps(nodes: nodesAtPoint) { return }
@@ -161,12 +180,25 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - PRIVATE HELPER
 
 private extension ForestScene {
+    func startTour() {
+        let tour = ForestTourManager(scene: self)
+        tour.onWalkHintChanged = { [weak self] direction in
+            self?.forestHelper?.setTourWalkHint(direction: direction)
+        }
+        tour.onFinished = { [weak self] in
+            self?.tourManager = nil
+            self?.forestHelper?.tourDidFinish()
+        }
+        tourManager = tour
+        tour.start()
+    }
+
     func handleMenuTaps(nodes: [SKNode]) -> Bool {
         if nodes.contains(where: { $0.name == "menu_button" }) {
             forestHelper?.showOptions()
             return true
         }
-        if nodes.contains(where: { $0.name == "announcementButton" }) {
+        if nodes.contains(where: { $0.name == ForestConstant.announcementButtonName }) {
             forestHelper?.showAnnouncement()
             return true
         }
@@ -339,6 +371,8 @@ extension ForestScene: ForestViewModelOutputProcotol {
     }
     
     func talkComponent(type model: ComponentType, id: UUID, message: String) {
+        // Ambient chatter would compete with the rabbit's guidance during the tour.
+        if let tourManager, tourManager.isActive { return }
         switch model {
         case .animal:
             if let animal = animalManagers.first(where: { $0.model?.id == id }) {
