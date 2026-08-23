@@ -38535,79 +38535,79 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "شكرًا لك! استمتع بوقتك!"
+            "value" : "شكرًا لك!"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Danke! Viel Spaß!"
+            "value" : "Danke!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thank you! Have fun!"
+            "value" : "Thank you!"
           }
         },
         "es-419" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Gracias! ¡Diviértete!"
+            "value" : "¡Gracias!"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Merci ! Amuse-toi bien !"
+            "value" : "Merci !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "धन्यवाद! मज़े करो!"
+            "value" : "धन्यवाद!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grazie! Divertiti!"
+            "value" : "Grazie!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ありがとう！楽しんでね！"
+            "value" : "ありがとう！"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "고마워요! 재미있게 즐겨요!"
+            "value" : "고마워요!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obrigado! Divirta-se!"
+            "value" : "Obrigado!"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Спасибо! Веселись!"
+            "value" : "Спасибо!"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teşekkür ederim! İyi eğlenceler!"
+            "value" : "Teşekkür ederim!"
           }
         },
         "zh-CN" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "谢谢你！玩得开心！"
+            "value" : "谢谢你！"
           }
         }
       }

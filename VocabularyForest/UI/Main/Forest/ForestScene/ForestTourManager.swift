@@ -215,13 +215,7 @@ extension ForestTourManager: ForestTourManagerProtocol {
             }
             return true
         case .followGate, .followMarket:
-            // Next pages the remaining hint sentences, then goes inert while
-            // walking is the lesson; all other touches drive the player.
-            if isNextButtonTapped(nodes), !pendingSentences.isEmpty {
-                showNextSentence()
-                pulseNextButton()
-                return true
-            }
+            // Walking is the lesson here; every touch drives the player.
             return false
         case .inactive, .entering, .finished:
             return true
@@ -289,14 +283,13 @@ private extension ForestTourManager {
     }
 
     var shouldShowNextButton: Bool {
+        // The arrow exists only under the spotlight veil; whenever the dim is
+        // down (follow legs, ready, outro) it must not be on screen.
+        guard dimNode.parent != nil else { return false }
         switch step {
         case .welcome, .board, .gate, .market:
-            // The spotlight veil is up on these steps: the arrow must be
-            // available even while the rabbit is still settling into place.
             return true
-        case .followGate, .followMarket:
-            return isRabbitTalking && !isWalking && !pendingSentences.isEmpty
-        case .inactive, .entering, .ready, .finished:
+        case .inactive, .entering, .followGate, .followMarket, .ready, .finished:
             return false
         }
     }
@@ -431,7 +424,7 @@ private extension ForestTourManager {
             talk(String(localized: "tour_board_intro"))
         case .followGate:
             hideSpotlight()
-            talk(String(localized: "tour_follow_gate"))
+            talkUnpaged(String(localized: "tour_follow_gate"))
             onWalkHintChanged?(.left)
         case .gate:
             onWalkHintChanged?(nil)
@@ -439,7 +432,7 @@ private extension ForestTourManager {
             talk(String(localized: "tour_gate_intro"))
         case .followMarket:
             hideSpotlight()
-            talk(String(localized: "tour_follow_market"))
+            talkUnpaged(String(localized: "tour_follow_market"))
             // Walking was already taught on the gate leg; once the user has
             // reached the adventure gate the hint never shows again.
             onWalkHintChanged?(nil)
@@ -497,6 +490,13 @@ private extension ForestTourManager {
 
     func talk(_ text: String) {
         pendingSentences = splitSentences(of: text)
+        showNextSentence()
+    }
+
+    /// Whole text in one bubble, for steps where no Next arrow is available
+    /// to page sentences (the walk legs run without the spotlight veil).
+    func talkUnpaged(_ text: String) {
+        pendingSentences = [text]
         showNextSentence()
     }
 
@@ -604,8 +604,10 @@ private extension ForestTourManager {
         onWalkHintChanged?(nil)
         removeReadyButton()
         nextButtonNode.removeFromParent()
-        // Farewell: thank the player, hold the bubble a beat, then jump away.
-        talk(String(localized: "tour_thanks"))
+        removeBubble()
+        // Farewell: the player's character thanks the guide, the rabbit holds
+        // a beat to receive it, then jumps away.
+        showPlayerThanks()
         let hold = SKAction.wait(forDuration: Constants.thanksHoldDuration)
         let stopIdle = SKAction.run { [weak self] in
             self?.rabbitNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
@@ -616,5 +618,21 @@ private extension ForestTourManager {
             self?.onFinished?()
         }
         rabbitNode.run(.sequence([hold, stopIdle, jump, fade, notify, .removeFromParent()]))
+    }
+
+    func showPlayerThanks() {
+        guard let playerNode else { return }
+        let text = String(localized: "tour_thanks")
+        let bubble = ComponentBubble.createTalkBubble(
+            parentSize: playerNode.size,
+            parentXScale: playerNode.xScale,
+            text: text,
+            width: ComponentBubble.Constants.tourBubbleWidth,
+            minHeight: ComponentBubble.Constants.tourBubbleMinHeight,
+            gap: ComponentBubble.Constants.tourBubbleGap
+                - playerNode.size.height * Constants.bubbleLowerHeightFraction
+        )
+        playerNode.addChild(bubble)
+        A11yAnnouncer.announce(text)
     }
 }
