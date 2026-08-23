@@ -34,6 +34,7 @@ enum ForestConstant {
     static let floorName = "floorNode"
     static let announcementButtonName = "announcementButton"
     static let tourAcceptButtonName = "btn_tour_accept"
+    static let tourNextButtonName = "btn_tour_next"
     static let marketName = "marketNode"
     static let adventureGateName = "adventureGateNode"
     static let sculptureName = "sculptureNode"
