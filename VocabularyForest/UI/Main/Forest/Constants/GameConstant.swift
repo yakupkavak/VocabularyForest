@@ -44,7 +44,7 @@ enum GameConstant {
     static let walkingTime: Double = 1.5
     static let scrollSpeedPerSecond: CGFloat = 100
     static let marketRevealScrollSeconds: CGFloat = 0.1
-    static let adventureGateRevealScrollSeconds: CGFloat = 0.5
+    static let adventureGateRevealScrollSeconds: CGFloat = 0.9
     /// Launch-time world-space X centers of the fixed structures (nodes are
     /// center-anchored on X). Single source shared by EnvironmentManager's
     /// sprite placement and ForestDataManager's random-spawn exclusion.

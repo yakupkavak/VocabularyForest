@@ -96,12 +96,21 @@ private extension ForestTourManager {
         /// while a follow step waits on the player walking.
         static let nextButtonImageName = "next_button"
         static let nextButtonSize: CGFloat = 64.0
-        /// One-second dip after every tap: the arrow fades away and returns,
-        /// pacing taps so each new sentence gets read before the next one.
-        static let nextButtonCooldownActionKey = "tourNextCooldown"
-        static let nextButtonCooldownFade: TimeInterval = 0.2
-        static let nextButtonCooldownHold: TimeInterval = 0.6
+        /// The arrow fades out on every tap and only fades back once the new
+        /// line has been on screen long enough to read.
+        static let nextButtonFadeActionKey = "tourNextFade"
+        static let nextButtonFadeDuration: TimeInterval = 0.2
         static let fullAlpha: CGFloat = 1.0
+        static let hiddenAlpha: CGFloat = 0.0
+
+        /// The guide takes a beat before each line, so the sentence reads as
+        /// speech instead of popping in the instant the player taps.
+        static let speechDelay: TimeInterval = 0.5
+        /// Pause between the line appearing and the Next arrow returning, so
+        /// the sentence gets read before the arrow invites the next tap.
+        static let afterSpeechDelay: TimeInterval = 0.5
+        static let speechDelayActionKey = "tourSpeechDelay"
+        static let readyButtonDelayActionKey = "tourReadyButtonDelay"
 
         /// Spotlight layering: the dim veil sits above every world node, and
         /// the featured structure, rabbit, and player are raised above it.
@@ -126,6 +135,9 @@ final class ForestTourManager {
     private var jumpTextures: [SKTexture] = []
     private var step: ForestTourStep = .inactive
     private var isWalking = false
+    /// Gate keeping the arrow off screen while the guide is drawing breath
+    /// and while the fresh sentence is still being read.
+    private var isNextButtonReady = false
     private var pendingSentences: [String] = []
     private var spotlitNode: SKNode?
     private var spotlitNodeOriginalZ: CGFloat = Constants.zero
@@ -185,25 +197,21 @@ extension ForestTourManager: ForestTourManagerProtocol {
         case .welcome:
             if isNextButtonTapped(nodes) {
                 advanceSentenceOrStep(to: .board)
-                pulseNextButton()
             }
             return true
         case .board:
             if isNextButtonTapped(nodes) {
                 advanceSentenceOrStep(to: .followGate)
-                pulseNextButton()
             }
             return true
         case .gate:
             if isNextButtonTapped(nodes) {
                 advanceSentenceOrStep(to: .followMarket)
-                pulseNextButton()
             }
             return true
         case .market:
             if isNextButtonTapped(nodes) {
                 advanceSentenceOrStep(to: .ready)
-                pulseNextButton()
             }
             return true
         case .ready:
@@ -276,6 +284,7 @@ private extension ForestTourManager {
             y: Constants.readyButtonBottomOffset
         )
         nextButtonNode.isHidden = true
+        nextButtonNode.alpha = Constants.hiddenAlpha
         scene.addChild(nextButtonNode)
     }
 
@@ -292,19 +301,36 @@ private extension ForestTourManager {
     }
 
     func isNextButtonTapped(_ nodes: [SKNode]) -> Bool {
-        // Ignore taps while the post-tap dip animation is still running.
-        guard nextButtonNode.action(forKey: Constants.nextButtonCooldownActionKey) == nil else { return false }
+        // Ignore taps while the arrow is away waiting on the next sentence.
+        guard isNextButtonReady else { return false }
         return nodes.contains { $0.name == ForestConstant.tourNextButtonName }
     }
 
-    func pulseNextButton() {
-        guard !nextButtonNode.isHidden else { return }
-        let fadeOut = SKAction.fadeOut(withDuration: Constants.nextButtonCooldownFade)
-        let hold = SKAction.wait(forDuration: Constants.nextButtonCooldownHold)
-        let fadeIn = SKAction.fadeIn(withDuration: Constants.nextButtonCooldownFade)
+    /// Fades the arrow away for the length of the upcoming line. Visibility
+    /// during the wait is alpha-only so the dip stays animated; `update()`
+    /// still owns whether the arrow belongs on screen at all.
+    func dismissNextButton() {
+        isNextButtonReady = false
+        nextButtonNode.removeAction(forKey: Constants.nextButtonFadeActionKey)
+        // Nothing to fade when the arrow is already off screen (follow legs);
+        // fading there would flash it back in for the length of the fade.
+        guard !nextButtonNode.isHidden else {
+            nextButtonNode.alpha = Constants.hiddenAlpha
+            return
+        }
         nextButtonNode.run(
-            .sequence([fadeOut, hold, fadeIn]),
-            withKey: Constants.nextButtonCooldownActionKey
+            .fadeOut(withDuration: Constants.nextButtonFadeDuration),
+            withKey: Constants.nextButtonFadeActionKey
+        )
+    }
+
+    func revealNextButton() {
+        isNextButtonReady = true
+        nextButtonNode.removeAction(forKey: Constants.nextButtonFadeActionKey)
+        nextButtonNode.alpha = Constants.hiddenAlpha
+        nextButtonNode.run(
+            .fadeAlpha(to: Constants.fullAlpha, duration: Constants.nextButtonFadeDuration),
+            withKey: Constants.nextButtonFadeActionKey
         )
     }
 
@@ -497,10 +523,25 @@ private extension ForestTourManager {
         showNextSentence()
     }
 
+    /// Beat, sentence, beat: the guide draws breath before every line, and
+    /// the Next arrow only returns once that line has had time to be read.
     func showNextSentence() {
         removeBubble()
         guard !pendingSentences.isEmpty else { return }
         let sentence = pendingSentences.removeFirst()
+        dismissNextButton()
+        rabbitNode.run(
+            .sequence([
+                .wait(forDuration: Constants.speechDelay),
+                .run { [weak self] in self?.presentBubble(with: sentence) },
+                .wait(forDuration: Constants.afterSpeechDelay),
+                .run { [weak self] in self?.revealNextButton() }
+            ]),
+            withKey: Constants.speechDelayActionKey
+        )
+    }
+
+    func presentBubble(with sentence: String) {
         let bubble = ComponentBubble.createTalkBubble(
             parentSize: rabbitNode.size,
             parentXScale: rabbitNode.xScale,
@@ -529,7 +570,15 @@ private extension ForestTourManager {
 
     func askReadyQuestion() {
         talk(String(localized: "tour_ready_question"))
-        addReadyButton()
+        // Same pacing as the Next arrow: the tick lands a beat after the
+        // question is on screen, never before the guide has asked it.
+        rabbitNode.run(
+            .sequence([
+                .wait(forDuration: Constants.speechDelay + Constants.afterSpeechDelay),
+                .run { [weak self] in self?.addReadyButton() }
+            ]),
+            withKey: Constants.readyButtonDelayActionKey
+        )
     }
 
     func addReadyButton() {
@@ -547,10 +596,14 @@ private extension ForestTourManager {
     }
 
     func removeReadyButton() {
+        rabbitNode.removeAction(forKey: Constants.readyButtonDelayActionKey)
         scene?.childNode(withName: ForestConstant.tourAcceptButtonName)?.removeFromParent()
     }
 
     func removeBubble() {
+        // Drops any line still waiting on its beat, so a queued sentence can
+        // never surface after the tour has moved on.
+        rabbitNode.removeAction(forKey: Constants.speechDelayActionKey)
         rabbitNode.childNode(withName: ComponentBubble.Constants.talkBubbleName)?.removeFromParent()
     }
 

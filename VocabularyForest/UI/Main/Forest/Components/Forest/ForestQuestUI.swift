@@ -191,10 +191,6 @@ struct QuestRewardView: View {
             }
 
             VStack(alignment: .leading) {
-                Text("Reward")
-                    .font(.caption2)
-                    .fontWeight(.black)
-                    .foregroundStyle(.white.opacity(0.8))
                 switch reward.reward {
                     case .chest(let chest):
                     RewardImageView(asset: chest.closeLocalImagePath, label: chest.displayName.localized)

@@ -91,8 +91,9 @@ struct ForestUI: View {
                     .allowsHitTesting(false)
             }
 
-            // Both first-launch popups wait for the rabbit tour to finish;
-            // the animal pick is the tour's closing beat, not its opener.
+            // Both first-launch popups wait for the rabbit tour to finish, then run in
+            // order: the animal pick is the tour's closing beat, and the forest info
+            // card follows right after the first reward is claimed.
             if shownForestTour && !userClaimedFirtReward {
                 ForestFirstRewardUI(rewards: ForestConstant.firstForestRewards) { selectedReward in
                     viewModel.claimLocalReward(model: selectedReward) {
@@ -424,8 +425,12 @@ private extension ForestUI {
         .ignoresSafeArea()
     }
 
-    /// Tap/VoiceOver target over the animated announcement sign's launch position,
-    /// built from the same shared geometry the sprite uses. VoiceOver also reads
+    /// VoiceOver/Voice Control target over the announcement sign's launch position.
+    /// Unlike the fixed menu column, the sign scrolls with the world, so this overlay
+    /// must never intercept finger taps — a fixed hotspot would trigger over empty
+    /// ground once the sprite has moved. Real touches pass through to the scene,
+    /// which hit-tests the sprite's live position (ForestScene.touchesBegan); this
+    /// element only carries the accessibility activation path. VoiceOver also reads
     /// whether a reward is waiting — the sighted cue for that is the animation.
     func announcementSignHotspot(in size: CGSize) -> some View {
         let signSize = GameConstant.announcementSignSize
@@ -434,17 +439,18 @@ private extension ForestUI {
             * ForestConstant.announcementSignFloorHeightMultiplier
             + signSize.height / 2
         let isRewardReady = !viewModel.claimableAnnouncementTypes.isEmpty
-        return Button(action: showAnnouncement) {
-            Color.clear
-                .frame(width: signSize.width, height: signSize.height)
-                .contentShape(Rectangle())
-        }
-        .accessibilityLabel(String(localized: "a11y_adventure_board"))
-        .accessibilityValue(isRewardReady ? String(localized: "a11y_reward_ready") : "")
-        .position(
-            x: size.width * ForestConstant.announcementSignRelativeX,
-            y: size.height - centerYFromBottom
-        )
+        return Color.clear
+            .frame(width: signSize.width, height: signSize.height)
+            .accessibilityElement()
+            .accessibilityLabel(String(localized: "a11y_adventure_board"))
+            .accessibilityValue(isRewardReady ? String(localized: "a11y_reward_ready") : "")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction(.default, showAnnouncement)
+            .position(
+                x: size.width * ForestConstant.announcementSignRelativeX,
+                y: size.height - centerYFromBottom
+            )
+            .allowsHitTesting(false)
     }
 
     var sceneMenuEntries: [(label: String, action: () -> Void)] {
@@ -637,8 +643,6 @@ extension ForestUI: ForestUIProtocol {
     func tourDidFinish() {
         walkHintDirection = nil
         shownForestTour = true
-        // The tour already introduced the forest, so skip the legacy info card.
-        forestSeen = true
     }
 }
 
