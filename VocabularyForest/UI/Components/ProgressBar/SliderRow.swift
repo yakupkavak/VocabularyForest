@@ -13,6 +13,7 @@ func customSliderRow(title: String, icon: String, value: Binding<Double>) -> som
             Image(systemName: icon)
                 .foregroundStyle(.white)
                 .frame(width: 24)
+                .a11yDecorative()
             Text(title)
                 .foregroundStyle(.white)
                 .font(.headline)
@@ -25,5 +26,6 @@ func customSliderRow(title: String, icon: String, value: Binding<Double>) -> som
         
         Slider(value: value, in: 0...1)
             .tint(Color.brown700)
+            .accessibilityLabel(title)
     }
 }

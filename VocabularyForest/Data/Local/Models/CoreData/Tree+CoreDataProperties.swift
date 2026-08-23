@@ -9,7 +9,6 @@
 public import Foundation
 public import CoreData
 
-
 public typealias TreeCoreDataPropertiesSet = NSSet
 
 extension Tree {
@@ -20,6 +19,9 @@ extension Tree {
     
     @NSManaged public var id: UUID?
     @NSManaged public var assetName: String?
+    @NSManaged public var assetSourceString: String?
+    @NSManaged public var posterKey: String?
+    @NSManaged public var posterSourceString: String?
     @NSManaged public var createdDate: Date?
     @NSManaged public var healthValue: Int16
     @NSManaged public var isAlive: Bool
@@ -28,6 +30,8 @@ extension Tree {
     @NSManaged public var forest: Forest?
     @NSManaged public var characterName: String?
     @NSManaged public var lastUpdatedDate: Date?
+    @NSManaged public var rewardId: String?
+    @NSManaged public var assetReady: Bool
     
 }
 
@@ -36,16 +40,26 @@ extension Tree: ConvertSafeModel {
     
     func safeObject(context: NSManagedObjectContext) throws -> TreeModel {
         try context.performAndWait {
-            if let id, let assetName, let createdDate, let characterName, let lastUpdatedDate {
+            if let id, let assetName, let createdDate, let characterName, let lastUpdatedDate, let posterKey, let assetSourceString, let posterSourceString {
+                
+                let mainAssetSource = ImageSourceType(rawValue: assetSourceString) ?? .offlineStorage
+                let posterSource = ImageSourceType(rawValue: posterSourceString) ?? .offlineStorage
+                let posterReference = RewardAssetReference(key: posterKey, source: posterSource)
+                
                 return TreeModel(
                     id: id,
                     assetName: assetName,
-                    characterName: characterName, isAlive: self.isAlive,
                     createdDate: createdDate,
-                    treeHealthValue: Int(self.healthValue),
-                    xPosition: self.xPosition,
-                    yPosition: self.yPosition,
-                    lastUpdatedDate: lastUpdatedDate
+                    characterName: characterName,
+                    assetSource: mainAssetSource,
+                    poster: posterReference,
+                    isAlive: isAlive,
+                    treeHealthValue: Int(healthValue),
+                    xPosition: xPosition,
+                    yPosition: yPosition,
+                    lastUpdatedDate: lastUpdatedDate,
+                    rewardId: rewardId,
+                    assetReady: mainAssetSource == .appAssets ? true : assetReady
                 )
             }
             throw SafeModelError.emptyValue

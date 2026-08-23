@@ -46,6 +46,7 @@ struct BookEditSheet: View {
                         TextEditor(text: $descriptionWord)
                             .frame(minHeight: 80)
                             .cornerRadius(8)
+                            .accessibilityLabel(Text("Açıklama"))
                     }
                     
                     VStack(alignment: .leading) {
@@ -55,10 +56,12 @@ struct BookEditSheet: View {
                         TextEditor(text: $exampleSentence)
                             .frame(minHeight: 80)
                             .cornerRadius(8)
+                            .accessibilityLabel(Text("Örnek Cümle"))
                     }
                 }
             }
             .navigationTitle("Kelimeyi Düzenle")
+            .trackScreen(.editBook)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

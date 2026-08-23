@@ -5,6 +5,7 @@
 //  Created by Yakup Kavak on 5.11.2025.
 //
 
+import AppTrackingTransparency
 import CoreData
 import UserNotifications
 import Combine
@@ -29,9 +30,14 @@ class SettingsViewModel: ObservableObject {
     private let coreDataManager: CoreDataManagerProtocol
     private let authManager: any AuthManagerProtocol
     private let syncManager: ForestSyncManagerProtocol
+    private let accountCloudDeletionService: AccountCloudDeletionServiceProtocol
     private let forestManager: ForestDataManagerProtocol
     private let playerManager: PlayerDataManagerProtocol
-    
+    private let restorePromptService: CloudRestorePromptServiceProtocol
+    private let forestInitializer: ForestInitializerServiceProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+    private let analyticsConsentStore: AnalyticsConsentStoreProtocol
+
     // MARK: - PROPERTIES
     
     private var cancellables = Set<AnyCancellable>()
@@ -39,13 +45,13 @@ class SettingsViewModel: ObservableObject {
     @Published var notificationsEnabled: Bool = false
     @Published var userSignIn: Bool = false
     @Published var lastSyncDate: String = ""
-    @Published var userHaveForestInFirebase: Bool = false
-    @Published var firebaseForest: SafeForestModel? = nil
-    @Published var userLocalForest: SafeForestModel? = nil
     @Published var showConflictError: Bool = false
     @Published var conflictErrorMsg: String = ""
     @Published var playerName: String = ""
-    
+    @Published var analyticsEnabled: Bool = true
+    @Published var trackingStatus: ATTrackingManager.AuthorizationStatus = .notDetermined
+    private let logger: AppLoggerProtocol
+
     // MARK: - INIT
     
     init(
@@ -53,15 +59,27 @@ class SettingsViewModel: ObservableObject {
         coreDataManager: CoreDataManagerProtocol,
         authManager: any AuthManagerProtocol,
         syncManager: ForestSyncManagerProtocol,
+        accountCloudDeletionService: AccountCloudDeletionServiceProtocol,
         forestManager: ForestDataManagerProtocol,
-        playerManager: PlayerDataManagerProtocol
+        playerManager: PlayerDataManagerProtocol,
+        restorePromptService: CloudRestorePromptServiceProtocol,
+        forestInitializer: ForestInitializerServiceProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
+        analyticsConsentStore: AnalyticsConsentStoreProtocol = AnalyticsConsentStore()
     ) {
         self.notificationManager = notificationManager
         self.coreDataManager = coreDataManager
         self.authManager = authManager
         self.syncManager = syncManager
+        self.accountCloudDeletionService = accountCloudDeletionService
         self.forestManager = forestManager
         self.playerManager = playerManager
+        self.restorePromptService = restorePromptService
+        self.forestInitializer = forestInitializer
+        self.logger = logger
+        self.analyticsService = analyticsService
+        self.analyticsConsentStore = analyticsConsentStore
         setupInit()
     }
     
@@ -76,7 +94,7 @@ class SettingsViewModel: ObservableObject {
                     await checkUserForest()
                 }
             } catch(let error) {
-                print(error)
+                logger.error("Apple sign-in failed: \(error.localizedDescription)", category: .auth)
             }
         }
     }
@@ -87,7 +105,7 @@ class SettingsViewModel: ObservableObject {
                 try await authManager.signInWithGoogle()
                 await checkUserForest()
             }catch {
-                print(error)
+                logger.error("Google sign-in failed: \(error.localizedDescription)", category: .auth)
             }
         }
     }
@@ -109,68 +127,9 @@ class SettingsViewModel: ObservableObject {
     }
     
     func checkUserForest() async {
-        let conflictCheck = await syncManager.checkHasConflictOnlyMetadata()
-        if conflictCheck.status == .error {
-            showError(message: String(localized: "Sunucu eşleştirilemedi"))
-            return
-        }
-        if conflictCheck.status == .success, conflictCheck.data == false {
-            // Firebase de boş, ormanın da sahibi yok. bağlayalım o zaman
-            let safeCurrentForest = forestManager.fetchSafeForest(contextType: .main)
-            if safeCurrentForest.data?.ownerId == nil {
-                //Ormanın sahibi yok, firebase de datası da yok bunları bağla geç
-                await syncManager.forceOverwriteCloud()
-            }
-            return
-        }
-        
-        let fireForest = await syncManager.userHaveForest()
-        let safeCurrentForest = forestManager.fetchSafeForest(contextType: .main)
-        if fireForest.status == .success {
-            if let forest = fireForest.data, safeCurrentForest.status == .success, let currentSafeForest = safeCurrentForest.data {
-                // Forest conflict
-                userHaveForestInFirebase = true
-                firebaseForest = forest
-                userLocalForest = currentSafeForest
-            }else if let forest = fireForest.data {
-                //Only firebase
-                userHaveForestInFirebase = true
-                firebaseForest = forest
-            }else if safeCurrentForest.status == .success, let currentSafeForest = safeCurrentForest.data {
-                // only local forest, connect it.
-                let syncResult = await syncManager.forceOverwriteCloud()
-            }
-        }
-    }
-    
-    func resolveForestConflict(keep source: ForestSource) {
-        Task {
-            let result: Resource<Bool>
-            
-            switch source {
-            case .local:
-                result = await syncManager.forceOverwriteCloud()
-                
-            case .cloud:
-                if let cloudForest = self.firebaseForest {
-                    result = await syncManager.downloadAndOverwriteLocal(with: cloudForest)
-                } else {
-                    self.showError(message: String(localized: "Bulut verisi bulunamadı. Lütfen tekrar deneyin."))
-                    return
-                }
-            }
-            
-            switch result.status {
-                case .success:
-                    self.userHaveForestInFirebase = false
-                    self.firebaseForest = nil
-                    self.userLocalForest = nil
-                case .error:
-                    let fallbackMsg = String(localized: "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin.")
-                    self.showError(message: fallbackMsg)
-                case .loading:
-                    print("")
-            }
+        let outcome = await restorePromptService.checkAndPromptIfNeeded()
+        if case .failed(let error) = outcome {
+            showError(message: error?.localizedDescription ?? String(localized: "Sunucu eşleştirilemedi"))
         }
     }
     
@@ -185,31 +144,33 @@ class SettingsViewModel: ObservableObject {
         do {
             try authManager.signOut()
         }catch {
-            print(error)
+            logger.error("Sign-out failed: \(error.localizedDescription)", category: .auth)
         }
     }
     
-    func handleNotificationToggleChange() {
-        let currentStatus = notificationManager.notificationsEnabled
+    func handleNotificationToggleChange(isOn: Bool) {
         Task {
-            if currentStatus {
+            if isOn {
                 await notificationManager.requestEnable()
             } else {
                 await notificationManager.requestDisable()
             }
             await notificationManager.checkNotificationStatus()
+            analyticsService.set(.notificationsEnabled(notificationManager.notificationsEnabled))
         }
     }
     
     func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            self.analyticsService.log(.notificationPermissionResult(status: granted ? .authorized : .denied))
+            self.analyticsService.set(.notificationsEnabled(granted))
             DispatchQueue.main.async {
                 if !granted {
                     self.notificationsEnabled = false
                 }
             }
             if let error = error {
-                print("Bildirim izin hatası: \(error.localizedDescription)")
+                self.logger.error("Notification permission request failed: \(error.localizedDescription)", category: .ui)
             }
         }
     }
@@ -330,6 +291,22 @@ class SettingsViewModel: ObservableObject {
     func deleteAllData() {
         coreDataManager.deleteEverything(contextType: .background)
     }
+    
+    func deleteAccount() {
+        Task {
+            do {
+                try await authManager.deleteAccount { [weak self] in
+                    try await self?.accountCloudDeletionService.deleteCloudData()
+                }
+                // The account is gone, so the local game resets too: next forest entry
+                // shows a fresh empty forest and offers the first-entry reward again.
+                _ = await forestInitializer.resetLocalGame()
+            } catch {
+                logger.error("Account deletion failed: \(error.localizedDescription)", category: .auth)
+                showError(message: String(localized: "Hesap silinemedi. Lütfen tekrar deneyin."))
+            }
+        }
+    }
 }
 
 private extension SettingsViewModel {
@@ -338,6 +315,7 @@ private extension SettingsViewModel {
         setupNotification()
         setupUserInit()
         setupSync()
+        analyticsEnabled = analyticsConsentStore.isAnalyticsEnabled
     }
     
     func setupPlayer() {
@@ -381,5 +359,32 @@ private extension SettingsViewModel {
                 }
             }
             .store(in: &cancellables)
+    }
+}
+
+// MARK: - PERMISSIONS
+
+extension SettingsViewModel {
+
+    /// The system prompt can only be shown once, so the status is re-read every time the screen
+    /// opens: the user may have changed it in Settings while the app was backgrounded.
+    func refreshTrackingStatus() {
+        trackingStatus = ATTrackingManager.trackingAuthorizationStatus
+    }
+
+    var trackingStatusDescription: String {
+        switch trackingStatus {
+        case .authorized: return String(localized: "İzin verildi")
+        case .denied: return String(localized: "İzin verilmedi")
+        case .restricted: return String(localized: "Cihaz tarafından kısıtlandı")
+        case .notDetermined: return String(localized: "Henüz sorulmadı")
+        @unknown default: return String(localized: "Bilinmiyor")
+        }
+    }
+
+    func setAnalyticsEnabled(_ isEnabled: Bool) {
+        analyticsEnabled = isEnabled
+        analyticsConsentStore.setAnalyticsEnabled(isEnabled)
+        analyticsService.setCollectionEnabled(isEnabled)
     }
 }

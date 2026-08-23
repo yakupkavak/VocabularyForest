@@ -61,6 +61,7 @@ struct BookRow: View{
                 }
             }
         }.animation(.spring(response: 0.3, dampingFraction: 0.6), value: showMeaning.wrappedValue)
+        .a11yGroup(value: String(localized: book.longMemory ? "a11y_long_memory" : "a11y_short_memory"))
         .frame(maxWidth: .greatestFiniteMagnitude)
         .padding(.vertical)
         .padding(.leading)
@@ -84,9 +85,11 @@ struct BookRow: View{
                     .padding(5)
                     .contentShape(Rectangle())
             }.offset(x: -12, y: 20)
+                .accessibilityLabel(String(localized: "a11y_more_options"))
         }
         .overlay(alignment: .bottomTrailing, content: {
             Image(book.longMemory ? "longMemoryIcon" : "shortMemoryIcon").resizable().scaledToFit().frame(width: 24).offset(x: -24, y: -24)
+                .accessibilityHidden(true)
         }).background(.red)
     }
 }

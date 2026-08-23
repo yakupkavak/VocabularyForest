@@ -28,6 +28,10 @@ struct BookcasePacketRow: View {
             }.frame(maxWidth: .infinity).onTapGesture {
                 isShow.toggle()
             }.padding(.bottom)
+                .a11yTapButton(
+                    language.toLanguageDisplayName(),
+                    value: String(localized: isShow ? "a11y_expanded" : "a11y_collapsed")
+                )
             
             if isShow {
                 let width = UIScreen.main.bounds.width - (safeAreaInsets.leading + safeAreaInsets.trailing)
@@ -49,6 +53,7 @@ struct BookcasePacketRow: View {
                 .foregroundColor(.secondary)
                 .padding(.top, 10)
                 .padding(.bottom, 5)
+                .accessibilityHidden(true)
                 
                 Divider().ignoresSafeArea()
                 ForEach(libraries) { library in
@@ -69,6 +74,19 @@ struct BookcasePacketRow: View {
                             }
                             .frame(width: width * 0.1, alignment: .trailing)
                         }.padding(.bottom)
+                            .a11yTapButton(
+                                String(
+                                    format: NSLocalizedString("a11y_packet_row_label", comment: ""),
+                                    name.capitalized,
+                                    source.toLanguageDisplayName(),
+                                    target.toLanguageDisplayName(),
+                                    count
+                                ),
+                                hint: String(localized: "a11y_download_hint")
+                            )
+                            // Combined row centers on the text columns, so VoiceOver's
+                            // synthesized tap would miss the trailing download button
+                            .accessibilityAction(.default) { onClick(library) }
                     }
                 }
 

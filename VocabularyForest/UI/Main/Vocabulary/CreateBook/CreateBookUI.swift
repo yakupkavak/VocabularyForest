@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DTO
+import DependencyContainer
 
 // MARK: - CREATE BOOK TYPE ENUM
 
@@ -94,6 +95,7 @@ struct CreateBookUI: View {
         .onTapGesture {
             hideKeyboard()
         }
+        .trackScreen(.createBook)
     }
 }
 
@@ -110,7 +112,7 @@ struct PartOfSpeechTag: View {
             }
         } label: {
             Text(partOfSpeech.localizedText)
-                .font(.system(size: 14))
+                .scaledFont(size: 14)
                 .fixedSize()
                 .padding(.vertical, 6)
                 .padding(.horizontal, 10)
@@ -119,6 +121,7 @@ struct PartOfSpeechTag: View {
         }
         .background(partOfSpeech.pasterColor).cornerRadius(16)
             .opacity(isSelected ? 1.0 : 0.6).padding(6)
+            .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 }
 
@@ -170,6 +173,14 @@ private extension CreateBookUI {
             .focused($focusedField, equals: .sentence)
             .submitLabel(.done)
             
+            Button {
+                if let url = URL(string: "https://dictionary.cambridge.org/") {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                Text("Cambridge Dictionary").frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing).foregroundStyle(.clickableButton).scaledFont(size: 14)
+            }.padding(.vertical, -8)
+            
             partOfSpeechPicker
                 .focused($focusedField, equals: .partOfSpeech)
 
@@ -196,13 +207,14 @@ private extension CreateBookUI {
                     selectBookcase()
                 } label: {
                     Text(viewModel.currentBookcase?.bookcaseName ?? String(localized: "Kitaplık seçilmedi"))
-                        .font(.system(size: 20, weight: .bold))
+                        .scaledFont(size: 20, weight: .bold)
                 }
                 .frame(maxWidth: 200)
                 Text(
                     "\(viewModel.currentBookcase?.learningLanguage.toLanguageDisplayName() ?? "") - \(viewModel.currentBookcase?.meaningLanguage.toLanguageDisplayName() ?? "")"
-                ) .font(.system(size: 14, weight: .medium))
-            }
+                ) .scaledFont(size: 12, weight: .medium)
+                    .foregroundStyle(.brown300)
+            }.padding(.top, 8)
             Spacer()
         }
         .overlay(alignment: .trailing) {
@@ -210,7 +222,7 @@ private extension CreateBookUI {
                 viewModel.checkAndCreateBook()
                 focusedField = .vocabulary
             } label: {
-                Text("Ekle").foregroundStyle(.title)
+                Text("Ekle").foregroundStyle(.darkGren)
             }
             .offset(x: -24)
         }
@@ -220,8 +232,11 @@ private extension CreateBookUI {
             } label: {
                 Image("bookcase")
                     .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.brown300)
                     .scaledToFit()
                     .frame(minWidth: 24, maxWidth: 36)
+                    .accessibilityLabel(String(localized: "a11y_select_bookcase"))
             }
             .offset(x: 24)
         }
@@ -242,8 +257,4 @@ private extension CreateBookUI {
     enum Field: Hashable {
         case vocabulary, meaning, description, partOfSpeech, sentence
     }
-}
-
-#Preview {
-    CreateBookUI(viewModel: CreateBookViewModel(coreDataManager: CoreDataManager()))
 }

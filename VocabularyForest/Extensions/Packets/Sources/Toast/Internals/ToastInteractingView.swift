@@ -24,7 +24,7 @@ internal struct ToastInteractingView: View {
 
   @MainActor
   private var main: some View {
-    ToastView(model: model)
+    ToastView(model: model, onClose: { manager.remove(model) })
       .offset(y: yOffset ?? 0)
       .gesture(dragGesture)
       .animation(.spring, value: isDragging)

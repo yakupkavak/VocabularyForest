@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AdventureRoadRewardModel: Encodable {
+struct AdventureRoadRewardModel {
     let wordCount: Int
     let shortTermReward: LocalRewardModel
     let longTermReward: LocalRewardModel
@@ -15,6 +15,9 @@ struct AdventureRoadRewardModel: Encodable {
 
 struct AdventureRoadConfigModel {
     let id: String?
+    let title: String?
+    let description: String?
+    let theme: AdventureRoadThemeModel
     let seasonEndDate: Date
     let rewards: [AdventureRoadRewardModel]
 }

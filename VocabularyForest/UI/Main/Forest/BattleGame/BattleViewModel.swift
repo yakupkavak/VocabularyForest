@@ -21,6 +21,7 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     )
     func checkAnswer(answerNumber: Int)
     func startMagic(magicType: MagicType)
+    func abandonGame()
     func nextQuestion()
     func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool)
     func playSoundEffect(name: String)
@@ -35,6 +36,11 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     var playerName: String { get }
     var enemyAnger: CharacterAnger? { get }
     var gameStatus: GameStatusModel { get }
+    var bookcasesList: [BookcaseModel] { get }
+    func fetchBookcases()
+    func addWordToBookcase(book: BookModel, bookcase: BookcaseModel) -> BookModel?
+    func removeAddedWord(book: BookModel)
+    func isWordAlreadyInBookcase(book: BookModel, bookcase: BookcaseModel) -> Bool
 }
 
 protocol BattleViewModelOutputProcotol: AnyObject {
@@ -53,6 +59,9 @@ class BattleViewModel: ObservableObject {
     private let audioService: any AudioServiceProtocol
     private let forestDataManager: any ForestDataManagerProtocol
     private let playerDataManager: any PlayerDataManagerProtocol
+    private let questService: any QuestServiceProtocol
+    private let gameManager: any GameManagerProtocol
+    private let analyticsService: any AnalyticsServiceProtocol
 
     // MARK: - PROPERTIES
     
@@ -82,17 +91,24 @@ class BattleViewModel: ObservableObject {
         wrongWords: []
     )
     @Published var playerName: String = ""
+    @Published var bookcasesList: [BookcaseModel] = []
 
     init(
         coreDataManager: (CoreDataManagerProtocol),
         audioService: (AudioServiceProtocol),
         forestDataManager: (ForestDataManagerProtocol),
-        playerDataManager: PlayerDataManagerProtocol
+        playerDataManager: PlayerDataManagerProtocol,
+        questService: QuestServiceProtocol,
+        gameManager: GameManagerProtocol,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
         self.playerDataManager = playerDataManager
+        self.questService = questService
+        self.gameManager = gameManager
+        self.analyticsService = analyticsService
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] timer in
             guard let self else { return }
@@ -103,6 +119,17 @@ class BattleViewModel: ObservableObject {
                 self.timer = nil
             }
         })
+    }
+}
+
+// MARK: - CONSTANTS
+
+private extension BattleViewModel {
+    /// Fallback values used only when the remote economy config has not loaded yet
+    enum EconomyFallback {
+        static let minGoldPerKill = 40
+        static let maxGoldPerKill = 60
+        static let dailyKillCountCap = 15
     }
 }
 
@@ -159,19 +186,29 @@ private extension BattleViewModel {
     
     //Learning modunu seçerken kitapların example ya da descriptionu olan halini veriyoruz.
     func setShortBooks(books: [BookModel], bookCount: Int) {
-        let shortBooks = books.filter { (book: BookModel) -> Bool in
-            return book.shortMemory == true
-        }
+        let shortBooks = books.filter { $0.shortMemory == true }
         var questionNumber = 1
+        
+        let allBookcases = coreData.fetchSafeBookcases(sortDescriptors: nil, contextType: .background) ?? []
+        var bookcaseDict: [UUID: BookcaseModel] = [:]
+        for bookcase in allBookcases {
+            bookcaseDict[bookcase.id] = bookcase
+        }
+        
         for book in shortBooks.shuffled().prefix(bookCount){
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
+            let answerBookcase = bookcaseDict[book.bookcaseId]
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
-                return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
+                let indexBookcase = bookcaseDict[indexBook.bookcaseId]
+                
+                return indexBook != book &&
+                       indexBookcase?.learningLanguage == answerBookcase?.learningLanguage &&
+                       indexBook.meaningWord != book.meaningWord
             }.shuffled().prefix(3))
+            
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, book.learningWord.firstUppercased)
+            
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
@@ -179,11 +216,12 @@ private extension BattleViewModel {
                     AnswerModel(book: nil, answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
                     AnswerModel(book: nil, answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
                     AnswerModel(book: nil, answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
-                ].shuffled(),
+                ].shuffled(), partOfSpeech: book.partOfSpeech,
                 questionNumber: questionNumber,
                 description: book.learningWord,
-                example: book.exampleSentence,
+                example: book.exampleSentence
             )
+            
             questionList.append(model)
             answerBooks.append(book)
             questionNumber += 1
@@ -195,26 +233,35 @@ private extension BattleViewModel {
             return book.longMemory == true
         }
         var questionNumber = 1
-        for book in longBooks.shuffled().prefix(bookCount){
+        
+        let allBookcases = coreData.fetchSafeBookcases(sortDescriptors: nil, contextType: .background) ?? []
+        var bookcaseDict: [UUID: BookcaseModel] = [:]
+        for bookcase in allBookcases {
+            bookcaseDict[bookcase.id] = bookcase
+        }
+        
+        for book in longBooks.shuffled().prefix(bookCount) {
             let answer = book.learningWord
-            let answerBookcase = coreData.fetchSafeBookcase(book: book, contextType: .background)
+            let answerBookcase = bookcaseDict[book.bookcaseId]
+            
             let randomBooks = Array(books.filter { (indexBook: BookModel) -> Bool in
-                let indexBookcase = coreData.fetchSafeBookcase(book: indexBook, contextType: .background)
+                let indexBookcase = bookcaseDict[indexBook.bookcaseId]
                 return indexBook != book && indexBookcase?.learningLanguage == answerBookcase?.learningLanguage && indexBook.meaningWord != book.meaningWord
             }).shuffled().prefix(3)
+            
             let formatString = NSLocalizedString("quiz_question_format", comment: "Learning vocabulary question title")
             let finalQuestionText = String(format: formatString, answer)
             let model = QuestionModel(
                 questionTitle: finalQuestionText,
                 answers: [
-                    AnswerModel(book: book,answer: book.meaningWord, isTrue: true),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
-                    AnswerModel(book: nil,answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
-                ].shuffled(),
+                    AnswerModel(book: book, answer: book.meaningWord, isTrue: true),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 0]?.meaningWord ?? "Agile", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 1]?.meaningWord ?? "Player", isTrue: false),
+                    AnswerModel(book: nil, answer: randomBooks[safe: 2]?.meaningWord ?? "Who", isTrue: false),
+                ].shuffled(), partOfSpeech: book.partOfSpeech,
                 questionNumber: questionNumber,
                 description: nil,
-                example: nil,
+                example: nil
             )
             questionList.append(model)
             answerBooks.append(book)
@@ -224,6 +271,44 @@ private extension BattleViewModel {
     
     func gameOver() {
         uiStation = .gameOver
+    }
+    
+    /// Grants gold for a defeated enemy using the remote economy config; daily cap is enforced by the manager
+    func grantKillGold() {
+        let killCap = gameManager.currentEconomyConfig()?.killCap
+        let minGold = killCap?.minGoldPerKill ?? EconomyFallback.minGoldPerKill
+        let maxGold = killCap?.maxGoldPerKill ?? EconomyFallback.maxGoldPerKill
+        let dailyCap = killCap?.dailyKillCountCap ?? EconomyFallback.dailyKillCountCap
+        // TODO: SHOW SAVE ERROR
+        if let grantedGold = try? forestDataManager.registerKillGold(
+            minGold: minGold,
+            maxGold: maxGold,
+            dailyCap: dailyCap,
+            contextType: .background
+        ) {
+            gameStatus.earnedGold += grantedGold
+            analyticsService.log(.virtualCurrencyEarned(
+                currencyName: AnalyticsVirtualCurrency.gold,
+                value: grantedGold,
+                source: AnalyticsGoldSource.battleKill
+            ))
+        }
+    }
+    
+    /// Clears all per-game state so a cached view model can start a fresh game
+    func resetGameState() {
+        questionList = []
+        answerBooks = []
+        currentQuestionId = 0
+        currentEnemyIndex = 0
+        currentQuestion = nil
+        errorModel = nil
+        questionStation = .notDetermined
+        gameStatus = GameStatusModel(
+            trueCount: 0,
+            wrongCount: 0,
+            wrongWords: []
+        )
     }
     
     func nextEnemy() {
@@ -246,7 +331,8 @@ extension BattleViewModel: BattleViewModelProtocol {
         gameLevel: GameLevel,
     ) {
         var books: [BookModel] = []
-        
+        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
+
         if questionType == .learning {
             if let bookcaseModel {
                 guard let bookcase = coreData.fetchBookcase(
@@ -264,7 +350,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(sortDescriptors: nil, contextType: .background) else {
+                guard let allBooks = coreData.fetchAllBooksWithExampleDescription(bookLimit: minBook, sortDescriptors: nil, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -290,7 +376,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                 }
                 books = spesificBooks
             } else {
-                guard let allBooks = coreData.fetchAllSafeBooks(contextType: .background) else {
+                guard let allBooks = coreData.fetchLimitedSafeBooks(bookCount: minBook, memoryType: questionType == .remainder ? .long : .short, contextType: .background) else {
                     errorModel = .emptyBookcase
                     return
                 }
@@ -299,7 +385,6 @@ extension BattleViewModel: BattleViewModelProtocol {
         }
         let safePlayerModel = playerDataManager.fetchSafePlayer(contextType: .main)
         playerName = safePlayerModel?.name ?? String(localized: "Ichigo")
-        let minBook = calculateMinBookCount(battleMode: battleMode, gameLevel: gameLevel)
         self.gameLevel = gameLevel
         self.questionType = questionType
         self.battleMode = battleMode
@@ -311,7 +396,7 @@ extension BattleViewModel: BattleViewModelProtocol {
         }
         preparePlayerLevel(gameLevel: gameLevel)
         prepareEnemyLevel(gameLevel: gameLevel, characterModel: firstEnemy)
-        questionList = []
+        resetGameState()
         switch questionType {
         case .learning, .competitive:
             setShortBooks(books: books, bookCount: minBook)
@@ -319,6 +404,10 @@ extension BattleViewModel: BattleViewModelProtocol {
             setLongBooks(books: books, bookCount: minBook)
         }
         uiStation = .notDetermined
+        analyticsService.log(.levelStart(
+            levelName: gameLevel.valueForCoreData,
+            character: battleMode.valueForCoreData
+        ))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.askQuestion()
         }
@@ -350,7 +439,7 @@ extension BattleViewModel: BattleViewModelProtocol {
                         coreData.updateBookAnswer(book: answerBook, type: questionType, contextType: .background)
                         _ = playerDataManager.increaseMonthlyLearnedCount(for: questionType, contextType: .background)
                         // TODO: SHOW SAVE ERROR
-                        let saveResult = forestDataManager.correctAnswer(questionType: questionType, contextType: .background)
+                        try? questService.correctAnswer(questionType: questionType)
                     }
                     output?.correctAnswer()
                 }else {
@@ -370,7 +459,16 @@ extension BattleViewModel: BattleViewModelProtocol {
     
     func startMagic(magicType: MagicType) {
         uiStation = .notDetermined
+        analyticsService.log(.magicUsed(magicType: String(describing: magicType)))
         output?.startMagic(magic: magicType)
+    }
+
+    func abandonGame() {
+        guard let gameLevel else { return }
+        analyticsService.log(.gameAbandoned(
+            levelName: gameLevel.valueForCoreData,
+            questionIndex: currentQuestionId
+        ))
     }
     
     func nextQuestion() {
@@ -402,12 +500,49 @@ extension BattleViewModel: BattleViewModelProtocol {
     func playSoundEffect(name: String) {
         audioService.playSFX(filename: name)
     }
+    
+    func fetchBookcases() {
+        bookcasesList = coreData.fetchSafeBookcases(
+            sortDescriptors: nil,
+            contextType: .main
+        ) ?? []
+    }
+    
+    /// Copies a wrongly answered word into the given bookcase; returns the created book so it can be undone
+    func addWordToBookcase(book: BookModel, bookcase: BookcaseModel) -> BookModel? {
+        coreData.createSafeBook(
+            learningWord: book.learningWord,
+            meaningWord: book.meaningWord,
+            exampleSentence: book.exampleSentence,
+            descriptionWord: book.descriptionWord,
+            partOfSpeech: book.partOfSpeech.rawValue,
+            safeBookcase: bookcase,
+            contextType: .main
+        )
+    }
+    
+    /// Removes a previously added copy when the user changes the target bookcase
+    func removeAddedWord(book: BookModel) {
+        coreData.deleteBook(book: book, contextType: .main)
+    }
+    
+    /// True when the bookcase already contains the same learning word (case/diacritic insensitive)
+    func isWordAlreadyInBookcase(book: BookModel, bookcase: BookcaseModel) -> Bool {
+        let books = coreData.fetchSafeBooks(model: bookcase, sortDescriptors: nil, contextType: .main) ?? []
+        return books.contains { existing in
+            existing.learningWord.compare(
+                book.learningWord,
+                options: [.caseInsensitive, .diacriticInsensitive]
+            ) == .orderedSame
+        }
+    }
 }
 
 // MARK: - BATTLE SCENE PROTOCOL
 
 extension BattleViewModel: BattleSceneProtocol {
     func roundComplete() {
+        grantKillGold()
         output?.setupNextEnemy()
         playerAnger?.currentLevel = 0
         nextQuestion()
@@ -416,25 +551,24 @@ extension BattleViewModel: BattleSceneProtocol {
     func playerDead() {
         gameStatus.userWon = false
         uiStation = .gameOver
+        logLevelEnd(isWon: false)
     }
     func playerWon() {
+        grantKillGold()
         if let gameLevel, let questionType, let battleMode {
-            let result = forestDataManager.winGame(
-                gameLevel: gameLevel,
-                battleEnemyMode: battleMode,
-                gameType: questionType,
-                contextType: .background
-            )
-            switch result.status {
-            case .success:
-                print("player won saved")
-            case .loading:
-                print("")
-            case .error:
-                print("couldn't save progress")
-            }
+            try? questService.winGame(gameLevel: gameLevel, battleEnemyMode: battleMode, questionType: questionType)
         }
         gameStatus.userWon = true
         uiStation = .gameOver
+        logLevelEnd(isWon: true)
+    }
+
+    private func logLevelEnd(isWon: Bool) {
+        guard let gameLevel else { return }
+        analyticsService.log(.levelEnd(
+            levelName: gameLevel.valueForCoreData,
+            isWon: isWon,
+            score: gameStatus.trueCount
+        ))
     }
 }

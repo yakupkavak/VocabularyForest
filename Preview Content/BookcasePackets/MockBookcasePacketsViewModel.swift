@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 import DTO
-
+import DomainMocks
+/*
 class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
     var downloadState: DownloadState
     
@@ -44,3 +45,4 @@ class MockBookcasePacketsViewModel: BookcasePacketsViewModelProtocol {
         print("Mock refresh data called.")
     }
 }
+*/

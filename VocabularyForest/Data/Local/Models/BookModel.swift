@@ -25,6 +25,11 @@ struct BookModel: Equatable, Codable, Hashable, Identifiable {
     }
 }
 
+enum BookMemoryType: Equatable, Sendable {
+    case short
+    case long
+}
+
 struct BookHelperModel {
     var learningcode: String
     var meaningCode: String

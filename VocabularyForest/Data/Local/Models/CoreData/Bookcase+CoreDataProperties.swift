@@ -90,7 +90,10 @@ extension Bookcase: ConvertSafeModel {
                         bookcaseName: name,
                         createdDate: createdDate,
                         learningLanguage: learningLanguage,
-                        meaningLanguage: meaningLanguage
+                        meaningLanguage: meaningLanguage,
+                        totalBooksCount: totalBooksCount,
+                        longMemoryCount: longMemoryBooksCount,
+                        shortMemoryCount: shortMemoryBooksCount
                     )
                 }
                 return bookcaseModel

@@ -15,7 +15,7 @@ extension NSManagedObjectContext {
                 return try self.fetch(request).compactMap { try $0.safeObject(context: self) }
             }
         }catch {
-            print(error.localizedDescription)
+            AppLogger.shared.error("Safe object fetch failed: \(error.localizedDescription)", category: .data)
         }
         return nil
     }

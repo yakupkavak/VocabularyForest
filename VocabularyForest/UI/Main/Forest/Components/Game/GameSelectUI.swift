@@ -44,13 +44,13 @@ struct GameSelectUI: View {
 
     var body: some View {
         VStack {
-            Text("Oyunlar").foregroundStyle(.white).font(.system(size: 24, weight: .bold)).padding(.horizontal, 12).padding(.vertical, 8).background(
-                Image("title_header").resizable()
+            Text("Oyunlar").foregroundStyle(.white).scaledFont(size: 24, weight: .bold).padding(.horizontal, 12).padding(.vertical, 8).background(
+                Image("title_header").resizable().a11yDecorative()
             )
             ZStack(alignment: .center) {
                 // TODO: - PLAY IDLE ANIMATION
                 Image(selectedMode.background).resizable().scaledToFill().frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height * 0.18).borderRadius(borderColor: .white)
-                Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
+                Image("\(selectedMode.valueForCoreData.lowercased())_idle_0").resizable().scaledToFit().scaleEffect(x: -1, y: 1).a11yDecorative().frame(maxHeight: UIScreen.main.bounds.width * 0.3 )
             }
             ScrollView(showsIndicators: false) {
                 Text("Oyun çeşitleri").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
@@ -84,7 +84,7 @@ struct GameSelectUI: View {
                         return !model.isBoss
                     }) ? "Düşmanları \(selectedLevel.enemyLevel), Patronu ise \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
                     : "Düşmanı \(selectedLevel.bossLevel) doğru seçimle yenebilirsin. \(selectedLevel.playerLevel) canın var."
-                ).frame(maxWidth: .infinity, alignment: .leading ).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
+                ).frame(maxWidth: .infinity, alignment: .leading ).fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).scaledFont(size: 14)
                     .multilineTextAlignment(.leading)
                 
                 Text("Oyun Modu").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.top, 4)
@@ -100,12 +100,12 @@ struct GameSelectUI: View {
                         ))
                     }
                 }
-                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).font(.system(size: 14)).foregroundStyle(.white.opacity(0.8))
+                Text(LocalizedStringKey("\(selectedType.description)")).frame(maxWidth: .infinity, alignment: .leading).fontWeight(.medium).scaledFont(size: 14).foregroundStyle(.white.opacity(0.8))
                     .multilineTextAlignment(.leading)
                 
                 Text("Kitaplık").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.bold).foregroundStyle(.white).padding(.vertical, 4)
                 Text(selectedType == .learning ? "Oyuna başlayabilmek için içerisinde örnek ya da açıklama bulunan en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var." : "Oyuna başlayabilmek için en az \(calculateMinBookCount(battleMode: selectedMode, gameLevel: selectedLevel)) kelimeye ihtiyacın var.").frame(maxWidth: .infinity, alignment: .leading)
-                    .fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).font(.system(size: 14))
+                    .fontWeight(.medium).foregroundStyle(.white.opacity(0.8)).scaledFont(size: 14)
                     .multilineTextAlignment(.leading)
                 
                 HStack {
@@ -125,12 +125,13 @@ struct GameSelectUI: View {
                         .resizable()
                         .colorMultiply(.green)
                         .cornerRadius(16)
+                        .a11yDecorative()
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(emptyBookcase ? Color.red : Color.yellow, lineWidth: 2)
                     )
-                    Toggle("Tüm kitaplarla oyna", isOn: $selectAllBookcase).toggleStyle(MyToggleStyle3()).foregroundColor(.white).font(.system(size: 13, weight: .medium))
+                    Toggle("Tüm kitaplarla oyna", isOn: $selectAllBookcase).toggleStyle(MyToggleStyle3()).foregroundColor(.white).scaledFont(size: 13, weight: .medium)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading).padding(.leading, 1)
                 
@@ -154,11 +155,13 @@ struct GameSelectUI: View {
                     .resizable()
                     .colorMultiply(.yellow)
                     .opacity(0.5)
+                    .a11yDecorative()
                 )
             }
         }
         .padding(16)
         .background(Color.brown.opacity(0.95))
+        .trackScreen(.gameSelect)
         .cornerRadius(16)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
@@ -172,6 +175,7 @@ struct GameSelectUI: View {
             } label: {
                 Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
         .sheet(isPresented: $showSelectBookcase) {
@@ -248,18 +252,17 @@ struct TagView: View {
             .resizable()
             .colorMultiply(isSelected ? .green : .white)
             .opacity(isSelected ? 1.0 : 0.7)
+            .a11yDecorative()
         )
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(isSelected ? Color.yellow : Color.clear, lineWidth: 2)
         ).padding(3)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
 #Preview {
     @State var gameSelect = true
-    GameSelectUI(showGameSelect: $gameSelect, bookcaseList: []) {
-        otpion, game, level, type  in
-        print("yakup")
-    }
+    GameSelectUI(showGameSelect: $gameSelect, bookcaseList: []) { _, _, _, _ in }
 }

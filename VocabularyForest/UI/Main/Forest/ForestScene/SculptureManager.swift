@@ -46,6 +46,7 @@ class SculptureManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var sculptureModel: SculptureModel? = nil
     private var isMenuOpen = false
     var currentSculptureNode = SKSpriteNode()
@@ -62,22 +63,49 @@ class SculptureManager {
 private extension SculptureManager {
     
     func setModel(model: SculptureModel) {
-        currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        switch model.assetSource {
+        case .appAssets:
+            currentSculptureNode = SKSpriteNode(imageNamed: model.assetName)
+        case .offlineStorage:
+            guard let texture = loadOfflineTexture(assetName: model.assetName) else {
+                logger.debug("SculptureManager skipped setup, empty texture for asset \(model.assetName) (source: \(model.assetSource))", category: .asset)
+                return
+            }
+            currentSculptureNode = SKSpriteNode(texture: texture)
+        }
         currentSculptureNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         currentSculptureNode.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
             y: GameConstant.sculptureHeightSize * model.yPosition
         )
-        let originalSize = currentSculptureNode.size
-        if originalSize.height > Constants.zero {
-            let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
-            currentSculptureNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.sculptureHeight)
-        }
+        currentSculptureNode.size = ComponentSizeConstant.nodeSize(
+            textureSize: currentSculptureNode.size,
+            widthRatio: model.widthRatio,
+            heightRatio: model.heightRatio,
+            defaultHeight: ComponentSizeConstant.sculptureHeight
+        )
         currentSculptureNode.name = "sculpture"
         currentSculptureNode.zPosition = getZIndex(yPosition: model.yPosition)
         sculptureModel = model
         scene?.addChild(currentSculptureNode)
+    }
+    
+    func loadOfflineTexture(assetName: String) -> SKTexture? {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
+        let baseURL = appSupport.appendingPathComponent("OfflineGameAssets")
+        var fileURL = baseURL.appendingPathComponent("\(assetName).png")
+        
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            let bundleURL = baseURL.appendingPathComponent(assetName)
+            guard let firstFrame = (try? FileManager.default.contentsOfDirectory(at: bundleURL, includingPropertiesForKeys: nil))?
+                .filter({ $0.pathExtension.lowercased() == "png" })
+                .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
+                .first else { return nil }
+            fileURL = firstFrame
+        }
+        
+        guard let image = UIImage(contentsOfFile: fileURL.path) else { return nil }
+        return SKTexture(image: image)
     }
      
     func createInteractionBubble() {
@@ -88,7 +116,7 @@ private extension SculptureManager {
         }
         
         isMenuOpen = true
-        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.characterName : sculptureModel?.assetName
+        let displayName = sculptureModel?.characterName.isEmpty == false ? sculptureModel?.localizedCharacterName : sculptureModel?.assetName
         
         let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: currentSculptureNode.size, displayName: displayName)
         

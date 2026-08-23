@@ -11,7 +11,7 @@ import GoogleSignIn
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
+        // Firebase is configured in VocabularyForestApp.init() before the delegate runs.
         UIApplication.shared.registerForRemoteNotifications()
         let center = UNUserNotificationCenter.current()
         center.delegate = self

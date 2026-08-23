@@ -9,6 +9,7 @@ import SwiftUI
 import StoreKit
 import GoogleSignInSwift
 import AuthenticationServices
+import FirebaseFirestore
 
 struct SettingsUI: View {
     
@@ -16,9 +17,14 @@ struct SettingsUI: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     @State private var showingDeleteAlert = false
+    @State private var showingDeleteAccountAlert = false
     @State private var showNameEditAlert = false
     @State private var newUserName = ""
     @State private var showSignIn = false
+    @State private var showManagePermissions = false
+    // The confirmation alert must live inside the fullScreenCover's presentation context;
+    // the root-level delete alert cannot present while the cover is up.
+    @State private var showPermissionsDeleteAlert = false
     @Environment(\.requestReview) var requestReview
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @State private var randomAnimal = getRandomAnimalModel().head
@@ -26,49 +32,70 @@ struct SettingsUI: View {
     // MARK: - VIEW
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            
-            Text("Account")
-                .font(.callout)
-                .foregroundColor(.gray)
-                .padding(.top)
-                .padding(.top, -16)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                
+                Text("Account")
+                    .a11yHeader()
+                    .font(.callout)
+                    .foregroundColor(.secondaryText)
+                    .padding(.top)
+                    .padding(.top, -16)
 
-            userHeader
-            
-            Divider()
-            
-            notificationView
-            
-            Divider()
+                userHeader
+                
+                Divider()
+                
+                notificationView
+                
+                Divider()
 
-            Text("Hakkında")
-                .font(.callout)
-                .foregroundColor(.gray)
+                Text("Hakkında")
+                    .a11yHeader()
+                    .font(.callout)
+                    .foregroundColor(.secondaryText)
 
-            aboutPage
-            
-            Divider()
+                aboutPage
+                
+                Divider()
 
-            Text("Tehlikeli Alan")
-                .font(.callout)
-                .foregroundColor(.gray)
-            
-            Button("Tüm Verileri Sıfırla") {
-                showingDeleteAlert = true
+                Text("Tehlikeli Alan")
+                    .a11yHeader()
+                    .font(.callout)
+                    .foregroundColor(.secondaryText)
+                
+                Button("Tüm Verileri Sıfırla") {
+                    showingDeleteAlert = true
+                }
+                .padding(.horizontal)
+                .tint(.dangerText)
+                .cornerRadius(10)
+                .accessibilityIdentifier("reset_all_data_button")
+                
+                Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
+                    .font(.caption)
+                    .foregroundColor(.secondaryText)
+                
+                if viewModel.userSignIn {
+                    Button("Hesabı Sil") {
+                        showingDeleteAccountAlert = true
+                    }
+                    .padding(.horizontal)
+                    .tint(.dangerText)
+                    .cornerRadius(10)
+                    .accessibilityIdentifier("delete_account_button")
+                    
+                    Text("Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinir. Güncel ormanınız da silinecektir; hesap silme sonrasında yeni bir orman ile başlayacaksınız.")
+                        .font(.caption)
+                        .foregroundColor(.secondaryText)
+                }
+                Spacer()
             }
             .padding(.horizontal)
-            .tint(.red)
-            .cornerRadius(10)
-            
-            Text("Bu işlem tüm kitaplıklarınızı ve kelimelerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.")
-                .font(.caption)
-                .foregroundColor(.gray)
-            Spacer()
         }
-        .padding(.horizontal)
         .background(Color.backgroundSystem.ignoresSafeArea())
         .navigationTitle("Ayarlar")
+        .trackScreen(.settings)
         .alert("Bir Sorun Oluştu", isPresented: $viewModel.showConflictError) {
             Button("Tamam", role: .cancel) { }
         } message: {
@@ -81,6 +108,14 @@ struct SettingsUI: View {
             }
         } message: {
             Text("Bu işlem geri alınamaz. Tüm kitaplıklarınız ve kelimeleriniz kalıcı olarak silinecektir.")
+        }
+        .alert("Hesabınız Silinsin mi?", isPresented: $showingDeleteAccountAlert) {
+            Button("Vazgeç", role: .cancel) { }
+            Button("Hesabı Sil", role: .destructive) {
+                viewModel.deleteAccount()
+            }
+        } message: {
+            Text("Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir.")
         }
         .alert("Kullanıcı Adı", isPresented: $showNameEditAlert) {
             TextField("Yeni adınız", text: $newUserName)
@@ -99,6 +134,36 @@ struct SettingsUI: View {
         .sheet(item: $viewModel.sheetContent) { content in
             PolicySheetView(content: content)
         }
+        .fullScreenCover(isPresented: $showManagePermissions) {
+            ZStack {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture { showManagePermissions = false }
+                    .a11yTapButton(String(localized: "a11y_close"))
+                ManagePermissionsUI(
+                    isAnalyticsEnabled: Binding(
+                        get: { viewModel.analyticsEnabled },
+                        set: viewModel.setAnalyticsEnabled
+                    ),
+                    trackingStatusDescription: viewModel.trackingStatusDescription,
+                    onOpenSystemSettings: viewModel.openAppSettings,
+                    onDeleteAccount: viewModel.userSignIn
+                        ? { showPermissionsDeleteAlert = true }
+                        : nil,
+                    onClose: { showManagePermissions = false }
+                )
+            }
+            .presentationBackground(.clear)
+            .alert("Hesabınız Silinsin mi?", isPresented: $showPermissionsDeleteAlert) {
+                Button("Vazgeç", role: .cancel) { }
+                Button("Hesabı Sil", role: .destructive) {
+                    showManagePermissions = false
+                    viewModel.deleteAccount()
+                }
+            } message: {
+                Text("Bu işlem geri alınamaz. Hesabınız ve buluta kaydedilen tüm verileriniz kalıcı olarak silinecektir. Kimliğinizi doğrulamanız istenebilir.")
+            }
+        }
         .fullScreenCover(isPresented: $showSignIn) {
             VStack {
                 Color.clear.contentShape(Rectangle())
@@ -106,6 +171,7 @@ struct SettingsUI: View {
                             .onTapGesture {
                                 showSignIn = false
                             }
+                            .a11yTapButton(String(localized: "a11y_close"))
                 BottomSheet(title: nil, isVisible: $showSignIn) {
                     VStack {
                         GoogleSignInButton(scheme: .light, style: .standard, state: .normal) {
@@ -125,7 +191,7 @@ struct SettingsUI: View {
                                 case .success(let authorization):
                                     viewModel.signInApple(auth: authorization)
                                 case .failure(let error):
-                                    print("AppleAuthorization failed: \(error)")
+                                    AppLogger.shared.error("Apple authorization failed: \(error.localizedDescription)", category: .auth)
                                 }
                                 showSignIn = false
                             }
@@ -140,23 +206,6 @@ struct SettingsUI: View {
             .presentationBackground(.clear)
             
         }
-        .overlay {
-            if viewModel.userHaveForestInFirebase,
-               let local = viewModel.userLocalForest,
-               let cloud = viewModel.firebaseForest {
-                
-                ForestConflictView(
-                    localForest: local,
-                    cloudForest: cloud,
-                    onResolve: { source in
-                        viewModel.resolveForestConflict(keep: source)
-                    }
-                )
-                .transition(.opacity.combined(with: .scale(scale: 0.95)))
-                .zIndex(100) 
-            }
-        }
-        .animation(.easeInOut(duration: 0.3), value: viewModel.userHaveForestInFirebase)
     }
 }
 
@@ -165,15 +214,16 @@ private extension SettingsUI {
     @ViewBuilder
     var notificationView: some View {
         Text("Bildirimler")
+            .a11yHeader()
             .font(.callout)
-            .foregroundColor(.gray)
+            .foregroundColor(.secondaryText)
             .padding(.top)
 
         VStack(alignment: .leading) {
             Toggle("Kelime Bildirimleri", isOn: Binding(
                 get: { viewModel.notificationsEnabled },
                 set: { newValue in
-                    viewModel.handleNotificationToggleChange()
+                    viewModel.handleNotificationToggleChange(isOn: newValue)
                 }
             ))
             Button("Bildirim Ayarlarını Aç") {
@@ -186,7 +236,7 @@ private extension SettingsUI {
         
         Text("Açık bırakırsanız, kelime tekrarı için günlük hatırlatıcılar alırsınız. İzin vermediyseniz, bu ayar sizden izin isteyecektir.")
             .font(.caption)
-            .foregroundColor(.gray)
+            .foregroundColor(.secondaryText)
     }
     
     @ViewBuilder
@@ -211,6 +261,16 @@ private extension SettingsUI {
                 }
             }
             Button {
+                viewModel.refreshTrackingStatus()
+                showManagePermissions = true
+            } label: {
+                HStack {
+                    Image(systemName: "hand.raised.fill")
+                        .foregroundColor(.logoBrown).frame(width: 50)
+                    Text("İzinleri Yönet")
+                }
+            }
+            Button {
                 viewModel.showPrivacyPolicy()
             } label: {
                 HStack {
@@ -232,6 +292,7 @@ private extension SettingsUI {
                     .scaledToFit()
                     .frame(width: 45, height: 30)
                     .foregroundColor(.logoGreen)
+                    .a11yDecorative()
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Text(viewModel.playerName)
@@ -241,6 +302,8 @@ private extension SettingsUI {
                         } label: {
                             Image(systemName: "pencil")
                         }
+                        .accessibilityLabel(String(localized: "a11y_edit_name"))
+                        .accessibilityIdentifier("edit_username_button")
 
                     }
                     HStack(spacing: 4) {
@@ -248,11 +311,13 @@ private extension SettingsUI {
                             viewModel.trySyncManuel()
                         } label: {
                             Image(systemName: "arrow.triangle.2.circlepath").font(.caption2)
-                        }.foregroundStyle(.clickableText)
+                        }
+                        .accessibilityLabel(String(localized: "a11y_sync_now"))
+                        .foregroundStyle(.clickableText)
                         Text("Son eşitleme: \(viewModel.lastSyncDate)")
                             .font(.caption)
                     }
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                 }
                 Spacer()
                 Button {
@@ -262,6 +327,7 @@ private extension SettingsUI {
                         .foregroundColor(.red)
                         .font(.title3)
                 }
+                .accessibilityLabel(String(localized: "a11y_sign_out"))
             }
             .padding(.horizontal)
             .background(Color.backgroundSystem)
@@ -286,13 +352,14 @@ private extension SettingsUI {
                     }
                     Spacer()
                     Image(systemName: "cloud.moon.fill")
-                        .font(.system(size: 35))
+                        .scaledFont(size: 35)
                         .foregroundColor(.logoBrown)
+                        .a11yDecorative()
                 }.padding(.horizontal)
                 Text("Ormanını buluta kaydetmek için giriş yap.")
                     .frame(minWidth: 0, maxWidth: .greatestFiniteMagnitude, alignment: .leading)
                     .font(.footnote)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondaryText)
                     .multilineTextAlignment(.leading)
             }
             .background(Color.backgroundSystem)
@@ -327,14 +394,39 @@ private struct PolicySheetView: View {
 }
 
 #Preview {
+    let coreData = CoreDataManager()
+    let forestData = ForestDataManager(mainContext: coreData.viewContext, backgroundContext: coreData.backgroundContext)
+    let authManager = AuthManager()
+    let syncCursorStore = ForestSyncCursorStore()
+    let syncManager = ForestSyncManager(
+        db: Firestore.firestore(),
+        conflictResolver: LastWriteWinsConflictResolver(),
+        cursorStore: syncCursorStore
+    )
+    let offlineAssetManager = OfflineAssetManager()
+    let networkManager = APIService(vocabularyBaseURLProvider: VocabularyBaseURLProvider())
+    let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
+    let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
+    let hydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: RemoteConfigRepository(), offlineAssetManager: offlineAssetManager, forestManager: forestData)
     SettingsUI(
         viewModel: SettingsViewModel(
             notificationManager: NotificationManager(),
-            coreDataManager: CoreDataManager(),
-            authManager: AuthManager(),
-            syncManager: ForestSyncManager(),
-            forestManager: ForestDataManager(),
-            playerManager: PlayerDataManager()
+            coreDataManager: coreData,
+            authManager: authManager,
+            syncManager: syncManager,
+            accountCloudDeletionService: AccountCloudDeletionService(
+                db: Firestore.firestore(),
+                cursorStore: syncCursorStore,
+                dataManager: forestData
+            ),
+            forestManager: forestData,
+            playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
+            restorePromptService: CloudRestorePromptService(authManager: authManager, syncManager: syncManager, forestManager: forestData, assetHydrationService: hydrationService),
+            forestInitializer: ForestInitializerService(
+                forestManager: forestData,
+                playerManager: PlayerDataManager(backgroundContext: coreData.backgroundContext, viewContext: coreData.viewContext),
+                coreData: coreData
+            )
         )
     )
 }

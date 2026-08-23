@@ -4,6 +4,18 @@
     "CFBundleDisplayName" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غابة الكلمة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörterwald"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11,6 +23,42 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocaForêt"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "शब्द वन"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocaBosco"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことばの森"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단어의 숲"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vocabosque"
@@ -26,6 +74,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "VocabForest"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单词森林"
           }
         }
       }
@@ -33,6 +87,18 @@
     "CFBundleName" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غابة الكلمة"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wörterwald"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -40,6 +106,42 @@
           }
         },
         "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabosque"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocaForêt"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "शब्द वन"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VocaBosco"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことばの森"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "단어의 숲"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vocabosque"
@@ -55,6 +157,96 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "VocabForest"
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "单词森林"
+          }
+        }
+      }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "comment" : "Privacy - Tracking Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتيح لنا عرض إعلانات تناسب اهتماماتك. إذا رفضت، ستظل ترى الإعلانات لكنها لن تكون مخصصة."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ermöglicht uns, Werbung passend zu deinen Interessen zu zeigen. Lehnst du ab, siehst du weiterhin Werbung, nur nicht personalisiert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lets us show ads that match your interests. If you decline, you'll still see ads, just not personalized ones."
+          }
+        },
+        "es-419" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos permite mostrarte anuncios acordes a tus intereses. Si no aceptas, seguirás viendo anuncios, pero no personalizados."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nous permet d'afficher des publicités correspondant à tes centres d'intérêt. Si tu refuses, tu verras toujours des publicités, mais non personnalisées."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "हमें आपकी रुचियों से मेल खाने वाले विज्ञापन दिखाने देता है। मना करने पर भी विज्ञापन दिखेंगे, बस वे वैयक्तिकृत नहीं होंगे।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ci permette di mostrarti annunci in linea con i tuoi interessi. Se rifiuti, vedrai comunque gli annunci, ma non personalizzati."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "あなたの興味に合った広告を表示するために使用します。許可しない場合も広告は表示されますが、パーソナライズはされません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "관심사에 맞는 광고를 표시하는 데 사용합니다. 거부해도 광고는 표시되지만 맞춤 광고는 아닙니다."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permite mostrar anúncios que combinem com seus interesses. Se recusar, você ainda verá anúncios, mas não personalizados."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Позволяет показывать рекламу по вашим интересам. Если вы откажетесь, реклама всё равно будет показываться, но без персонализации."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İlgi alanlarına uygun reklamlar gösterebilmemizi sağlar. İzin vermezsen reklamları yine görürsün ama kişiselleştirilmez."
+          }
+        },
+        "zh-CN" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于向你展示符合兴趣的广告。若拒绝，你仍会看到广告，但不会个性化。"
           }
         }
       }

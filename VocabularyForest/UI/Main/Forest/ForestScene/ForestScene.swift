@@ -42,10 +42,15 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
     var animalManagers: [AnimalManagerProtocol] = []
     var plantManagers: [PlantManagerProtocol] = []
     var sculptureManagers: [SculptureManagerProtocol] = []
+    var tourManager: ForestTourManagerProtocol?
+    /// Set by ForestUI before the scene is presented; didMove reads it once.
+    var tourRequested = false
     private var isTouching = false
     private var previewDirectionList: [DirectionWithCount] = []
     private var selectedManager: UpdatePositionProtocol? = nil
     private var selectedModel: ComponentModelProtocol? = nil
+    private var isAnnouncementClaimable = false
+    private weak var marketBubbleNode: SKNode?
     var timer: Timer?
     
     // MARK: - LIFECYCLE
@@ -56,10 +61,15 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         playerManager = PlayerManager(scene: self)
         environmentManager.setupEnvironment()
         playerManager.setupPlayer()
+        environmentManager.setAnnouncementClaimable(isAnnouncementClaimable)
+        if tourRequested {
+            startTour()
+        }
     }
-    
+
     override func update(_ currentTime: TimeInterval) {
         environmentManager.update()
+        tourManager?.update()
         handleAnimalsCoordination()
         guard isTouching else { return }
         handlePlayerCoordination()
@@ -138,8 +148,21 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
-        
+
+        // The guided tour owns all interaction: taps either advance the tour
+        // or walk the player; menus and entity bubbles stay closed until it ends.
+        if let tourManager, tourManager.isActive {
+            if tourManager.handleTouch(nodes: nodesAtPoint) {
+                isTouching = false
+                return
+            }
+            let direction: HorizontalDirection = (location.x > self.size.width / 2) ? .right : .left
+            playerManager.startWalking(direction: direction)
+            return
+        }
+
         if handleMenuTaps(nodes: nodesAtPoint) { return }
+        if handleMarketTap(nodes: nodesAtPoint) { return }
         if handleBubbleButtonTaps(nodes: nodesAtPoint) { return }
         if handleEntityTaps(nodes: nodesAtPoint) { return }
         if handleArrowTaps(nodes: nodesAtPoint) { return }
@@ -157,16 +180,29 @@ class ForestScene: SKScene, SKPhysicsContactDelegate {
 // MARK: - PRIVATE HELPER
 
 private extension ForestScene {
+    func startTour() {
+        let tour = ForestTourManager(scene: self, playerNode: playerManager.playerNode)
+        tour.onWalkHintChanged = { [weak self] direction in
+            self?.forestHelper?.setTourWalkHint(direction: direction)
+        }
+        tour.onFinished = { [weak self] in
+            self?.tourManager = nil
+            self?.forestHelper?.tourDidFinish()
+        }
+        tourManager = tour
+        tour.start()
+    }
+
     func handleMenuTaps(nodes: [SKNode]) -> Bool {
         if nodes.contains(where: { $0.name == "menu_button" }) {
             forestHelper?.showOptions()
             return true
         }
-        if nodes.contains(where: { $0.name == "announcementButton" }) {
+        if nodes.contains(where: { $0.name == ForestConstant.announcementButtonName }) {
             forestHelper?.showAnnouncement()
             return true
         }
-        if nodes.contains(where: { $0.name == "play_button" }) {
+        if nodes.contains(where: { $0.name == ForestConstant.adventureGateName }) {
             forestHelper?.showGameSelection()
             return true
         }
@@ -174,9 +210,43 @@ private extension ForestScene {
             forestHelper?.showForestInfo()
             return true
         }
+        if nodes.contains(where: { $0.name == "market_button" }) {
+            forestHelper?.showMarket()
+            return true
+        }
         return false
     }
     
+    func handleMarketTap(nodes: [SKNode]) -> Bool {
+        if nodes.contains(where: { $0.name == "btn_open_market" }) {
+            marketBubbleNode?.removeFromParent()
+            forestHelper?.showMarket()
+            return true
+        }
+        guard let marketNode = nodes.first(where: { $0.name == ForestConstant.marketName }) as? SKSpriteNode else {
+            return false
+        }
+        toggleMarketBubble(on: marketNode)
+        return true
+    }
+
+    /// Tapping the market building shows an invitation bubble instead of opening the
+    /// market outright; the bubble's cart icon is the actual "open" affordance.
+    func toggleMarketBubble(on marketNode: SKSpriteNode) {
+        if let bubble = marketBubbleNode {
+            bubble.removeFromParent()
+            return
+        }
+
+        let bubble = ComponentBubble.createMarketMenuBubble(parentSize: marketNode.size)
+        bubble.setScale(ComponentBubble.Constants.initialScale)
+        marketNode.addChild(bubble)
+        bubble.run(.scale(to: ComponentBubble.Constants.targetScale, duration: ComponentBubble.Constants.scaleDuration))
+        marketBubbleNode = bubble
+
+        ComponentBubble.applyAutoCloseAnimation(to: bubble) { }
+    }
+
     func handleBubbleButtonTaps(nodes: [SKNode]) -> Bool {
         guard let btnNode = nodes.first(where: { $0.name == "btn_update_name" || $0.name == "btn_update_pos" }),
               let bubble = btnNode.parent,
@@ -283,18 +353,26 @@ private extension ForestScene {
     }
     
     func clearSelection() {
-        selectedModel = nil
+        selectedManager = nil
         selectedModel = nil
         previewDirectionList = []
         environmentManager?.closePositionArrows()
     }
+
 }
 
 // MARK: - VIEW MODEL OUTPUT
 
 extension ForestScene: ForestViewModelOutputProcotol {
     
+    func updateAnnouncementClaimable(_ isClaimable: Bool) {
+        isAnnouncementClaimable = isClaimable
+        environmentManager?.setAnnouncementClaimable(isClaimable)
+    }
+    
     func talkComponent(type model: ComponentType, id: UUID, message: String) {
+        // Ambient chatter would compete with the rabbit's guidance during the tour.
+        if let tourManager, tourManager.isActive { return }
         switch model {
         case .animal:
             if let animal = animalManagers.first(where: { $0.model?.id == id }) {

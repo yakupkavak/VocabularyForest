@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct WeeklyRewardModel: Encodable {
+struct WeeklyRewardModel {
     let id: UUID
     let day: Int
-    let reward: LocalRewardModel
+    let reward: LocalRewardType
 }

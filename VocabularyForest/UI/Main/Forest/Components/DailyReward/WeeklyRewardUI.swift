@@ -31,6 +31,7 @@ struct WeeklyRewardUI: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
+        .trackScreen(.weeklyReward)
     }
 }
 
@@ -42,6 +43,7 @@ private extension WeeklyRewardUI {
         ZStack(alignment: .top) {
             Image("krem")
                 .resizable()
+                .a11yDecorative()
                 .frame(width: size.width * (isPad ? 0.8 : 0.98), height: size.height * backgroundHeight)
             
             VStack(spacing: 0) {
@@ -64,7 +66,7 @@ private extension WeeklyRewardUI {
     
     func titleView(size: CGSize) -> some View {
         Text("Daily Reward")
-            .font(.system(size: isPad ? 40 : 22, weight: .heavy, design: .rounded))
+            .scaledFont(size: isPad ? 40 : 22, weight: .heavy, design: .rounded)
             .foregroundStyle(.white.opacity(0.95))
             .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 3)
     }
@@ -74,7 +76,7 @@ private extension WeeklyRewardUI {
             HStack {
                 Spacer()
                 Text("Play everyday and get additional bonuses")
-                    .font(.system(size: isPad ? 32 : 18, weight: .heavy, design: .rounded))
+                    .scaledFont(size: isPad ? 32 : 18, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)
@@ -92,6 +94,7 @@ private extension WeeklyRewardUI {
                         .shadow(color: .black.opacity(0.3), radius: 1)
                 }
                 .offset(x: size.width * (isPad ? -0.00 : 0.07), y: size.height * (isPad ? 0.015 : 0.01))
+                .accessibilityLabel(String(localized: "a11y_close"))
             }
             
             
@@ -138,6 +141,7 @@ private extension WeeklyRewardUI {
 // MARK: - PREVIEW
 
 #Preview {
+    /*
     let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .claimed)
     let waterModel = WeeklyDailyCardModel(day: 2, bounty: .standart(model: .gold(count: 200)), status: .passed)
     let goldModel1 = WeeklyDailyCardModel(day: 3, bounty: .chest(model: .gold), status: .locked)
@@ -147,7 +151,6 @@ private extension WeeklyRewardUI {
     let chest1 = WeeklyDailyCardModel(day: 7, bounty: .standart(model: .gold(count: 200)), status: .locked)
     let list = [goldModel,waterModel,goldModel1,waterModel2,goldModel3,waterModel3,chest1]
     
-    WeeklyRewardUI(isOpen: .constant(true), cardList: list) { card in
-        print("\(card)")
-    }
+    WeeklyRewardUI(isOpen: .constant(true), cardList: list) { _ in }
+     */
 }

@@ -12,7 +12,8 @@ class LearningFeedViewModel: ObservableObject{
     
     // MARK: - DEPENDENCIES
     private let dataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var todaysLearningWord = ""
@@ -23,8 +24,9 @@ class LearningFeedViewModel: ObservableObject{
     
     // MARK: - INIT
     
-    init(coreDataManager: CoreDataManagerProtocol) {
+    init(coreDataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()) {
         self.dataManager = coreDataManager
+        self.analyticsService = analyticsService
         fetchDailyWord()
     }
     
@@ -41,8 +43,10 @@ class LearningFeedViewModel: ObservableObject{
             todaysDescription = defaults.string(forKey: Constant.dailyDescriptionKey) ?? ""
             if todaysLearningWord.isEmpty {
                 alert = .emptyWord
+            } else {
+                analyticsService.log(.dailyWordViewed)
             }
-            
+
         } else {
             fetchNewWordFromCoreData()
         }
@@ -83,7 +87,8 @@ class LearningFeedViewModel: ObservableObject{
             todaysDescription = randomBook.descriptionWord ?? ""
             alert = .none
             saveDailyWord()
-            
+            analyticsService.log(.dailyWordViewed)
+
         } else {
             alert = .emptyWord
             clearDailyWord()
@@ -96,7 +101,6 @@ class LearningFeedViewModel: ObservableObject{
         defaults.set(todaysLearningWord, forKey: Constant.dailyWordKey)
         defaults.set(todaysMeaning, forKey: Constant.dailyMeaningKey)
         defaults.set(todaysExample, forKey: Constant.dailyExampleKey)
-        print("New word saved to UserDefaults for today.")
     }
     
     private func clearDailyWord() {

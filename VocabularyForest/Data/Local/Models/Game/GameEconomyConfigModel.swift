@@ -7,32 +7,22 @@
 
 import Foundation
 
-struct GameEconomyConfigModel {
+struct GameEconomyConfigModel: Decodable {
     let id: String?
     let season: String?
-    let chestOdds: GameChestOddsModel
-    let chestRewardRanges: GameChestRewardRangesModel
-    let killCap: GameKillCapModel
+    let killCap: GameKillCapModel?
+    let progressionTargets: GameProgressionTargetsModel?
 }
 
-struct GameChestOddsModel {
-    let goldChestDiamondChance: Int
-    let goldChestWaterChance: Int
-    let natureChestAnimalChance: Int
-    let antiqueChestAnimalChance: Int
+struct GameKillCapModel: Decodable {
+    let minGoldPerKill: Int?
+    let maxGoldPerKill: Int?
+    let dailyKillCountCap: Int?
 }
 
-struct GameKillCapModel {
-    let minGoldPerKill: Int
-    let maxGoldPerKill: Int
-    let dailyKillCountCap: Int
-}
-
-struct GameChestRewardRangesModel {
-    let goldChestGoldMin: Int
-    let goldChestGoldMax: Int
-    let goldChestDiamondMin: Int
-    let goldChestDiamondMax: Int
-    let diamondChestDiamondMin: Int
-    let diamondChestDiamondMax: Int
+struct GameProgressionTargetsModel: Decodable {
+    let dailyActiveGoldTarget: Int?
+    let rainCost: Int?
+    let rainDecayPerHour: Int?
+    let dailyQuestCompletionRateForRain: Double?
 }

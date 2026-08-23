@@ -27,7 +27,7 @@ struct ForestPopUp: View{
                 .modifier(TitleBackground())
             .padding(.bottom, 10)
             if let descriptionText {
-                Text(descriptionText).foregroundStyle(.white).font(.system(size: 14)).multilineTextAlignment(.center)
+                Text(descriptionText).foregroundStyle(.white).scaledFont(size: 14).multilineTextAlignment(.center)
             }
             HStack(alignment: .center) {
                 if let deniedText, let onDenied {
@@ -59,6 +59,7 @@ struct ForestPopUp: View{
                     .resizable()
                     .frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }.frame(maxWidth: UIScreen.main.bounds.width * 0.7)
         .zIndex(4.0)
@@ -69,5 +70,5 @@ struct ForestPopUp: View{
 #Preview {
     @State var bool: Bool = false
     
-    ForestPopUp(titleText: "Yakup", descriptionText: "Kafasdfsdafsdafsafasfsafdsafasasfsdafsdafsafasvak", onConfirm: {print("") }, onDenied: { print("")}, confirmText: "Kabul", deniedText: "Red", showForestPopUp: $bool)
+    ForestPopUp(titleText: "Yakup", descriptionText: "Kafasdfsdafsdafsafasfsafdsafasasfsdafsdafsafasvak", onConfirm: { }, onDenied: { }, confirmText: "Kabul", deniedText: "Red", showForestPopUp: $bool)
 }

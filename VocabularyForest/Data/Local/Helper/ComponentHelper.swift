@@ -9,11 +9,13 @@ import Foundation
 
 func generateRandomName(type: ComponentType) -> String {
     switch type {
+    // Default names are stored as raw catalog keys so they can be re-localized
+    // at display time when the device language changes (see localizedCharacterName).
     case .animal:
-        return ["Boncuk", String(localized: "Mutlu"), String(localized: "Huzur")].randomElement() ?? String("Mutlu")
+        return ["Boncuk", "Mutlu", "Huzur"].randomElement() ?? String("Mutlu")
     case .plant:
-        return [String(localized: "Güneş"), String(localized: "Ay"), String(localized: "Venüs")].randomElement() ?? String("Mars")
+        return ["Güneş", "Ay", "Venüs"].randomElement() ?? String("Mars")
     case .sculpture:
-        return [String(localized: "Bilge"), String(localized: "Zafer"), String(localized: "umut")].randomElement() ?? String("Sonsuzluk")
+        return ["Bilge", "Zafer", "umut"].randomElement() ?? String("Sonsuzluk")
     }
 }

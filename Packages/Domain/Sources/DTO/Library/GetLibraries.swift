@@ -8,9 +8,7 @@
 
 import Alamofire
 import CoreAPI
-import YakoSwift
 
-@DefaultInit
 public enum GetLibraries: EndPoint {
     
     case standart(baseURL: String)

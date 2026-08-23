@@ -9,6 +9,7 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
     @Environment(\.presentToast) var presentToast
     @ObservedObject var viewModel: ViewModel
     @State private var showEmpty = false
+    
     var body: some View {
         ZStack {
             Color.backgroundSystem.ignoresSafeArea()
@@ -37,15 +38,19 @@ struct BookcasePacketsUI<ViewModel>: View where ViewModel: BookcasePacketsViewMo
         .onChange(of: viewModel.downloadState) { state in
             switch state {
             case .waiting:
-                print("Waiting")
+                break
             case .downloading:
                 presentToast(ToastValue(message: String(localized: "Yükleniyor")))
             case .success:
                 presentToast(ToastValue(message: String(localized: "Kütüphanen yüklendi!")))
             case .error(let errorText):
                 presentToast(ToastValue(message: errorText))
+            case .addWaiting:
+                presentToast(ToastValue(message: String(localized: "Reklam hazırlanıyor")))
             }
-        }
+        }.task {
+            viewModel.loadRewardedAd()
+        }.trackScreen(.bookcasePackets)
     }
 }
 
@@ -53,14 +58,16 @@ extension BookcasePacketsUI {
     var defaultHeader: some View {
         HStack {
             Spacer()
-            Text("Hazır Kütüphaneler").font(.system(size: 24)).fontWeight(.medium).foregroundStyle(.title)
+            Text("Hazır Kütüphaneler").scaledFont(size: 24).fontWeight(.medium).foregroundStyle(.title).a11yHeader()
             Spacer()
         }.overlay(alignment: .leading) {
             Button {
                 router.navigateBack()
             } label: {
                 Image(systemName: "chevron.backward").resizable().scaledToFit().frame(width: 32).foregroundStyle(.clickableButton)
-            }.offset(x: 32)
+            }
+            .accessibilityLabel(String(localized: "a11y_back"))
+            .offset(x: 32)
         }
     }
     var horizontalBookcaseList: some View {
@@ -80,6 +87,7 @@ extension BookcasePacketsUI {
                                 .onTapGesture {
                                     withAnimation { viewModel.selectLibrary(code: languageCode) }
                                 }
+                                .a11yTapButton(isSelected: isSelected)
                         }
                     }
                     .padding(.horizontal)
@@ -104,6 +112,19 @@ extension BookcasePacketsUI {
                         ForEach(sortedGroups, id: \.language) { group in
                             BookcasePacketRow(language: group.language, libraries: group.libs) { library in
                                 viewModel.downloadLibrary(model: library)
+                                /*
+                                PopupManager.shared.show {
+                                    LibraryPopUp(
+                                        titleText: String(localized: "Download Vocabulary"),
+                                        descriptionText: String(localized: "You can download a vocabulary by watching a video. Would you like to watch a video?"),
+                                        onConfirm: { if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+                                            viewModel.showAdAndDownload(from: rootVC, library: library)
+                                        }
+                                        },
+                                        onClose: { PopupManager.shared.dismiss() },
+                                        confirmText: String(localized: "Watch the Video"))
+                                }
+                                 */
                             }
                         }
                     }
@@ -111,11 +132,12 @@ extension BookcasePacketsUI {
             }
         }
     }
+    
     var emptyView: some View {
         CustomEmptyView(emptyText: String(localized: "Hiçbir kitaplık bulunamadı"))
     }
 }
-
+/*
 #Preview("Success State") {
     BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(uiState: .success, libraries: .mock)).environmentObject(BookcaseRouter())
 }
@@ -128,3 +150,4 @@ extension BookcasePacketsUI {
 #Preview("Error State") {
     BookcasePacketsUI(viewModel: MockBookcasePacketsViewModel(uiState: .error("İnternet bağlantısı koptu."), libraries: nil)).environmentObject(BookcaseRouter())
 }
+*/

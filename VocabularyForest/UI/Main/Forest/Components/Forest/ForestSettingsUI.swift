@@ -23,19 +23,19 @@ struct ForestSettingsUI: View {
             GamePopUpContainer(title: "Settings", onClose: onClose, screenWidth: geometry.size.width) {
                 VStack(spacing: 24) {
                     Group {
-                        customSliderRow(title: "Music", icon: "music.note", value: $musicVolume)
+                        customSliderRow(title: String(localized: "Music"), icon: "music.note", value: $musicVolume)
                             .disabled(isMuted)
                             .opacity(isMuted ? 0.5 : 1.0)
                         
-                        customSliderRow(title: "SFX", icon: "speaker.wave.2.fill", value: $sfxVolume)
+                        customSliderRow(title: String(localized: "SFX"), icon: "speaker.wave.2.fill", value: $sfxVolume)
                             .disabled(isMuted)
                             .opacity(isMuted ? 0.5 : 1.0)
                         
-                        customToggleRow(title: "Mute All", icon: "speaker.slash.fill", isOn: $isMuted)
+                        customToggleRow(title: String(localized: "Mute All"), icon: "speaker.slash.fill", isOn: $isMuted)
                     }
                     Divider().background(Color.white.opacity(0.5))
                     Group {
-                        customToggleRow(title: "Haptics", icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
+                        customToggleRow(title: String(localized: "Haptics"), icon: "iphone.radiowaves.left.and.right", isOn: $isHapticsEnabled)
                     }
                 }
                 .padding(.horizontal, 8)

@@ -49,6 +49,9 @@ public struct ToastButton {
   /// The color of the button text.
   public var color: Color
 
+  /// Whether the button title should be rendered with an underline.
+  public var underlined: Bool
+
   /// The action to perform when the button is tapped.
   public var action: () -> Void
 
@@ -57,14 +60,17 @@ public struct ToastButton {
   /// - Parameters:
   ///   - title: The text to display on the button.
   ///   - color: The color of the button text. Default is `.primary`.
+  ///   - underlined: Whether the button title is underlined. Default is `false`.
   ///   - action: The closure to execute when the button is tapped.
   public init(
     title: String,
     color: Color = .primary,
+    underlined: Bool = false,
     action: @escaping () -> Void
   ) {
     self.title = title
     self.color = color
+    self.underlined = underlined
     self.action = action
   }
 }

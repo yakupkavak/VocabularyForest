@@ -20,8 +20,10 @@ struct ForestConflictView: View {
     
     @State private var selectedSource: ForestSource? = nil
     @State private var confirmText: String = ""
+    @FocusState private var isInputFocused: Bool
     
     // MARK: - Localization Support
+    
     private var expectedKeyword: String {
         NSLocalizedString("conflict_confirm_keyword", value: "confirm", comment: "Keyword to type for confirmation")
     }
@@ -35,84 +37,124 @@ struct ForestConflictView: View {
     }
     
     // MARK: - VIEW
+    
     var body: some View {
         ZStack {
-            Color.black.opacity(0.85)
+            Color.backgroundSystem
                 .ignoresSafeArea()
             
-            VStack(spacing: 24) {
-                VStack(spacing: 8) {
-                    Text("Conflict Detected")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(.horizontal)
-                
-                HStack(spacing: 12) {
-                    forestCard(
-                        title: String(localized: "Local Forest"),
-                        forest: localForest,
-                        source: .local,
-                        icon: "iphone"
-                    )
-                    
-                    forestCard(
-                        title: String(localized: "Cloud Forest"),
-                        forest: cloudForest,
-                        source: .cloud,
-                        icon: "icloud.fill"
-                    )
-                }
-                .padding(.horizontal)
-                
-                Divider()
-                    .background(Color.gray.opacity(0.3))
-                
-                VStack(spacing: 12) {
-                    Text("Type **'\(expectedKeyword)'** to confirm your selection:")
-                        .font(.callout)
-                        .foregroundColor(.primary)
-                    
-                    TextField(expectedKeyword, text: $confirmText)
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.center)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .frame(maxWidth: 250)
-                }
-                
-                Button {
-                    if let selected = selectedSource {
-                        onResolve(selected)
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 24) {
+                        headerSection
+                        forestCardsSection
+                        
+                        Divider()
+                            .background(Color.gray.opacity(0.3))
+                        
+                        confirmationSection
+                        confirmButton
                     }
-                } label: {
-                    Text("Confirm Selection")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(isConfirmed ? Color.logoGreen : Color.gray)
-                        .cornerRadius(12)
+                    .padding(.top, 64)
+                    .padding(.bottom, 40)
+                    .frame(maxWidth: 500)
+                    .frame(maxWidth: .infinity)
                 }
-                .disabled(!isConfirmed)
-                .padding(.horizontal, 30)
+                .scrollDismissesKeyboard(.interactively)
+                .onChange(of: isInputFocused) { isFocused in
+                    guard isFocused else { return }
+                    // Wait one runloop so the keyboard safe area is applied before scrolling
+                    Task { @MainActor in
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            proxy.scrollTo(Constants.confirmButtonId, anchor: .bottom)
+                        }
+                    }
+                }
             }
-            .padding(.vertical, 30)
-            .background(Color.backgroundSystem)
-            .cornerRadius(24)
-            .padding(.horizontal, 16)
-            .shadow(color: .black.opacity(0.2), radius: 20, x: 0, y: 10)
+        }
+    }
+}
+
+// MARK: - VIEW COMPONENTS
+
+private extension ForestConflictView {
+    
+    var headerSection: some View {
+        VStack(spacing: 8) {
+            Text("Conflict Detected")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.primary)
+            
+            Text("Different forest records found on your device and in the cloud. Which one do you want to keep?\n\n**Warning: This action cannot be undone. The unselected forest will be permanently deleted.**")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal)
+    }
+    
+    var forestCardsSection: some View {
+        HStack(spacing: 12) {
+            forestCard(
+                title: String(localized: "Local Forest"),
+                forest: localForest,
+                source: .local,
+                icon: "iphone"
+            )
+            
+            forestCard(
+                title: String(localized: "Cloud Forest"),
+                forest: cloudForest,
+                source: .cloud,
+                icon: "icloud.fill"
+            )
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal)
+    }
+    
+    var confirmationSection: some View {
+        VStack(spacing: 12) {
+            Text("Type **'\(expectedKeyword)'** to confirm your selection:")
+                .font(.callout)
+                .foregroundColor(.primary)
+            
+            TextField(expectedKeyword, text: $confirmText)
+                .accessibilityLabel(String(
+                    format: NSLocalizedString("a11y_confirm_keyword", comment: ""),
+                    expectedKeyword
+                ))
+                .focused($isInputFocused)
+                .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.center)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .submitLabel(.done)
+                .onSubmit { isInputFocused = false }
+                .frame(maxWidth: 250)
         }
     }
     
-    // MARK: - SUBVIEWS
+    var confirmButton: some View {
+        Button {
+            guard let selected = selectedSource else { return }
+            isInputFocused = false
+            onResolve(selected)
+        } label: {
+            Text("Confirm Selection")
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(isConfirmed ? Color.logoGreen : Color.gray)
+                .cornerRadius(12)
+        }
+        .disabled(!isConfirmed)
+        .padding(.horizontal, 30)
+        .id(Constants.confirmButtonId)
+    }
     
     @ViewBuilder
     private func forestCard(title: String, forest: SafeForestModel, source: ForestSource, icon: String) -> some View {
@@ -122,25 +164,44 @@ struct ForestConflictView: View {
             Image(systemName: icon)
                 .font(.title2)
                 .foregroundColor(isSelected ? .logoGreen : .gray)
-            
+                /// Decorative: local/cloud distinction is already in the card title
+                .accessibilityHidden(true)
+
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)
-                .lineLimit(1)
+                .lineLimit(2)
                 .minimumScaleFactor(0.8)
             
             VStack(alignment: .leading, spacing: 6) {
-                customStatRow(assetIcon: "gold_icon", text: "\(forest.moneyValue)")
-                customStatRow(assetIcon: "diamond_icon", text: "\(forest.diamondValue)")
-                customStatRow(assetIcon: "water_icon", text: "\(forest.rainValue)")
-                statRow(icon: "heart.fill", color: .red, text: "%\(forest.landHealthPercent)")
+                customStatRow(
+                    assetIcon: "gold_icon",
+                    text: "\(forest.moneyValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_balance_gold", comment: ""), "\(forest.moneyValue)")
+                )
+                customStatRow(
+                    assetIcon: "diamond_icon",
+                    text: "\(forest.diamondValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_balance_diamond", comment: ""), "\(forest.diamondValue)")
+                )
+                customStatRow(
+                    assetIcon: "water_icon",
+                    text: "\(forest.rainValue)",
+                    a11yText: String(format: NSLocalizedString("a11y_stat_water", comment: ""), "\(forest.rainValue)")
+                )
+                statRow(
+                    icon: "heart.fill",
+                    color: .red,
+                    text: "%\(forest.landHealthPercent)",
+                    a11yText: String(format: NSLocalizedString("a11y_stat_health", comment: ""), "\(forest.landHealthPercent)")
+                )
                 
                 Divider().padding(.vertical, 2)
                 
-                statRow(icon: "tree.fill", color: .green, text: "\(forest.trees.count) Trees")
+                statRow(icon: "tree.fill", color: .green, text: "\(forest.trees.count) Plants")
                 statRow(icon: "pawprint.fill", color: .orange, text: "\(forest.animals.count) Animals")
                 statRow(icon: "building.columns.fill", color: .gray, text: "\(forest.sculptures.count) Sculptures")
-                statRow(icon: "leaf.fill", color: .mint, text: "\(forest.quests.count) Plants/Quests")
+                statRow(icon: "checkmark.seal.fill", color: .mint, text: "\(forest.quests.count) Quests")
                 
                 Divider().padding(.vertical, 2)
                 
@@ -168,22 +229,26 @@ struct ForestConflictView: View {
                 selectedSource = source
             }
         }
+        /// One selectable element: title + spoken stats, selection state via `.isSelected`
+        .a11yTapButton(isSelected: isSelected)
     }
-    
+
     @ViewBuilder
-    private func statRow(icon: String, color: Color, text: String) -> some View {
+    private func statRow(icon: String, color: Color, text: String, a11yText: String? = nil) -> some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .foregroundColor(color)
                 .frame(width: 16, alignment: .center)
+                .accessibilityHidden(true)
             Text(text)
                 .foregroundColor(.secondary)
                 .fontWeight(.medium)
         }
+        .a11yGroup(a11yText)
     }
-    
+
     @ViewBuilder
-    private func customStatRow(assetIcon: String, text: String) -> some View {
+    private func customStatRow(assetIcon: String, text: String, a11yText: String) -> some View {
         HStack(spacing: 8) {
             Image(assetIcon)
                 .resizable()
@@ -193,6 +258,15 @@ struct ForestConflictView: View {
                 .foregroundColor(.secondary)
                 .fontWeight(.medium)
         }
+        .a11yGroup(a11yText)
+    }
+}
+
+// MARK: - CONSTANTS
+
+private extension ForestConflictView {
+    enum Constants {
+        static let confirmButtonId = "confirmButton"
     }
 }
 

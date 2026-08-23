@@ -19,6 +19,7 @@ protocol VocabularyForestCoordinatorProtocol {
     func startBookcasePacketsUI() -> AnyView
     func startCreateBookUI() -> AnyView
     func startCreateBookcaseUI() -> AnyView
+    func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView
 }
 
 final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, ObservableObject{
@@ -31,12 +32,11 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     private var cachedBattleViewModel: BattleViewModel?
     private var cachedLearningFeedViewModel: LearningFeedViewModel?
     private var cachedSettingsViewModel: SettingsViewModel?
-    private var cachedBookcaseDetailViewModel: BookcaseDetailViewModel?
     private var cachedBookcaseFeedViewModel: BookcaseFeedViewModel?
     private var cachedBookcasePacketsViewModel: BookcasePacketsViewModel?
     private var cachedCreateBookViewModel: CreateBookViewModel?
     private var cachedCreateBookcaseViewModel: CreateBookcaseViewModel?
-    
+
     init(resolver: DCResolve) {
         self.resolver = resolver
     }
@@ -52,10 +52,11 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let forestControllerService = ForestInitializerService(
             forestManager: forestData,
             playerManager: playerManager,
-            coreData: coreData,
-            remoteConfigRepository: remoteConfigRepository
+            coreData: coreData
         )
-        let viewModel = SplashViewModel(forestController: forestControllerService)
+        let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
+        let assetHydrationService = resolver.resolve(type: .singleInstance, for: RewardAssetHydrationServiceProtocol.self)
+        let viewModel = SplashViewModel(forestController: forestControllerService, restorePromptService: restorePromptService, assetHydrationService: assetHydrationService)
         self.cachedSplashViewModel = viewModel
         return AnyView(
             SplashUI(viewModel: viewModel)
@@ -74,6 +75,12 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let adventureService = resolver.resolve(type: .singleInstance, for: ForestAdventureServiceProtocol.self)
         let remoteConfigRepository = resolver.resolve(type: .singleInstance, for: RemoteConfigRepositoryProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+        let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
+        let dailySpinService = resolver.resolve(type: .singleInstance, for: DailySpinServiceProtocol.self)
+        let weeklyRewardService = resolver.resolve(type: .singleInstance, for: WeeklyRewardServiceProtocol.self)
+        let adventureRoadService = resolver.resolve(type: .singleInstance, for: AdventureRoadServiceProtocol.self)
+        let marketService = resolver.resolve(type: .singleInstance, for: MarketServiceProtocol.self)
+        let assetHydrationService = resolver.resolve(type: .singleInstance, for: RewardAssetHydrationServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
             coreDataManager: coreData,
@@ -81,9 +88,15 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             forestEntityService: forestEntityService,
             forestAdventureService: adventureService,
             remoteConfigRepository: remoteConfigRepository,
-            playerDataManager: playerManager
+            playerDataManager: playerManager,
+            questService: questService,
+            dailySpinService: dailySpinService,
+            weeklyRewardService: weeklyRewardService,
+            adventureRoadService: adventureRoadService,
+            marketService: marketService,
+            assetHydrationService: assetHydrationService
         )
-        
+
         self.cachedForestViewModel = viewModel
         return AnyView(
             ForestUI(viewModel: viewModel)
@@ -99,12 +112,17 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
-
+        let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
+        let gameManager = resolver.resolve(type: .singleInstance, for: GameManagerProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
             forestDataManager: forestData,
-            playerDataManager: playerManager
+            playerDataManager: playerManager,
+            questService: questService,
+            gameManager: gameManager,
+            analyticsService: analyticsService,
         )
         
         self.cachedBattleViewModel = viewModel
@@ -119,7 +137,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = LearningFeedViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = LearningFeedViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedLearningFeedViewModel = viewModel
         return AnyView(
@@ -135,16 +154,31 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
         let notification = resolver.resolve(type: .singleInstance, for: (any NotificationManagerProtocol).self)
         let auth = resolver.resolve(type: .singleInstance, for: (any AuthManagerProtocol).self)
-        let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManager.self)
+        let sync = resolver.resolve(type: .singleInstance, for: ForestSyncManagerProtocol.self)
+        let accountCloudDeletion = resolver.resolve(type: .singleInstance, for: AccountCloudDeletionServiceProtocol.self)
         let forestData = resolver.resolve(type: .singleInstance, for: ForestDataManagerProtocol.self)
         let playerManager = resolver.resolve(type: .singleInstance, for: PlayerDataManagerProtocol.self)
+        let restorePromptService = resolver.resolve(type: .singleInstance, for: CloudRestorePromptServiceProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let analyticsConsentStore = resolver.resolve(type: .singleInstance, for: AnalyticsConsentStoreProtocol.self)
+        // Stateless service; built ad hoc like the splash flow's instance.
+        let forestInitializer = ForestInitializerService(
+            forestManager: forestData,
+            playerManager: playerManager,
+            coreData: coreData
+        )
         let viewModel = SettingsViewModel(
             notificationManager: notification,
             coreDataManager: coreData,
             authManager: auth,
             syncManager: sync,
+            accountCloudDeletionService: accountCloudDeletion,
             forestManager: forestData,
-            playerManager: playerManager
+            playerManager: playerManager,
+            restorePromptService: restorePromptService,
+            forestInitializer: forestInitializer,
+            analyticsService: analyticsService,
+            analyticsConsentStore: analyticsConsentStore
         )
         
         self.cachedSettingsViewModel = viewModel
@@ -154,19 +188,17 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     }
     
     func startBookcaseDetailUI(bookcaseName: String, learningLanguage: String, meaningLanguage: String) -> AnyView {
-        if let cachedVM = cachedBookcaseDetailViewModel {
-            return AnyView(BookcaseDetailUI(viewModel: cachedVM))
-        }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
         let viewModel = BookcaseDetailViewModel(
             bookcaseName: bookcaseName,
             learningLanguage: learningLanguage,
             meaningLanguage: meaningLanguage,
-            dataManager: coreData
+            dataManager: coreData,
+            analyticsService: analyticsService
         )
         
-        self.cachedBookcaseDetailViewModel = viewModel
         return AnyView(
             BookcaseDetailUI(viewModel: viewModel)
         )
@@ -178,7 +210,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = BookcaseFeedViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = BookcaseFeedViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedBookcaseFeedViewModel = viewModel
         return AnyView(
@@ -193,7 +226,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         
         let networkService = resolver.resolve(type: .singleInstance, for: APIServiceProtocol.self)
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = BookcasePacketsViewModel(networkService: networkService, dataManager: coreData, analyticsService: analyticsService)
         
         self.cachedBookcasePacketsViewModel = viewModel
         return AnyView(
@@ -207,7 +241,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = CreateBookViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = CreateBookViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedCreateBookViewModel = viewModel
         return AnyView(
@@ -221,7 +256,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         }
         
         let coreData = resolver.resolve(type: .singleInstance, for: CoreDataManagerProtocol.self)
-        let viewModel = CreateBookcaseViewModel(coreDataManager: coreData)
+        let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let viewModel = CreateBookcaseViewModel(coreDataManager: coreData, analyticsService: analyticsService)
         
         self.cachedCreateBookcaseViewModel = viewModel
         return AnyView(
@@ -229,4 +265,9 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         )
     }
     
+    func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView {
+        let chestRepository = resolver.resolve(type: .singleInstance, for: ChestRepositoryProtocol.self)
+        let viewModel = ClaimRewardViewModel(chestManager: chestRepository)
+        return AnyView(ClaimRewardUI(viewModel: viewModel, claimReward: claimReward, onClaim: onClaim))
+    }
 }

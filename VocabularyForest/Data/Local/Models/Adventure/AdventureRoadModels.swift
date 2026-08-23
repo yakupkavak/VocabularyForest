@@ -14,8 +14,67 @@ enum AdventureTicketNotchSide {
     case right
 } 
 
+/// Season theme colors driven by the remote config, falls back to the default forest palette
+struct AdventureRoadThemeModel {
+    let backgroundTopColor: Color
+    let backgroundBottomColor: Color
+    let titleTextColor: Color
+    let subtitleTextColor: Color
+    let countdownTextColor: Color
+    let countdownBackgroundColor: Color
+    let wordLabelTextColor: Color
+    let shortBadgeTopColor: Color
+    let shortBadgeBottomColor: Color
+    let shortBadgeTextColor: Color
+    let longBadgeTopColor: Color
+    let longBadgeBottomColor: Color
+    let longBadgeTextColor: Color
+
+    static let `default` = AdventureRoadThemeModel(
+        backgroundTopColor: Color(red: 0.74, green: 0.88, blue: 0.55),
+        backgroundBottomColor: Color(red: 0.16, green: 0.56, blue: 0.33),
+        titleTextColor: .white,
+        subtitleTextColor: .white,
+        countdownTextColor: .white,
+        countdownBackgroundColor: Color.black.opacity(0.14),
+        wordLabelTextColor: Color.white.opacity(0.96),
+        shortBadgeTopColor: Color(red: 0.31, green: 0.87, blue: 0.76).opacity(0.78),
+        shortBadgeBottomColor: Color(red: 0.16, green: 0.74, blue: 0.64).opacity(0.7),
+        shortBadgeTextColor: Color(red: 0.04, green: 0.28, blue: 0.33),
+        longBadgeTopColor: Color.white.opacity(0.14),
+        longBadgeBottomColor: Color.white.opacity(0.05),
+        longBadgeTextColor: .white
+    )
+
+    static func make(from remote: RemoteAdventureRoadThemeModel?) -> AdventureRoadThemeModel {
+        guard let remote else { return .default }
+        return AdventureRoadThemeModel(
+            backgroundTopColor: color(remote.backgroundTopColor, fallback: Self.default.backgroundTopColor),
+            backgroundBottomColor: color(remote.backgroundBottomColor, fallback: Self.default.backgroundBottomColor),
+            titleTextColor: color(remote.titleTextColor, fallback: Self.default.titleTextColor),
+            subtitleTextColor: color(remote.subtitleTextColor, fallback: Self.default.subtitleTextColor),
+            countdownTextColor: color(remote.countdownTextColor, fallback: Self.default.countdownTextColor),
+            countdownBackgroundColor: color(remote.countdownBackgroundColor, fallback: Self.default.countdownBackgroundColor),
+            wordLabelTextColor: color(remote.wordLabelTextColor, fallback: Self.default.wordLabelTextColor),
+            shortBadgeTopColor: color(remote.shortBadgeTopColor, fallback: Self.default.shortBadgeTopColor),
+            shortBadgeBottomColor: color(remote.shortBadgeBottomColor, fallback: Self.default.shortBadgeBottomColor),
+            shortBadgeTextColor: color(remote.shortBadgeTextColor, fallback: Self.default.shortBadgeTextColor),
+            longBadgeTopColor: color(remote.longBadgeTopColor, fallback: Self.default.longBadgeTopColor),
+            longBadgeBottomColor: color(remote.longBadgeBottomColor, fallback: Self.default.longBadgeBottomColor),
+            longBadgeTextColor: color(remote.longBadgeTextColor, fallback: Self.default.longBadgeTextColor)
+        )
+    }
+
+    private static func color(_ hex: String?, fallback: Color) -> Color {
+        guard let hex = hex?.trimmingCharacters(in: .whitespacesAndNewlines), !hex.isEmpty else { return fallback }
+        return Color(hex: hex)
+    }
+}
+
 struct AdventureRoadScreenModel {
     let title: String
+    let subtitle: String
+    let theme: AdventureRoadThemeModel
     let eventEndDate: Date
     let referenceDate: Date
     let shortTermCorrectWords: Int
@@ -102,7 +161,7 @@ struct AdventureMilestoneModel: Identifiable {
     let track: AdventureMemoryTrack
     let wordCount: Int
     let reward: LocalRewardModel
-    let isClaimed: Bool
+    let status: BountyStatus
 
     var id: String {
         "\(track.rawValue)-\(wordCount)"
@@ -119,150 +178,23 @@ struct AdventureRoadRowModel: Identifiable {
     }
 }
 
-enum AdventureRoadMockData {
-    static func screenModel() -> AdventureRoadScreenModel {
-        let maxWordCount = 500
-        let shortWords = 340
-        let longWords = 270
-        let rows = rows(
-            maxWordCount: maxWordCount,
-            shortTermCorrectWords: shortWords,
-            longTermCorrectWords: longWords
-        )
+// MARK: - CLAIMED TIER CODER
 
-        return AdventureRoadScreenModel(
-            title: String(
-                localized: "adventure_road_title",
-                defaultValue: "Adventure Road",
-                comment: "Main title of the Adventure Road screen"
-            ),
-            eventEndDate: Calendar.current.date(byAdding: .hour, value: 203, to: Date()) ?? Date(),
-            referenceDate: Date(),
-            shortTermCorrectWords: shortWords,
-            longTermCorrectWords: longWords,
-            maxWordCount: maxWordCount,
-            rows: rows
-        )
+/// Encodes / decodes the claimed milestone word counts stored as a comma separated string in Core Data
+enum AdventureTierCoder {
+
+    static func decode(_ value: String?) -> Set<Int> {
+        guard let value, !value.isEmpty else { return [] }
+        return Set(value.split(separator: ",").compactMap { Int($0.trimmingCharacters(in: .whitespaces)) })
     }
 
-    static func rows(
-        maxWordCount: Int = 500,
-        shortTermCorrectWords: Int,
-        longTermCorrectWords: Int
-    ) -> [AdventureRoadRowModel] {
-        let values = stride(from: 10, through: maxWordCount, by: 10)
-
-        return values.map { value in
-            AdventureRoadRowModel(
-                wordCount: value,
-                leftMilestone: milestone(
-                    for: .shortTerm,
-                    wordCount: value,
-                    claimedWordCount: shortTermCorrectWords
-                ),
-                rightMilestone: milestone(
-                    for: .longTerm,
-                    wordCount: value,
-                    claimedWordCount: longTermCorrectWords
-                )
-            )
-        }
+    static func encode(_ tiers: Set<Int>) -> String {
+        tiers.sorted().map(String.init).joined(separator: ",")
     }
 
-    private static func milestone(
-        for track: AdventureMemoryTrack,
-        wordCount: Int,
-        claimedWordCount: Int
-    ) -> AdventureMilestoneModel {
-        let milestoneStep = max((wordCount / 10) - 1, 0)
-        let isChest = wordCount.isMultiple(of: 50)
-        let resourceCycle: [QuestRewardModel] = [
-            .gold(count: 0),
-            .water(count: 0),
-            .gold(count: 0),
-            .water(count: 0),
-            .diamond(count: 0)
-        ]
-        let chestCycle: [ChestBountyModel] = track == .shortTerm
-            ? [.gold, .diamond, .gold]
-            : [.nature, .gold, .nature]
-        let reward: LocalRewardModel
-
-        if isChest {
-            reward = .chest(model: chestCycle[milestoneStep % chestCycle.count])
-        } else {
-            let resource = resourceCycle[milestoneStep % resourceCycle.count]
-            reward = .standart(model: rewardForResource(resource: resource, step: milestoneStep, track: track))
-        }
-
-        return AdventureMilestoneModel(
-            track: track,
-            wordCount: wordCount,
-            reward: reward,
-            isClaimed: wordCount <= claimedWordCount
-        )
-    }
-
-    private static func rewardForResource(
-        resource: QuestRewardModel,
-        step: Int,
-        track: AdventureMemoryTrack
-    ) -> QuestRewardModel {
-        switch resource {
-        case .water:
-            let values = track == .shortTerm ? [30, 45, 25, 30, 45] : [10, 15, 10, 15, 20]
-            return .water(count: values[step % values.count])
-        case .gold:
-            let values = track == .shortTerm ? [300, 800, 1000, 450, 600] : [300, 300, 500, 250, 300]
-            return .gold(count: values[step % values.count])
-        case .diamond:
-            let values = track == .shortTerm ? [10, 20, 30, 45, 20] : [5, 10, 10, 15, 20]
-            return .diamond(count: values[step % values.count])
-        default:
-            return .gold(count: 0)
-        }
-    }
-}
-
-enum AdventureRoadBuilder {
-    static func screenModel(
-        rewards: [AdventureRoadRewardModel],
-        progress: AdventureRoadProgressModel,
-        eventEndDate: Date,
-        referenceDate: Date
-    ) -> AdventureRoadScreenModel {
-        let sortedRewards = rewards.sorted { $0.wordCount < $1.wordCount }
-        let maxWordCount = sortedRewards.map(\.wordCount).max() ?? 0
-        let rows = sortedRewards.map { reward in
-            AdventureRoadRowModel(
-                wordCount: reward.wordCount,
-                leftMilestone: AdventureMilestoneModel(
-                    track: .shortTerm,
-                    wordCount: reward.wordCount,
-                    reward: reward.shortTermReward,
-                    isClaimed: reward.wordCount <= progress.monthlyShortLearnedCount
-                ),
-                rightMilestone: AdventureMilestoneModel(
-                    track: .longTerm,
-                    wordCount: reward.wordCount,
-                    reward: reward.longTermReward,
-                    isClaimed: reward.wordCount <= progress.monthlyLongLearnedCount
-                )
-            )
-        }
-        
-        return AdventureRoadScreenModel(
-            title: String(
-                localized: "adventure_road_title",
-                defaultValue: "Adventure Road",
-                comment: "Main title of the Adventure Road screen"
-            ),
-            eventEndDate: eventEndDate,
-            referenceDate: referenceDate,
-            shortTermCorrectWords: progress.monthlyShortLearnedCount,
-            longTermCorrectWords: progress.monthlyLongLearnedCount,
-            maxWordCount: maxWordCount,
-            rows: rows
-        )
+    static func append(_ wordCount: Int, to value: String?) -> String {
+        var tiers = decode(value)
+        tiers.insert(wordCount)
+        return encode(tiers)
     }
 }

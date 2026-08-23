@@ -12,9 +12,10 @@ internal import CoreData
 class BookcaseFeedViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
-    
+
     private let coreDataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var bookcases: [BookcaseDisplayItem] = []
@@ -26,8 +27,9 @@ class BookcaseFeedViewModel: ObservableObject {
 
     // MARK: - INIT
   
-    init(coreDataManager: CoreDataManagerProtocol) {
+    init(coreDataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol) {
         self.coreDataManager = coreDataManager
+        self.analyticsService = analyticsService
         fetchBookcases()
         setListener()
     }
@@ -61,7 +63,8 @@ class BookcaseFeedViewModel: ObservableObject {
             contextType: .main
         ) ?? []
         bookcases = fetchedBookcases.map { bookcase in
-            BookcaseDisplayItem(
+            
+            return BookcaseDisplayItem(
                 id: bookcase.id,
                 bookcase: bookcase,
                 animalModel: getRandomAnimalModel()
@@ -74,6 +77,8 @@ class BookcaseFeedViewModel: ObservableObject {
             allBookcases = bookcases
             createdAnyBookcase = true
         }
+        analyticsService.set(.bookcaseCount(bookcases.count))
+        analyticsService.set(.wordCount(coreDataManager.countAllBooks(contextType: .main)))
     }
     
     func deleteBookcaseIndex(offsets: IndexSet) {
@@ -90,10 +95,11 @@ class BookcaseFeedViewModel: ObservableObject {
         filterBookcases(searchText: self.searchText)
     }
 
-    func deleteBookcase(item: BookcaseDisplayItem) {
-        coreDataManager.deleteBookcase(bookcase: item.bookcase, contextType: .main)
-        if let index = allBookcases.firstIndex(of: item) {
-            allBookcases.remove(at: index)
+    func deleteBookcase(bookcase: BookcaseModel) {
+        coreDataManager.deleteBookcase(bookcase: bookcase, contextType: .main)
+        allBookcases.removeAll { $0.bookcase.id == bookcase.id }
+        if allBookcases.isEmpty {
+            createdAnyBookcase = false
         }
         filterBookcases(searchText: self.searchText)
     }

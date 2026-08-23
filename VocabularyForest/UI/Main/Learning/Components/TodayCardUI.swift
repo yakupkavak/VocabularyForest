@@ -47,22 +47,18 @@ struct CardFront : View {
                         .foregroundStyle(Color.brown700)
                 }
                 .contentShape(Rectangle())
-                .padding(.top, 16)
+                .padding(.top, 8)
                 .padding(.trailing, 16)
             }
             
             VStack(spacing: 8){
-                Image(systemName: "suit.club.fill")
-                    .resizable()
-                    .frame(width: width / 3, height: height / 3)
-                    .foregroundColor(Color(hex: "#F2CB05"))
                 if !meaningWord.isEmpty {
-                    Text(meaningWord).font(.system(size: meaningFontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+                    Text(meaningWord).scaledFont(size: meaningFontSize).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                         RoundedRectangle(cornerRadius: 16)
                     ).overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
-                    }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2).zIndex(2.0)
+                    }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2).minimumScaleFactor(0.6).zIndex(2.0)
                 }
                 if !descriptionSentence.isEmpty {
                     FrontCardText(text: descriptionSentence, width: width, fontSize: descriptionFontSize).zIndex(2.0)
@@ -87,12 +83,12 @@ private extension CardFront {
         var fontSize: CGFloat
         
         var body: some View {
-            Text(text).font(.system(size: fontSize)).frame(maxWidth: width * 2 / 3).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
+            Text(text).scaledFont(size: fontSize).frame(maxWidth: width * 3 / 4).padding(10).background(.thickMaterial.opacity(0.2)).clipShape(
                 RoundedRectangle(cornerRadius: 16)
             ).overlay {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(.ultraThinMaterial.opacity(0.5), lineWidth: 1.5)
-            }.foregroundStyle(Color(hex:"#F2CB05")).lineLimit(2)
+            }.foregroundStyle(Color(hex:"#F2CB05"))
         }
     }
 }
@@ -150,7 +146,8 @@ struct CardBack : View {
                         .frame(width: width * 17 / 24, height: height * 13 / 24)
                         .foregroundColor(Color(hex: "#010D00").opacity(0.7))
                 }.padding(.top, 8)
-                Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).font(.system(size: titleFontSize)).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).padding(.top, -12)
+                    .accessibilityHidden(true)
+                Text(learningWord.isEmpty ? String(localized: "Firstly create a book") : learningWord).scaledFont(size: titleFontSize).frame(maxWidth: width * 3 / 4).padding(10).zIndex(2.0).foregroundStyle(Color(hex: "#8C3027")).lineLimit(2).minimumScaleFactor(0.6).padding(.top, -12)
             }
 
         }.rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 1, z: 0))
@@ -182,6 +179,8 @@ struct TodayCardUI: View {
     
     func flipCard () {
         isFlipped = !isFlipped
+        /// The 3D flip is purely visual; speak which side is now facing the user
+        A11yAnnouncer.announce(String(localized: isFlipped ? "a11y_card_front" : "a11y_card_back"))
         if isFlipped {
             withAnimation(.linear(duration: durationAndDelay)) {
                 backDegree = 90
@@ -209,6 +208,8 @@ struct TodayCardUI: View {
                 height: height,
                 degree: $backDegree
             )
+            /// Both faces stay in the view tree; expose only the visible one
+            .accessibilityHidden(isFlipped)
             CardFront(
                 meaningWord: meaningWord,
                 exampleSentence: exampleSentence,
@@ -221,15 +222,20 @@ struct TodayCardUI: View {
                 },
                 degree: $frontDegree
             )
+            .accessibilityHidden(!isFlipped)
         }
         .onTapGesture {
             flipCard()
         }
+        .a11yTapButton(
+            value: String(localized: isFlipped ? "a11y_card_front" : "a11y_card_back"),
+            hint: String(localized: "a11y_flip_card_hint")
+        )
     }
 }
 
 #Preview {
-    TodayCardUI(height: 320, learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf", onRefreshClick: { print("refresh") })
+    TodayCardUI(height: 320, learningWord: "learning", meaningWord: "meaning", exampleSentence: "dscriptionfdsafdsafsadfsaddfasdfdsafadssadf", descriptionSentence: "dscriptionfdsafdsafsadfsaddasdfasfsafsadf", onRefreshClick: { })
 }
 
 extension Color {

@@ -31,8 +31,11 @@ struct MemoryProgressBar: View {
             
             // TODO: - LOCALIZE HERE
             
-            Text("%\(percentage)").font(.system(size: textSize))
+            Text("%\(percentage)").scaledFont(size: textSize)
         }.frame(maxWidth: width)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(String(localized: "a11y_long_memory_progress"))
+            .accessibilityValue(String(format: NSLocalizedString("a11y_percent_value", comment: ""), percentage))
     }
 }
 

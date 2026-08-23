@@ -14,18 +14,26 @@ struct QuizRowUI: View {
     var quizModel: QuizRowModel
     var height: CGFloat
     var onClick: (QuizType) -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     // MARK: - UI
-    
+
     var body: some View {
         HStack{
             Spacer()
-            Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3)
+            // Decorative bamboos yield their width to the label at accessibility sizes
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(quizModel.leftImage).resizable().scaledToFit().frame(maxHeight: height / 3).a11yDecorative()
+                Spacer()
+            }
+            Text("Maceraya Atıl").scaledFont(size: 22, weight: .bold).foregroundStyle(.brown300).multilineTextAlignment(.center)
+                // Grow vertically only at accessibility sizes; default layout stays untouched
+                .fixedSize(horizontal: false, vertical: dynamicTypeSize.isAccessibilitySize)
             Spacer()
-            Text("Maceraya Atıl").font(.system(size: 22, weight: .bold)).foregroundStyle(.brown300).multilineTextAlignment(.center)
-            Spacer()
-            Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3)
-            Spacer()
+            if !dynamicTypeSize.isAccessibilitySize {
+                Image(quizModel.rightImage).resizable().scaledToFit().frame(maxHeight: height / 3).a11yDecorative()
+                Spacer()
+            }
         }.padding()
         .padding(.vertical)
         .background(.backgroundSystem)
@@ -33,17 +41,12 @@ struct QuizRowUI: View {
         .onTapGesture {
             onClick(quizModel.quizType)
         }
+        .a11yTapButton()
         .frame(width: height * 8 / 9)
     }
 }
 
 #Preview {
-    QuizRowUI(quizModel: QuizRowModel(leftImage: "bambuuLeft", rightImage: "bambuuRight", quizType: .flashCard), height: 400, onClick: ({ type in
-        switch type {
-        case .flashCard:
-            print("flashcard clicked")
-        case .forest:
-            print("flashcard clicked")
-        }}))
+    QuizRowUI(quizModel: QuizRowModel(leftImage: "bambuuLeft", rightImage: "bambuuRight", quizType: .flashCard), height: 400, onClick: ({ _ in }))
 }
 

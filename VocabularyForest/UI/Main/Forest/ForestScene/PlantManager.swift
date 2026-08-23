@@ -56,6 +56,7 @@ class PlantManager {
     private var treeModel: TreeModel? = nil
     private var isMenuOpen = false
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var textures: [SKTexture] = []
     private var isPerished = false
     
@@ -71,28 +72,56 @@ class PlantManager {
 private extension PlantManager {
     
     func loadTextures(for model: TreeModel) {
-        let atlas = SKTextureAtlas(named: model.assetName)
-        for i in Constants.firstFrameIndex..<atlas.textureNames.count {
-            textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+        switch model.assetSource {
+        case .appAssets:
+            let atlas = SKTextureAtlas(named: model.assetName)
+            for i in Constants.firstFrameIndex..<atlas.textureNames.count {
+                textures.append(atlas.textureNamed("\(model.assetName.lowercased())_\(i)"))
+            }
+        case .offlineStorage:
+            textures = loadOfflineTextures(assetName: model.assetName)
+        }
+        if textures.isEmpty {
+            logger.debug("PlantManager skipped setup, empty textures for asset \(model.assetName) (source: \(model.assetSource))", category: .asset)
+            return
         }
         setPlant(model: model)
         plant.zPosition = getZIndex(yPosition: model.yPosition)
     }
     
+    func loadOfflineTextures(assetName: String) -> [SKTexture] {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return [] }
+        let baseURL = appSupport.appendingPathComponent("OfflineGameAssets")
+        let bundleURL = baseURL.appendingPathComponent(assetName)
+        
+        var frameURLs: [URL]
+        if let contents = try? FileManager.default.contentsOfDirectory(at: bundleURL, includingPropertiesForKeys: nil) {
+            frameURLs = contents
+                .filter { $0.pathExtension.lowercased() == "png" }
+                .sorted { $0.lastPathComponent < $1.lastPathComponent }
+        } else {
+            frameURLs = [baseURL.appendingPathComponent("\(assetName).png")]
+        }
+        
+        return frameURLs.compactMap { url in
+            guard let image = UIImage(contentsOfFile: url.path) else { return nil }
+            return SKTexture(image: image)
+        }
+    }
+    
     func setPlant(model: TreeModel) {
         // FUTURE: - GROW PLANT
         plant.removeFromParent()
-        guard let firstFrame = textures[safe: Constants.secondFrameIndex], let scene else {
+        guard let firstFrame = textures[safe: Constants.secondFrameIndex] ?? textures.first, let scene else {
             return
         }
         plant.texture = firstFrame
-        // TODO: - SIZE
-        let originalSize = firstFrame.size()
-        if originalSize.height > Constants.zero {
-            let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = ComponentSizeConstant.plantHeight * aspectRatio
-            plant.size = CGSize(width: targetWidth, height: ComponentSizeConstant.plantHeight)
-        }
+        plant.size = ComponentSizeConstant.nodeSize(
+            textureSize: firstFrame.size(),
+            widthRatio: model.widthRatio,
+            heightRatio: model.heightRatio,
+            defaultHeight: ComponentSizeConstant.plantHeight
+        )
         plant.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         plant.position = CGPoint(
             x: GameConstant.gameWidthSize * model.xPosition,
@@ -112,7 +141,7 @@ private extension PlantManager {
         }
         
         isMenuOpen = true
-        let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.characterName : treeModel?.assetName
+        let displayName = treeModel?.characterName.isEmpty == false ? treeModel?.localizedCharacterName : treeModel?.assetName
         let finalName = displayName ?? String(localized: "Bitki")
         
         let bubble = ComponentBubble.createSculptureMenuBubble(parentSize: plant.size, displayName: finalName)

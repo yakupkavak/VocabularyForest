@@ -7,20 +7,35 @@
 
 import SwiftUI
 
+// TODO: VERSION CONTROL WILL ADD INTO RESOURCE
 // MARK: - REMOTE REWARD MODEL
 
 /// The raw data model that strictly mirrors the remote JSON structure.
 /// Everything is optional to prevent decoding failures if the backend sends incomplete data.
-struct RemoteRewardModel: Codable, Identifiable {
+struct RemoteRewardModel: Decodable, Identifiable {
     let id: String?
     let type: String?             // e.g., "chest" or "resource"
     let category: String?         // e.g., "gold", "nature", "water", "diamond"
     let rewardCount: Int?
-    let nameKey: String?          // Localization key instead of raw text
-    let imageName: String?
-    let probabilityWeight: Double?
+    let assetName: String? // Name of the source
+    let displayName: RemoteLocalizedText? // Localization key instead of raw text
+    let imageSource: String? // local, remote, zip
+    let chestId: String?
+    let localImageName: String?
+    let remoteAssetVersion: Int?
+    let remotePath: String?
+    let posterIconPath: String? // remote den poster pathi
     let textColorHex: String?
     let gradientHexes: [String]?
+    let textStrokeColorHex: String?
+    /// Adventure road styling; when absent the road falls back to the category palette
+    let roadColorHex: String?
+    let cardGradientHexes: [String]?
+    let cardTextColorHex: String?
+    /// Forest render size as a fraction of screen height (0-1); when absent the
+    /// category default in `ComponentSizeConstant` and the texture aspect ratio apply
+    let widthRatio: Double?
+    let heightRatio: Double?
 }
 
 // MARK: - SAFE COMPUTED PROPERTIES (UI HELPERS)
@@ -42,16 +57,12 @@ extension RemoteRewardModel {
     }
     
     var safeName: String {
-        let key = nameKey ?? "reward_unknown"
+        let key = displayName?.localized ?? "reward_unknown"
         return String(localized: String.LocalizationValue(key))
     }
     
     var safeImageName: String {
-        return imageName ?? "questionmark.circle.fill"
-    }
-    
-    var safeProbabilityWeight: Double {
-        return probabilityWeight ?? 1.0
+        return localImageName ?? "questionmark.circle.fill"
     }
     
     // MARK: Styling Properties

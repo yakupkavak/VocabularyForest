@@ -11,9 +11,10 @@ import Combine
 class CreateBookcaseViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
-    
+
     private let coreDataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var emptyInitialBookcaseName = false
@@ -25,8 +26,9 @@ class CreateBookcaseViewModel: ObservableObject {
 
     // MARK: - INIT
 
-    init(coreDataManager: CoreDataManagerProtocol){
+    init(coreDataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol){
         self.coreDataManager = coreDataManager
+        self.analyticsService = analyticsService
     }
     
     // MARK: - HELPERS
@@ -39,6 +41,9 @@ class CreateBookcaseViewModel: ObservableObject {
             contextType: .main
         ) {
             setBookcaseDefault(bookcase: bookcase)
+            let languagePair = "\(learningLanguage)_\(meaningLanguage)"
+            analyticsService.log(.bookcaseCreated(languagePair: languagePair, source: .manual))
+            analyticsService.set(.learningLanguagePair(languagePair))
         }
     }
     

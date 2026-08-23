@@ -112,13 +112,14 @@ struct QuestProgressBar: View {
             }
             .frame(height: 12)
         }
+        .a11yGroup()
     }
 }
 
 // MARK: - Reward View
 
 struct QuestRewardView: View {
-    let reward: QuestRewardModel
+    let reward: LocalRewardModel
 
     @ScaledMetric private var iconSize: CGFloat = 35
     @ScaledMetric private var backgroundSize: CGFloat = 50
@@ -139,79 +140,91 @@ struct QuestRewardView: View {
                     .frame(width: backgroundSize, height: backgroundSize)
                     .shadow(radius: 2)
 
-                switch reward {
-                case .animal(let name), .plant(let name), .sculpture(let name):
-                    Image(name)
-                        .resizable()
+                switch reward.reward {
+                    case .chest(let chest):
+                    RewardImageView(asset: chest.closeLocalImagePath, label: chest.displayName.localized)
                         .scaledToFit()
                         .frame(width: iconSize, height: iconSize)
                         .shadow(radius: 2)
+                    case .standart(let rewardModel):
+                    switch rewardModel.category {
+                    case .animal, .plant, .sculpture:
+                        RewardImageView(asset: rewardModel.posterImage)
+                            .scaledToFit()
+                            .frame(width: iconSize, height: iconSize)
+                            .shadow(radius: 2)
 
-                case .water(let count):
-                    Image("water_icon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(
-                            width: QuestRewardSizing.waterDropSize(
-                                count: count,
-                                minSize: 18,
-                                maxSize: 36
-                            ),
-                            height: QuestRewardSizing.waterDropSize(
-                                count: count,
-                                minSize: 18,
-                                maxSize: 36
+                    case .water:
+                        Image("water_icon")
+                            .resizable()
+                            .accessibilityLabel(String(localized: "a11y_water"))
+                            .scaledToFit()
+                            .frame(
+                                width: QuestRewardSizing.waterDropSize(
+                                    count: reward.rewardCount,
+                                    minSize: 18,
+                                    maxSize: 36
+                                ),
+                                height: QuestRewardSizing.waterDropSize(
+                                    count: reward.rewardCount,
+                                    minSize: 18,
+                                    maxSize: 36
+                                )
                             )
-                        )
-                        .foregroundStyle(.blue)
+                            .foregroundStyle(.blue)
 
-                case .gold:
-                    Image("gold_icon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: smallIconSize, height: smallIconSize)
-                        .foregroundStyle(.yellow)
-                case .diamond(count: let count):
-                    Image("diamond_icon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: smallIconSize, height: smallIconSize)
+                    case .gold:
+                        Image("gold_icon")
+                            .resizable()
+                            .accessibilityLabel(String(localized: "a11y_gold"))
+                            .scaledToFit()
+                            .frame(width: smallIconSize, height: smallIconSize)
+                            .foregroundStyle(.yellow)
+                    case .diamond:
+                        Image("diamond_icon")
+                            .resizable()
+                            .accessibilityLabel(String(localized: "a11y_diamond"))
+                            .scaledToFit()
+                            .frame(width: smallIconSize, height: smallIconSize)
+                    }
                 }
             }
 
             VStack(alignment: .leading) {
-                Text("Reward")
-                    .font(.caption2)
-                    .fontWeight(.black)
-                    .foregroundStyle(.white.opacity(0.8))
-
-                switch reward {
-                case .animal, .plant, .sculpture:
-                    Text(LocalizedStringKey(reward.rewardName))
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .minimumScaleFactor(0.8)
-                        .lineLimit(1)
-
-                case .water(let count):
-                    Text("\(count) Water Drops")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.blue)
-
-                case .gold(let count):
-                    Text("\(count) Gold")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                case .diamond(count: let count):
-                    Text("\(count) Diamond")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
-                        .foregroundStyle(.blue)
+                switch reward.reward {
+                    case .chest(let chest):
+                    RewardImageView(asset: chest.closeLocalImagePath, label: chest.displayName.localized)
+                        .scaledToFit()
+                        .frame(width: iconSize, height: iconSize)
+                        .shadow(radius: 2)
+                    case .standart(let rewardModel):
+                    switch rewardModel.category {
+                    case .animal, .plant, .sculpture:
+                        Text(rewardModel.displayName.localized)
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
+                            .foregroundStyle(.white)
+                            .minimumScaleFactor(0.8)
+                            .lineLimit(1)
+                    case .water:
+                        Text(String(localized: "\(reward.rewardCount) Water Drops"))
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
+                            .foregroundStyle(.blue)
+                    case .gold:
+                        Text("\(reward.rewardCount) Gold")
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
+                            .foregroundStyle(.white)
+                    case .diamond:
+                        Text("\(reward.rewardCount) Diamond")
+                            .scaledFont(size: 12, weight: .bold, design: .rounded)
+                            .foregroundStyle(.blue)
+                    }
                 }
             }
         }
         .padding(8)
         .background(Color.white.opacity(0.3))
         .cornerRadius(12)
+        .a11yGroup()
     }
 }
 
@@ -238,6 +251,7 @@ private struct QuestInfoBadge: View {
                 .bold()
                 .foregroundStyle(color)
         }
+        .a11yGroup()
     }
 }
 
@@ -299,7 +313,7 @@ private struct QuestRowActionView: View {
 struct QuestRow: View {
     let quest: QuestModel
     let isExpanded: Bool
-    let onToggleExpansion: (UUID) -> Void
+    let onToggleExpansion: (String) -> Void
     let onQuestSelect: (QuestModel) -> Void
     let onRewardClaim: (QuestModel) -> Void
 
@@ -325,14 +339,34 @@ struct QuestRow: View {
 
     private var waterDropSize: CGFloat {
         QuestRewardSizing.waterDropSize(
-            count: {
-                if case let .water(count) = quest.reward { return count }
-                return 3
-            }(),
+            count: quest.reward.rewardCount,
             minSize: iconBoxSize * 0.3,
             maxSize: iconBoxSize * 0.6
         )
     }
+    
+    private var dynamicImageSize: CGFloat {
+        return switch quest.reward.reward {
+        case .chest(let chest):
+            iconBoxSize * 0.7
+        case .standart(let standart):
+            switch standart.category {
+            case .animal:
+                iconBoxSize * 0.85
+            case .plant:
+                iconBoxSize * 0.85
+            case .gold:
+                iconBoxSize * 0.7
+            case .water:
+                waterDropSize
+            case .diamond:
+                iconBoxSize * 0.7
+            case .sculpture:
+                iconBoxSize * 0.85
+            }
+        }
+    }
+
 
     var body: some View {
         VStack(spacing: 0) {
@@ -361,6 +395,7 @@ struct QuestRow: View {
             }
             .buttonStyle(.plain)
             .disabled(quest.status == .locked)
+            .accessibilityValue(String(localized: isExpanded ? "a11y_expanded" : "a11y_collapsed"))
 
             if isExpanded {
                 detailView
@@ -384,36 +419,12 @@ struct QuestRow: View {
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color.white.opacity(0.2))
                 .frame(width: iconBoxSize, height: iconBoxSize)
-
-            switch quest.reward {
-            case .animal(let name), .plant(let name), .sculpture(let name):
-                Image(name)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: iconBoxSize * 0.85, maxHeight: iconBoxSize * 0.85)
-                    .shadow(radius: 2)
-
-            case .water:
-                Image("water_icon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: waterDropSize, height: waterDropSize)
-                    .foregroundStyle(.blue)
-
-            case .gold:
-                Image("gold_icon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: iconBoxSize * 0.7)
-                    .foregroundStyle(.yellow)
-            case .diamond(count: let count):
-                Image("diamond_icon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: iconBoxSize * 0.7)
-                    .foregroundStyle(.blue)
-            }
-
+            RewardImageView(asset: quest.reward.reward.posterImage)
+                .scaledToFit()
+                .frame(maxWidth: dynamicImageSize, maxHeight: dynamicImageSize)
+                .shadow(radius: 2)
+                // Keep the asset name out of the row's accessibility/Voice Control name.
+                .accessibilityHidden(true)
             if quest.status == .locked {
                 Image(systemName: "lock.fill")
                     .font(.title3)
@@ -421,11 +432,12 @@ struct QuestRow: View {
             }
         }
     }
+    
 
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(LocalizedStringKey(quest.title))
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .scaledFont(size: 13, weight: .semibold, design: .rounded)
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
@@ -446,6 +458,7 @@ struct QuestRow: View {
             HStack(alignment: .top) {
                 Image(systemName: "scroll.fill")
                     .foregroundStyle(statusColor)
+                    .accessibilityHidden(true)
 
                 Text(LocalizedStringKey(quest.description))
                     .font(.subheadline)
@@ -519,10 +532,12 @@ private struct ForestQuestSectionHeader: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)
+                .a11yDecorative()
+                .accessibilityHidden(true)
 
             Text(title)
                 .foregroundStyle(.white)
-                .font(.system(size: 20, weight: .bold))
+                .scaledFont(size: 20, weight: .bold)
                 .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
         }
         .padding(.bottom)
@@ -535,8 +550,9 @@ private struct ForestQuestEmptyStateView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "clipboard")
-                .font(.system(size: 50))
+                .scaledFont(size: 50)
                 .foregroundStyle(.white.opacity(0.4))
+                .accessibilityHidden(true)
 
             Text("No quests available.")
                 .foregroundStyle(.white.opacity(0.7))
@@ -573,7 +589,7 @@ private struct ForestQuestMenuRow: View {
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.headline)
                     .foregroundStyle(.white.opacity(0.6))
             }
@@ -605,7 +621,7 @@ struct ForestQuestUI: View {
     let claimReward: (QuestModel) -> Void
 
     @State private var selectedSection: ForestQuestSection?
-    @State private var expandedQuestIDs: Set<UUID> = []
+    @State private var expandedQuestIDs: Set<String> = []
 
     private var isShowingSubMenu: Bool {
         selectedSection != nil
@@ -653,6 +669,7 @@ struct ForestQuestUI: View {
                 }
             }
         }
+        .trackScreen(.questList)
     }
 
     private var closeButton: some View {
@@ -670,6 +687,7 @@ struct ForestQuestUI: View {
                 .scaledToFit()
                 .frame(width: 36, height: 36)
                 .offset(x: 12, y: -12)
+                .accessibilityLabel(String(localized: "a11y_close"))
         }
     }
 
@@ -681,11 +699,13 @@ struct ForestQuestUI: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 60)
+                        .a11yDecorative()
+                        .accessibilityHidden(true)
                 }
 
                 Text("Quests")
                     .foregroundStyle(.white)
-                    .font(.system(size: 28, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 28, weight: .heavy, design: .rounded)
                     .shadow(color: .black.opacity(0.6), radius: 2, x: 0, y: 2)
             }
             .padding(.bottom, 10)
@@ -761,7 +781,7 @@ struct ForestQuestUI: View {
         }
     }
 
-    private func toggleExpansion(for questID: UUID) {
+    private func toggleExpansion(for questID: String) {
         if expandedQuestIDs.contains(questID) {
             expandedQuestIDs.remove(questID)
         } else {
@@ -814,6 +834,7 @@ struct ScaleButtonStyle: ButtonStyle {
 // MARK: - Preview
 
 #Preview {
+    /*
     @State var show = true
 
     let dummyQuest = QuestModel(
@@ -867,4 +888,5 @@ struct ScaleButtonStyle: ButtonStyle {
         specialQuests: [],
         claimReward: { _ in }
     )
+     */
 }

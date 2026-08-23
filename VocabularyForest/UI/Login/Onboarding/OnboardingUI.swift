@@ -7,22 +7,37 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
+private extension OnboardingUI {
+    enum Constants {
+        static let waveCenterRatio: CGFloat = 0.15
+        static let waveCurrentPoint: CGFloat = 50
+        static let handleEdgeInset: CGFloat = 30
+        static let nextPagePeekWidth: CGFloat = 15
+        static let offscreenWidthRatio: CGFloat = 1.5
+        static let advanceThresholdRatio: CGFloat = 0.5
+    }
+}
+
 struct OnboardingUI: View {
-    
-    // MARK: PROPERTIES
-    
+
+    // MARK: - PROPERTIES
+
     @GestureState private var isDragging: Bool = false
+    @Environment(\.analyticsService) private var analyticsService
+    @Environment(\.layoutDirection) private var layoutDirection
     @State private var currentPage = 0
     @State private var fakeIndex = 0
     @State private var models = OnboardingConstants.onboardingModels
     @State private var isPulseAnimating = false
-    
+
     private var waveCenterY: CGFloat {
-        UIScreen.main.bounds.height * 0.15
+        UIScreen.main.bounds.height * Constants.waveCenterRatio
     }
-    
-    // MARK: VIEW
-    
+
+    // MARK: - VIEW
+
     var body: some View {
         ZStack {
             backPage.ignoresSafeArea()
@@ -35,16 +50,21 @@ struct OnboardingUI: View {
             alignment: .topTrailing
         )
         .safeAreaInset(edge: .bottom) { bottomBar }
+        .trackScreen(.onboarding)
+        .onChange(of: currentPage) { page in
+            analyticsService.log(.onboardingStepViewed(stepIndex: page))
+        }
         .onAppear {
             var base = OnboardingConstants.onboardingModels
             guard let first = base.first, var last = base.last else { return }
-            last.offSet.width = -getRect().width * 1.5
+            last.offSet.width = offscreenWidth
             base.append(first)
             base.insert(last, at: 0)
             models = base
             fakeIndex = 1
             currentPage = 0
             isPulseAnimating = true
+            analyticsService.log(.tutorialBegin)
         }
     }
 }
@@ -70,14 +90,18 @@ private extension OnboardingUI {
             if models.indices.contains(fakeIndex) {
                 let model = models[fakeIndex]
                 BaseOnboardingUI(onboardingModel: model)
+                    // A fresh identity per page restarts the talking-box entrance animation;
+                    // reusing one view would leave its `onAppear` state stuck after the first page.
+                    .id(model.id)
                     .clipShape(
                         LiquidShape(
                             offset: model.offSet,
-                            currentPoint: 50,
-                            curveCenterY: waveCenterY
+                            currentPoint: Constants.waveCurrentPoint,
+                            curveCenterY: waveCenterY,
+                            layoutDirection: layoutDirection
                         )
                     )
-                    .padding(.trailing, 15)
+                    .padding(.trailing, Constants.nextPagePeekWidth)
                     .zIndex(1)
             } else {
                 Color.clear
@@ -88,37 +112,35 @@ private extension OnboardingUI {
     var bottomBar: some View {
         HStack(spacing: 12) {
             let dotCount = max(models.count - 2, 0)
-            ForEach(0..<dotCount, id: \.self) { index in
-                Circle()
-                    .fill(currentPage == index ? Colors.selectedButton : Colors.unselectedButton)
-                    .frame(width: currentPage == index ? 24 : 16)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.85), value: currentPage)
+            HStack(spacing: 12) {
+                ForEach(0..<dotCount, id: \.self) { index in
+                    Circle()
+                        .fill(currentPage == index ? Colors.selectedButton : Colors.unselectedButton)
+                        .frame(width: currentPage == index ? 24 : 16)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.85), value: currentPage)
+                        .onTapGesture { jumpToPage(index) }
+                        // Each dot is its own VoiceOver button so assistive users can move
+                        // between pages now that the "next" button is gone.
+                        .a11yTapButton(
+                            String(format: NSLocalizedString("a11y_go_to_page", comment: ""), index + 1),
+                            isSelected: currentPage == index
+                        )
+                }
             }
-            
+
             Spacer()
             
-            Button {
-                if currentPage == dotCount - 1 {
+            // Only the last page shows a button; earlier pages advance with the drag dot.
+            if currentPage == dotCount - 1 {
+                Button {
                     openApp()
-                } else {
-                    nextPage()
-                }
-            } label: {
-                if currentPage == dotCount - 1 {
+                } label: {
                     Text("Başla")
                         .foregroundStyle(.white)
-                        .font(.system(size: 24))
+                        .scaledFont(size: 24)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 8)
                         .background(.brown.opacity(0.5))
-                        .borderRadius(borderColor: .white)
-                } else {
-                    Text("Diğer")
-                        .foregroundStyle(.white)
-                        .font(.system(size: 24))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 8)
-                        .background(.white.opacity(0.2))
                         .borderRadius(borderColor: .white)
                 }
             }
@@ -169,17 +191,17 @@ private extension OnboardingUI {
                                 blendDuration: 0.6
                             )
                         ) {
-                            models[fakeIndex].offSet = value.translation
+                            models[fakeIndex].offSet = logicalTranslation(of: value.translation)
                         }
                     }
                 }
                 .onEnded { _ in
                     guard models.indices.contains(fakeIndex) else { return }
-                    let threshold = getRect().width / 2
-                    
+                    let threshold = getRect().width * Constants.advanceThresholdRatio
+
                     withAnimation(.spring()) {
                         if -(models[fakeIndex].offSet.width) > threshold {
-                            models[fakeIndex].offSet.width = -getRect().width * 1.5
+                            models[fakeIndex].offSet.width = offscreenWidth
                             fakeIndex += 1
                             
                             let realCount = max(models.count - 2, 1)
@@ -202,37 +224,54 @@ private extension OnboardingUI {
                     }
                 }
         )
-        .position(x: UIScreen.main.bounds.width - 30, y: waveCenterY)
+        .position(x: handleCenterX, y: waveCenterY)
+        // `position` resolves its x against the layout direction; pinning it to LTR keeps the
+        // handle on the edge `handleCenterX` names, so it can never drift away from the curve.
+        .environment(\.layoutDirection, .leftToRight)
+        // Hidden from VoiceOver: the page dots are accessible buttons and cover navigation.
+        .accessibilityHidden(true)
     }
 }
 
-// MARK: - Functions
+// MARK: - HELPERS
 
 private extension OnboardingUI {
-    
-    private func nextPage() {
-        withAnimation(.spring()) {
-            models[fakeIndex].offSet.width = -getRect().width * 1.5
-            fakeIndex += 1
-            
-            let realCount = max(models.count - 2, 1)
-            currentPage = (currentPage + 1) % realCount
-            
-            let idx = fakeIndex
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                if idx == models.count - 2, models.count > 2 {
-                    for i in 0..<(models.count - 2) {
-                        models[i].offSet = .zero
-                    }
-                    fakeIndex = 0
-                } else if models.indices.contains(idx) {
-                    models[idx].offSet = .zero
-                }
-            }
-        }
+
+    /// Physical x the drag handle sits at: the trailing edge, resolved here rather than left to
+    /// `position`, so the handle and the carved curve share one source of truth.
+    var handleCenterX: CGFloat {
+        layoutDirection == .rightToLeft
+        ? Constants.handleEdgeInset
+        : UIScreen.main.bounds.width - Constants.handleEdgeInset
     }
-    
+
+    /// Logical width of a page parked off-screen, past the edge it is dragged toward.
+    var offscreenWidth: CGFloat {
+        -getRect().width * Constants.offscreenWidthRatio
+    }
+
+    /// Maps a physical drag onto the logical axis the page math runs on, where a negative width
+    /// always means "toward the next page" — leftward in LTR, rightward in RTL.
+    func logicalTranslation(of translation: CGSize) -> CGSize {
+        CGSize(
+            width: layoutDirection == .rightToLeft ? -translation.width : translation.width,
+            height: translation.height
+        )
+    }
+
+    /// Jumps straight to the tapped page. Only `models[fakeIndex]` and the page behind it are
+    /// ever rendered, so an instant index swap (no wave animation) is the correct jump here.
+    private func jumpToPage(_ target: Int) {
+        guard target != currentPage else { return }
+        let idx = target + 1
+        guard models.indices.contains(idx) else { return }
+        models[idx].offSet = .zero
+        fakeIndex = idx
+        currentPage = target
+    }
+
     private func openApp() {
+        analyticsService.log(.tutorialComplete)
         UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
     }
 }

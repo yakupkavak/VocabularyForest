@@ -14,7 +14,7 @@ struct AnnouncementItem: Identifiable {
     let type: AnnouncementTypeModel
 }
 
-enum AnnouncementTypeModel {
+enum AnnouncementTypeModel: Hashable {
     case tasks
     case dailyReward
     case dailySpin

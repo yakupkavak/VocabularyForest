@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24299" systemVersion="24G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Animal" representedClassName="Animal" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
+        <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="healtValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="healthValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="posterKey" optional="YES" attributeType="String"/>
+        <attribute name="posterSourceString" optional="YES" attributeType="String"/>
+        <attribute name="rewardId" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="animals" inverseEntity="Forest"/>
@@ -37,7 +42,9 @@
         <attribute name="adventureSeasonID" optional="YES" attributeType="String"/>
         <attribute name="claimedLongTiers" optional="YES" attributeType="String"/>
         <attribute name="claimedShortTiers" optional="YES" attributeType="String"/>
+        <attribute name="dailyKillGoldCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dailySpinLastUsedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="killGoldLastResetDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fixedTimeZone" optional="YES" attributeType="String"/>
         <attribute name="lastFetchDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -76,39 +83,40 @@
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="player" inverseEntity="Forest"/>
     </entity>
     <entity name="Quest" representedClassName="Quest" syncable="YES">
-        <attribute name="battleEnemyModel" optional="YES" attributeType="String"/>
         <attribute name="currentProgressCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="description_quest" optional="YES" attributeType="String"/>
-        <attribute name="gameLevel" optional="YES" attributeType="String"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="questType" optional="YES" attributeType="String"/>
-        <attribute name="rewardType" optional="YES" attributeType="String"/>
-        <attribute name="rewardValue" optional="YES" attributeType="String"/>
         <attribute name="status" optional="YES" attributeType="String"/>
-        <attribute name="targetCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="quests" inverseEntity="Forest"/>
     </entity>
     <entity name="Sculpture" representedClassName="Sculpture" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
+        <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="posterKey" optional="YES" attributeType="String"/>
+        <attribute name="posterSourceString" optional="YES" attributeType="String"/>
+        <attribute name="rewardId" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="sculptures" inverseEntity="Forest"/>
     </entity>
     <entity name="Tree" representedClassName="Tree" syncable="YES">
+        <attribute name="assetReady" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="assetName" optional="YES" attributeType="String"/>
+        <attribute name="assetSourceString" optional="YES" attributeType="String"/>
         <attribute name="characterName" optional="YES" attributeType="String"/>
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="healthValue" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="isAlive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="lastUpdatedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="posterKey" optional="YES" attributeType="String"/>
+        <attribute name="posterSourceString" optional="YES" attributeType="String"/>
+        <attribute name="rewardId" optional="YES" attributeType="String"/>
         <attribute name="xPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="yPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="forest" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Forest" inverseName="trees" inverseEntity="Forest"/>

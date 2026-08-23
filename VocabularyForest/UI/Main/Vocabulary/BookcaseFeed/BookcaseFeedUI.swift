@@ -16,6 +16,7 @@ struct BookcaseFeedUI: View {
     @ObservedObject var viewModel: BookcaseFeedViewModel
     @EnvironmentObject private var bookcaseRouter: BookcaseRouter
     @State private var showEmptyText = false
+    @State private var pendingDeleteBookcase: BookcaseModel?
     @FocusState private var searchBarIsFocused: Bool
     
     // MARK: - VIEWS
@@ -42,8 +43,12 @@ struct BookcaseFeedUI: View {
         }
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBookcase)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.bookcases.isEmpty)
+        .trackScreen(.bookcaseFeed)
         .onAppear {
             viewModel.fetchBookcases()
+        }
+        .bookcaseDeleteConfirmation(pendingBookcase: $pendingDeleteBookcase) { bookcase in
+            viewModel.deleteBookcase(bookcase: bookcase)
         }
         .sheet(item: $viewModel.editingBookcaseItem) { item in
             BookcaseEditSheet(item: item) { (newName, newLearningLang, newMeaningLang) in
@@ -68,12 +73,14 @@ private extension BookcaseFeedUI {
             } label: {
                 Image("books (1)").resizable().scaledToFit().frame(maxWidth: 40).foregroundStyle(.clickableButton)
             }
+            .accessibilityLabel(String(localized: "Hazır kütüphaneler"))
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kitaplık ara")).focused($searchBarIsFocused)
             Button {
                 bookcaseRouter.navigate(to: .createBookcase)
             } label: {
                 Image(systemName: "plus").resizable().scaledToFit().frame(maxWidth: 28).foregroundStyle(.clickableButton)
             }
+            .accessibilityLabel(String(localized: "Kitaplık oluştur"))
         }.padding(.horizontal,32)
     }
     var noneDataView: some View {
@@ -81,6 +88,8 @@ private extension BookcaseFeedUI {
             Spacer()
             Spacer()
             tvDefault(text: String(localized: "Hiçbir kitaplık bulamadık"), color: .brown300)
+                // Keep the ideal text height so a compressed VStack wraps instead of truncating
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(24)
                 .overlay {
                     RoundedRectangle(cornerRadius: 16)
@@ -92,12 +101,12 @@ private extension BookcaseFeedUI {
             Button {
                 bookcaseRouter.navigate(to: .bookcasePacket)
             } label: {
-                Text("Hazır kütüphaneler").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+                Text("Hazır kütüphaneler").fixedSize(horizontal: false, vertical: true).padding().background(Color.clickableButton).foregroundStyle(.white).scaledFont(size: 20).borderRadius(borderColor: .clickableButton)
             }.buttonStyle(.plain)
             Button {
                 bookcaseRouter.navigate(to: .createBookcase)
             } label: {
-                Text("Kitaplık oluştur").padding().background(Color.clickableButton).foregroundStyle(.white).font(.system(size: 20)).borderRadius(borderColor: .clickableButton)
+                Text("Kitaplık oluştur").fixedSize(horizontal: false, vertical: true).padding().background(Color.clickableButton).foregroundStyle(.white).scaledFont(size: 20).borderRadius(borderColor: .clickableButton)
             }
             Spacer()
 
@@ -111,22 +120,34 @@ private extension BookcaseFeedUI {
     var bookcaseList: some View {
         List{
             ForEach(viewModel.bookcases, id: \.id) { bookcaseDisplayItem in
-                BookcaseRow(bookcase: bookcaseDisplayItem.bookcase, animalModel: bookcaseDisplayItem.animalModel, onEdit: {
-                    viewModel.prepareForEdit(item: bookcaseDisplayItem)
-                }, onDelete: {
-                    viewModel.deleteBookcase(item: bookcaseDisplayItem)
+                BookcaseRow(
+                    bookcase: bookcaseDisplayItem.bookcase,
+                    animalModel: bookcaseDisplayItem.animalModel,
+                    onEdit: {
+                        viewModel.prepareForEdit(item: bookcaseDisplayItem)
+                    },
+                    onDelete: {
+                    pendingDeleteBookcase = bookcaseDisplayItem.bookcase
                 })
                 .contentShape(Rectangle())
                 .onTapGesture {
                     bookcaseRouter.navigate(
-                        to: .bookcaseDetail(bookcase: bookcaseDisplayItem.bookcase.bookcaseName, learning: bookcaseDisplayItem.bookcase.learningLanguage,meaning: bookcaseDisplayItem.bookcase.meaningLanguage)
+                        to: .bookcaseDetail(
+                            bookcase: bookcaseDisplayItem.bookcase.bookcaseName,
+                            learning: bookcaseDisplayItem.bookcase.learningLanguage,
+                            meaning: bookcaseDisplayItem.bookcase.meaningLanguage
+                        )
                     )
+                }
+                .a11yTapButton(hint: String(localized: "a11y_open_bookcase_hint"))
+                .accessibilityAction(named: Text("Düzenle")) {
+                    viewModel.prepareForEdit(item: bookcaseDisplayItem)
+                }
+                .accessibilityAction(named: Text("Sil")) {
+                    pendingDeleteBookcase = bookcaseDisplayItem.bookcase
                 }
                 .listRowInsets(.init())
                 .listRowSeparator(.hidden, edges: .all)
-                .onDisappear {
-                    print("disapper")
-                }
             }
         }.scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
@@ -154,7 +175,7 @@ private extension BookcaseFeedUI {
         
         try? context.save()
         
-        return BookcaseFeedViewModel(coreDataManager: previewManager)
+        return BookcaseFeedViewModel(coreDataManager: previewManager, analyticsService: NoopAnalyticsService())
     }()
     
     NavigationStack {

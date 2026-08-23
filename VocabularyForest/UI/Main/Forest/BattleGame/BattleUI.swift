@@ -9,21 +9,12 @@ import SwiftUI
 import SpriteKit
 internal import CoreData
 
-// MARK: - CONSTANTS
-
-private enum BattleConstantUI {
-    static let optionsList: [SettingsModel<SettingType>] = [
-        SettingsModel(title: "Resume", icon: "right_icon", color: .brown500, type: .resume),
-        SettingsModel(title: "Settings", icon: "settings_button", color: .brown500, type: .settings),
-        SettingsModel(title: "Home", icon: "exit_button", color: .brown500, type: .home)
-    ]
-}
-
 struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     
     // MARK: - PROPERTIES
     
     @Environment(\.safeAreaInsets) private var safeAreaInsets
+    @Environment(\.presentToast) private var presentToast
     @AppStorage(AppStorageNames.musicVolume.rawValue) private var musicVolume: Double = 0.5
     @AppStorage(AppStorageNames.sfxVolume.rawValue) private var sfxVolume: Double = 0.8
     @AppStorage(AppStorageNames.isMuted.rawValue) private var isMuted: Bool = false
@@ -35,6 +26,11 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
     @State private var showOption = false
     @State private var showSetting = false
     @State private var showExistAlert = false
+    @State private var showSelectWordBookcase = false
+    @State private var wordTargetBookcase: BookcaseModel? = nil
+    @State private var pendingWordToAdd: BookModel? = nil
+    @State private var lastAddedBookCopy: BookModel? = nil
+    @State private var isChangingWordBookcase = false
     @State private var scene: BattleScene
     var gameType: BattleQuestionType
     var battleMode: BattleEnemyModel
@@ -65,6 +61,7 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
         ZStack() {
             SpriteView(scene: scene)
                 .ignoresSafeArea()
+                .accessibilityHidden(true)
             VStack {
                 headerView.padding(.top, safeAreaInsets.top)
                 Spacer()
@@ -73,10 +70,12 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
             if showOption {
                 if showExistAlert {
                     GameConfirmationUI(title: String(localized: "Are you sure?"), message: String(localized: "Your progress won't be saved")) {
+                        viewModel.abandonGame()
                         forestRouter.navigateBack()
                     } onCancel: {
                         showExistAlert = false
                     }.transition(.scale)
+                        .a11yModal(onEscape: { showExistAlert = false })
                         .zIndex(3.0)
                 }else {
                     GameOptionsUI(
@@ -123,8 +122,10 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                     case .checkAnswer:
                         if viewModel.questionStation == .correct {
                             Text("correct")
+                                .onAppear { A11yAnnouncer.announce(String(localized: "a11y_correct_announce")) }
                         }else if viewModel.questionStation == .wrong {
                             Text("wrong")
+                                .onAppear { A11yAnnouncer.announce(String(localized: "a11y_wrong_announce")) }
                         }
                     case .gameOver:
                         gameOverView
@@ -132,9 +133,21 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                 }.ignoresSafeArea(.all)
             }
         }
+        // Battle HUD sits on fixed-size artwork; AX3 (~235%) still exceeds the 200%
+        // Larger Text requirement while keeping the layout intact.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
+        .trackScreen(.battle)
+        .sheet(isPresented: $showSelectWordBookcase) {
+            SelectBookcaseUI(allBookcases: viewModel.bookcasesList, selectedBookcase: $wordTargetBookcase)
+        }
+        .onChange(of: wordTargetBookcase) { bookcase in
+            guard let bookcase, let book = pendingWordToAdd else { return }
+            addWord(book, to: bookcase, replacingPrevious: isChangingWordBookcase)
+        }
         .task {
             self.viewModel.output = scene
             self.scene.helper = viewModel
+            self.viewModel.fetchBookcases()
             self.viewModel.prepareGame(bookcaseModel: selectedBookcase, questionType: gameType, battleMode: battleMode, gameLevel: gameLevel)
         }.onAppear {
             viewModel.updateAudioSettings(music: musicVolume, sfx: sfxVolume, isMuted: isMuted)
@@ -158,7 +171,7 @@ private extension BattleUI {
     
     var magicSelectionView: some View {
         ZStack {
-            Image("pop_up_background").resizable()
+            Image("pop_up_background").resizable().a11yDecorative()
             Spacer()
             VStack(alignment: .center) {
                 HStack {
@@ -170,7 +183,9 @@ private extension BattleUI {
                                     showMagics = false
                                     viewModel.startMagic(magicType: magic)
                                 }
+                                .a11yTapButton(magicModel.name)
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
+                                .accessibilityHidden(true)
                             Spacer()
                         }.padding(.horizontal, 12)
                     }
@@ -183,7 +198,9 @@ private extension BattleUI {
                                 showMagics = false
                                 viewModel.startMagic(magicType: magic)
                             }
+                            .a11yTapButton(magicModel.name)
                             Text(magicModel.name).foregroundStyle(.white).foregroundStyle(.white).multilineTextAlignment(.center)
+                                .accessibilityHidden(true)
                         }.padding(.horizontal, 16)
                     }
                 }
@@ -191,7 +208,7 @@ private extension BattleUI {
                 
         }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.3).overlay(alignment: .top) {
             ZStack {
-                Image("pop_up_title_window").resizable().scaledToFit()
+                Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                 Text("Select your \nMagic").foregroundStyle(.white).multilineTextAlignment(.center)
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.06)
         }
@@ -202,50 +219,56 @@ private extension BattleUI {
             Spacer()
             if let question = viewModel.currentQuestion {
                 ZStack {
-                    Image("pop_up_background").resizable()
+                    Image("pop_up_background").resizable().a11yDecorative()
                     Spacer()
                     VStack(alignment: .center) {
                         Text(question.questionTitle).foregroundStyle(.white).multilineTextAlignment(.center)
+                        Text("Word Class: \(question.partOfSpeech.localizedText)").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12)
                         if gameType == .learning {
                             if let example = question.example, !example.isEmpty {
-                                Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(.top, 4)
-                                Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                Text("Örnek").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12).padding(.top, 4)
+                                Text(example.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 13)
                             } else {
                                 if let description = question.description, !description.isEmpty {
-                                    Text("Description").foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 12)).padding(2)
-                                    Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).font(.system(size: 13))
+                                    Text("Description").foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 12).padding(2)
+                                    Text(description.firstUppercased).foregroundStyle(.white).multilineTextAlignment(.center).scaledFont(size: 13)
                                 }
                             }
                         }
                     }.frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.height * (gameType == .learning ? 0.25 : 0.2))
                 }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.2) .overlay(alignment: .top) {
                     ZStack {
-                        Image("pop_up_title_window").resizable().scaledToFit()
+                        Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                         let questionString = NSLocalizedString("question_number", comment: "")
                         let finalString = String(format: questionString, question.questionNumber)
                         Text(finalString).foregroundStyle(.white).multilineTextAlignment(.center)
                     }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.08)
                 }
+                .task(id: question.questionNumber) {
+                    A11yAnnouncer.announce(
+                        String(format: NSLocalizedString("a11y_question_announce", comment: ""), question.questionNumber, question.questionTitle)
+                    )
+                }
                 Spacer()
                 VStack() {
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[0].answer).onTapGesture {
+                        answerComponent(answer: question.answers[0]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 0)
                         }
                         Spacer()
-                        answerComponent(text: question.answers[1].answer).onTapGesture {
+                        answerComponent(answer: question.answers[1]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 1)
                         }
                         Spacer()
                     }
                     HStack{
                         Spacer()
-                        answerComponent(text: question.answers[2].answer).onTapGesture {
+                        answerComponent(answer: question.answers[2]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 2)
                         }
                         Spacer()
-                        answerComponent(text: question.answers[3].answer).onTapGesture {
+                        answerComponent(answer: question.answers[3]).onTapGesture {
                             viewModel.checkAnswer(answerNumber: 3)
                         }
                         Spacer()
@@ -258,9 +281,18 @@ private extension BattleUI {
     
     var gameOverView: some View {
         ZStack {
-            Image("pop_up_background").resizable()
+            Image("pop_up_background").resizable().a11yDecorative()
             Spacer()
             VStack(alignment: .center) {
+                if viewModel.gameStatus.earnedGold > 0 {
+                    HStack(spacing: 6) {
+                        Image("gold_icon").resizable().scaledToFit().frame(width: 24, height: 24)
+                        Text("+\(viewModel.gameStatus.earnedGold)")
+                            .foregroundStyle(.yellow)
+                            .font(.headline)
+                    }.padding(.top, 8)
+                        .a11yGroup(String(format: NSLocalizedString("a11y_earned_gold", comment: ""), viewModel.gameStatus.earnedGold))
+                }
                 VStack{
                     if viewModel.gameStatus.wrongWords.isEmpty {
                         Text("Amazing!!\nYou remembered everything!").multilineTextAlignment(.center).foregroundStyle(.white).padding()
@@ -268,8 +300,19 @@ private extension BattleUI {
                         Text("Review  wrong words").multilineTextAlignment(.center).foregroundStyle(.white).font(.headline).padding()
                         List {
                             ForEach(viewModel.gameStatus.wrongWords) { book in
-                                Text(book.learningWord).foregroundStyle(.white).listRowBackground(Color.clear)
-                                    .listRowSeparator(.hidden)
+                                HStack {
+                                    Text(book.learningWord).foregroundStyle(.white)
+                                    Spacer()
+                                    Image(.addListIcon).resizable().scaledToFit().frame(width: 24, height: 24).onTapGesture {
+                                        addWordTapped(book: book)
+                                    }
+                                    .a11yTapButton(
+                                        String(format: NSLocalizedString("a11y_add_to_bookcase", comment: ""), book.learningWord),
+                                        inputLabels: [book.learningWord]
+                                    )
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                             }
                         }.padding(.horizontal).listRowInsets(.none).listRowSeparator(.hidden, edges: .all)
                             .listStyle(.plain)
@@ -287,9 +330,13 @@ private extension BattleUI {
                 
         }.frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.height * 0.3).overlay(alignment: .top) {
             ZStack {
-                Image("pop_up_title_window").resizable().scaledToFit()
+                Image("pop_up_title_window").resizable().scaledToFit().a11yDecorative()
                 Text(viewModel.gameStatus.userWon ?? true ? "Fantastic!" : "So Close!").foregroundStyle(.white).multilineTextAlignment(.center)
             }.frame(maxHeight: UIScreen.main.bounds.height * 0.1).offset(y: -UIScreen.main.bounds.height * 0.078)
+        }
+        .onAppear {
+            let resultKey = (viewModel.gameStatus.userWon ?? true) ? "a11y_game_won_announce" : "a11y_game_lost_announce"
+            A11yAnnouncer.announce(String(localized: String.LocalizationValue(resultKey)))
         }
     }
     
@@ -304,7 +351,7 @@ private extension BattleUI {
                                 .minimumScaleFactor(0.5)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
-                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0).a11yDecorative()
                             Image("loading_bar_fill_blue").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
                                 GeometryReader { geo in
                                     Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.playerAnger?.currentLevel ?? 1) / CGFloat( viewModel.playerAnger?.totalLevel ?? 1)))
@@ -312,6 +359,10 @@ private extension BattleUI {
                             }.zIndex(2.0)
                         }
                     }
+                    .a11yGroup(
+                        viewModel.playerName,
+                        value: String(format: NSLocalizedString("a11y_energy_value", comment: ""), playerAnger.currentLevel, playerAnger.totalLevel)
+                    )
                 }
                 Spacer()
                 if let enemyAnger = viewModel.enemyAnger {
@@ -320,7 +371,7 @@ private extension BattleUI {
                             Text(enemyAnger.name).foregroundStyle(.white).padding(4)
                         }.frame(width: UIScreen.main.bounds.width * 0.4)
                         ZStack {
-                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0)
+                            Image("loading_bar_background").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).zIndex(1.0).a11yDecorative()
                             Image("loading_bar_fill_red").resizable().scaledToFit().frame(width: UIScreen.main.bounds.width * 0.46).mask {
                                 GeometryReader { geo in
                                     Rectangle().frame(width: geo.size.width * (CGFloat(viewModel.enemyAnger?.currentLevel ?? 1) / CGFloat( viewModel.enemyAnger?.totalLevel ?? 1)))
@@ -328,51 +379,28 @@ private extension BattleUI {
                             }.zIndex(2.0)
                         }
                     }
+                    .a11yGroup(
+                        enemyAnger.name,
+                        value: String(format: NSLocalizedString("a11y_energy_value", comment: ""), enemyAnger.currentLevel, enemyAnger.totalLevel)
+                    )
                 }
             }
+            // The SpriteKit battle scene always draws the player on the left and the enemy on the
+            // right, so this row must not flip in RTL or each name and energy bar would sit above
+            // the wrong character. Pinning the direction also keeps both bars filling from their
+            // own outer edge inwards. Arabic text inside the labels still shapes right-to-left.
+            .environment(\.layoutDirection, .leftToRight)
             HStack {
                 Spacer()
                 Image("menu_button").resizable().scaledToFit().frame(maxWidth: 36).onTapGesture {
                     showOption = true
                 }
+                .a11yTapButton(String(localized: "a11y_menu"))
             }
         }.ignoresSafeArea(edges: .horizontal).padding(.trailing, 8)
     }
     
-    var options: some View {
-        VStack {
-            ZStack {
-                Image("title_header").resizable().scaledToFit()
-                Text("Options").foregroundStyle(.white).font(.system(size: 24))
-            }
-            ForEach(BattleConstantUI.optionsList, id: \.self) { model in
-                settingsRow(model: model).onTapGesture {
-                    switch model.type {
-                    case .resume:
-                        showOption = false
-                    case .settings:
-                        showOption = false
-                        showSetting = true
-                    case .home:
-                        showOption = false
-                        showExistAlert = true
-                    case .info:
-                        print("nil")
-                    }
-                }
-            }
-        }.padding().background(.brown.opacity(0.8)).cornerRadius(16).zIndex(3.0).frame(width: UIScreen.main.bounds.width * 0.6)
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    showOption = false
-                } label: {
-                    Image("close_button").resizable().frame(maxWidth: 36, maxHeight: 36)
-                        .offset(x: 12, y: -12)
-                }
-            }
-    }
-    
-    func answerComponent(text: String) -> some View {
+    func answerComponent(answer: AnswerModel) -> some View {
         ZStack {
             Image(.popUpBackground)
                 .resizable()
@@ -381,8 +409,9 @@ private extension BattleUI {
                     height: UIScreen.main.bounds.width * 0.2
                 )
                 .opacity(0.9)
-            Text(text.firstUppercased)
-                .font(.system(size: 13))
+                .a11yDecorative()
+            Text(answer.answer.firstUppercased)
+                .scaledFont(size: 13)
                 .foregroundStyle(.white)
                 .minimumScaleFactor(0.7)
                 .frame(
@@ -391,6 +420,8 @@ private extension BattleUI {
                 )
                 .multilineTextAlignment(.center)
         }
+        .a11yTapButton()
+        .accessibilityIdentifier(UITestConstants.answerIdentifier(isCorrect: answer.isTrue))
     }
 }
 
@@ -399,6 +430,51 @@ private extension BattleUI {
 private extension BattleUI {
     func exitGame() {
         showExistAlert = true
+    }
+    
+    /// First add opens the bookcase picker; later adds reuse the last chosen bookcase directly
+    func addWordTapped(book: BookModel) {
+        pendingWordToAdd = book
+        isChangingWordBookcase = false
+        if let bookcase = wordTargetBookcase {
+            addWord(book, to: bookcase, replacingPrevious: false)
+        } else {
+            showSelectWordBookcase = true
+        }
+    }
+    
+    func addWord(_ book: BookModel, to bookcase: BookcaseModel, replacingPrevious: Bool) {
+        guard !viewModel.isWordAlreadyInBookcase(book: book, bookcase: bookcase) else {
+            isChangingWordBookcase = false
+            lastAddedBookCopy = nil
+            wordTargetBookcase = nil
+            let messageFormat = NSLocalizedString("word_already_in_bookcase_toast", comment: "Toast shown when the word is already in the selected bookcase")
+            presentToast(
+                ToastValue(message: String(format: messageFormat, bookcase.bookcaseName))
+            )
+            return
+        }
+        if replacingPrevious, let lastAddedBookCopy {
+            viewModel.removeAddedWord(book: lastAddedBookCopy)
+        }
+        isChangingWordBookcase = false
+        lastAddedBookCopy = viewModel.addWordToBookcase(book: book, bookcase: bookcase)
+        
+        guard lastAddedBookCopy != nil else { return }
+        let messageFormat = NSLocalizedString("added_to_bookcase_toast", comment: "Toast shown when a word is added to a bookcase")
+        presentToast(
+            ToastValue(
+                message: String(format: messageFormat, bookcase.bookcaseName),
+                button: ToastButton(
+                    title: String(localized: "Change"),
+                    underlined: true
+                ) {
+                    isChangingWordBookcase = true
+                    showSelectWordBookcase = true
+                },
+                duration: 4.0
+            )
+        )
     }
 }
 /*

@@ -135,33 +135,3 @@ extension QuestRewardModel {
     }
 }
 
-extension ChestBountyModel {
-    var sparklePalette: SparklePalette {
-        switch self {
-        case .gold:
-            return SparklePalette(
-                primary: Color(hex: "#FFF1BF"),
-                secondary: Color(hex: "#FFCC4D"),
-                shadow: Color(hex: "#B67F1E")
-            )
-        case .nature:
-            return SparklePalette(
-                primary: Color(hex: "#F2FFD5"),
-                secondary: Color(hex: "#A6E05F"),
-                shadow: Color(hex: "#4F8F2D")
-            )
-        case .diamond:
-            return SparklePalette(
-                primary: Color(hex: "#E7FAFF"),
-                secondary: Color(hex: "#6AD8FF"),
-                shadow: Color(hex: "#2E7AB8")
-            )
-        case .antique:
-            return SparklePalette(
-                primary: Color(hex: "#FFF1DF"),
-                secondary: Color(hex: "#D7AF7C"),
-                shadow: Color(hex: "#8A5E35")
-            )
-        }
-    }
-}

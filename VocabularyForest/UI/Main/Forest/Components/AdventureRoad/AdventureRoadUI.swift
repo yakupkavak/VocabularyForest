@@ -7,13 +7,142 @@
 
 import SwiftUI
 
+// MARK: - REWARD PALETTE
+
+/// Derives the missing palette stops from the remote colors.
+/// Hex parsing itself is not repeated here — it stays in the shared `Color(hex:)` initializer.
+private enum AdventureColorMath {
+
+    /// Mixes the color toward white and/or black, both ratios in 0...1
+    static func mixed(_ color: Color, whiteMix: Double = 0, blackMix: Double = 0) -> Color {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(color).getRed(&r, green: &g, blue: &b, alpha: &a)
+        func channel(_ value: CGFloat) -> Double {
+            let mixed = (Double(value) + (1 - Double(value)) * whiteMix) * (1 - blackMix)
+            return min(max(mixed, 0), 1)
+        }
+        return Color(.sRGB, red: channel(r), green: channel(g), blue: channel(b), opacity: Double(a))
+    }
+}
+
+/// Resolves every color the road UI needs from the remote-driven reward data.
+/// Chests read their own config colors (deriving from the market background gradient when the
+/// dedicated fields are missing), so a newly added chest never drops to a generic fallback look.
+private struct AdventureRewardPalette {
+    let roadColor: Color
+    let cardGradientColors: [Color]
+    let borderColors: [Color]
+    let claimedOverlayColor: Color
+    let valueTextColor: Color
+
+    init(reward: LocalRewardModel) {
+        switch reward.reward {
+        case .standart(let model):
+            let defaults = Self.categoryStyle(for: model.category)
+            self.init(
+                cardHexes: model.cardGradientHexes ?? defaults.cardHexes,
+                roadHex: model.roadColorHex ?? defaults.roadHex,
+                textHex: model.cardTextColorHex ?? defaults.textHex
+            )
+        case .chest(let model):
+            self.init(
+                cardHexes: model.cardGradientHexes ?? model.backgroundGradientColors ?? [],
+                roadHex: model.roadColorHex,
+                textHex: model.cardTextColorHex
+            )
+        }
+    }
+
+    /// Missing road/text colors are derived from the normalized light → base → dark card stops
+    private init(cardHexes: [String], roadHex: String?, textHex: String?) {
+        let stops = Self.normalizedCardColors(cardHexes)
+        let base = stops[stops.count / 2]
+        let dark = stops[stops.count - 1]
+
+        cardGradientColors = stops
+        roadColor = roadHex.map { Color(hex: $0) } ?? base
+
+        let textColor = textHex.map { Color(hex: $0) } ?? AdventureColorMath.mixed(dark, blackMix: 0.35)
+        valueTextColor = textColor
+        claimedOverlayColor = textColor.opacity(0.15)
+
+        borderColors = [
+            Color.white.opacity(0.98),
+            base.opacity(0.92),
+            dark.opacity(0.9)
+        ]
+    }
+
+    /// The card design needs at least three stops; short remote gradients gain a light top stop
+    private static func normalizedCardColors(_ hexes: [String]) -> [Color] {
+        switch hexes.count {
+        case 0:
+            return ["#F2F2F2", "#BFBFBF", "#8F8F8F"].map { Color(hex: $0) }
+        case 1:
+            let base = Color(hex: hexes[0])
+            return [
+                AdventureColorMath.mixed(base, whiteMix: 0.75),
+                base,
+                AdventureColorMath.mixed(base, blackMix: 0.3)
+            ]
+        case 2:
+            let light = Color(hex: hexes[0])
+            return [AdventureColorMath.mixed(light, whiteMix: 0.75), light, Color(hex: hexes[1])]
+        default:
+            return hexes.map { Color(hex: $0) }
+        }
+    }
+
+    /// Fixed palette for the closed set of standart reward categories,
+    /// used only when the remote reward doesn't specify its own colors
+    private static func categoryStyle(for category: QuestRewardModel) -> (roadHex: String, cardHexes: [String], textHex: String) {
+        switch category {
+        case .gold:
+            ("#F4C430", ["#FFF5CC", "#F4C430", "#C88A1E"], "#8B5E00")
+        case .water:
+            ("#77AFCA", ["#E2F5FA", "#77AFCA", "#3A7192"], "#0B4F6C")
+        case .diamond:
+            ("#7BDDF2", ["#F0FDFF", "#8BE9F7", "#2783D7"], "#0B3A64")
+        case .plant:
+            ("#7ED957", ["#EFFFDD", "#7ED957", "#1E8449"], "#2F5D1B")
+        case .sculpture:
+            ("#B983FF", ["#F3E8FF", "#B983FF", "#5B2A86"], "#4A2270")
+        case .animal:
+            ("#FF9F45", ["#FFEEDB", "#FF9F45", "#E4572E"], "#8A3417")
+        }
+    }
+}
+
+// MARK: - ACCESSIBILITY TEXT
+
+/// Milestone state is otherwise conveyed only through opacity and glow,
+/// so VoiceOver needs an explicit spoken equivalent.
+private extension AdventureMilestoneModel {
+
+    var a11yStatusText: String {
+        switch status {
+        case .locked: String(localized: "a11y_status_locked")
+        case .ready: String(localized: "a11y_status_ready")
+        case .claimed: String(localized: "a11y_status_claimed")
+        }
+    }
+
+    var a11yLabel: String {
+        let rewardName = switch reward.reward {
+        case .standart(let model): model.displayName.localized
+        case .chest(let model): model.displayName.localized
+        }
+        return String(format: NSLocalizedString("a11y_milestone_label", comment: ""), rewardName, wordCount)
+    }
+}
+
 struct AdventureRoadUI: View {
     
     // MARK: - PROPERTIES
     
     let screenModel: AdventureRoadScreenModel
     @Binding var isVisible: Bool
-    @Binding var seasonLeftTime: Date
+    let onMilestoneTap: (AdventureMilestoneModel) -> Void
     @Environment(\.safeAreaInsets) private var globalSafeArea
     
     // MARK: - UI
@@ -38,12 +167,12 @@ struct AdventureRoadUI: View {
                         titleSection(w: w)
                     }
                     HStack {
-                        AdventurePassBadge(track: .shortTerm)
+                        AdventurePassBadge(track: .shortTerm, theme: screenModel.theme)
                             .frame(width: cardWidth, height: rowHeight * 0.7)
                         
                         Spacer(minLength: 0)
                         
-                        AdventurePassBadge(track: .longTerm)
+                        AdventurePassBadge(track: .longTerm, theme: screenModel.theme)
                             .frame(width: cardWidth, height: rowHeight * 0.7)
                     }
 
@@ -53,7 +182,9 @@ struct AdventureRoadUI: View {
                             notchSide: .right,
                             cardWidth: cardWidth,
                             rowHeight: rowHeight,
-                            rowSpacing: rowSpacingForSideColumns
+                            rowSpacing: rowSpacingForSideColumns,
+                            wordLabelColor: screenModel.theme.wordLabelTextColor,
+                            onMilestoneTap: onMilestoneTap
                         )
                         .frame(width: cardWidth)
 
@@ -68,6 +199,7 @@ struct AdventureRoadUI: View {
                             rowSpacingOfCard: rowSpacingForSideColumns
                         )
                         .frame(width: centerWidth)
+                        .accessibilityHidden(true)
                         
                         Spacer(minLength: 0)
                         
@@ -76,7 +208,9 @@ struct AdventureRoadUI: View {
                             notchSide: .left,
                             cardWidth: cardWidth,
                             rowHeight: rowHeight,
-                            rowSpacing: rowSpacingForSideColumns
+                            rowSpacing: rowSpacingForSideColumns,
+                            wordLabelColor: screenModel.theme.wordLabelTextColor,
+                            onMilestoneTap: onMilestoneTap
                         )
                         .frame(width: cardWidth)
                     }
@@ -85,6 +219,7 @@ struct AdventureRoadUI: View {
                 .padding(.bottom, safeBottomInset + (w * 0.06))
             }
             .padding(.top, globalSafeArea.top > 0 ? globalSafeArea.top : w * 0.04)        .background(backgroundGradient)
+            .trackScreen(.adventureRoad)
         }
     }
 }
@@ -93,7 +228,7 @@ private extension AdventureRoadUI {
     
     var backgroundGradient: LinearGradient {
         LinearGradient(
-            colors: [Color(red: 0.74, green: 0.88, blue: 0.55), Color(red: 0.16, green: 0.56, blue: 0.33)],
+            colors: [screenModel.theme.backgroundTopColor, screenModel.theme.backgroundBottomColor],
             startPoint: .top,
             endPoint: .init(x: 0.5, y: 0.9)
         )
@@ -105,67 +240,61 @@ private extension AdventureRoadUI {
                 isVisible = false
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: w * 0.06, weight: .regular))
+                    .scaledFont(size: w * 0.06, weight: .regular)
                     .foregroundStyle(Color.black.opacity(0.72))
                     .frame(width: w * 0.14, height: w * 0.14)
                     .background(Color.white.opacity(0.78))
                     .clipShape(Circle())
             }
+            .accessibilityLabel(String(localized: "a11y_close"))
 
             Spacer()
 
-            HStack(spacing: w * 0.02) {
-                Circle()
-                    .fill(Color.black.opacity(0.14))
-                    .frame(width: w * 0.12, height: w * 0.12)
-                    .overlay(
-                        Image(systemName: "questionmark.bubble")
-                            .font(.system(size: w * 0.055, weight: .medium))
-                            .foregroundStyle(.white)
-                    )
-
-                HStack(spacing: w * 0.015) {
-                    Image(systemName: "hourglass")
-                        .font(.system(size: w * 0.04, weight: .semibold))
-                    Text(screenModel.countdownText)
-                        .font(.system(size: w * 0.04, weight: .medium, design: .rounded))
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, w * 0.035)
-                .padding(.vertical, w * 0.023)
-                .background(Color.black.opacity(0.14))
-                .clipShape(Capsule())
+            HStack(spacing: w * 0.015) {
+                Image(systemName: "hourglass")
+                    .scaledFont(size: w * 0.04, weight: .semibold)
+                Text(screenModel.countdownText)
+                    .scaledFont(size: w * 0.04, weight: .medium, design: .rounded)
             }
+            .foregroundStyle(screenModel.theme.countdownTextColor)
+            .padding(.horizontal, w * 0.035)
+            .padding(.vertical, w * 0.023)
+            .background(screenModel.theme.countdownBackgroundColor)
+            .clipShape(Capsule())
+            .a11yGroup()
         }
     }
     
     func titleSection(w: CGFloat) -> some View {
         VStack(spacing: w * 0.025) {
             Text(screenModel.title)
-                .font(.system(size: w * 0.1, weight: .heavy, design: .rounded))
-                .foregroundStyle(.white)
+                .scaledFont(size: w * 0.1, weight: .heavy, design: .rounded)
+                .foregroundStyle(screenModel.theme.titleTextColor)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .multilineTextAlignment(.center)
 
-            Text(String(localized: "adventure_road_subtitle"))
-                .font(.system(size: w * 0.042, weight: .medium, design: .rounded))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .multilineTextAlignment(.center)
+            if !screenModel.subtitle.isEmpty {
+                Text(screenModel.subtitle)
+                    .scaledFont(size: w * 0.042, weight: .medium, design: .rounded)
+                    .foregroundStyle(screenModel.theme.subtitleTextColor)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .multilineTextAlignment(.center)
+            }
         }
     }
 }
 
 private struct AdventurePassBadge: View {
     let track: AdventureMemoryTrack
+    let theme: AdventureRoadThemeModel
 
     var body: some View {
         let title = track.title
-        let textColor: Color = track == .shortTerm ? Color(red: 0.04, green: 0.28, blue: 0.33) : .white
+        let textColor: Color = track == .shortTerm ? theme.shortBadgeTextColor : theme.longBadgeTextColor
         let bgGradient = LinearGradient(
             colors: track == .shortTerm
-                ? [Color(red: 0.31, green: 0.87, blue: 0.76).opacity(0.78), Color(red: 0.16, green: 0.74, blue: 0.64).opacity(0.7)]
-                : [Color.white.opacity(0.14), Color.white.opacity(0.05)],
+                ? [theme.shortBadgeTopColor, theme.shortBadgeBottomColor]
+                : [theme.longBadgeTopColor, theme.longBadgeBottomColor],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -179,7 +308,7 @@ private struct AdventurePassBadge: View {
                     .stroke(Color.white.opacity(0.85), lineWidth: proxy.size.width * 0.015)
 
                 Text(title)
-                    .font(.system(size: proxy.size.width * 0.15, weight: .heavy, design: .rounded))
+                    .scaledFont(size: proxy.size.width * 0.15, weight: .heavy, design: .rounded)
                     .padding(.horizontal, 2)
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.5)
@@ -196,20 +325,35 @@ private struct AdventureLaneColumn: View {
     let cardWidth: CGFloat
     let rowHeight: CGFloat
     let rowSpacing: CGFloat
+    let wordLabelColor: Color
+    let onMilestoneTap: (AdventureMilestoneModel) -> Void
 
     var body: some View {
+        let maxWordCount = milestones.map(\.wordCount).max() ?? 0
         VStack(spacing: rowSpacing) {
             ForEach(milestones) { milestone in
                 VStack(spacing: rowHeight * 0.08) {
-                    AdventureRewardCard(milestone: milestone, notchSide: notchSide, cardWidth: cardWidth)
+                    AdventureRewardCard(
+                        milestone: milestone,
+                        notchSide: notchSide,
+                        cardWidth: cardWidth,
+                        isFinalMilestone: milestone.wordCount == maxWordCount
+                    )
                         .frame(height: rowHeight * 0.82)
+                        .onTapGesture {
+                            onMilestoneTap(milestone)
+                        }
 
                     Text(String(localized: "\(milestone.wordCount) words"))
-                        .font(.system(size: max(cardWidth * 0.1, 11), weight: .bold, design: .rounded))
-                        .foregroundStyle(Color.white.opacity(0.96))
-                        .shadow(color: Color.white.opacity(0.7), radius: 1, x: 0, y: 0)
+                        .scaledFont(size: max(cardWidth * 0.1, 11), weight: .bold, design: .rounded)
+                        .foregroundStyle(wordLabelColor)
                 }
                 .frame(height: rowHeight)
+                .a11yTapButton(
+                    milestone.a11yLabel,
+                    value: milestone.a11yStatusText,
+                    hint: milestone.status == .ready ? String(localized: "a11y_claim_hint") : nil
+                )
             }
         }
     }
@@ -288,57 +432,32 @@ private struct AdventureCenterRoads: View {
         neckRatio: CGFloat,
         centerOffsetY: CGFloat
     ) -> some View {
-        let baseColor = nodeOuterColor(milestone: milestone)
+        let palette = AdventureRewardPalette(reward: milestone.reward)
+        let isReached = milestone.status != .locked
+        /// Locked road segments stay plain white, only reached ones take the reward color
+        let baseColor = isReached
+            ? palette.roadColor
+            : Color.white.opacity(0.97)
 
         ZStack {
             AdventureFlowPath(neckRatio: neckRatio)
                 .fill(
                     LinearGradient(
-                        colors: [.white, baseColor, .white],
+                        colors: isReached
+                            ? [
+                                baseColor.opacity(0.35),
+                                baseColor,
+                                baseColor.opacity(0.35)
+                              ]
+                            : [.white, baseColor, .white],
                         startPoint: .top,
                         endPoint: .bottom
                     )
                 )
                 .frame(width: nodeSize, height: segmentHeight)
-            
-            if milestone.isClaimed {
-                Image(systemName: "checkmark")
-                    .font(.system(size: nodeSize * 0.5, weight: .bold))
-                    .foregroundStyle(
-                        isWhiteNode(milestone: milestone)
-                        ? Color.green
-                        : Color.white
-                    )
-            } else {
-                EmptyView()
-            }
         }
         .offset(y: centerOffsetY)
         .frame(width: nodeSize, height: segmentHeight)
-    }
-
-    private func nodeOuterColor(milestone: AdventureMilestoneModel) -> Color {
-        switch milestone.reward {
-        case .chest(model: .gold):
-            return Color(hex: "#E8B83F")
-        case .chest(model: .nature):
-            return Color(hex: "#99D04E")
-        case .chest(model: .diamond):
-            return Color(hex: "#7BDDF2")
-        case .chest(model: .antique):
-            return Color(hex: "#D1A05B")
-        default:
-            return Color.white.opacity(0.97)
-        }
-    }
-
-    private func isWhiteNode(milestone: AdventureMilestoneModel) -> Bool {
-        switch milestone.reward {
-        case .chest:
-            return false
-        default:
-            return true
-        }
     }
 }
 
@@ -346,6 +465,38 @@ private struct AdventureRewardCard: View {
     let milestone: AdventureMilestoneModel
     let notchSide: AdventureTicketNotchSide
     let cardWidth: CGFloat
+    let isFinalMilestone: Bool
+
+    private var palette: AdventureRewardPalette {
+        AdventureRewardPalette(reward: milestone.reward)
+    }
+
+    private var isClaimed: Bool {
+        milestone.status == .claimed
+    }
+
+    private var isReady: Bool {
+        milestone.status == .ready
+    }
+
+    private var rewardName: String {
+        switch milestone.reward.reward {
+        case .standart(let model):
+            return model.displayName.localized
+        case .chest(let model):
+            return model.displayName.localized
+        }
+    }
+
+    private var amountText: String? {
+        switch milestone.reward.reward {
+        case .standart:
+            /// A single reward doesn't need an "x1" label
+            return milestone.reward.rewardCount > 1 ? "x\(milestone.reward.rewardCount)" : nil
+        case .chest:
+            return nil
+        }
+    }
 
     var body: some View {
         let cardShape = AdventureRewardCardShape(notchSide: notchSide)
@@ -355,40 +506,44 @@ private struct AdventureRewardCard: View {
             cardShape
                 .fill(cardFillGradient)
 
-            if milestone.isClaimed {
+            if isClaimed {
                 cardShape
                     .fill(claimedOverlayColor)
             }
 
-            VStack(spacing: cardWidth * 0.05) {
+            VStack(spacing: cardWidth * 0.035) {
                 ZStack {
-                    Image(milestone.reward.iconName)
-                        .resizable()
+                    RewardImageView(asset: milestone.reward.reward.posterImage)
                         .scaledToFit()
-                        .frame(height: cardWidth * 0.4)
-                        .opacity(milestone.isClaimed ? 0.35 : 1)
+                        .frame(height: cardWidth * 0.36)
+                        .opacity(isClaimed ? 0.35 : 1)
                 }
 
-                Text(String(localized: String.LocalizationValue(milestone.reward.amountText)))
-                    .font(
-                        .system(
-                            size: milestone.reward.isChestReward ? cardWidth * 0.11 : cardWidth * 0.18,
-                            weight: .heavy,
-                            design: .rounded
-                        )
-                    )
+                Text(rewardName)
+                    .scaledFont(size: cardWidth * 0.105, weight: .bold, design: .rounded)
                     .foregroundStyle(rewardValueColor)
-                    .opacity(milestone.isClaimed ? (isChestReward ? 0.78 : 0.55) : 1)
+                    .shadow(color: Color.white.opacity(0.65), radius: 1, x: 0, y: 0)
+                    .opacity(isClaimed ? 0.6 : 1)
                     .multilineTextAlignment(.center)
-                    .lineLimit(isChestReward ? 2 : 1)
-                    .frame(maxWidth: isChestReward ? cardWidth * 0.52 : cardWidth * 0.9)
+                    .lineLimit(2)
+                    .frame(maxWidth: cardWidth * 0.9)
                     .fixedSize(horizontal: false, vertical: true)
-                    .minimumScaleFactor(isChestReward ? 1.0 : 0.75)
+                    .minimumScaleFactor(0.7)
+
+                if let amountText {
+                    Text(amountText)
+                        .scaledFont(size: cardWidth * 0.12, weight: .heavy, design: .rounded)
+                        .foregroundStyle(rewardValueColor)
+                        .shadow(color: Color.white.opacity(0.65), radius: 1, x: 0, y: 0)
+                        .opacity(isClaimed ? 0.55 : 1)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
             }
             .padding(contentPadding)
             .padding(.top, 4)
 
-            if milestone.isClaimed {
+            if isClaimed {
                 claimedBadge
             }
         }
@@ -396,199 +551,58 @@ private struct AdventureRewardCard: View {
             cardShape
                 .stroke(borderGradient, lineWidth: cardWidth * 0.02)
         )
+        .shadow(color: Color.white.opacity(isReady ? 0.9 : 0), radius: isReady ? 5 : 0, x: 0, y: 0)
+        .opacity(milestone.status == .locked ? 0.72 : 1)
     }
 
     private var cardFillGradient: LinearGradient {
-        let colors: [Color]
-        switch milestone.reward {
-        case .standart(model: .gold(count: _)):
-            colors = [
-                Color(hex: "#FFF5CC").opacity(0.98),
-                Color(hex: "#F4C430").opacity(0.78),
-                Color(hex: "#C88A1E").opacity(0.74)
-            ]
-        case .standart(model: .water(count: _)):
-            colors = [
-                Color(hex: "#E2F5FA").opacity(0.98),
-                Color(hex: "#77AFCA").opacity(0.74),
-                Color(hex: "#3A7192").opacity(0.7)
-            ]
-        case .standart(model: .diamond(count: _)):
-            colors = [
-                Color(hex: "#F0FDFF").opacity(0.99),
-                Color(hex: "#8BE9F7").opacity(0.78),
-                Color(hex: "#2783D7").opacity(0.74)
-            ]
-        case .chest(model: .gold):
-            colors = [
-                Color(hex: "#FFF1BF").opacity(0.99),
-                Color(hex: "#FFCC4D").opacity(0.82),
-                Color(hex: "#B67F1E").opacity(0.72)
-            ]
-        case .chest(model: .nature):
-            colors = [
-                Color(hex: "#F2FFD5").opacity(0.98),
-                Color(hex: "#A8EA6A").opacity(0.78),
-                Color(hex: "#4D922A").opacity(0.72)
-            ]
-        case .chest(model: .diamond):
-            colors = [
-                Color(hex: "#EAFDFF").opacity(0.99),
-                Color(hex: "#72DFFF").opacity(0.82),
-                Color(hex: "#2A67D3").opacity(0.72)
-            ]
-        case .chest(model: .antique):
-            colors = [
-                Color(hex: "#F7E4C2").opacity(0.99),
-                Color(hex: "#CD9F5F").opacity(0.82),
-                Color(hex: "#8A5A2B").opacity(0.72)
-            ]
-        case .standart:
-            colors = [
-                Color(hex: "#F0FDFF").opacity(0.99),
-                Color(hex: "#8BE9F7").opacity(0.78),
-                Color(hex: "#2783D7").opacity(0.74)
-            ]
+        let gradientColors = palette.cardGradientColors
+        let colors = gradientColors.enumerated().map { index, color in
+            switch index {
+            case 0:
+                color.opacity(0.98)
+            case gradientColors.count - 1:
+                color.opacity(0.72)
+            default:
+                color.opacity(0.78)
+            }
         }
 
+        /// The final rewards drop the near-white top stop so the card reads as a rich solid color
+        let finalColors = isFinalMilestone ? Array(colors.dropFirst()) : colors
+
         return LinearGradient(
-            colors: colors,
+            colors: finalColors,
             startPoint: .top,
             endPoint: .bottomTrailing
         )
     }
 
     private var borderGradient: LinearGradient {
-        switch milestone.reward {
-        case .standart(model: .gold(count: _)), .chest(model: .gold):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#E8B83F").opacity(0.92),
-                    Color(hex: "#B67F1E").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .standart(model: .water(count: _)):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.96),
-                    Color(hex: "#5FB3D9").opacity(0.9),
-                    Color(hex: "#1F6780").opacity(0.88)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .standart(model: .diamond(count: _)), .chest(model: .diamond):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#7BDDF2").opacity(0.92),
-                    Color(hex: "#2A67D3").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .chest(model: .nature):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#99D04E").opacity(0.92),
-                    Color(hex: "#4F8F2D").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .chest(model: .antique):
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#D1A05B").opacity(0.92),
-                    Color(hex: "#8A5A2B").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        case .standart:
-            return LinearGradient(
-                colors: [
-                    Color.white.opacity(0.98),
-                    Color(hex: "#7BDDF2").opacity(0.92),
-                    Color(hex: "#2A67D3").opacity(0.9)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
+        LinearGradient(
+            colors: palette.borderColors,
+            startPoint: .top,
+            endPoint: .bottom
+        )
     }
 
     private var claimedOverlayColor: Color {
-        switch milestone.reward {
-        case .chest(model: .gold):
-            return Color(hex: "#8B5E00").opacity(0.16)
-        case .chest(model: .nature):
-            return Color(hex: "#2F5D1B").opacity(0.16)
-        case .chest(model: .diamond):
-            return Color(hex: "#0B3A64").opacity(0.16)
-        case .chest(model: .antique):
-            return Color(hex: "#6B4A1E").opacity(0.16)
-        case .standart(model: .gold(count: _)):
-            return Color(hex: "#8B5E00").opacity(0.14)
-        case .standart(model: .water(count: _)):
-            return Color(hex: "#0B4F6C").opacity(0.14)
-        case .standart(model: .diamond(count: _)):
-            return Color(hex: "#0B3A64").opacity(0.14)
-        case .standart:
-            return Color(hex: "#0B3A64").opacity(0.14)
-        }
+        palette.claimedOverlayColor
     }
 
     private var rewardValueColor: Color {
-        switch milestone.reward {
-        case .standart(model: .water(count: _)):
-            return Color(hex: "#0B4F6C")
-        case .standart(model: .gold(count: _)):
-            return Color(hex: "#8B5E00")
-        case .standart(model: .diamond(count: _)):
-            return Color(hex: "#0B3A64")
-        case .chest(model: .gold):
-            return Color(hex: "#8B5E00")
-        case .chest(model: .nature):
-            return Color(hex: "#2F5D1B")
-        case .chest(model: .diamond):
-            return Color(hex: "#0B3A64")
-        case .chest(model: .antique):
-            return Color(hex: "#6B4A1E")
-        case .standart:
-            return Color(hex: "#0B3A64")
+        /// The final milestone always shines in gold no matter what the reward is
+        if isFinalMilestone {
+            return Color(hex: "#FFB800")
         }
-    }
-
-    private var isChestReward: Bool {
-        switch milestone.reward {
-        case .chest:
-            return true
-        default:
-            return false
-        }
+        return palette.valueTextColor
     }
 
     private var claimedBadge: some View {
         ZStack {
             Image(systemName: "checkmark")
-                .font(.system(size: cardWidth * 0.2, weight: .black))
+                .scaledFont(size: cardWidth * 0.2, weight: .black)
                 .foregroundStyle(.white.opacity(0.9))
         }
     }
-}
-
-// MARK: - PREVIEW
-
-#Preview {
-    AdventureRoadUI(
-        screenModel: AdventureRoadMockData.screenModel(),
-        isVisible: .constant(true),
-        seasonLeftTime: .constant(Date())
-    )
 }

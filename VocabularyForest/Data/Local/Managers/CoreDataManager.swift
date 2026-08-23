@@ -37,6 +37,7 @@ protocol CoreDataManagerProtocol: AnyObject {
     func save(in context: NSManagedObjectContext)
     func save(type contextType: CoreDataManager.ContextType)
     func deleteEverything(contextType: CoreDataManager.ContextType)
+    func deleteForestData(contextType: CoreDataManager.ContextType)
     
     // MARK: Book Operations
     
@@ -46,11 +47,13 @@ protocol CoreDataManagerProtocol: AnyObject {
     func updateBook(bookToUpdate: BookModel, learningWord: String, meaningWord: String, descriptionWord: String?, exampleSentence: String?, onComplete: () -> (), contextType: CoreDataManager.ContextType)
     func deleteBook(book: BookModel, contextType: CoreDataManager.ContextType)
     func fetchBookHelperProperties(book model: BookModel, contextType: CoreDataManager.ContextType) -> BookHelperModel?
-    func fetchAllSafeBooks(contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func askIsEnoughtLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> Bool?
     func fetchBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchSafeBooks(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchBooks(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
-    func fetchAllBooksWithExampleDescription(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func fetchAllBooksWithExampleDescription(bookLimit: Int, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
+    func countAllBooks(contextType: CoreDataManager.ContextType) -> Int
     func fetchSafeBooksExampleDescription(model: BookcaseModel, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     func fetchSafeBooksExampleDescription(bookcase: Bookcase, sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookModel]?
     // MARK: Bookcase Operations
@@ -60,7 +63,6 @@ protocol CoreDataManagerProtocol: AnyObject {
     func importBookcase(_ request: BookcaseRequest, overwrite: Bool, contextType: CoreDataManager.ContextType, completion: @escaping (Result<Bookcase, CoreDataManager.ImportBookcaseError>) -> Void)
     func deleteBookcase(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType)
     func deleteBookcase(bookcase: Bookcase, contextType: CoreDataManager.ContextType)
-    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: CoreDataManager.ContextType) -> BookcaseStatus?
     func fetchSafeBookcases(sortDescriptors: [NSSortDescriptor]?, contextType: CoreDataManager.ContextType) -> [BookcaseModel]?
     func fetchSafeBookcase(book: BookModel, contextType: CoreDataManager.ContextType) -> BookcaseModel?
     func fetchBookcase(name: String, learningLanguageCode: String, meaningLanguageCode: String, contextType: CoreDataManager.ContextType) -> BookcaseModel?
@@ -72,32 +74,70 @@ class CoreDataManager: CoreDataManagerProtocol {
     
     weak var notificationManager: (any NotificationManagerProtocol)?
     let container: NSPersistentContainer
+    private let logger: AppLoggerProtocol
     var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
     lazy var backgroundContext: NSManagedObjectContext = {
         let context = container.newBackgroundContext()
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.automaticallyMergesChangesFromParent = true
         return context
     }()
     
     
     // MARK: - INIT
     
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, logger: AppLoggerProtocol = AppLogger.shared) {
+        self.logger = logger
         container = NSPersistentContainer(name: "VocabularyForest")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores { storeDescription, error in
-            if let error = error {
-                fatalError("Core data couldn't inin -> \(error.localizedDescription)")
-            }
+        if let description = container.persistentStoreDescriptions.first {
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
         }
+        
+        var loadError: Error?
+        container.loadPersistentStores { _, error in
+            loadError = error
+        }
+        
+        if let loadError {
+            Self.recoverFromStoreLoadFailure(container: container, error: loadError)
+        }
+        
         viewContext.automaticallyMergesChangesFromParent = true
         backgroundContext.perform { [weak self] in
             guard let self else { return }
             self.checkGame(contextType: .background)
+        }
+    }
+    
+    private static func recoverFromStoreLoadFailure(container: NSPersistentContainer, error: Error) {
+        assertionFailure("Core Data store couldn't load -> \(error.localizedDescription)")
+        
+        guard let storeURL = container.persistentStoreDescriptions.first?.url,
+              storeURL.isFileURL else {
+            fatalError("Core data couldn't init -> \(error.localizedDescription)")
+        }
+        
+        let fileManager = FileManager.default
+        let timestamp = Int(Date().timeIntervalSince1970)
+        for suffix in ["", "-wal", "-shm"] {
+            let source = URL(fileURLWithPath: storeURL.path + suffix)
+            guard fileManager.fileExists(atPath: source.path) else { continue }
+            let destination = URL(fileURLWithPath: storeURL.path + suffix + ".backup-\(timestamp)")
+            try? fileManager.moveItem(at: source, to: destination)
+        }
+        
+        var retryError: Error?
+        container.loadPersistentStores { _, error in
+            retryError = error
+        }
+        if let retryError {
+            fatalError("Core data couldn't init -> \(retryError.localizedDescription)")
         }
     }
     
@@ -137,7 +177,7 @@ class CoreDataManager: CoreDataManagerProtocol {
             do {
                 try context.save()
             } catch {
-                print("Core data couldn't saved context \(context) description -> \(error.localizedDescription)")
+                logger.error("Core Data context save failed: \(error.localizedDescription)", category: .data)
             }
         }
     }
@@ -149,22 +189,31 @@ class CoreDataManager: CoreDataManagerProtocol {
             do {
                 try context.save()
             } catch {
-                print("Core data couldn't saved context \(context) description -> \(error.localizedDescription)")
+                logger.error("Core Data context save failed: \(error.localizedDescription)", category: .data)
             }
         }
     }
     
     func deleteEverything(contextType: ContextType) {
+        batchDelete(entities: CoreDataConstant.entities, contextType: contextType)
+    }
+
+    /// Wipes only the account-owned game state; Forest relationships use Nullify rules,
+    /// so every forest entity must be deleted explicitly rather than relying on cascade.
+    func deleteForestData(contextType: ContextType) {
+        batchDelete(entities: CoreDataConstant.forestEntities, contextType: contextType)
+    }
+
+    private func batchDelete(entities: [String], contextType: ContextType) {
         let context = getContext(for: contextType)
         context.performAndWait {
-            let entities = CoreDataConstant.entities
             for entity in entities {
                 let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
                 do {
                     try context.execute(deleteRequest)
                 } catch {
-                    print("Error in \(entity): \(error.localizedDescription)")
+                    logger.error("Batch delete failed for entity \(entity): \(error.localizedDescription)", category: .data)
                 }
             }
             save(in: context)
@@ -182,7 +231,7 @@ extension CoreDataManager {
         let context = getContext(for: contextType)
         return context.performAndWait {
             guard let answerBook = fetchSingleBook(book: book, contextType: contextType) else {
-                print("updateBookAnswer Error")
+                logger.error("updateBookAnswer could not find the book to update", category: .data)
                 return .error(error: nil)
             }
             if type == .competitive {
@@ -327,15 +376,21 @@ extension CoreDataManager {
         }
     }
     
-    func fetchAllSafeBooks(
-        contextType: ContextType
-    ) -> [BookModel]? {
+    func fetchLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType ,contextType: CoreDataManager.ContextType) -> [BookModel]? {
         let context = getContext(for: contextType)
+        let isShort = (memoryType == .short)
+
         return context.performAndWait {
             let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
             request.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
+            request.fetchLimit = bookCount
+            if isShort {
+                request.predicate = NSPredicate(format: "shortMemory == YES")
+            } else {
+                request.predicate = NSPredicate(format: "longMemory == YES")
+            }
             var results: [BookModel]?
             context.performAndWait {
                 do {
@@ -343,10 +398,32 @@ extension CoreDataManager {
                 }
                 catch {
                     results = nil
-                    print("Fetch error: \(error.localizedDescription)")
+                    logger.error("Fetch failed: \(error.localizedDescription)", category: .data)
                 }
             }
             return results
+        }
+    }
+    
+    func askIsEnoughtLimitedSafeBooks(bookCount: Int, memoryType: BookMemoryType, contextType: CoreDataManager.ContextType) -> Bool? {
+        let context = getContext(for: contextType)
+        let isShort = (memoryType == .short)
+        
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
+            if isShort {
+                request.predicate = NSPredicate(format: "shortMemory == YES")
+            } else {
+                request.predicate = NSPredicate(format: "longMemory == YES")
+            }
+            
+            do {
+                let count = try context.count(for: request)
+                return count >= bookCount
+            } catch {
+                logger.error("Count fetch failed: \(error.localizedDescription)", category: .data)
+                return nil
+            }
         }
     }
     
@@ -368,13 +445,13 @@ extension CoreDataManager {
                     NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
                 ]
                 if let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType) {
-                    request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
+                    request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase), bookcase)
                     do {
                         let bookList = try context.fetch(request)
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
-                        print("Books couldn't fetched -> \(error)")
+                        logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                         return nil
                     }
                 }else {
@@ -404,7 +481,7 @@ extension CoreDataManager {
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -421,19 +498,20 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
-            request.predicate = NSPredicate(format: "\(CoreDataConstant.bookcaseEntityName) == %@", bookcase)
+            request.predicate = NSPredicate(format: "%K == %@", #keyPath(Book.bookcase), bookcase)
             do {
                 let bookList = try context.fetch(request)
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
     }
     
     func fetchAllBooksWithExampleDescription(
+        bookLimit: Int,
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
     ) -> [BookModel]? {
@@ -443,6 +521,7 @@ extension CoreDataManager {
             request.sortDescriptors = sortDescriptors ?? [
                 NSSortDescriptor(keyPath: \Book.createdDate, ascending: false)
             ]
+            request.fetchLimit = bookLimit
             request.predicate = NSPredicate(format: "(exampleSentence != nil OR descriptionWord != nil)")
             do {
                 let bookList = try context.fetch(request)
@@ -482,7 +561,7 @@ extension CoreDataManager {
                         let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                         return bookModelList
                     } catch {
-                        print("Books couldn't fetched -> \(error)")
+                        logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                         return nil
                     }
                 }else {
@@ -518,9 +597,17 @@ extension CoreDataManager {
                 let bookModelList = try bookList.map({ try $0.safeObject(context: context) })
                 return bookModelList
             } catch {
-                print("Books couldn't fetched -> \(error)")
+                logger.error("Books fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
+        }
+    }
+
+    func countAllBooks(contextType: ContextType) -> Int {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            let request = NSFetchRequest<Book>(entityName: CoreDataConstant.bookEntityName)
+            return (try? context.count(for: request)) ?? 0
         }
     }
 }
@@ -659,37 +746,7 @@ extension CoreDataManager {
     }
     
     // MARK: - FETCH HELPERS
-    
-    func fetchBookcaseProperties(bookcase model: BookcaseModel, contextType: ContextType) -> BookcaseStatus? {
-        let context = getContext(for: contextType)
-        return context.performAndWait {
-            let bookcase = fetchSingleBookcase(bookcase: model, contextType: contextType)
-            if let bookcase {
-                do {
-                    let status = BookcaseStatus(
-                        bookList: try bookcase.booksArray.map({ book in
-                            try book.safeObject(context: context)
-                        }),
-                        longMemoryCount: bookcase.longMemoryBooksCount,
-                        shortMemoryCount: bookcase.shortMemoryBooksCount,
-                        totalBooksCount: bookcase.totalBooksCount,
-                        longMemoryBooks: try bookcase.longMemoryBooks.map({ book in
-                            try book.safeObject(context: context)
-                        }),
-                        shortMemoryBooks: try bookcase.shortMemoryBooks.map({ book in
-                            try book.safeObject(context: context)
-                        })
-                    )
-                    return status
-                }catch {
-                    return nil
-                }
-            }else {
-                return nil
-            }
-        }
-    }
-    
+
     func fetchSafeBookcases(
         sortDescriptors: [NSSortDescriptor]? = nil,
         contextType: ContextType
@@ -729,7 +786,7 @@ extension CoreDataManager {
                 let safeBookcase = try singleBookcase.first?.safeObject(context: context)
                 return safeBookcase
             } catch {
-                print("Bookcase coduln't fetched \(error)")
+                logger.error("Bookcase fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -752,7 +809,7 @@ extension CoreDataManager {
                 let bookcase = try firtBookcase?.safeObject(context: context)
                 return bookcase
             } catch {
-                print(error.localizedDescription)
+                logger.error("First bookcase fetch failed: \(error.localizedDescription)", category: .data)
                 return nil
             }
         }
@@ -772,7 +829,7 @@ private extension CoreDataManager {
                 let booklist = try context.fetch(request)
                 return booklist.first
             } catch {
-                print("Book id couldn't fetch \(book.id)")
+                logger.error("Book could not be fetched by id \(book.id)", category: .data)
                 return nil
             }
         }
@@ -788,7 +845,7 @@ private extension CoreDataManager {
                 let booklist = try context.fetch(request)
                 return booklist.first
             } catch {
-                print("Bookcase id couldn't fetch \(bookcase.id)")
+                logger.error("Bookcase could not be fetched by id \(bookcase.id)", category: .data)
                 return nil
             }
         }
@@ -811,7 +868,7 @@ private extension CoreDataManager {
                 }
                 catch {
                     results = nil
-                    print("Fetch error: \(error.localizedDescription)")
+                    logger.error("Fetch failed: \(error.localizedDescription)", category: .data)
                 }
             }
             return results

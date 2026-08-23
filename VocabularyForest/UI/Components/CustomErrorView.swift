@@ -23,8 +23,10 @@ struct CustomErrorView: View {
                         .strokeBorder(.title, lineWidth: 4)
                 }.opacity(showEmptyText ? 1.0 : 0.0 )
             TalkingBallons(foregroundColor: .title, delayMultiplier: 1.2)
+                .a11yDecorative()
             LottieView(animation: .named("errordog"))
                 .playing(loopMode: .playOnce).resizable().frame(maxWidth: 250).frame(maxHeight: 300)
+                .a11yDecorative()
             Spacer()
         }
         .onAppear {

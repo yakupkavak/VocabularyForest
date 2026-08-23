@@ -73,6 +73,7 @@ struct BookcaseEditSheet: View {
                 }
             }
             .navigationTitle("Kitaplığı Düzenle")
+            .trackScreen(.editBookcase)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -117,8 +118,6 @@ struct BookcaseEditSheet: View {
             bookcase: sampleBookcase,
             animalModel: AnimalBodyModel(head: "fox", foot: "fox")
         )
-        BookcaseEditSheet(item: sampleItem, onSave: { (newName, newLang, newMean) in
-            print("\(newName)")
-        })
+        BookcaseEditSheet(item: sampleItem, onSave: { _, _, _ in })
     
 }

@@ -13,4 +13,6 @@ extension Tag {
     @Tag static var database: Self
     @Tag static var critical: Self
     @Tag static var system: Self
+    @Tag static var rain: Self
+    @Tag static var questTrack: Self
 }

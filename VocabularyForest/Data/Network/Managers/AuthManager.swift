@@ -20,6 +20,7 @@ protocol AuthManagerProtocol: ObservableObject {
         nonce: String?) async throws -> AuthDataResult?
     func signInWithGoogle() async throws
     func signOut() throws
+    func deleteAccount(cloudCleanup: () async throws -> Void) async throws
 }
 
 enum SignInType {
@@ -39,9 +40,15 @@ class AuthManager: AuthManagerProtocol {
     var isUserSignedInPublisher: AnyPublisher<Bool, Never> {
         $isUserSignedIn.eraseToAnyPublisher()
     }
+    private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: INIT
-    
-    init() {
+
+    init(logger: AppLoggerProtocol = AppLogger.shared,
+         analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()) {
+        self.logger = logger
+        self.analyticsService = analyticsService
         checkPreviousSign()
         verifySignInWithAppleID()
     }
@@ -54,8 +61,9 @@ class AuthManager: AuthManagerProtocol {
 
             let result = try await googleAuth(user)
             if let result = result, let authUser = Auth.auth().currentUser {
-                
+
                 setupCurrentUser(user: authUser)
+                logSignIn(method: .google, isNewUser: result.additionalUserInfo?.isNewUser == true)
             }
         }
         catch {
@@ -73,34 +81,81 @@ class AuthManager: AuthManagerProtocol {
             fatalError("Invalid state: A login callback was received, but no login request was sent.")
         }
         guard let appleIDToken = appleIDCredential.identityToken else {
-            print("Unable to fetch identity token")
+            logger.error("Apple sign-in could not fetch the identity token", category: .auth)
             return nil
         }
         guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-            print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+            logger.error("Apple sign-in could not serialize the identity token", category: .auth)
             return nil
         }
         let credentials = OAuthProvider.appleCredential(withIDToken: idTokenString,
                                                        rawNonce: nonce,
                                                        fullName: appleIDCredential.fullName)
         do {
-            return try await authenticateUser(credentials: credentials)
+            let result = try await authenticateUser(credentials: credentials)
+            if let result {
+                logSignIn(method: .apple, isNewUser: result.additionalUserInfo?.isNewUser == true)
+            }
+            return result
         }
         catch {
-            print("FirebaseAuthError: appleAuth(appleIDCredential:nonce:) failed. \(error)")
+            logger.error("Apple authentication failed: \(error.localizedDescription)", category: .auth)
             throw error
         }
     }
     
     func signOut() throws {
-        if let currentUser {
-            let providers = currentUser.providerData.map { $0.providerID }.joined(separator: ", ")
-            if providers.contains("google.com") {
-                signOutFromGoogle()
+        let providers = auth.currentUser?.providerData.map { $0.providerID } ?? []
+        if providers.contains("google.com") {
+            signOutFromGoogle()
+        }
+        try auth.signOut()
+        currentUser = nil
+        isUserSignedIn = false
+        analyticsService.log(.signOut)
+        analyticsService.setUserID(nil)
+        analyticsService.set(.hasCloudAccount(false))
+    }
+    
+    // MARK: - DELETE ACCOUNT
+    
+    /// Apple 5.1.1(v): reauth -> wipe cloud data -> revoke the Apple token -> delete the account.
+    func deleteAccount(cloudCleanup: () async throws -> Void) async throws {
+        guard let user = auth.currentUser else { return }
+        let providers = user.providerData.map { $0.providerID }
+        
+        if providers.contains("apple.com") {
+            let appleCredential = try await AppleSignInManager.shared.requestFreshCredential()
+            guard let tokenData = appleCredential.identityToken,
+                  let idTokenString = String(data: tokenData, encoding: .utf8) else {
+                throw AuthError.invalidCredantial
             }
-            else {
-                try auth.signOut()
+            let credentials = OAuthProvider.appleCredential(withIDToken: idTokenString,
+                                                            rawNonce: AppleSignInManager.nonce,
+                                                            fullName: nil)
+            try await user.reauthenticate(with: credentials)
+            try await cloudCleanup()
+            if let codeData = appleCredential.authorizationCode,
+               let authCode = String(data: codeData, encoding: .utf8) {
+                try await auth.revokeToken(withAuthorizationCode: authCode)
             }
+        }
+        else {
+            if let googleUser = try await signInWithGoogle(), let idToken = googleUser.idToken?.tokenString {
+                let credentials = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                                accessToken: googleUser.accessToken.tokenString)
+                try await user.reauthenticate(with: credentials)
+            }
+            try await cloudCleanup()
+            signOutFromGoogle()
+        }
+        
+        try await user.delete()
+        analyticsService.log(.accountDeleted)
+        analyticsService.setUserID(nil)
+        analyticsService.set(.hasCloudAccount(false))
+        await MainActor.run {
+            currentUser = nil
             isUserSignedIn = false
         }
     }
@@ -117,6 +172,7 @@ private extension AuthManager {
                 if let user {
                     self.setupCurrentUser(user: user)
                 } else {
+                    self.currentUser = nil
                     self.isUserSignedIn = false
                 }
             }
@@ -136,7 +192,7 @@ private extension AuthManager {
                         try self.signOut()
                     }
                     catch {
-                        print("FirebaseAuthError: signOut() failed. \(error)")
+                        self.logger.error("Sign-out after revoked Apple credential failed: \(error.localizedDescription)", category: .auth)
                     }
                 default:
                     break
@@ -172,12 +228,20 @@ private extension AuthManager {
             return try await authenticateUser(credentials: credentials)
         }
         catch {
-            print("FirebaseAuthError: googleAuth(user:) failed. \(error)")
+            logger.error("Google authentication failed: \(error.localizedDescription)", category: .auth)
             throw error
         }
     }
     func setupCurrentUser(user: User) {
         currentUser = user
         isUserSignedIn = true
+        // Firebase Auth UID is a pseudonymous id; it enables cross-device user
+        // stitching in GA4 without exposing personal data.
+        analyticsService.setUserID(user.uid)
+        analyticsService.set(.hasCloudAccount(true))
+    }
+
+    func logSignIn(method: AnalyticsAuthMethod, isNewUser: Bool) {
+        analyticsService.log(isNewUser ? .signUp(method: method) : .login(method: method))
     }
 }

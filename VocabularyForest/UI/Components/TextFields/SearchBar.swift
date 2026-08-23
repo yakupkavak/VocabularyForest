@@ -11,16 +11,19 @@ import SwiftUI
 struct CustomSearchBar: View {
     
     @Binding var searchText: String
-    var placeholder: String = "Ara..."
+    var placeholder: String = String(localized: "Ara...")
     @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
-                
+                .accessibilityHidden(true)
+
             TextField(placeholder, text: $searchText)
                 .textFieldStyle(.plain)
+                /// Placeholder disappears while typing; keep it as the permanent label
+                .accessibilityLabel(placeholder)
                 .focused($isFocused)
                 .onSubmit { isFocused = false }
 
@@ -32,6 +35,7 @@ struct CustomSearchBar: View {
                         .foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "a11y_clear_search"))
             }
         }
         .padding(.horizontal)
@@ -54,9 +58,9 @@ struct CustomSearchBar: View {
         
         var body: some View {
             VStack {
-                Text("Aranan: \(query)")
-                
-                CustomSearchBar(searchText: $query, placeholder: "Ürün veya hizmet ara...")
+                Text(verbatim: "Query: \(query)")
+
+                CustomSearchBar(searchText: $query, placeholder: String(localized: "Kelime ara"))
                     .padding()
                 
                 Spacer()

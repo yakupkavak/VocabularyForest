@@ -12,9 +12,13 @@ public typealias Completion<T> = @Sendable (Result<T, APIClientError>) -> Void w
 
 public final class NetworkManager<EndpointItem: EndPoint> {
     
+    private let session: Session
+    
     // MARK: - INIT
     
-    public init() {}
+    public init(session: Session = .default) {
+        self.session = session
+    }
     
     private var possibleEmptyResponseCodes: Set<Int> {
         var defaultSet = DataResponseSerializer.defaultEmptyResponseCodes
@@ -28,7 +32,7 @@ public final class NetworkManager<EndpointItem: EndPoint> {
             completion(.failure(.networkError))
             return
         }
-        AF.request(
+        self.session.request(
             endpoint.url,
             method: endpoint.method,
             parameters: endpoint.parameters,
@@ -85,6 +89,7 @@ public final class NetworkManager<EndpointItem: EndPoint> {
             case .success(let data):
                 completion(.success(data))
             case .failure(let error):
+                print(error.localizedDescription)
                 if NSURLErrorTimedOut == (error as NSError).code {
                     completion(.failure(.timeout))
                 } else {

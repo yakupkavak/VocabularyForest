@@ -21,6 +21,7 @@ struct DailySpinUI: View {
     
     // MARK: - PROPERTIES
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @StateObject var controller: YKSpinController
     @Binding var isVisible: Bool
     @Binding var nextSpinTime: Date?
@@ -48,6 +49,7 @@ struct DailySpinUI: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
+        .trackScreen(.dailySpin)
     }
 }
 
@@ -59,6 +61,7 @@ private extension DailySpinUI {
         ZStack(alignment: .top) {
             Image("krem")
                 .resizable()
+                .a11yDecorative()
                 .frame(width: size.width * 0.96, height: size.height * DailySpinUI.backgroundHeight)
             
             VStack(spacing: 0) {
@@ -79,7 +82,7 @@ private extension DailySpinUI {
     
     var titleView: some View {
         Text("Daily Spin")
-            .font(.system(size: 22, weight: .heavy, design: .rounded))
+            .scaledFont(size: 22, weight: .heavy, design: .rounded)
             .foregroundStyle(.white.opacity(0.95))
             .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 3)
     }
@@ -89,10 +92,11 @@ private extension DailySpinUI {
             HStack {
                 Spacer()
                 Text("Play everyday and get additional bonuses")
-                    .font(.system(size: 20, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 20, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white.opacity(0.95))
                     .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 2)
+                    .frame(minWidth: 0, maxWidth: size.width * 0.75)
                 Spacer()
             }.offset(y: size.height * 0.01)
             
@@ -108,6 +112,7 @@ private extension DailySpinUI {
                     .shadow(color: .black.opacity(0.3), radius: 1)
             }
             .offset(x: -size.width * 0.13, y: size.height * 0.01)
+            .accessibilityLabel(String(localized: "a11y_close"))
         }
         .frame(width: size.width * 0.96)
     }
@@ -118,41 +123,48 @@ private extension DailySpinUI {
         return YKSpinWheel(
             controller: controller,
             center: {
-                Image("daliy_spin_center").resizable()
+                Image("daliy_spin_center").resizable().a11yDecorative()
             },
             wheelTopPointer: {
-                Image("çarkıfelek_ok").resizable().scaleEffect(y: -1)
+                Image("çarkıfelek_ok").resizable().scaleEffect(y: -1).a11yDecorative()
             }
         )
-        .ykPieceThinSliceAngleThreshold(60)
+        .ykPieceVerticalSpacing(4)
+        .ykPieceThinSliceAngleThreshold(40)
         .ykPointerHeight(radius * 0.2)
         .ykPointerWidth(radius * 0.2)
         .ykPointerOffset(-radius * 0.065)
         .frame(width: size.width * 0.68, height: size.height * 0.4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(localized: "a11y_spin_wheel"))
     }
     
     var actionSection: some View {
         Group {
             if let nextSpinTime {
                 Text("Wait until \n \(String(describing: nextSpinTime.toFriendlyRemaintime()))")
-                    .font(.system(size: 20, weight: .heavy, design: .rounded))
+                    .scaledFont(size: 20, weight: .heavy, design: .rounded)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.orange.opacity(0.95))
                     .shadow(color: .white.opacity(0.5), radius: 1, x: 0, y: 2)
             } else {
                 Button {
                     Task {
-                        if let rewardModel = await controller.startSpin(spinTime: 4, spinTurns: 5) {
+                        A11yAnnouncer.announce(String(localized: "a11y_spin_started"))
+                        // Long decorative spins frustrate VoiceOver and reduce-motion users
+                        let quickSpin = reduceMotion || A11yAnnouncer.isVoiceOverOn
+                        if let rewardModel = await controller.startSpin(spinTime: quickSpin ? 1 : 4, spinTurns: quickSpin ? 1 : 5) {
                             onRewardClaimed(rewardModel)
                         }
                     }
                 } label: {
                     Text("Start Spin")
-                        .font(.system(size: 28, weight: .heavy, design: .rounded))
+                        .scaledFont(size: 28, weight: .heavy, design: .rounded)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.title.opacity(0.95))
                         .shadow(color: .white.opacity(0.5), radius: 1, x: 0, y: 2)
                 }
+                .accessibilityHint(String(localized: "a11y_spin_hint"))
             }
         }
     }
@@ -161,28 +173,25 @@ private extension DailySpinUI {
 // MARK: - PREVIEW
 
 #Preview {
-    struct DailySpinPreviewWrapper: View {
-        @State private var isVisible = true
-        @State private var nextSpinTime: Date? = Date().addingTimeInterval(86400)
-        let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-        private let previewModels = RewardHelper.createDailySpinWheel(
-            from: RewardHelper.defaultDailySpinRewards()
-        ).0
-        
-        var body: some View {
-            DailySpinUI(
-                models: previewModels,
-                isVisible: $isVisible,
-                nextSpinTime: $nextSpinTime
-            ) { reward in
-                print("Kazanılan Ödül: \(reward)")
-            }
-            .onReceive(timer) { _ in
-                if let currentTime = nextSpinTime {
-                    nextSpinTime = currentTime.addingTimeInterval(-1)
-                }
+    DailySpinPreviewWrapper()
+}
+
+struct DailySpinPreviewWrapper: View {
+    @State private var models: [SpinModel] = [SpinModel(id: 1, image: Image(systemName: "heart"))]
+    @State private var isLoaded = true
+    
+    var body: some View {
+        Group {
+            if isLoaded {
+                DailySpinUI(
+                    models: models,
+                    isVisible: .constant(true),
+                    nextSpinTime: .constant(nil),
+                    onRewardClaimed: { _ in }
+                )
+            } else {
+                ProgressView("Çark Yükleniyor...")
             }
         }
     }
-    return DailySpinPreviewWrapper()
 }

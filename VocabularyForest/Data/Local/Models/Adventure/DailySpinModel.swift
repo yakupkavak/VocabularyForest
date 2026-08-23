@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct DailySpinModel: Encodable {
+struct DailySpinModel {
+    let id: Int
     let weight: Double
     let reward: LocalRewardModel
+    let textColorHex: String?
+    let backgroundHexes: [String]?
 }

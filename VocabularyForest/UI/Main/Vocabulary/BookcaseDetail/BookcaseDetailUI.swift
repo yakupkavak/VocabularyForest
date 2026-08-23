@@ -48,6 +48,7 @@ struct BookcaseDetailUI: View {
         .padding(.top, 8)
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: viewModel.createdAnyBook)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: viewModel.books.isEmpty)
+        .trackScreen(.bookcaseDetail)
         .navigationTitle(viewModel.bookcaseName)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -60,6 +61,7 @@ struct BookcaseDetailUI: View {
                         .frame(maxWidth: 32)
                         .foregroundStyle(.brown300)
                 }
+                .accessibilityLabel(String(localized: showMeaning ? "a11y_hide_meanings" : "a11y_show_meanings"))
             }
         }
         .frame(maxWidth: .greatestFiniteMagnitude)
@@ -93,6 +95,7 @@ private extension BookcaseDetailUI {
                 onClickBookcaseIcon()
             } label: {
                 Image("bookcase").resizable().scaledToFit().frame(maxWidth: 40)
+                    .accessibilityLabel(String(localized: "a11y_select_bookcase"))
             }
             CustomSearchBar(searchText: $viewModel.searchText, placeholder: String(localized: "Kelime ara"))
                 .focused($searchBarIsFocused)
@@ -170,6 +173,6 @@ private extension BookcaseDetailUI {
 
 #Preview {
     let mockCoreData = CoreDataManager.preview
-    let vm = BookcaseDetailViewModel(bookcaseName: "Japonca Kelimeler", learningLanguage: "ja", meaningLanguage: "tr", dataManager: mockCoreData)
+    let vm = BookcaseDetailViewModel(bookcaseName: "Japonca Kelimeler", learningLanguage: "ja", meaningLanguage: "tr", dataManager: mockCoreData, analyticsService: NoopAnalyticsService())
     NavigationStack { BookcaseDetailUI(viewModel: vm) }
 }

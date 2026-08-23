@@ -7,13 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6CB02FDBD93C00225FE5 /* YKSpinWheel */; };
+		371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 371C6F4D2FDD714A00225FE5 /* Alamofire */; };
 		37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 37267F0D2E927B8E0019D139 /* Kingfisher */; };
-		3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3732327E2F723975004F3DF9 /* YakoSwift */; };
+		372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 372851583008FEF500C0605F /* GoogleMobileAds */; };
 		373232812F7239AC004F3DF9 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373232802F7239AC004F3DF9 /* Domain */; };
+		373876C8300CCD2F009949B4 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 373876C7300CCD2F009949B4 /* CoreAPI */; };
+		373876CB300CCD44009949B4 /* DependencyContainer in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CA300CCD44009949B4 /* DependencyContainer */; };
+		373876CE300CCD59009949B4 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CD300CCD59009949B4 /* Domain */; };
+		373876D0300CCD59009949B4 /* DomainMocks in Frameworks */ = {isa = PBXBuildFile; productRef = 373876CF300CCD59009949B4 /* DomainMocks */; };
+		373876D3300CCD68009949B4 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 373876D2300CCD68009949B4 /* Router */; };
 		375FE1A92F7005F200765018 /* CoreAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1A82F7005F200765018 /* CoreAPI */; };
 		375FE1B82F704F7200765018 /* Router in Frameworks */ = {isa = PBXBuildFile; productRef = 375FE1B72F704F7200765018 /* Router */; };
+		376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 376DE2F62FCABB3E00305BAB /* ZIPFoundation */; };
 		377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B12F854D8E008A13CC /* FirebaseAnalytics */; };
-		377BE2B42F854D8E008A13CC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B32F854D8E008A13CC /* FirebaseAppCheck */; };
 		377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */; };
 		377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B72F854D8E008A13CC /* FirebaseAuth */; };
 		377BE2BA2F854D8E008A13CC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 377BE2B92F854D8E008A13CC /* FirebaseCore */; };
@@ -50,11 +57,9 @@
 
 /* Begin PBXFileReference section */
 		37267D202E90E9D90019D139 /* VocabularyForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VocabularyForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3739F3382F71C38C00D3013D /* YakoSwift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YakoSwift; sourceTree = "<group>"; };
 		375FE02D2F7005E700765018 /* CoreAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreAPI; sourceTree = "<group>"; };
 		375FE02E2F7005E700765018 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		375FE1AA2F70071100765018 /* Router */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Router; sourceTree = "<group>"; };
-		378816322F83AD6600C2BB52 /* YKSpinWheel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YKSpinWheel; sourceTree = "<group>"; };
 		3791D1A12F6EBC0A002D219E /* DependencyContainer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DependencyContainer; sourceTree = "<group>"; };
 		3791D1A22F6EBDE5002D219E /* VocabularyForest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = VocabularyForest.xctestplan; sourceTree = "<group>"; };
 		37B28C502F74FE75008A7591 /* VocabularyForestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VocabularyForestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,34 +67,36 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
+		3710E1BA2FF2A0180068731C /* Exceptions for "Data" folder in "VocabularyForest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				TestAssets.xcassets,
+			);
+			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
+		};
+		377C6AF4300CD310002E12A6 /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Data/Source/Info.plist,
-			);
-			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
-		};
-		37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				MockBookcasePacketsViewModel.swift,
-			);
-			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
-		};
-		37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				MockData.swift,
+				Data/Source/InfoPlist.xcstrings,
 			);
 			target = 37267D1F2E90E9D90019D139 /* VocabularyForest */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		3710E1B72FF29FFB0068731C /* Data */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3710E1BA2FF2A0180068731C /* Exceptions for "Data" folder in "VocabularyForest" target */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		37267D222E90E9D90019D139 /* VocabularyForest */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				37CB4FC92F0539D000447B4A /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */,
+				377C6AF4300CD310002E12A6 /* Exceptions for "VocabularyForest" folder in "VocabularyForest" target */,
 			);
 			path = VocabularyForest;
 			sourceTree = "<group>";
@@ -106,17 +113,11 @@
 		};
 		37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				37CCB35E2EF95B060046A777 /* Exceptions for "BookcasePackets" folder in "VocabularyForest" target */,
-			);
 			path = BookcasePackets;
 			sourceTree = "<group>";
 		};
 		37D8A8B12EF95A2600E59CA9 /* Models */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				37D8A8B22EF95A3500E59CA9 /* Exceptions for "Models" folder in "VocabularyForest" target */,
-			);
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -133,22 +134,28 @@
 				377BE2C02F854D8E008A13CC /* FirebaseFunctions in Frameworks */,
 				37267F0E2E927B8E0019D139 /* Kingfisher in Frameworks */,
 				377BE2BE2F854D8E008A13CC /* FirebaseFirestore in Frameworks */,
+				371C6CB12FDBD93C00225FE5 /* YKSpinWheel in Frameworks */,
 				377BE2B62F854D8E008A13CC /* FirebaseAppDistribution-Beta in Frameworks */,
 				3791D1A52F6EE10F002D219E /* DependencyContainer in Frameworks */,
 				377BE2B82F854D8E008A13CC /* FirebaseAuth in Frameworks */,
-				377BE2B42F854D8E008A13CC /* FirebaseAppCheck in Frameworks */,
+				373876C8300CCD2F009949B4 /* CoreAPI in Frameworks */,
 				3788162A2F82754600C2BB52 /* YKSpinWheel in Frameworks */,
 				37D8A7992EF928A700E59CA9 /* Alamofire in Frameworks */,
 				377BE2B22F854D8E008A13CC /* FirebaseAnalytics in Frameworks */,
 				37E8617C2F72C94300DD54C6 /* DomainMocks in Frameworks */,
 				377BE2C22F854D8E008A13CC /* FirebasePerformance in Frameworks */,
+				373876D0300CCD59009949B4 /* DomainMocks in Frameworks */,
 				37D84B602EA8C43A0063F4D8 /* Lottie in Frameworks */,
+				373876CB300CCD44009949B4 /* DependencyContainer in Frameworks */,
+				372851593008FEF500C0605F /* GoogleMobileAds in Frameworks */,
 				377BE2BC2F854D8E008A13CC /* FirebaseCrashlytics in Frameworks */,
 				373232812F7239AC004F3DF9 /* Domain in Frameworks */,
-				3732327F2F723975004F3DF9 /* YakoSwift in Frameworks */,
 				377BE2C42F854D8E008A13CC /* FirebaseRemoteConfig in Frameworks */,
+				373876D3300CCD68009949B4 /* Router in Frameworks */,
 				377BE2CC2F868777008A13CC /* GoogleSignIn in Frameworks */,
+				373876CE300CCD59009949B4 /* Domain in Frameworks */,
 				377BE2CE2F868777008A13CC /* GoogleSignInSwift in Frameworks */,
+				376DE2F72FCABB3E00305BAB /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +170,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				371C6F4E2FDD714A00225FE5 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,12 +211,10 @@
 		37BFA0632F6E6778007C20E7 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				3739F3382F71C38C00D3013D /* YakoSwift */,
 				375FE1AA2F70071100765018 /* Router */,
 				3791D1A12F6EBC0A002D219E /* DependencyContainer */,
 				375FE02D2F7005E700765018 /* CoreAPI */,
 				375FE02E2F7005E700765018 /* Domain */,
-				378816322F83AD6600C2BB52 /* YKSpinWheel */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
@@ -216,6 +222,7 @@
 		37D8A8AF2EF959E500E59CA9 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				3710E1B72FF29FFB0068731C /* Data */,
 				37D8A8B12EF95A2600E59CA9 /* Models */,
 				37D8A8B02EF95A1A00E59CA9 /* BookcasePackets */,
 			);
@@ -232,6 +239,7 @@
 				37267D1C2E90E9D90019D139 /* Sources */,
 				37267D1D2E90E9D90019D139 /* Frameworks */,
 				37267D1E2E90E9D90019D139 /* Resources */,
+				377BE2C62F854D8E008A13CC /* Upload Crashlytics dSYMs */,
 			);
 			buildRules = (
 			);
@@ -239,6 +247,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				37267D222E90E9D90019D139 /* VocabularyForest */,
+				37D8A8B12EF95A2600E59CA9 /* Models */,
 			);
 			name = VocabularyForest;
 			packageProductDependencies = (
@@ -248,12 +257,10 @@
 				3791D1A42F6EE10F002D219E /* DependencyContainer */,
 				375FE1A82F7005F200765018 /* CoreAPI */,
 				375FE1B72F704F7200765018 /* Router */,
-				3732327E2F723975004F3DF9 /* YakoSwift */,
 				373232802F7239AC004F3DF9 /* Domain */,
 				37E8617B2F72C94300DD54C6 /* DomainMocks */,
 				378816292F82754600C2BB52 /* YKSpinWheel */,
 				377BE2B12F854D8E008A13CC /* FirebaseAnalytics */,
-				377BE2B32F854D8E008A13CC /* FirebaseAppCheck */,
 				377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */,
 				377BE2B72F854D8E008A13CC /* FirebaseAuth */,
 				377BE2B92F854D8E008A13CC /* FirebaseCore */,
@@ -264,6 +271,14 @@
 				377BE2C32F854D8E008A13CC /* FirebaseRemoteConfig */,
 				377BE2CB2F868777008A13CC /* GoogleSignIn */,
 				377BE2CD2F868777008A13CC /* GoogleSignInSwift */,
+				376DE2F62FCABB3E00305BAB /* ZIPFoundation */,
+				371C6CB02FDBD93C00225FE5 /* YKSpinWheel */,
+				372851583008FEF500C0605F /* GoogleMobileAds */,
+				373876C7300CCD2F009949B4 /* CoreAPI */,
+				373876CA300CCD44009949B4 /* DependencyContainer */,
+				373876CD300CCD59009949B4 /* Domain */,
+				373876CF300CCD59009949B4 /* DomainMocks */,
+				373876D2300CCD68009949B4 /* Router */,
 			);
 			productName = VocabularyForest;
 			productReference = 37267D202E90E9D90019D139 /* VocabularyForest.app */;
@@ -310,6 +325,7 @@
 			);
 			name = VocabularyForestTests;
 			packageProductDependencies = (
+				371C6F4D2FDD714A00225FE5 /* Alamofire */,
 			);
 			productName = VocabularyForestTests;
 			productReference = 37BFA0572F6D24C0007C20E7 /* VocabularyForestTests.xctest */;
@@ -349,6 +365,14 @@
 				ru,
 				"es-419",
 				"pt-BR",
+				ar,
+				de,
+				fr,
+				it,
+				"zh-CN",
+				ja,
+				ko,
+				hi,
 			);
 			mainGroup = 37267D172E90E9D90019D139;
 			minimizedProjectReferenceProxies = 1;
@@ -358,6 +382,13 @@
 				37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				377BE2CA2F868777008A13CC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */,
+				372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				373876C6300CCD2F009949B4 /* XCLocalSwiftPackageReference "Packages/CoreAPI" */,
+				373876C9300CCD44009949B4 /* XCLocalSwiftPackageReference "Packages/DependencyContainer" */,
+				373876CC300CCD59009949B4 /* XCLocalSwiftPackageReference "Packages/Domain" */,
+				373876D1300CCD68009949B4 /* XCLocalSwiftPackageReference "Packages/Router" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 37267D212E90E9D90019D139 /* Products */;
@@ -394,6 +425,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		377BE2C62F854D8E008A13CC /* Upload Crashlytics dSYMs */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Upload Crashlytics dSYMs";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		37267D1C2E90E9D90019D139 /* Sources */ = {
@@ -469,11 +526,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -540,7 +597,7 @@
 				DEVELOPMENT_TEAM = 4QK62PW2A7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -579,18 +636,19 @@
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Lets us show ads that match your interests. If you decline, you'll still see ads, just not personalized ones.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bootcamp.vocabulary-forest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -623,18 +681,19 @@
 				INFOPLIST_KEY_CFBundleDisplayName = VocabForest;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Lets us show ads that match your interests. If you decline, you'll still see ads, just not personalized ones.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bootcamp.vocabulary-forest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -655,7 +714,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -676,7 +735,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FNF48X95J5;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.yakupkavak.VocabularyForestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -778,13 +837,56 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		373876C6300CCD2F009949B4 /* XCLocalSwiftPackageReference "Packages/CoreAPI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CoreAPI;
+		};
+		373876C9300CCD44009949B4 /* XCLocalSwiftPackageReference "Packages/DependencyContainer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/DependencyContainer;
+		};
+		373876CC300CCD59009949B4 /* XCLocalSwiftPackageReference "Packages/Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Domain;
+		};
+		373876D1300CCD68009949B4 /* XCLocalSwiftPackageReference "Packages/Router" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Router;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
+		371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yakupkavak/YKSpinWheel";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 8.5.0;
+			};
+		};
+		372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.6.0;
+			};
+		};
+		376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.20;
 			};
 		};
 		377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -822,18 +924,49 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		371C6CB02FDBD93C00225FE5 /* YKSpinWheel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 371C6CAF2FDBD93C00225FE5 /* XCRemoteSwiftPackageReference "YKSpinWheel" */;
+			productName = YKSpinWheel;
+		};
+		371C6F4D2FDD714A00225FE5 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 37D8A7972EF928A700E59CA9 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		37267F0D2E927B8E0019D139 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 37267F0C2E927B8E0019D139 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		3732327E2F723975004F3DF9 /* YakoSwift */ = {
+		372851583008FEF500C0605F /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = YakoSwift;
+			package = 372851573008FEF500C0605F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 		373232802F7239AC004F3DF9 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		373876C7300CCD2F009949B4 /* CoreAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreAPI;
+		};
+		373876CA300CCD44009949B4 /* DependencyContainer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DependencyContainer;
+		};
+		373876CD300CCD59009949B4 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		373876CF300CCD59009949B4 /* DomainMocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DomainMocks;
+		};
+		373876D2300CCD68009949B4 /* Router */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Router;
 		};
 		375FE1A82F7005F200765018 /* CoreAPI */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -843,15 +976,15 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Router;
 		};
+		376DE2F62FCABB3E00305BAB /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 376DE2F52FCABB3E00305BAB /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
 		377BE2B12F854D8E008A13CC /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalytics;
-		};
-		377BE2B32F854D8E008A13CC /* FirebaseAppCheck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 377BE2B02F854D8E008A13CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAppCheck;
 		};
 		377BE2B52F854D8E008A13CC /* FirebaseAppDistribution-Beta */ = {
 			isa = XCSwiftPackageProductDependency;

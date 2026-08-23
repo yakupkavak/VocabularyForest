@@ -8,6 +8,7 @@
 //
 
 import SpriteKit
+import DTO
 
 // MARK: - ANIMAL MANAGER PROTOCOL
 
@@ -67,6 +68,7 @@ class AnimalManager {
     // MARK: - PROPERTIES
     
     private weak var scene: SKScene?
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var idleTextures: [SKTexture] = []
     private var walkingTextures: [SKTexture] = []
     private var jumpTextures: [SKTexture] = []
@@ -94,6 +96,30 @@ private extension AnimalManager {
         idleTextures = loadAtlas(named: "\(type)Idle", prefix: "\(type.lowercased())_idle_")
         jumpTextures = loadAtlas(named: "\(type)Jump", prefix: "\(type.lowercased())_jump_")
         walkingTextures = loadAtlas(named: "\(type)Walk", prefix: "\(type.lowercased())_walk_")
+    }
+    
+    func loadOfflineTextures(for assetName: String) {
+        guard let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return }
+        let bundleURL = appSupport.appendingPathComponent("OfflineGameAssets").appendingPathComponent(assetName)
+        let manifestURL = bundleURL.appendingPathComponent("manifest.json")
+        
+        guard let manifestData = try? Data(contentsOf: manifestURL),
+              let manifest = try? JSONDecoder().decode(ManifestModel.self, from: manifestData) else { return }
+        
+        idleTextures = loadFrames(names: manifest.animations?.idle, in: bundleURL)
+        walkingTextures = loadFrames(names: manifest.animations?.walk, in: bundleURL)
+        jumpTextures = loadFrames(names: manifest.animations?.jump, in: bundleURL)
+        
+        if walkingTextures.isEmpty { walkingTextures = idleTextures }
+        if jumpTextures.isEmpty { jumpTextures = idleTextures }
+    }
+    
+    func loadFrames(names: [String]?, in bundleURL: URL) -> [SKTexture] {
+        (names ?? []).compactMap { name in
+            let fileName = name.hasSuffix(".png") ? name : "\(name).png"
+            guard let image = UIImage(contentsOfFile: bundleURL.appendingPathComponent(fileName).path) else { return nil }
+            return SKTexture(image: image)
+        }
     }
 
     func loadCircleAtlas(named atlasName: String, prefix: String) -> [SKTexture] {
@@ -159,7 +185,16 @@ private extension AnimalManager {
     }
 
     func setupAnimal(animal: AnimalModel) {
-        loadTextures(for: animal.assetName)
+        switch animal.assetSource {
+        case .appAssets:
+            loadTextures(for: animal.assetName)
+        case .offlineStorage:
+            loadOfflineTextures(for: animal.assetName)
+        }
+        guard !idleTextures.isEmpty else {
+            logger.debug("AnimalManager skipped setup, empty idle textures for asset \(animal.assetName) (source: \(animal.assetSource))", category: .asset)
+            return
+        }
         setupAnimalFrames(model: animal)
         idleAnimation()
         randomActions()
@@ -177,18 +212,19 @@ private extension AnimalManager {
             y: GameConstant.floorHeightSize * Constants.floorHeightMultiplier + model.yPosition)
         currentAnimalNode.xScale = Constants.scaleLeft
         currentAnimalNode.zPosition = Constants.baseZPosition - (model.yPosition / Constants.zPositionDivider)
-        let originalSize = firstFrame.size()
-        if originalSize.height > Constants.zero {
-            let aspectRatio = originalSize.width / originalSize.height
-            let targetWidth = ComponentSizeConstant.animalHeight * aspectRatio
-            currentAnimalNode.size = CGSize(width: targetWidth, height: ComponentSizeConstant.animalHeight)
-        }
+        currentAnimalNode.size = ComponentSizeConstant.nodeSize(
+            textureSize: firstFrame.size(),
+            widthRatio: model.widthRatio,
+            heightRatio: model.heightRatio,
+            defaultHeight: ComponentSizeConstant.animalHeight
+        )
         scene.addChild(currentAnimalNode)
     }
     
     // MARK: - ANIMATIONS
     
     func idleAnimation() {
+        guard !idleTextures.isEmpty else { return }
         let animate = SKAction.animate(with: idleTextures, timePerFrame: GameConstant.waitingTimePerFrame * Constants.idleTimeMultiplier)
         currentAnimalNode.run(SKAction.repeatForever(animate), withKey: GameConstant.waitingCharacterAnimation )
     }
@@ -204,6 +240,7 @@ private extension AnimalManager {
     }
     
     func walkAnimation() {
+        guard !walkingTextures.isEmpty else { return }
         let animate = SKAction.animate(with: walkingTextures, timePerFrame: GameConstant.waitingTimePerFrame)
         let animateAction = SKAction.repeatForever(animate)
         currentAnimalNode.run(
@@ -213,6 +250,10 @@ private extension AnimalManager {
     }
     
     func jumpAnimation(completion: @escaping () -> Void) {
+        guard !jumpTextures.isEmpty else {
+            completion()
+            return
+        }
         currentAnimalNode.removeAction(forKey: GameConstant.movingCharacterAnimation)
         let animate = SKAction.animate(with: jumpTextures, timePerFrame: GameConstant.jumpTimePerFrame)
         let jumpFinish = SKAction.run {
@@ -236,7 +277,7 @@ private extension AnimalManager {
         }
         
         isMenuOpen = true
-        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.characterName : animalModel?.assetName
+        let displayName = animalModel?.characterName.isEmpty == false ? animalModel?.localizedCharacterName : animalModel?.assetName
         
         let bubble = ComponentBubble.createAnimalMenuBubble(parentSize: currentAnimalNode.size, displayName: displayName)
         

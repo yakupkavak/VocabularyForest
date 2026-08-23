@@ -21,7 +21,9 @@ extension DailyActivities {
     @NSManaged public var adventureSeasonID: String?
     @NSManaged public var claimedLongTiers: String?
     @NSManaged public var claimedShortTiers: String?
+    @NSManaged public var dailyKillGoldCount: Int16
     @NSManaged public var dailySpinLastUsedDate: Date?
+    @NSManaged public var killGoldLastResetDate: Date?
     @NSManaged public var fixedTimeZone: String?
     @NSManaged public var lastFetchDate: Date?
     @NSManaged public var lastUpdatedDate: Date?
@@ -49,7 +51,9 @@ extension DailyActivities: ConvertSafeModel {
                     lastFetchDate: lastFetchDate,
                     fixedTimeZone: fixedTimeZone,
                     dailySpinLastUsedDate: dailySpinLastUsedDate,
-                    lastUpdatedDate: lastUpdatedDate
+                    lastUpdatedDate: lastUpdatedDate,
+                    dailyKillGoldCount: Int(dailyKillGoldCount),
+                    killGoldLastResetDate: killGoldLastResetDate
                 )
             }
             throw SafeModelError.emptyValue

@@ -20,6 +20,7 @@ protocol ForestViewModelOutputProcotol: AnyObject {
     func setupSculpture(sculpture: SculptureModel)
     func setupPlant(plant: TreeModel)
     func talkComponent(type model: ComponentType, id: UUID, message: String)
+    func updateAnnouncementClaimable(_ isClaimable: Bool)
 }
 
 protocol ForestViewModelProtocol: AnyObject {
@@ -30,7 +31,8 @@ protocol ForestViewModelProtocol: AnyObject {
     func didTapTree(id: UUID)
     func didCollectWater(amount: Int)
     func fetchForest()
-    func claimReward(quest: QuestModel)
+    func refreshForestStatus()
+    func claimQuestReward(quest: QuestModel)
     func startRain()
     func checkBookCount(type: BattleQuestionType,
                         battleMode: BattleEnemyModel,
@@ -46,11 +48,6 @@ protocol ForestViewModelProtocol: AnyObject {
 // MARK: - VIEW MODEL
 
 class ForestViewModel: BaseViewModel {
-    private static let defaultDailySpinWheel = RewardHelper.createDailySpinWheel(
-        from: RewardHelper.defaultDailySpinRewards()
-    )
-    
-    // MARK: - DEPENDENCIES
     
     private let coreDataManager: CoreDataManagerProtocol
     private let audioService: AudioServiceProtocol
@@ -59,7 +56,13 @@ class ForestViewModel: BaseViewModel {
     private let adventureService: ForestAdventureServiceProtocol
     private let remoteConfigRepository: RemoteConfigRepositoryProtocol
     private let playerDataManager: PlayerDataManagerProtocol
-    
+    private let questService: QuestServiceProtocol
+    private let dailySpinService: DailySpinServiceProtocol
+    private let weeklyRewardService: WeeklyRewardServiceProtocol
+    private let adventureRoadService: AdventureRoadServiceProtocol
+    private let marketService: MarketServiceProtocol
+    private let assetHydrationService: RewardAssetHydrationServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var dailyQuestList: [QuestModel] = []
@@ -72,10 +75,12 @@ class ForestViewModel: BaseViewModel {
     @Published var showBookThreshold = false
     @Published var weeklyDailyCards: [WeeklyDailyCardModel] = []
     @Published var dailySpinTime: Date? = nil
-    @Published var dailySpinModels: [SpinModel] = ForestViewModel.defaultDailySpinWheel.0
+    @Published var dailySpinModels: [SpinModel] = []
     @Published var dailySpinModelVersion = UUID()
-    @Published var adventureRoadScreenModel: AdventureRoadScreenModel = AdventureRoadMockData.screenModel()
-    @Published var adventureRoadSeasonLeftTime: Date = Calendar.current.date(byAdding: .day, value: 30, to: Date()) ?? Date()
+    @Published var adventureRoadScreenModel: AdventureRoadScreenModel? = nil
+    @Published var marketScreenModel: MarketScreenModel? = nil
+    @Published var marketErrorMessage: String? = nil
+    @Published private(set) var isDailySpinClaimable = false
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
     private var sculptureList: [SculptureModel] = []
@@ -83,12 +88,19 @@ class ForestViewModel: BaseViewModel {
     private var componentUUID: UUID? = nil
     private var selectedModel: ComponentType? = nil
     private var directionList: [DirectionWithCount] = []
-    private var dailySpinRewardMap: [Int: LocalRewardModel] = ForestViewModel.defaultDailySpinWheel.1
+    private var dailySpinRewardMap: [Int: LocalRewardType] = [:]
+    private var fetchForestTask: Task<Void, Error>? = nil
+    /// Latest rewards catalog, kept for resolving entity render sizes (rewards_config ratios).
+    private var rewardCatalogResolver = RewardCatalogResolver(items: [])
     weak var output: ForestViewModelOutputProcotol?
     
+    private let logger: AppLoggerProtocol
     private var talkCancellable: AnyCancellable?
     private var dailyTimeCancellable: AnyCancellable?
     private var rainTimeCancellable: AnyCancellable?
+    private var questCancellable = Set<AnyCancellable>()
+    private var adventureCancellable = Set<AnyCancellable>()
+    private var hydrationCancellable = Set<AnyCancellable>()
 
     // MARK: - INIT
     
@@ -99,7 +111,14 @@ class ForestViewModel: BaseViewModel {
         forestEntityService: ForestEntityServiceProtocol,
         forestAdventureService: ForestAdventureServiceProtocol,
         remoteConfigRepository: RemoteConfigRepositoryProtocol,
-        playerDataManager: PlayerDataManagerProtocol
+        playerDataManager: PlayerDataManagerProtocol,
+        questService: QuestServiceProtocol,
+        dailySpinService: DailySpinServiceProtocol,
+        weeklyRewardService: WeeklyRewardServiceProtocol,
+        adventureRoadService: AdventureRoadServiceProtocol,
+        marketService: MarketServiceProtocol,
+        assetHydrationService: RewardAssetHydrationServiceProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared
     ) {
         self.audioService = audioService
         self.coreDataManager = coreDataManager
@@ -108,8 +127,21 @@ class ForestViewModel: BaseViewModel {
         self.adventureService = forestAdventureService
         self.remoteConfigRepository = remoteConfigRepository
         self.playerDataManager = playerDataManager
+        self.questService = questService
+        self.dailySpinService = dailySpinService
+        self.weeklyRewardService = weeklyRewardService
+        self.adventureRoadService = adventureRoadService
+        self.marketService = marketService
+        self.assetHydrationService = assetHydrationService
+        self.logger = logger
         super.init()
-        
+        bindQuests()
+        bindDailySpin()
+        bindWeeklyRewards()
+        bindAdventureRoad()
+        bindMarket()
+        bindAssetHydration()
+        fetchForest()
     }
 }
 
@@ -132,7 +164,7 @@ extension ForestViewModel {
             switch bookcaseSelection {
             case .allBookcases:
                 guard let books = coreDataManager.fetchAllBooksWithExampleDescription(
-                    sortDescriptors: nil,
+                    bookLimit: minBook, sortDescriptors: nil,
                     contextType: .background
                 ) else {
                     showBookThreshold = true
@@ -158,16 +190,21 @@ extension ForestViewModel {
         else {
             switch bookcaseSelection {
             case .allBookcases:
-                guard let books = coreDataManager.fetchAllSafeBooks(contextType: .background) else {
-                    showBookThreshold = true
-                    return false }
                 if type == .competitive {
-                    if books.filter({ $0.shortMemory == true }).count < minBook {
+                    guard let isEnoughBook = coreDataManager.askIsEnoughtLimitedSafeBooks(bookCount: minBook, memoryType: .short, contextType: .background) else {
+                        showBookThreshold = true
+                        return false
+                    }
+                    if !isEnoughBook {
                         showBookThreshold = true
                         return false
                     }
                 }else { // remainder
-                    if books.filter({ $0.longMemory == true }).count < minBook {
+                    guard let isEnoughBook = coreDataManager.askIsEnoughtLimitedSafeBooks(bookCount: minBook, memoryType: .long, contextType: .background) else {
+                        showBookThreshold = true
+                        return false
+                    }
+                    if !isEnoughBook {
                         showBookThreshold = true
                         return false
                     }
@@ -201,14 +238,31 @@ extension ForestViewModel {
 
 extension ForestViewModel {
     
+    var claimableAnnouncementTypes: Set<AnnouncementTypeModel> {
+        var types: Set<AnnouncementTypeModel> = []
+        let allQuests = dailyQuestList + weeklyQuestList + monthlyQuestList + specialQuestList
+        if allQuests.contains(where: { $0.status == .completed }) {
+            types.insert(.tasks)
+        }
+        if weeklyDailyCards.contains(where: { $0.status == .ready }) {
+            types.insert(.dailyReward)
+        }
+        if isDailySpinClaimable {
+            types.insert(.dailySpin)
+        }
+        let hasAdventureReward = adventureRoadScreenModel?.rows.contains {
+            $0.leftMilestone.status == .ready || $0.rightMilestone.status == .ready
+        } ?? false
+        if hasAdventureReward {
+            types.insert(.adventureRoad)
+        }
+        return types
+    }
+    
     func fetchWeeklyDailyCards() {
-        Task { @MainActor in
-            let result = await adventureService.fetchWeeklyDailyRewards()
-            if result.status == .success, let cards = result.data {
-                self.weeklyDailyCards = cards
-            } else {
-                print("Hata: Haftalık kartlar çekilemedi -> \(result.error?.localizedDescription ?? "")")
-            }
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await weeklyRewardService.checkAndUpdateWeeklyState()
         }
     }
     
@@ -219,6 +273,7 @@ extension ForestViewModel {
             sculptureList.removeAll()
             treeList.removeAll()
             fetchForest()
+            hydratePendingAssets()
             checkDailySpinStatus()
             refreshDailySpinRewards()
             fetchWeeklyDailyCards()
@@ -226,144 +281,169 @@ extension ForestViewModel {
         }
     }
     
+    func hydratePendingAssets() {
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            // Try to download the queued entities (assetReady == false): this is where the user is
+            // most likely to notice something missing. Idempotent, ready assets skip the network.
+            await assetHydrationService.hydratePendingAssets()
+        }
+    }
+
+    func checkDailySpinStatus() {
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await dailySpinService.checkAndUpdateSpinState()
+        }
+    }
+    
     func refreshDailySpinRewards() {
         Task(priority: .background) { [weak self] in
             guard let self else { return }
-            let result = await remoteConfigRepository.fetchDailySpinRewards()
-            guard result.status == .success, let rewards = result.data else { return }
-            let (models, rewardMap) = RewardHelper.createDailySpinWheel(from: rewards)
-            
+            /*
             await MainActor.run { [weak self] in
                 guard let self else { return }
                 self.dailySpinModels = models
                 self.dailySpinRewardMap = rewardMap
                 self.dailySpinModelVersion = UUID()
             }
+             */
         }
     }
     
-    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel {
-        dailySpinRewardMap[spinModel.id] ?? RewardHelper.convertDailyRewardModel(from: spinModel)
+    func resolveDailySpinReward(from spinModel: SpinModel) -> LocalRewardModel? {
+        do {
+            return try dailySpinService.convertLocalReward(model: spinModel)
+        }catch {
+            logger.error("Daily spin reward could not be resolved: \(error.localizedDescription)", category: .reward)
+        }
+        return nil
     }
     
     func fetchAdventureRoadData() {
-        Task { @MainActor in
-            let trueNow = (try? await NetworkTimeHelper.getTrueTime()) ?? Date()
-            var configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
-            
-            if let config = configResult.data, trueNow >= config.seasonEndDate {
-                configResult = await remoteConfigRepository.fetchAdventureRoadConfig()
-            }
-            
-            let progress = playerDataManager.fetchAdventureRoadProgress(contextType: .main) ?? AdventureRoadProgressModel(
-                seasonID: nil,
-                monthlyShortLearnedCount: 0,
-                monthlyLongLearnedCount: 0
-            )
-            
-            guard configResult.status == .success, let config = configResult.data else {
-                adventureRoadScreenModel = AdventureRoadMockData.screenModel()
-                adventureRoadSeasonLeftTime = adventureRoadScreenModel.eventEndDate
-                return
-            }
-            
-            adventureRoadScreenModel = AdventureRoadBuilder.screenModel(
-                rewards: config.rewards,
-                progress: progress,
-                eventEndDate: config.seasonEndDate,
-                referenceDate: trueNow
-            )
-            adventureRoadSeasonLeftTime = config.seasonEndDate
+        Task(priority: .background) { [weak self] in
+            guard let self else { return }
+            await adventureRoadService.checkAndUpdateAdventureState()
         }
     }
     
     func fetchForest() {
         let forestInitalized = UserDefaults.standard.bool(forKey: "forestInitalized")
 
-        Task(priority: .background) { [weak self] in
+        let previousTask = fetchForestTask
+        fetchForestTask = Task(priority: .background) { [weak self] in
+            // Ayni anda birden fazla fetch calisip eski verinin yeniyi ezmesini engelle
+            if let previousTask { _ = try? await previousTask.value }
             guard let self else { return }
             
             if !forestInitalized {
                 // TODO: - CREATE FOREST IF NOT CREATED
             }
             
-            let fetchedAnimals = forestEntityService.fetchAnimals(contextType: .background).data ?? []
-            let fetchedSculptures = forestEntityService.fetchSculptures(contextType: .background).data ?? []
-            let fetchedTrees = forestEntityService.fetchTrees(contextType: .background).data ?? []
+            // Status is fetched first so an entity fetch failure below can never leave
+            // forestStatus nil (the info popup shows an error state when it is).
+            let forestData: ForestStatusModel
+            do {
+                forestData = try forestDataManager.fetchForestStatus(contextType: .background)
+            } catch {
+                logger.error("Forest status could not be fetched: \(error.localizedDescription)", category: .forest)
+                return
+            }
+
+            // Entities with assetReady == false never enter the scene; once hydration finishes,
+            // fetchForest is triggered again and the missing ones appear on their own.
+            var fetchedAnimals: [AnimalModel] = []
+            var fetchedSculptures: [SculptureModel] = []
+            do {
+                fetchedAnimals = try forestEntityService.fetchAnimals(contextType: .background).filter { $0.assetReady }
+                fetchedSculptures = try forestEntityService.fetchSculptures(contextType: .background).filter { $0.assetReady }
+            } catch {
+                logger.error("Forest entities could not be fetched: \(error.localizedDescription)", category: .forest)
+            }
+            let fetchedTrees = (forestEntityService.fetchTrees(contextType: .background).data ?? []).filter { $0.assetReady }
             let fetchedBookcases = coreDataManager.fetchSafeBookcases(
                 sortDescriptors: nil,
                 contextType: .background
             )
-            let statusResult = forestDataManager.fetchForestStatus(contextType: .background)
-            let questResult = forestDataManager.fetchQuests(contextType: .background)
-            
+            let catalogResolver = await fetchRewardCatalogResolver()
+
             await MainActor.run { [weak self] in
                 guard let self = self else { return }
-                
+                self.rewardCatalogResolver = catalogResolver
+
                 let newAnimals = fetchedAnimals.filter { newItem in
-                    !self.animalList.contains(where: { $0 == newItem })
+                    !animalList.contains(where: { $0 == newItem })
                 }
                 
                 let newSculptures = fetchedSculptures.filter { newItem in
-                    !self.sculptureList.contains(where: { $0 == newItem })
+                    !sculptureList.contains(where: { $0 == newItem })
                 }
                 
                 let newTrees = fetchedTrees.filter { newItem in
-                    !self.treeList.contains(where: { $0 == newItem })
+                    !treeList.contains(where: { $0 == newItem })
                 }
                 
                 if let cases = fetchedBookcases {
-                    self.bookcaseList = cases
+                    bookcaseList = cases
                 }
 
-                if !newAnimals.isEmpty { self.animalList.append(contentsOf: newAnimals) }
-                if !newSculptures.isEmpty { self.sculptureList.append(contentsOf: newSculptures) }
-                if !newTrees.isEmpty { self.treeList.append(contentsOf: newTrees) }
+                if !newAnimals.isEmpty { animalList.append(contentsOf: newAnimals) }
+                if !newSculptures.isEmpty { sculptureList.append(contentsOf: newSculptures) }
+                if !newTrees.isEmpty { treeList.append(contentsOf: newTrees) }
 
                 for animal in newAnimals {
-                    self.output?.setupAnimal(animal: animal)
+                    output?.setupAnimal(animal: applyingRewardSizes(animal))
                 }
-                
+
                 for sculpture in newSculptures {
-                    self.output?.setupSculpture(sculpture: sculpture)
+                    output?.setupSculpture(sculpture: applyingRewardSizes(sculpture))
                 }
-                
+
                 for tree in newTrees {
-                    self.output?.setupPlant(plant: tree)
+                    output?.setupPlant(plant: applyingRewardSizes(tree))
                 }
+
+                forestStatus = ForestStatusModel(
+                    rainValue: forestData.rainValue,
+                    landHealthPercentage: forestData.landHealthPercentage,
+                    landStatus: forestData.landStatus,
+                    gold: forestData.gold,
+                    diamond: forestData.diamond
+                )
                 
-                if let quests = questResult.data {
-                    self.processQuests(quests: quests)
-                }
+                if forestData.rainValue >= ForestConstant.rainCostValue { self.showRainButton = true }
                 
-                if let forestData = statusResult.data {
-                    self.forestStatus = ForestStatusModel(
-                        rainValue: forestData.rainValue,
-                        landHealthPercentage: forestData.landHealthPercentage,
-                        landStatus: forestData.landStatus,
-                        gold: forestData.gold
-                    )
-                    
-                    if forestData.rainValue >= 50 { self.showRainButton = true }
-                    
-                    if let landHealthPercentage = self.forestStatus?.landHealthPercentage {
-                        if landHealthPercentage == 0 {
-                            self.output?.startDrought()
-                        } else if landHealthPercentage <= 50 {
-                            self.output?.startFade()
-                        }
+                if let landHealthPercentage = forestStatus?.landHealthPercentage {
+                    if landHealthPercentage == 0 {
+                        output?.startDrought()
+                    } else if landHealthPercentage <= 50 {
+                        output?.startFade()
                     }
                 }
                 
-                self.startRandomTalking()
+                startRandomTalking()
             }
         }
     }
     
+    /// Lightweight refresh used by the info popup; fetchForest may still be in flight
+    /// (or may have failed) when the popup opens, so the status is re-read on demand.
+    func refreshForestStatus() {
+        Task(priority: .userInitiated) { [weak self] in
+            guard let self else { return }
+            do {
+                let status = try forestDataManager.fetchForestStatus(contextType: .background)
+                await MainActor.run { self.forestStatus = status }
+            } catch {
+                logger.error("Forest status refresh failed: \(error.localizedDescription)", category: .forest)
+            }
+        }
+    }
+
     func startRain() {
         showRainButton = false
         output?.startRain()
-        forestDataManager.startRain(contextType: .background)
+        try? forestDataManager.startRain(contextType: .background)
         var time = 0
         
         rainTimeCancellable?.cancel()
@@ -373,8 +453,8 @@ extension ForestViewModel {
                 guard let self = self else { return }
                 time += 1
                 if time == 40 {
-                    self.output?.stopRain()
-                    self.rainTimeCancellable?.cancel()
+                    output?.stopRain()
+                    rainTimeCancellable?.cancel()
                 }
             }
     }
@@ -430,15 +510,24 @@ extension ForestViewModel: ForestViewModelProtocol {
             switch selectedModel {
             case .animal:
                 if let model = forestEntityService.fetchAnimal(id: componentUUID, contextType: .background) {
-                    self.output?.setupAnimal(animal: model)
+                    self.output?.setupAnimal(animal: applyingRewardSizes(model))
+                }
+                if let index = animalList.firstIndex(where: { $0.id == componentUUID }) {
+                    animalList[index].characterName = name
                 }
             case .plant:
                 if let model = forestEntityService.fetchPlant(id: componentUUID, contextType: .background) {
-                    self.output?.setupPlant(plant: model)
+                    self.output?.setupPlant(plant: applyingRewardSizes(model))
+                }
+                if let index = treeList.firstIndex(where: { $0.id == componentUUID }) {
+                    treeList[index].characterName = name
                 }
             case .sculpture:
                 if let model = forestEntityService.fetchSculpture(id: componentUUID, contextType: .background) {
-                    self.output?.setupSculpture(sculpture: model)
+                    self.output?.setupSculpture(sculpture: applyingRewardSizes(model))
+                }
+                if let index = sculptureList.firstIndex(where: { $0.id == componentUUID }) {
+                    sculptureList[index].characterName = name
                 }
             }
         }
@@ -446,33 +535,101 @@ extension ForestViewModel: ForestViewModelProtocol {
         self.componentUUID = nil
     }
     
-    func claimReward(quest: QuestModel) {
-        let result = forestDataManager.claimQuestReward(quest: quest, contextType: .background)
-        if result.status == .success {
-            fetchForest()
-        }
-    }
-    
-    func claimDailyReward(model: QuestRewardModel) {
-        Task { @MainActor in
-            let result = await adventureService.claimDailySpinReward(reward: model, contextType: .main)
-            if result.status == .success {
-                let target = Date().addingTimeInterval(86400)
-                self.nextDailySpinTime = target
-                self.dailySpinTime = target
-                self.startDailySpinTimer()
+    func claimQuestReward(quest: QuestModel) {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await adventureService.claimQuestReward(quest: quest)
+                await MainActor.run {
+                    self.fetchForest()
+                }
+            } catch {
+                logger.error("Quest reward claim failed: \(error.localizedDescription)", category: .reward)
             }
         }
     }
     
-    func claimWeeklyReward(reward: QuestRewardModel, weeklyModel:  WeeklyDailyCardModel) {
-        Task { @MainActor in
-            let result = await adventureService.saveWeeklyReward(weeklyModel: weeklyModel, contextType: .main)
-            let _ = forestDataManager.claimReward(model: reward, contextType: .main)
-            if result.status == .success {
-                if let index = self.weeklyDailyCards.firstIndex(where: { $0.day == weeklyModel.day }) {
-                    self.weeklyDailyCards[index].status = .claimed
+    func claimLocalReward(model: LocalRewardModel, onSuccess: (() -> Void)? = nil) {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await adventureService.claimLocalReward(model: model)
+                await MainActor.run {
+                    onSuccess?()
+                    self.fetchForest()
                 }
+            } catch {
+                logger.error("Local reward claim failed: \(error.localizedDescription)", category: .reward)
+            }
+        }
+    }
+    
+    func claimDailyRewards(models: [LocalRewardModel]) {
+        Task { @MainActor in
+            do {
+                for model in models {
+                    try await adventureService.claimDailySpinReward(model: model)
+                }
+                self.fetchForest()
+            } catch {
+                logger.error("Daily spin rewards claim failed: \(error.localizedDescription)", category: .reward)
+            }
+        }
+    }
+    
+    func claimWeeklyRewards(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) {
+        Task { @MainActor in
+            do {
+                try await adventureService.claimWeeklyReward(models: models, weeklyModel: weeklyModel)
+                self.fetchForest()
+            } catch {
+                logger.error("Weekly reward claim failed: \(error.localizedDescription)", category: .reward)
+            }
+        }
+    }
+    
+    func claimAdventureRewards(models: [LocalRewardModel], milestone: AdventureMilestoneModel) {
+        Task { @MainActor in
+            do {
+                try await adventureService.claimAdventureReward(models: models, milestone: milestone)
+                self.fetchForest()
+            } catch {
+                logger.error("Adventure reward claim failed: \(error.localizedDescription)", category: .reward)
+            }
+        }
+    }
+    
+    func purchaseMarketItem(item: MarketItemModel, onSuccess: @escaping () -> Void) {
+        Task { @MainActor in
+            do {
+                try await adventureService.purchaseMarketItem(item: item)
+                marketErrorMessage = nil
+                fetchForest()
+                onSuccess()
+            } catch {
+                marketErrorMessage = error.localizedDescription
+            }
+        }
+    }
+    
+    func fetchChestDropInfo(chestId: String) async -> [ChestDropInfoModel]? {
+        do {
+            return try await adventureService.fetchChestDropInfo(chestId: chestId)
+        } catch {
+            logger.error("Chest drop info fetch failed for chest \(chestId): \(error.localizedDescription)", category: .reward)
+            return nil
+        }
+    }
+    
+    func claimMarketRewards(models: [LocalRewardModel]) {
+        Task { @MainActor in
+            do {
+                for model in models {
+                    try await adventureService.claimLocalReward(model: model)
+                }
+                self.fetchForest()
+            } catch {
+                logger.error("Market rewards claim failed: \(error.localizedDescription)", category: .reward)
             }
         }
     }
@@ -508,7 +665,7 @@ extension ForestViewModel: ForectSceneProtocol {
 // MARK: - RANDOM TALK HELPERS
 
 private extension ForestViewModel {
-    
+
     func startRandomTalking() {
         stopRandomTalking()
         
@@ -570,16 +727,109 @@ private extension ForestViewModel {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestViewModel {
-    func checkDailySpinStatus() {
-        Task { @MainActor in
-            let result = await adventureService.fetchDailySpinStatusDate()
-            
-            if let targetTime = result.data {
-                self.nextDailySpinTime = targetTime
-                self.dailySpinTime = targetTime
-                self.startDailySpinTimer()
-            }
+
+    func fetchRewardCatalogResolver() async -> RewardCatalogResolver {
+        do {
+            let response = try await remoteConfigRepository.fetchRewardsCatalog()
+            return RewardCatalogResolver(items: response.model.items ?? [])
+        } catch {
+            logger.error("Rewards catalog could not be fetched for sizing: \(error.localizedDescription)", category: .forest)
+            return RewardCatalogResolver(items: [])
         }
+    }
+
+    /// Copies the rewards_config size ratios onto the model handed to the scene;
+    /// stored lists stay untouched so Equatable-based dedup keeps working.
+    func applyingRewardSizes<Model: ComponentModelProtocol>(_ model: Model) -> Model {
+        guard let item = rewardCatalogResolver.catalogItem(rewardId: model.rewardId, assetName: model.assetName) else {
+            return model
+        }
+        var sizedModel = model
+        sizedModel.widthRatio = item.widthRatio.map { CGFloat($0) }
+        sizedModel.heightRatio = item.heightRatio.map { CGFloat($0) }
+        return sizedModel
+    }
+
+    func bindQuests() {
+        questService.questListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] updatedQuests in
+                guard let self else { return }
+                dailyQuestList = updatedQuests.filter {  $0.type == .daily }
+                weeklyQuestList = updatedQuests.filter {  $0.type == .weekly }
+                monthlyQuestList = updatedQuests.filter {  $0.type == .monthly }
+                specialQuestList = updatedQuests.filter {  $0.type == .special }
+                notifyAnnouncementClaimState()
+            }.store(in: &questCancellable)
+    }
+    
+    func bindDailySpin() {
+        dailySpinService.dailySpinListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] models in
+                guard let self else { return }
+                dailySpinModels = models
+                dailySpinModelVersion = UUID()
+            }.store(in: &adventureCancellable)
+        
+        dailySpinService.dailySpinStatePublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self else { return }
+                switch state {
+                case .claimable:
+                    dailyTimeCancellable?.cancel()
+                    nextDailySpinTime = nil
+                    dailySpinTime = nil
+                    isDailySpinClaimable = true
+                case .alreadyClaimed(let remainSeconds):
+                    nextDailySpinTime = Date().addingTimeInterval(remainSeconds)
+                    dailySpinTime = Calendar.current.startOfDay(for: Date()).addingTimeInterval(remainSeconds)
+                    startDailySpinTimer()
+                    isDailySpinClaimable = false
+                }
+                notifyAnnouncementClaimState()
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindWeeklyRewards() {
+        weeklyRewardService.weeklyCardListPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] cards in
+                guard let self else { return }
+                weeklyDailyCards = cards
+                notifyAnnouncementClaimState()
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindAdventureRoad() {
+        adventureRoadService.adventureScreenModelPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self else { return }
+                adventureRoadScreenModel = model
+                notifyAnnouncementClaimState()
+            }.store(in: &adventureCancellable)
+    }
+    
+    func bindAssetHydration() {
+        assetHydrationService.statePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self else { return }
+                // Refresh the scene when hydration marked at least one asset ready; ForestScene
+                // returns early on an id match, so a repeated call does not create duplicates.
+                if case .finished(let summary) = state, summary.readyCount > 0 {
+                    fetchForest()
+                }
+            }.store(in: &hydrationCancellable)
+    }
+
+    func bindMarket() {
+        marketService.marketScreenModelPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] model in
+                guard let self else { return }
+                marketScreenModel = model
+            }.store(in: &adventureCancellable)
+    }
+    
+    func notifyAnnouncementClaimState() {
+        output?.updateAnnouncementClaimable(!claimableAnnouncementTypes.isEmpty)
     }
     
     func startDailySpinTimer() {

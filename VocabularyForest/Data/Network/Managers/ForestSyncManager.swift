@@ -9,103 +9,6 @@ import Combine
 import FirebaseFirestore
 import FirebaseAuth
 
-// MARK: - CONSTANTS
-
-enum ForestSyncConstants {
-    static let usersCollection = "Users"
-    static let forestsCollection = "Forests"
-    static let mainForestDocument = "mainForest"
-    static let playerDocument = "player"
-
-    static let treesCollection = "Trees"
-    static let animalsCollection = "Animals"
-    static let sculpturesCollection = "Sculptures"
-    static let questsCollection = "Quests"
-    static let playerCollection = "Player"
-    static let dailyRewardsCollection = "DailyRewards"
-
-    static let idField = "id"
-    static let nameField = "name"
-    static let typeField = "type"
-    static let assetNameField = "assetName"
-    static let characterNameField = "characterName"
-    static let xPositionField = "xPosition"
-    static let yPositionField = "yPosition"
-    static let isAliveField = "isAlive"
-    static let healthValueField = "healthValue"
-    static let createdDateField = "createdDate"
-    static let lastUpdatedDateField = "lastUpdatedDate"
-    
-    static let moneyValueField = "moneyValue"
-    static let diamondValueField = "diamondValue"
-    static let rainValueField = "rainValue"
-    static let landHealthPercentField = "landHealthPercent"
-    
-    static let titleField = "title"
-    static let descriptionField = "description"
-    static let rewardTypeField = "rewardType"
-    static let rewardValueField = "rewardValue"
-    static let statusField = "status"
-    static let targetCountField = "targetCount"
-    static let currentProgressCountField = "currentProgressCount"
-    static let questionTypeField = "questionType"
-    static let battleEnemyModelField = "battleEnemyModel"
-    static let gameLevelField = "gameLevel"
-    
-    static let metadataDocument = "metadata"
-    static let weeklyStreakCurrentDayField = "weeklyStreakCurrentDayField"
-    static let weeklyStreakLastClaimDateField = "weeklyStreakLastClaimDate"
-    static let lastFetchDateField = "lastFetchDate"
-    static let fixedTimeZoneField = "fixedTimeZone"
-    static let dailySpinLastUsedDateField = "dailySpinLastUsedDate"
-    static let firstVisitTimestamp = "firstVisitTimestamp"
-    
-    static let adventureSeasonIDField = "adventureSeasonID"
-    static let claimedLongTiersField = "claimedLongTiers"
-    static let claimedShortTiersField = "claimedShortTiers"
-    static let monthlyLongLearnedCountField = "monthlyLongLearnedCount"
-    static let monthlyShortLearnedCountField = "monthlyShortLearnedCount"
-    
-    static let plantType = "plant"
-    static let animalType = "animal"
-    static let sculptureType = "sculpture"
-    static let ownerId = "ownerId"
-    
-    static let manualSyncCooldownHours: Double = 1.0
-    static let backgroundSyncCooldownHours: Double = 24.0
-}
-
-// MARK: - ERRORS
-
-enum ForestSyncError: LocalizedError {
-    case cooldownActive(waitMinutes: Int)
-    case unauthenticated
-    case noDataToSync
-    case firestoreError(Error)
-    case fetchError
-    case dataManager
-    case ownershipMismatch
-    
-    var errorDescription: String? {
-        switch self {
-        case .cooldownActive(let waitMinutes):
-            return String(localized: "Lütfen yeni bir yedekleme yapmak için \(waitMinutes) dakika bekleyin.")
-        case .unauthenticated:
-            return String(localized: "Yedekleme yapmak için giriş yapmalısınız.")
-        case .noDataToSync:
-            return String(localized: "Senkronize edilecek yeni bir veri bulunamadı.")
-        case .firestoreError(let error):
-            return error.localizedDescription
-        case .fetchError:
-            return String(localized: "Yerel veriler okunurken bir hata oluştu.")
-        case .dataManager:
-            return String(localized: "Forest data manager eklenmedi.")
-        case .ownershipMismatch:
-            return String(localized: "Bu orman başka bir hesaba bağlı. Lütfen kendi hesabınıza giriş yapın veya oyunu sıfırlayın.")
-        }
-    }
-}
-
 // MARK: - PROTOCOL
 
 protocol ForestSyncManagerProtocol: AnyObject {
@@ -115,86 +18,65 @@ protocol ForestSyncManagerProtocol: AnyObject {
     func userHaveForest() async -> Resource<SafeForestModel>
     func forceOverwriteCloud() async -> Resource<Bool>
     func downloadAndOverwriteLocal(with safeForest: SafeForestModel) async -> Resource<Bool>
-    func checkHasConflictOnlyMetadata() async -> Resource<Bool>
 }
 
 // MARK: - MANAGER
 
-class ForestSyncManager: ForestSyncManagerProtocol {
-    
-    // MARK: - PRIVATE PROPERTIES
-    
-    private let db = Firestore.firestore()
-    private let lastSyncSubject = CurrentValueSubject<Date?, Never>(nil)
-    
-    private var forestDocument: DocumentReference? {
-        guard let uid = Auth.auth().currentUser?.uid else { return nil }
-        return db
-            .collection(ForestSyncConstants.usersCollection)
-            .document(uid)
-            .collection(ForestSyncConstants.forestsCollection)
-            .document(ForestSyncConstants.mainForestDocument)
-    }
-    
+final class ForestSyncManager {
+
     // MARK: - PROPERTIES
-    
+
+    private let db: Firestore
+    private let conflictResolver: SyncConflictResolving
+    private let cursorStore: ForestSyncCursorStoring
+    private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol
+    private let lastSyncSubject = CurrentValueSubject<Date?, Never>(nil)
+    /// Server stamp of the forest document from the latest full cloud read; seeds the
+    /// pull cursor after a restore so the first delta sync does not re-pull everything.
+    private var latestRemoteServerStamp: Date?
+    private var isSyncRunning = false
+
     weak var dataManager: ForestDataManagerProtocol?
-    
+    var remoteConfigRepository: RemoteConfigRepositoryProtocol?
+    var assetHydrationService: RewardAssetHydrationServiceProtocol?
+
+    // MARK: - INIT
+
+    init(
+        db: Firestore,
+        conflictResolver: SyncConflictResolving,
+        cursorStore: ForestSyncCursorStoring,
+        logger: AppLoggerProtocol = AppLogger.shared,
+        analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService()
+    ) {
+        self.db = db
+        self.conflictResolver = conflictResolver
+        self.cursorStore = cursorStore
+        self.logger = logger
+        self.analyticsService = analyticsService
+    }
+}
+
+// MARK: - PROTOCOL CONFORMANCE
+
+extension ForestSyncManager: ForestSyncManagerProtocol {
+
     var lastSyncDatePublisher: AnyPublisher<Date?, Never> {
         lastSyncSubject.eraseToAnyPublisher()
     }
-    
-    // MARK: - INIT
-    
-    init() { }
-    
-    // MARK: - PUBLIC METHODS
-    
-    func checkHasConflictOnlyMetadata() async -> Resource<Bool> {
-        guard let forestDoc = forestDocument else {
-            return .error(error: ForestSyncError.unauthenticated)
-        }
-        
-        do {
-            let docSnapshot = try await forestDoc.getDocument()
-            guard docSnapshot.exists, let forestData = docSnapshot.data() else {
-                return .success(false)
-            }
-            
-            let cloudUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-            
-            guard let dataManager = dataManager else { return .error(error: ForestSyncError.dataManager) }
-            let localForestRes = dataManager.fetchSafeForest(contextType: .main)
-            
-            guard localForestRes.status == .success, let localForest = localForestRes.data else {
-                return .success(true)
-            }
 
-            guard let localSyncTime = localForest.lastSyncCloudTime else {
-                return .success(true)
-            }
-
-            let timeDifference = abs(cloudUpdatedDate.timeIntervalSince(localSyncTime))
-            if timeDifference > 2.0 {
-                return .success(true)
-            }
-            
-            return .success(false)
-        } catch {
-            return .error(error: ForestSyncError.firestoreError(error))
-        }
-    }
-    
     func userHaveForest() async -> Resource<SafeForestModel> {
         guard let forestDoc = forestDocument else {
             return .error(error: ForestSyncError.unauthenticated)
         }
-        
+
         do {
             let docSnapshot = try await forestDoc.getDocument()
             guard docSnapshot.exists, let forestData = docSnapshot.data() else {
                 return .error(error: ForestSyncError.noDataToSync)
             }
+            latestRemoteServerStamp = ForestSyncMapper.serverStamp(forestData)
             let localForest = dataManager?.fetchSafeForest(contextType: .main).data
             let forestId: UUID
             if let idString = forestData[ForestSyncConstants.idField] as? String,
@@ -206,20 +88,13 @@ class ForestSyncManager: ForestSyncManagerProtocol {
             } else {
                 forestId = UUID()
             }
-            
-            let ownerUIDString = forestData[ForestSyncConstants.ownerId] as? String
-            var parsedOwnerId: String? = nil
-            if ownerUIDString != nil {
-                parsedOwnerId = ownerUIDString
-            }
-            
-            let moneyValue = forestData[ForestSyncConstants.moneyValueField] as? Int ?? 0
-            let diamondValue = forestData[ForestSyncConstants.diamondValueField] as? Int ?? 0
-            let rainValue = forestData[ForestSyncConstants.rainValueField] as? Int ?? 0
-            let landHealthPercent = forestData[ForestSyncConstants.landHealthPercentField] as? Int ?? 100
-            
-            let lastUpdatedDate = (forestData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-            
+
+            let parsedOwnerId = forestData[ForestSyncConstants.ownerId] as? String
+            let metadata = ForestSyncMapper.parseMetadata(forestData)
+            let lastUpdatedDate = metadata?.lastUpdatedDate ?? Date()
+            let belongsToForest = forestMembershipFilter(forestData: forestData, forestId: forestId)
+            let catalogResolver = await fetchRewardCatalogResolver()
+
             async let treesSnapshot = forestDoc.collection(ForestSyncConstants.treesCollection).getDocuments()
             async let animalsSnapshot = forestDoc.collection(ForestSyncConstants.animalsCollection).getDocuments()
             async let sculpturesSnapshot = forestDoc.collection(ForestSyncConstants.sculpturesCollection).getDocuments()
@@ -229,95 +104,44 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 .collection(ForestSyncConstants.dailyRewardsCollection)
                 .document(ForestSyncConstants.metadataDocument)
                 .getDocument()
-            
+
             let (treesDocs, animalsDocs, sculpturesDocs, questsDocs, playerDocs, dailyDocs) = try await (treesSnapshot, animalsSnapshot, sculpturesSnapshot, questsSnapshot, playerSnapshot, dailySnapshot)
-            
+
             let parsedTrees = treesDocs.documents.compactMap { document -> TreeModel? in
                 let data = document.data()
-                guard let idString = data[ForestSyncConstants.idField] as? String,
-                      let id = UUID(uuidString: idString) else { return nil }
-                
-                return TreeModel(
-                    id: id,
-                    assetName: data[ForestSyncConstants.assetNameField] as? String ?? "",
-                    characterName: data[ForestSyncConstants.characterNameField] as? String ?? "",
-                    isAlive: data[ForestSyncConstants.isAliveField] as? Bool ?? true,
-                    createdDate: (data[ForestSyncConstants.createdDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    treeHealthValue: data[ForestSyncConstants.healthValueField] as? Int ?? 10,
-                    xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
-                    yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
-                    lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-                )
+                guard belongsToForest(data) else { return nil }
+                return ForestSyncMapper.parseTree(data, catalogResolver: catalogResolver)
             }
-            
+
             let parsedAnimals = animalsDocs.documents.compactMap { document -> AnimalModel? in
                 let data = document.data()
-                guard let idString = data[ForestSyncConstants.idField] as? String,
-                      let id = UUID(uuidString: idString) else { return nil }
-                
-                return AnimalModel(
-                    id: id,
-                    characterName: data[ForestSyncConstants.characterNameField] as? String ?? "",
-                    assetName: data[ForestSyncConstants.assetNameField] as? String ?? "",
-                    createdDate: (data[ForestSyncConstants.createdDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    healthValue: data[ForestSyncConstants.healthValueField] as? Int ?? 10,
-                    isAlive: data[ForestSyncConstants.isAliveField] as? Bool ?? true,
-                    xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
-                    yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
-                    lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-                )
+                guard belongsToForest(data) else { return nil }
+                return ForestSyncMapper.parseAnimal(data, catalogResolver: catalogResolver)
             }
-            
+
             let parsedSculptures = sculpturesDocs.documents.compactMap { document -> SculptureModel? in
                 let data = document.data()
-                guard let idString = data[ForestSyncConstants.idField] as? String,
-                      let id = UUID(uuidString: idString) else { return nil }
-                
-                return SculptureModel(
-                    id: id,
-                    assetName: data[ForestSyncConstants.assetNameField] as? String ?? "",
-                    characterName: data[ForestSyncConstants.characterNameField] as? String ?? "",
-                    createdDate: (data[ForestSyncConstants.createdDateField] as? Timestamp)?.dateValue() ?? Date(),
-                    xPosition: data[ForestSyncConstants.xPositionField] as? Double ?? 0.0,
-                    yPosition: data[ForestSyncConstants.yPositionField] as? Double ?? 0.0,
-                    lastUpdatedDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-                )
+                guard belongsToForest(data) else { return nil }
+                return ForestSyncMapper.parseSculpture(data, catalogResolver: catalogResolver)
             }
-            
-            let parsedQuests = questsDocs.documents.compactMap { document -> QuestModel? in
-                return nil
-            }
-            
-            let parsedPlayer = playerDocs.documents.compactMap { document -> PlayerModel in
+
+            let parsedQuests = questsDocs.documents.compactMap { document -> QuestTrackModel? in
                 let data = document.data()
-                return PlayerModel(
-                    name: data[ForestSyncConstants.nameField] as? String ?? "Error",
-                    lastUpdateDate: (data[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-                )
-            }.first ?? PlayerModel(name: "Error", lastUpdateDate: Date())
-            
-            let dailyData = dailyDocs.data() ?? [:]
-            let parsedDaily = DailyActivitiesModel(
-                adventureSeasonID: dailyData[ForestSyncConstants.adventureSeasonIDField] as? String,
-                claimedLongTiers: dailyData[ForestSyncConstants.claimedLongTiersField] as? String,
-                claimedShortTiers: dailyData[ForestSyncConstants.claimedShortTiersField] as? String,
-                monthlyLongLearnedCount: dailyData[ForestSyncConstants.monthlyLongLearnedCountField] as? Int ?? 0,
-                monthlyShortLearnedCount: dailyData[ForestSyncConstants.monthlyShortLearnedCountField] as? Int ?? 0,
-                weeklyStreakLastClaimDate: (dailyData[ForestSyncConstants.weeklyStreakLastClaimDateField] as? Timestamp)?.dateValue(),
-                weeklyStreakCurrentDay: dailyData[ForestSyncConstants.weeklyStreakCurrentDayField] as? Int ?? 0,
-                lastFetchDate: (dailyData[ForestSyncConstants.lastFetchDateField] as? Timestamp)?.dateValue(),
-                fixedTimeZone: dailyData[ForestSyncConstants.fixedTimeZoneField] as? String ?? TimeZone.current.identifier,
-                dailySpinLastUsedDate: (dailyData[ForestSyncConstants.dailySpinLastUsedDateField] as? Timestamp)?.dateValue(),
-                lastUpdatedDate: (dailyData[ForestSyncConstants.lastUpdatedDateField] as? Timestamp)?.dateValue() ?? Date()
-            )
-            
+                guard belongsToForest(data) else { return nil }
+                return ForestSyncMapper.parseQuest(data)
+            }
+
+            let parsedPlayer = playerDocs.documents.first.map { ForestSyncMapper.parsePlayer($0.data()) }
+                ?? PlayerHelper.createDefaultPlayer()
+            let parsedDaily = ForestSyncMapper.parseDailyActivities(dailyDocs.data() ?? [:])
+
             let safeModel = SafeForestModel(
                 forestId: forestId,
                 ownerId: parsedOwnerId,
-                rainValue: rainValue,
-                moneyValue: moneyValue,
-                diamondValue: diamondValue,
-                landHealthPercent: landHealthPercent,
+                rainValue: metadata?.rainValue ?? 0,
+                moneyValue: metadata?.moneyValue ?? 0,
+                diamondValue: metadata?.diamondValue ?? 0,
+                landHealthPercent: metadata?.landHealthPercent ?? 100,
                 landStatus: localForest?.landStatus ?? true,
                 isRaining: localForest?.isRaining ?? false,
                 lastRainUpdateDate: localForest?.lastRainUpdateDate,
@@ -333,59 +157,93 @@ class ForestSyncManager: ForestSyncManagerProtocol {
                 lastSyncCloudTime: Date(),
                 dailyActivities: parsedDaily
             )
-            
+
             return .success(safeModel)
-            
+
         } catch {
             return .error(error: ForestSyncError.firestoreError(error))
         }
     }
-    
+
     func downloadAndOverwriteLocal(with safeForest: SafeForestModel) async -> Resource<Bool> {
         guard let dataManager else { return .error(error: ForestSyncError.dataManager) }
         guard let currentUID = Auth.auth().currentUser?.uid else {
             return .error(error: ForestSyncError.unauthenticated)
         }
-        
+
         let result = dataManager.overwriteLocalForest(with: safeForest, ownerId: currentUID, contextType: .main)
         if case .success = result.status {
+            // The restored snapshot is as fresh as the last cloud read; nil clears the
+            // cursor so legacy data without server stamps still gets one full pull.
+            cursorStore.pullCursor = latestRemoteServerStamp
             lastSyncSubject.send(Date())
+            // The restore completes with the CoreData write; asset downloads continue in the background.
+            // Assets that fail stay at assetReady = false and are retried on the next hydration pass.
+            Task { [weak self] in
+                await self?.assetHydrationService?.hydrateMissingAssets(for: safeForest)
+            }
         }
         return result
     }
-    
+
     func forceOverwriteCloud() async -> Resource<Bool> {
         guard let dataManager else { return .error(error: ForestSyncError.dataManager) }
         guard let currentUID = Auth.auth().currentUser?.uid else {
             return .error(error: ForestSyncError.unauthenticated)
         }
-        
+
         let updateIDResult = dataManager.bindForestToUser(uid: currentUID, contextType: .main)
-        
+
         if case .error = updateIDResult.status {
             return .error(error: nil)
         }
-        return await manualSync()
-    }
-    
-    func manualSync() async -> Resource<Bool> {
+
+        // Explicit user choice: allowed to replace the cloud forest identity and
+        // exempt from the sync cooldown so conflict resolution is never blocked.
+        // fullResync uploads every local entity with the forestId tag (writes only,
+        // no reads/deletes) so stale cloud documents get filtered out on restore.
         do {
-            try checkCooldown(hoursRequired: ForestSyncConstants.manualSyncCooldownHours)
-            try await performDeltaSync()
+            try await performDeltaSync(allowIdentityOverwrite: true, fullResync: true)
             return .success(true)
         } catch {
             return .error(error: error)
         }
     }
-    
+
+    func manualSync() async -> Resource<Bool> {
+        do {
+            try checkCooldown(hoursRequired: ForestSyncConstants.manualSyncCooldownHours)
+            try await performDeltaSync()
+            analyticsService.log(.cloudSyncCompleted(result: .success, trigger: .manual))
+            return .success(true)
+        } catch {
+            let syncResult: CloudSyncResult = switch error as? ForestSyncError {
+            case .ownershipMismatch, .cloudForestMismatch: .conflict
+            default: .failed
+            }
+            analyticsService.log(.cloudSyncCompleted(result: syncResult, trigger: .manual))
+            return .error(error: error)
+        }
+    }
+
     func backgroundSyncIfNeeded() {
+        // Called on both cold start and every return to the foreground; the flag keeps
+        // overlapping triggers from running two delta syncs against the same batch.
+        guard !isSyncRunning else { return }
+        isSyncRunning = true
         Task.detached { [weak self] in
             guard let self else { return }
+            defer { isSyncRunning = false }
             do {
                 try await checkCooldown(hoursRequired: ForestSyncConstants.backgroundSyncCooldownHours)
                 try await performDeltaSync()
+                analyticsService.log(.cloudSyncCompleted(result: .success, trigger: .auto))
             } catch {
-                print(error)
+                // Cooldown skips are routine, not failures — logging them would drown the report.
+                if let syncError = error as? ForestSyncError, case .cooldownActive = syncError { return }
+                if let syncError = error as? ForestSyncError, case .noDataToSync = syncError { return }
+                analyticsService.log(.cloudSyncCompleted(result: .failed, trigger: .auto))
+                logger.error("Background delta sync failed: \(error.localizedDescription)", category: .sync)
             }
         }
     }
@@ -394,221 +252,396 @@ class ForestSyncManager: ForestSyncManagerProtocol {
 // MARK: - PRIVATE HELPERS
 
 private extension ForestSyncManager {
-    
+
+    /// Remote documents that changed after this device's pull cursor.
+    struct RemotePullResult {
+        var metadata: ForestMetadataUpdate?
+        var trees: [TreeModel] = []
+        var animals: [AnimalModel] = []
+        var sculptures: [SculptureModel] = []
+        var quests: [QuestTrackModel] = []
+        var player: PlayerModel?
+        var dailyActivities: DailyActivitiesModel?
+        var maxServerStamp: Date?
+    }
+
+    var forestDocument: DocumentReference? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        return db
+            .collection(ForestSyncConstants.usersCollection)
+            .document(uid)
+            .collection(ForestSyncConstants.forestsCollection)
+            .document(ForestSyncConstants.mainForestDocument)
+    }
+
+    /// Fetches the rewards catalog from Remote Config. On failure, returns an empty
+    /// resolver so the restore still proceeds (assets then default to app bundle).
+    func fetchRewardCatalogResolver() async -> RewardCatalogResolver {
+        guard let remoteConfigRepository else {
+            return RewardCatalogResolver(items: [])
+        }
+        do {
+            let response = try await remoteConfigRepository.fetchRewardsCatalog()
+            return RewardCatalogResolver(items: response.model.items ?? [])
+        } catch {
+            return RewardCatalogResolver(items: [])
+        }
+    }
+
+    /// Stale-document filtering with no extra read/write cost: the entitiesTagged flag
+    /// means every entity was uploaded with a forestId tag. When it is set, documents
+    /// tagged for another forest (leftovers from older installs) are ignored.
+    func forestMembershipFilter(forestData: [String: Any], forestId: UUID) -> ([String: Any]) -> Bool {
+        let entitiesTagged = forestData[ForestSyncConstants.entitiesTaggedField] as? Bool ?? false
+        return { data in
+            guard entitiesTagged else { return true }
+            return data[ForestSyncConstants.forestIdField] as? String == forestId.uuidString
+        }
+    }
+
     func checkCooldown(hoursRequired: Double) throws {
         guard Auth.auth().currentUser != nil else {
             throw ForestSyncError.unauthenticated
         }
-        
-        if let lastSync = lastSyncSubject.value {
+
+        // Use the persisted sync time from Core Data so the cooldown survives app
+        // restarts; the in-memory subject only covers syncs from the current session.
+        let persistedLastSync = dataManager?.fetchSafeForest(contextType: .main).data?.lastSyncCloudTime
+        let lastSync = [persistedLastSync, lastSyncSubject.value].compactMap { $0 }.max()
+
+        if let lastSync {
             let timePassed = Date().timeIntervalSince(lastSync)
             let timeRequired = hoursRequired * 3600
-            
+
             if timePassed < timeRequired {
                 let minutesLeft = Int((timeRequired - timePassed) / 60)
                 throw ForestSyncError.cooldownActive(waitMinutes: max(1, minutesLeft))
             }
         }
     }
-    
-    func performDeltaSync() async throws {
-        guard let forestDoc = forestDocument else { throw ForestSyncError.unauthenticated }
-        guard let currentUID = Auth.auth().currentUser?.uid else { throw ForestSyncError.unauthenticated }
-        guard let dataManager else { throw ForestSyncError.fetchError }
-        
+
+    /// Whether the cloud may hold changes this device has not seen. The check rides on
+    /// the forest document read the sync already makes, so a quiet cloud costs no
+    /// extra Firestore reads.
+    /// - No cursor: first delta sync on this install — pull everything once, which also
+    ///   backfills documents written by app versions that predate updatedAtServer.
+    /// - No remote stamp: legacy cloud data; the bootstrap write below adds the stamp,
+    ///   and a stamp-less query would match nothing anyway.
+    func shouldPull(remoteStamp: Date?, cursor: Date?) -> Bool {
+        guard let cursor else { return true }
+        guard let remoteStamp else { return false }
+        return remoteStamp > cursor
+    }
+
+    /// Single-document reads (player, daily activities) cannot use the updatedAtServer
+    /// query filter, so the same cursor condition is applied after the read.
+    func isChanged(_ data: [String: Any], since cursor: Date?) -> Bool {
+        guard let cursor else { return true }
+        guard let stamp = ForestSyncMapper.serverStamp(data) else { return false }
+        return stamp > cursor
+    }
+
+    func fetchRemoteChanges(
+        forestDoc: DocumentReference,
+        forestData: [String: Any],
+        forestId: UUID,
+        since cursor: Date?
+    ) async throws -> RemotePullResult {
+        var result = RemotePullResult()
+        result.metadata = ForestSyncMapper.parseMetadata(forestData)
+        result.maxServerStamp = ForestSyncMapper.serverStamp(forestData)
+
+        let belongsToForest = forestMembershipFilter(forestData: forestData, forestId: forestId)
+
+        func changedDocuments(in collection: String) async throws -> [QueryDocumentSnapshot] {
+            let ref = forestDoc.collection(collection)
+            guard let cursor else { return try await ref.getDocuments().documents }
+            return try await ref
+                .whereField(ForestSyncConstants.updatedAtServerField, isGreaterThan: Timestamp(date: cursor))
+                .getDocuments()
+                .documents
+        }
+
+        async let treeDocs = changedDocuments(in: ForestSyncConstants.treesCollection)
+        async let animalDocs = changedDocuments(in: ForestSyncConstants.animalsCollection)
+        async let sculptureDocs = changedDocuments(in: ForestSyncConstants.sculpturesCollection)
+        async let questDocs = changedDocuments(in: ForestSyncConstants.questsCollection)
+        async let playerSnapshot = forestDoc
+            .collection(ForestSyncConstants.playerCollection)
+            .document(ForestSyncConstants.playerDocument)
+            .getDocument()
+        async let dailySnapshot = forestDoc
+            .collection(ForestSyncConstants.dailyRewardsCollection)
+            .document(ForestSyncConstants.metadataDocument)
+            .getDocument()
+
+        let (trees, animals, sculptures, quests, playerDoc, dailyDoc) = try await (treeDocs, animalDocs, sculptureDocs, questDocs, playerSnapshot, dailySnapshot)
+
+        // The catalog fetch hits Remote Config, so it only runs when an asset-carrying
+        // entity actually needs resolving.
+        let needsCatalog = !(trees.isEmpty && animals.isEmpty && sculptures.isEmpty)
+        let catalogResolver = needsCatalog ? await fetchRewardCatalogResolver() : RewardCatalogResolver(items: [])
+
+        func track(_ data: [String: Any]) {
+            if let stamp = ForestSyncMapper.serverStamp(data) {
+                result.maxServerStamp = max(result.maxServerStamp ?? stamp, stamp)
+            }
+        }
+
+        result.trees = trees.compactMap { document -> TreeModel? in
+            let data = document.data()
+            guard belongsToForest(data) else { return nil }
+            track(data)
+            return ForestSyncMapper.parseTree(data, catalogResolver: catalogResolver)
+        }
+
+        result.animals = animals.compactMap { document -> AnimalModel? in
+            let data = document.data()
+            guard belongsToForest(data) else { return nil }
+            track(data)
+            return ForestSyncMapper.parseAnimal(data, catalogResolver: catalogResolver)
+        }
+
+        result.sculptures = sculptures.compactMap { document -> SculptureModel? in
+            let data = document.data()
+            guard belongsToForest(data) else { return nil }
+            track(data)
+            return ForestSyncMapper.parseSculpture(data, catalogResolver: catalogResolver)
+        }
+
+        result.quests = quests.compactMap { document -> QuestTrackModel? in
+            let data = document.data()
+            guard belongsToForest(data) else { return nil }
+            track(data)
+            return ForestSyncMapper.parseQuest(data)
+        }
+
+        if let playerData = playerDoc.data(), isChanged(playerData, since: cursor) {
+            track(playerData)
+            result.player = ForestSyncMapper.parsePlayer(playerData)
+        }
+
+        if let dailyData = dailyDoc.data(), isChanged(dailyData, since: cursor) {
+            track(dailyData)
+            result.dailyActivities = ForestSyncMapper.parseDailyActivities(dailyData)
+        }
+
+        return result
+    }
+
+    func mergeKeyedEntities<Model: SyncTimestamped, Key: Hashable>(
+        local: [Model],
+        remote: [Model],
+        key: (Model) -> Key,
+        lastSyncDate: Date
+    ) -> (applyRemote: [Model], pushLocal: [Model]) {
+        let localByKey = Dictionary(local.map { (key($0), $0) }, uniquingKeysWith: { first, _ in first })
+        let remoteByKey = Dictionary(remote.map { (key($0), $0) }, uniquingKeysWith: { first, _ in first })
+
+        var applyRemote: [Model] = []
+        var pushLocal: [Model] = []
+
+        for entityKey in Set(localByKey.keys).union(remoteByKey.keys) {
+            let resolution = conflictResolver.resolve(
+                local: localByKey[entityKey],
+                remote: remoteByKey[entityKey],
+                lastSyncDate: lastSyncDate
+            )
+            switch resolution {
+            case .applyRemote(let model): applyRemote.append(model)
+            case .pushLocal(let model): pushLocal.append(model)
+            case .skip: break
+            }
+        }
+        return (applyRemote, pushLocal)
+    }
+
+    func performDeltaSync(allowIdentityOverwrite: Bool = false, fullResync: Bool = false) async throws {
+        guard let forestDoc = forestDocument, let currentUID = Auth.auth().currentUser?.uid else {
+            throw ForestSyncError.unauthenticated
+        }
+        guard let dataManager else { throw ForestSyncError.dataManager }
+
+        // Captured before reading local state so edits made while the sync is in
+        // flight stay newer than the stored sync time and ride the next delta.
+        let syncStartDate = Date()
+
         let forestRes = dataManager.fetchSafeForest(contextType: .main)
         guard forestRes.status == .success, let forest = forestRes.data else {
             throw ForestSyncError.fetchError
         }
-        
-        let lastSyncDate = forest.lastSyncCloudTime ?? Date.distantPast
-        
-        let batch = db.batch()
-        var totalOperations = 0
-        
+
         let remoteSnapshot = try await forestDoc.getDocument()
         let remoteData = remoteSnapshot.data()
         let expectedOwnerId = forest.ownerId ?? currentUID
         let remoteId = remoteData?[ForestSyncConstants.idField] as? String
         let remoteOwnerId = remoteData?[ForestSyncConstants.ownerId] as? String
-        
-        if remoteId != forest.forestId.uuidString || remoteOwnerId != expectedOwnerId {
-            let identityData: [String: Any] = [
-                ForestSyncConstants.idField: forest.forestId.uuidString,
+
+        // Safety guard: never silently overwrite a different forest living in the cloud.
+        // This happens e.g. after a reinstall where auth persisted but a brand-new local
+        // forest was created. Identity can only change through an explicit user choice
+        // (forceOverwriteCloud), which passes allowIdentityOverwrite = true.
+        if remoteData != nil {
+            if let remoteOwnerId, remoteOwnerId != currentUID {
+                throw ForestSyncError.ownershipMismatch
+            }
+            if let remoteId, remoteId != forest.forestId.uuidString, !allowIdentityOverwrite {
+                throw ForestSyncError.cloudForestMismatch
+            }
+        }
+
+        // On the first sync (no lastSync) or on an explicit user request (fullResync) every entity
+        // is uploaded; since all of them then carry a forestId tag, the entitiesTagged flag can be
+        // written on the forest document. That flag lets restore discard untagged documents and
+        // documents belonging to another forest at no extra cost.
+        let isFullUpload = forest.lastSyncCloudTime == nil || fullResync
+        let lastSyncDate = isFullUpload ? Date.distantPast : (forest.lastSyncCloudTime ?? Date.distantPast)
+        let forestIdString = forest.forestId.uuidString
+
+        // PULL — skipped for forceOverwriteCloud, where local must win wholesale.
+        let remoteStamp = remoteData.flatMap { ForestSyncMapper.serverStamp($0) }
+        let cursor = cursorStore.pullCursor
+        var pull = RemotePullResult()
+        var didPull = false
+        if !fullResync, let remoteData, shouldPull(remoteStamp: remoteStamp, cursor: cursor) {
+            pull = try await fetchRemoteChanges(
+                forestDoc: forestDoc,
+                forestData: remoteData,
+                forestId: forest.forestId,
+                since: cursor
+            )
+            didPull = true
+        }
+
+        // MERGE — entity-level last-write-wins between the local forest and the pulled set.
+        let (applyTrees, pushTrees) = mergeKeyedEntities(local: forest.trees, remote: pull.trees, key: { $0.id }, lastSyncDate: lastSyncDate)
+        let (applyAnimals, pushAnimals) = mergeKeyedEntities(local: forest.animals, remote: pull.animals, key: { $0.id }, lastSyncDate: lastSyncDate)
+        let (applySculptures, pushSculptures) = mergeKeyedEntities(local: forest.sculptures, remote: pull.sculptures, key: { $0.id }, lastSyncDate: lastSyncDate)
+        let (applyQuests, pushQuests) = mergeKeyedEntities(local: forest.quests, remote: pull.quests, key: { $0.id }, lastSyncDate: lastSyncDate)
+
+        let localMetadata = ForestMetadataUpdate(
+            moneyValue: forest.moneyValue,
+            diamondValue: forest.diamondValue,
+            rainValue: forest.rainValue,
+            landHealthPercent: forest.landHealthPercent,
+            lastUpdatedDate: forest.lastUpdatedDate
+        )
+        let metadataResolution = conflictResolver.resolve(local: localMetadata, remote: pull.metadata, lastSyncDate: lastSyncDate)
+        let playerResolution = conflictResolver.resolve(local: forest.player, remote: pull.player, lastSyncDate: lastSyncDate)
+        let dailyResolution = conflictResolver.resolve(local: forest.dailyActivities, remote: pull.dailyActivities, lastSyncDate: lastSyncDate)
+
+        var remoteChanges = RemoteForestChanges()
+        remoteChanges.trees = applyTrees
+        remoteChanges.animals = applyAnimals
+        remoteChanges.sculptures = applySculptures
+        remoteChanges.quests = applyQuests
+        if case .applyRemote(let metadata) = metadataResolution { remoteChanges.metadata = metadata }
+        if case .applyRemote(let player) = playerResolution { remoteChanges.player = player }
+        if case .applyRemote(let daily) = dailyResolution { remoteChanges.dailyActivities = daily }
+
+        if !remoteChanges.isEmpty {
+            let applyResult = dataManager.applyRemoteForestChanges(remoteChanges, contextType: .main)
+            guard applyResult.status == .success else {
+                throw applyResult.error ?? ForestSyncError.fetchError
+            }
+            // Entities created on another device may reference assets missing on this one.
+            if let refreshedForest = dataManager.fetchSafeForest(contextType: .main).data {
+                Task { [weak self] in
+                    await self?.assetHydrationService?.hydrateMissingAssets(for: refreshedForest)
+                }
+            }
+        }
+
+        // PUSH — only the local winners go up, so a stale device can never overwrite
+        // a newer edit that another device already uploaded.
+        let batch = db.batch()
+        var totalOperations = 0
+
+        if remoteId != forestIdString || remoteOwnerId != expectedOwnerId || isFullUpload {
+            var identityData: [String: Any] = [
+                ForestSyncConstants.idField: forestIdString,
                 ForestSyncConstants.ownerId: expectedOwnerId
             ]
+            if isFullUpload {
+                identityData[ForestSyncConstants.entitiesTaggedField] = true
+            }
             batch.setData(identityData, forDocument: forestDoc, merge: true)
             totalOperations += 1
         }
-        
-        if forest.lastUpdatedDate > lastSyncDate {
-            let mainData: [String: Any] = [
-                ForestSyncConstants.moneyValueField: forest.moneyValue,
-                ForestSyncConstants.diamondValueField: forest.diamondValue,
-                ForestSyncConstants.rainValueField: forest.rainValue,
-                ForestSyncConstants.landHealthPercentField: forest.landHealthPercent,
-                ForestSyncConstants.lastUpdatedDateField: forest.lastUpdatedDate
-            ]
-            batch.setData(mainData, forDocument: forestDoc, merge: true)
+
+        if case .pushLocal(let metadata) = metadataResolution {
+            batch.setData(ForestSyncMapper.metadataPayload(metadata), forDocument: forestDoc, merge: true)
             totalOperations += 1
         }
-        
-        let updatedTrees = forest.trees.filter { $0.lastUpdatedDate > lastSyncDate }
-        for tree in updatedTrees {
+
+        for tree in pushTrees {
             let docRef = forestDoc.collection(ForestSyncConstants.treesCollection).document(tree.id.uuidString)
-            batch.setData(treePayload(tree), forDocument: docRef, merge: true)
+            batch.setData(ForestSyncMapper.treePayload(tree, forestId: forestIdString), forDocument: docRef, merge: true)
             totalOperations += 1
         }
-        
-        let updatedAnimals = forest.animals.filter { $0.lastUpdatedDate > lastSyncDate }
-        for animal in updatedAnimals {
+
+        for animal in pushAnimals {
             let docRef = forestDoc.collection(ForestSyncConstants.animalsCollection).document(animal.id.uuidString)
-            batch.setData(animalPayload(animal), forDocument: docRef, merge: true)
+            batch.setData(ForestSyncMapper.animalPayload(animal, forestId: forestIdString), forDocument: docRef, merge: true)
             totalOperations += 1
         }
-        
-        let updatedSculptures = forest.sculptures.filter { $0.lastUpdatedDate > lastSyncDate }
-        for sculpture in updatedSculptures {
+
+        for sculpture in pushSculptures {
             let docRef = forestDoc.collection(ForestSyncConstants.sculpturesCollection).document(sculpture.id.uuidString)
-            batch.setData(sculpturePayload(sculpture), forDocument: docRef, merge: true)
+            batch.setData(ForestSyncMapper.sculpturePayload(sculpture, forestId: forestIdString), forDocument: docRef, merge: true)
             totalOperations += 1
         }
-        
-        let updatedQuests = forest.quests.filter { $0.lastUpdatedDate > lastSyncDate }
-        for quest in updatedQuests {
-            let docRef = forestDoc.collection(ForestSyncConstants.questsCollection).document(quest.id.uuidString)
-            batch.setData(questPayload(quest), forDocument: docRef, merge: true)
+
+        for quest in pushQuests {
+            let docRef = forestDoc.collection(ForestSyncConstants.questsCollection).document(quest.id)
+            batch.setData(ForestSyncMapper.questPayload(quest, forestId: forestIdString), forDocument: docRef, merge: true)
             totalOperations += 1
         }
-        
-        if forest.player.lastUpdateDate > lastSyncDate {
+
+        if case .pushLocal(let player) = playerResolution {
             let playerDocRef = forestDoc.collection(ForestSyncConstants.playerCollection).document(ForestSyncConstants.playerDocument)
-            batch.setData(playerPayload(forest.player), forDocument: playerDocRef, merge: true)
+            batch.setData(ForestSyncMapper.playerPayload(player), forDocument: playerDocRef, merge: true)
             totalOperations += 1
         }
-        
-        if forest.dailyActivities.lastUpdatedDate > lastSyncDate {
+
+        if case .pushLocal(let daily) = dailyResolution {
             let dailyDocRef = forestDoc
                 .collection(ForestSyncConstants.dailyRewardsCollection)
                 .document(ForestSyncConstants.metadataDocument)
-            batch.setData(
-                dailyActivitiesPayload(forest.dailyActivities),
-                forDocument: dailyDocRef,
-                merge: true
-            )
+            batch.setData(ForestSyncMapper.dailyActivitiesPayload(daily), forDocument: dailyDocRef, merge: true)
             totalOperations += 1
         }
-        
-        guard totalOperations > 0 else {
+
+        // A cloud forest written before updatedAtServer existed must get its first
+        // stamp even when nothing else changed, otherwise the pull guard could never
+        // observe later commits.
+        let needsBootstrapStamp = remoteData != nil && remoteStamp == nil
+        let hasAppliedRemote = !remoteChanges.isEmpty
+
+        guard totalOperations > 0 || needsBootstrapStamp || didPull || hasAppliedRemote else {
             throw ForestSyncError.noDataToSync
         }
-        
+
         do {
-            try await batch.commit()
-            let now = Date()
-            _ = dataManager.updateLastSyncCloudTime(date: now, contextType: .main)
-            lastSyncSubject.send(now)
+            if totalOperations > 0 || needsBootstrapStamp {
+                // Every commit stamps the forest document with the server time; other
+                // devices compare this single field against their cursor to decide
+                // whether a pull is needed at all.
+                batch.setData([ForestSyncConstants.updatedAtServerField: FieldValue.serverTimestamp()], forDocument: forestDoc, merge: true)
+                try await batch.commit()
+                // One extra read per pushing sync: the committed server time becomes the
+                // cursor, so the next pull skips this device's own writes. Best effort —
+                // on failure the stale cursor only causes one redundant pull, never data loss.
+                let committedData = (try? await forestDoc.getDocument())?.data()
+                cursorStore.pullCursor = committedData.flatMap { ForestSyncMapper.serverStamp($0) } ?? pull.maxServerStamp ?? cursor
+            } else if let maxStamp = pull.maxServerStamp {
+                cursorStore.pullCursor = maxStamp
+            }
         } catch {
             throw ForestSyncError.firestoreError(error)
         }
-    }
-    
-    func treePayload(_ tree: TreeModel) -> [String: Any] {
-        [
-            ForestSyncConstants.idField: tree.id.uuidString,
-            ForestSyncConstants.typeField: ForestSyncConstants.plantType,
-            ForestSyncConstants.assetNameField: tree.assetName,
-            ForestSyncConstants.characterNameField: tree.characterName,
-            ForestSyncConstants.xPositionField: tree.xPosition,
-            ForestSyncConstants.yPositionField: tree.yPosition,
-            ForestSyncConstants.isAliveField: tree.isAlive,
-            ForestSyncConstants.healthValueField: tree.treeHealthValue,
-            ForestSyncConstants.createdDateField: tree.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: tree.lastUpdatedDate
-        ]
-    }
-    
-    func animalPayload(_ animal: AnimalModel) -> [String: Any] {
-        [
-            ForestSyncConstants.idField: animal.id.uuidString,
-            ForestSyncConstants.typeField: ForestSyncConstants.animalType,
-            ForestSyncConstants.assetNameField: animal.assetName,
-            ForestSyncConstants.characterNameField: animal.characterName,
-            ForestSyncConstants.xPositionField: animal.xPosition,
-            ForestSyncConstants.yPositionField: animal.yPosition,
-            ForestSyncConstants.isAliveField: animal.isAlive,
-            ForestSyncConstants.healthValueField: animal.healthValue,
-            ForestSyncConstants.createdDateField: animal.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: animal.lastUpdatedDate
-        ]
-    }
-    
-    func sculpturePayload(_ sculpture: SculptureModel) -> [String: Any] {
-        [
-            ForestSyncConstants.idField: sculpture.id.uuidString,
-            ForestSyncConstants.typeField: ForestSyncConstants.sculptureType,
-            ForestSyncConstants.assetNameField: sculpture.assetName,
-            ForestSyncConstants.characterNameField: sculpture.characterName,
-            ForestSyncConstants.xPositionField: sculpture.xPosition,
-            ForestSyncConstants.yPositionField: sculpture.yPosition,
-            ForestSyncConstants.createdDateField: sculpture.createdDate,
-            ForestSyncConstants.lastUpdatedDateField: sculpture.lastUpdatedDate
-        ]
-    }
-    
-    func questPayload(_ quest: QuestModel) -> [String: Any] {
-        [
-            ForestSyncConstants.idField: quest.id.uuidString,
-            ForestSyncConstants.typeField: quest.type.valueForCoreData,
-            ForestSyncConstants.titleField: quest.title,
-            ForestSyncConstants.descriptionField: quest.description,
-            ForestSyncConstants.rewardTypeField: quest.reward.typeName,
-            ForestSyncConstants.rewardValueField: quest.reward.coreDataValueString,
-            ForestSyncConstants.statusField: quest.status.valueForCoreData,
-            ForestSyncConstants.targetCountField: quest.targetCount,
-            ForestSyncConstants.currentProgressCountField: quest.currentProgressCount,
-            ForestSyncConstants.questionTypeField: quest.questionType.valueForCoreData,
-            ForestSyncConstants.battleEnemyModelField: quest.battleEnemyModel.valueForCoreData,
-            ForestSyncConstants.gameLevelField: quest.gameLevel.valueForCoreData,
-            ForestSyncConstants.lastUpdatedDateField: quest.lastUpdatedDate
-        ]
-    }
-    
-    func playerPayload(_ player: PlayerModel) -> [String: Any] {
-        [
-            ForestSyncConstants.nameField: player.name,
-            ForestSyncConstants.lastUpdatedDateField: player.lastUpdateDate
-        ]
-    }
-    
-    func dailyActivitiesPayload(_ daily: DailyActivitiesModel) -> [String: Any] {
-        var payload: [String: Any] = [
-            ForestSyncConstants.weeklyStreakCurrentDayField: daily.weeklyStreakCurrentDay,
-            ForestSyncConstants.monthlyLongLearnedCountField: daily.monthlyLongLearnedCount,
-            ForestSyncConstants.monthlyShortLearnedCountField: daily.monthlyShortLearnedCount,
-            ForestSyncConstants.fixedTimeZoneField: daily.fixedTimeZone ?? TimeZone.current.identifier,
-            ForestSyncConstants.lastUpdatedDateField: daily.lastUpdatedDate
-        ]
-        
-        if let claimDate = daily.weeklyStreakLastClaimDate {
-            payload[ForestSyncConstants.weeklyStreakLastClaimDateField] = claimDate
-        }
-        if let fetchDate = daily.lastFetchDate {
-            payload[ForestSyncConstants.lastFetchDateField] = fetchDate
-        }
-        if let spinDate = daily.dailySpinLastUsedDate {
-            payload[ForestSyncConstants.dailySpinLastUsedDateField] = spinDate
-        }
-        if let seasonID = daily.adventureSeasonID {
-            payload[ForestSyncConstants.adventureSeasonIDField] = seasonID
-        }
-        if let claimedLong = daily.claimedLongTiers {
-            payload[ForestSyncConstants.claimedLongTiersField] = claimedLong
-        }
-        if let claimedShort = daily.claimedShortTiers {
-            payload[ForestSyncConstants.claimedShortTiersField] = claimedShort
-        }
-        
-        return payload
+
+        _ = dataManager.updateLastSyncCloudTime(date: syncStartDate, contextType: .main)
+        lastSyncSubject.send(syncStartDate)
     }
 }

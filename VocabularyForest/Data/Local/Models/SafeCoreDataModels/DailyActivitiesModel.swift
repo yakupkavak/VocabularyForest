@@ -19,4 +19,6 @@ struct DailyActivitiesModel {
     let fixedTimeZone: String?
     let dailySpinLastUsedDate: Date?
     let lastUpdatedDate: Date
+    var dailyKillGoldCount: Int = 0
+    var killGoldLastResetDate: Date? = nil
 }

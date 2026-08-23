@@ -8,9 +8,7 @@
 
 import Alamofire
 import CoreAPI
-import YakoSwift
 
-@DefaultInit
 public enum GetImage: EndPoint {
     
     case image(_ value: GetImageRequestModel, baseURL: String)

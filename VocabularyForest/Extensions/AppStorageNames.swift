@@ -11,4 +11,6 @@ enum AppStorageNames: String {
     case isMuted
     case isHapticsEnabled
     case shownForestInfo
+    case shownForestTour
+    case userClaimedFirtReward
 }

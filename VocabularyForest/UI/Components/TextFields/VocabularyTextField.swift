@@ -22,12 +22,16 @@ struct VocabularyTextField: View {
     // MARK: - VIEW
     
     var body: some View {
-        TextField(placeholder, text: $userInput)
+        // Vertical axis lets long placeholders and accessibility text sizes wrap
+        // instead of clipping inside the fixed single-line height.
+        TextField(placeholder, text: $userInput, axis: .vertical)
+            .a11yFieldLabel(title)
             .padding(.vertical, 16)
             .padding(.horizontal)
-            .lineLimit(1)
+            .lineLimit(1...3)
+            .foregroundStyle(.logoGreen)
             .textFieldStyle(PlainTextFieldStyle())
-            .background(Color.white)
+            .background(Color.textfieldBackground)
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -36,12 +40,14 @@ struct VocabularyTextField: View {
             .overlay(alignment: .topLeading){
                 if let title {
                     Text(title)
-                        .font(.system(size: 18, weight: .medium))
+                        .a11yDecorative()
+                        .scaledFont(size: 20, weight: .bold)
+                        .foregroundStyle(.textfieldHeader)
                         .background(
                             VStack(spacing: 0) {
                                 Color.backgroundSystem
                                     .frame(height: 12)
-                                Color.white
+                                Color.textfieldBackground
                             }
                         )
                         .offset(x: 16, y: -12)
@@ -51,11 +57,13 @@ struct VocabularyTextField: View {
                 Image(imageHead ?? "")
                     .resizable().scaledToFit().frame(width: 50)
                     .offset(x: -20,y: -23)
+                    .a11yDecorative()
             }
             .overlay(alignment: .bottomTrailing) {
                 Image(imageFoot ?? "")
                     .resizable().scaledToFit().frame(width: 30)
                     .offset(x: -30,y: 7)
+                    .a11yDecorative()
             }
     }
 }
@@ -67,5 +75,6 @@ struct VocabularyTextField: View {
     VStack {
         VocabularyTextField(userInput: $input, isSelected: $selected, isEmpty: .constant(true), placeholder: "English word", title: "English",imageHead: "elephanthead", imageFoot: "elephantfoot")
     }.frame(minHeight: 0, maxHeight: .infinity).padding().background(.backgroundSystem)
+        .preferredColorScheme(.dark)
     
 }

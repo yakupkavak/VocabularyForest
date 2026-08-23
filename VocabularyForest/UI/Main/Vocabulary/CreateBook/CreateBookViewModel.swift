@@ -11,9 +11,10 @@ import Combine
 class CreateBookViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
-    
+
     private let coreDataManager: CoreDataManagerProtocol
-    
+    private let analyticsService: AnalyticsServiceProtocol
+
     // MARK: - PROPERTIES
     
     @Published var currentBookcase: BookcaseModel? = nil
@@ -31,8 +32,9 @@ class CreateBookViewModel: ObservableObject {
     
     // MARK: - INITALIZE
 
-    init(coreDataManager: CoreDataManagerProtocol){
+    init(coreDataManager: CoreDataManagerProtocol, analyticsService: AnalyticsServiceProtocol){
         self.coreDataManager = coreDataManager
+        self.analyticsService = analyticsService
         fetchUserPreferences()
         fetchBookcases()
         NotificationCenter.default.addObserver(
@@ -153,7 +155,7 @@ class CreateBookViewModel: ObservableObject {
         guard let currentBookcase else {
             return
         }
-        if let book = coreDataManager.createSafeBook(
+        if coreDataManager.createSafeBook(
             learningWord: bookLearningWord,
             meaningWord: bookMeaningWord,
             exampleSentence: bookExampleSentence,
@@ -161,8 +163,11 @@ class CreateBookViewModel: ObservableObject {
             partOfSpeech: partOfSpeech.rawValue,
             safeBookcase: currentBookcase,
             contextType: .main
-        ) {
-            // Todo: Show success
+        ) != nil {
+            analyticsService.log(.bookCreated(
+                bookcaseID: currentBookcase.id.uuidString,
+                hasExample: !bookExampleSentence.isEmpty
+            ))
         }else {
             // TODO: Show error
         }

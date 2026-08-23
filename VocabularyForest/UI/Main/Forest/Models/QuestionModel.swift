@@ -11,6 +11,7 @@ struct QuestionModel: Hashable {
     let id = UUID()
     let questionTitle: String
     let answers: [AnswerModel]
+    let partOfSpeech: PartOfSpeech
     let questionNumber: Int
     let description: String?
     let example: String?

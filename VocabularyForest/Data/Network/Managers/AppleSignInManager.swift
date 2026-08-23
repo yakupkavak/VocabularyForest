@@ -8,22 +8,53 @@
 import AuthenticationServices
 import CryptoKit
 
-class AppleSignInManager {
+class AppleSignInManager: NSObject {
     
     static let shared = AppleSignInManager()
     
     fileprivate static var currentNonce: String?
+    private var credentialContinuation: CheckedContinuation<ASAuthorizationAppleIDCredential, Error>?
 
     static var nonce: String? {
         currentNonce ?? nil
     }
 
-    private init() {}
+    private override init() {}
 
     func requestAppleAuthorization(_ request: ASAuthorizationAppleIDRequest) {
         AppleSignInManager.currentNonce = randomNonceString()
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(AppleSignInManager.currentNonce!)
+    }
+    
+    /// Hesap silme öncesi reauth + token revoke için taze Apple credential alır.
+    @MainActor
+    func requestFreshCredential() async throws -> ASAuthorizationAppleIDCredential {
+        try await withCheckedThrowingContinuation { continuation in
+            credentialContinuation = continuation
+            let request = ASAuthorizationAppleIDProvider().createRequest()
+            requestAppleAuthorization(request)
+            let controller = ASAuthorizationController(authorizationRequests: [request])
+            controller.delegate = self
+            controller.performRequests()
+        }
+    }
+}
+
+extension AppleSignInManager: ASAuthorizationControllerDelegate {
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let credential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            credentialContinuation?.resume(returning: credential)
+        } else {
+            credentialContinuation?.resume(throwing: AuthError.invalidCredantial)
+        }
+        credentialContinuation = nil
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        credentialContinuation?.resume(throwing: error)
+        credentialContinuation = nil
     }
 }
 

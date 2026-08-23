@@ -16,6 +16,8 @@ struct CreateBookcaseUI: View {
     @ObservedObject var viewModel: CreateBookcaseViewModel
     @FocusState private var focusedField: Field?
     @State private var activeSheet: SheetTypes? = nil
+    /// When set, called after a successful creation instead of the default router navigation (e.g. when shown inside a sheet)
+    var onCreated: (() -> Void)? = nil
     
     // MARK: - VIEWS
     
@@ -33,6 +35,7 @@ struct CreateBookcaseUI: View {
         .background(.backgroundSystem)
         .navigationTitle("Kitaplık oluştur")
         .navigationBarTitleDisplayMode(.inline)
+        .trackScreen(.createBookcase)
     }
 }
 
@@ -74,15 +77,20 @@ private extension CreateBookcaseUI {
                 Spacer()
                 LottieView(animation: .named("meditationSloth"))
                     .playing(loopMode: .loop).resizable().frame(maxWidth: 250)
+                    .a11yDecorative()
                 Spacer()
             }
             Button {
                 if viewModel.checkAndCreateBookcase() {
-                    router.navigateToRoot()
+                    if let onCreated {
+                        onCreated()
+                    } else {
+                        router.navigateToRoot()
+                    }
                 }
             } label: {
                 Text("Oluştur").padding(.vertical, 8).padding(.horizontal, 4).frame(maxWidth: .greatestFiniteMagnitude, alignment: .center)
-            }.tint(Color.clickableButton).buttonStyle(.bordered)
+            }.tint(Color.brown300).buttonStyle(.borderedProminent)
 
             Spacer()
         }.padding(24)
@@ -112,5 +120,5 @@ private extension CreateBookcaseUI {
 }
 
 #Preview {
-    CreateBookcaseUI(viewModel: CreateBookcaseViewModel(coreDataManager: CoreDataManager()))
+    CreateBookcaseUI(viewModel: CreateBookcaseViewModel(coreDataManager: CoreDataManager(), analyticsService: NoopAnalyticsService()))
 }

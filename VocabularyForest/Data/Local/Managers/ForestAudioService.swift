@@ -30,6 +30,8 @@ class ForestAudioService: NSObject, AudioServiceProtocol {
     ]
     private var playlist: [String] = []
     private var currentTrackIndex = 0
+    private var consecutiveTrackFailures = 0
+    private let logger: AppLoggerProtocol = AppLogger.shared
     
     // MARK: - INIT
     
@@ -78,7 +80,7 @@ class ForestAudioService: NSObject, AudioServiceProtocol {
             sfxPlayer?.volume = currentSFXVolume
             sfxPlayer?.play()
         } catch {
-            print("SFX Error: \(error)")
+            logger.error("Sound effect playback failed: \(error.localizedDescription)", category: .forest)
         }
     }
 }
@@ -107,11 +109,19 @@ private extension ForestAudioService {
     }
     
     func playMusicFile(filename: String) {
+        // If every track in the playlist fails (missing resource, audio session
+        // unavailable), stop instead of recursing through playNextTrack forever —
+        // the unbounded recursion crashes with a stack overflow.
+        guard consecutiveTrackFailures < playlist.count else {
+            consecutiveTrackFailures = 0
+            return
+        }
         guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else {
+            consecutiveTrackFailures += 1
             playNextTrack()
             return
         }
-        
+
         do {
             musicPlayer = try AVAudioPlayer(contentsOf: url)
             musicPlayer?.delegate = self
@@ -119,8 +129,9 @@ private extension ForestAudioService {
             musicPlayer?.numberOfLoops = 0
             musicPlayer?.prepareToPlay()
             musicPlayer?.play()
-            
+            consecutiveTrackFailures = 0
         } catch {
+            consecutiveTrackFailures += 1
             playNextTrack()
         }
     }

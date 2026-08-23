@@ -7,6 +7,21 @@
 
 import SwiftUI
 
+// MARK: - ACCESSIBILITY TEXT
+
+/// Card state is otherwise conveyed only through color, glow and badge icons,
+/// so VoiceOver needs an explicit spoken equivalent.
+private extension WeeklyDailyCardModel {
+
+    var a11yStatusText: String {
+        switch status {
+        case .locked: String(localized: "a11y_status_locked")
+        case .ready: String(localized: "a11y_status_ready")
+        case .claimed: String(localized: "a11y_status_claimed")
+        }
+    }
+}
+
 struct DailyCard: View {
     
     // MARK: - PROPERTIES
@@ -22,10 +37,8 @@ struct DailyCard: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Image(model.bounty.rewardImage).resizable().scaledToFit().frame(width: parentWidth * 0.12, height: parentWidth * 0.12)
-            if let rewardCount = model.bounty.rewardCount {
-                Text("x\(rewardCount)").outlinedLargeTitle().offset(x: 15, y: 5)
-            }
+            RewardImageView(asset: model.bounty.reward.posterImage).scaledToFit().frame(width: parentWidth * 0.12, height: parentWidth * 0.12)
+            Text("x\(model.bounty.rewardCount)").outlinedLargeTitle().offset(x: 15, y: 5)
         }
         .compositingGroup()
         .padding(8)
@@ -33,7 +46,7 @@ struct DailyCard: View {
         .padding(.top, 10)
         .padding(.vertical, 6)
         .background(
-            RadialGradient(colors: model.status == .ready ? [.backgroundSystem, .brown500, .claimedText] : [.backgroundSystem, .brown700, .claimedText], center: .center, startRadius: 30, endRadius: (isPad ? 300 : 150))
+            RadialGradient(colors: model.status == .ready ? [.backgroundLight, .brown500, .claimedText] : [.backgroundLight, .brown700, .claimedText], center: .center, startRadius: 30, endRadius: (isPad ? 300 : 150))
         )
         .borderShape(radius: 24)
         .outlinedLine(radius: model.status == .ready ? 2 : 0.2, color: model.status == .ready ? .darkGren.opacity(0.3) : .orange.opacity(0.3))
@@ -64,11 +77,21 @@ struct DailyCard: View {
             }
         }
         .compositingGroup()
-        .opacity(model.status == .passed || model.status == .claimed  ? 0.8 : 1.0)
+        .opacity(model.status == .claimed ? 0.8 : 1.0)
 
         .onTapGesture {
             onClick()
         }
+        .a11yTapButton(
+            String(
+                format: NSLocalizedString("a11y_daily_card_label", comment: ""),
+                model.day,
+                model.bounty.reward.displayName.localized,
+                model.bounty.rewardCount
+            ),
+            value: model.a11yStatusText,
+            hint: model.status == .ready ? String(localized: "a11y_claim_hint") : nil
+        )
     }
 }
 
@@ -83,7 +106,7 @@ struct DailyHeader: View {
             .shadow(color: .white, radius: 0.7)
             .frame(width: (isPad ? 120 : 80))
             .overlay(alignment: .center) {
-                Text(text).font(.system(size: (isPad ? 32 : 24), weight: .bold)).foregroundStyle(goldGradient)
+                Text(text).scaledFont(size: (isPad ? 32 : 24), weight: .bold).foregroundStyle(goldGradient)
                     
                 .outlinedLine(radius: 0.2, color: .black.opacity(0.1))
                 .offset(y: -2)
@@ -92,22 +115,22 @@ struct DailyHeader: View {
 }
 
 #Preview {
+    /*
     let goldModel = WeeklyDailyCardModel(day: 1, bounty: .chest(model: .gold), status: .ready)
     let waterModel = WeeklyDailyCardModel(day: 1, bounty: .standart(model: .water(count: 200)), status: .passed)
     HStack {
         Spacer()
         VStack {
             Spacer()
-            DailyCard(parentWidth: UIScreen.main.bounds.width, model: waterModel) {
-                print("yakup")
-            }
+            DailyCard(parentWidth: UIScreen.main.bounds.width, model: waterModel) { }
             Spacer()
         }
         Spacer()
-        DailyCard(parentWidth: UIScreen.main.bounds.width, model: goldModel) {
-            print("yakup")
-        }
+        DailyCard(parentWidth: UIScreen.main.bounds.width, model: goldModel) { }
         Spacer()
     }
     .background(.blue)
+     */
 }
+
+

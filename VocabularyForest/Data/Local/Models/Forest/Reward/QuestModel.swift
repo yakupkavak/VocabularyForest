@@ -134,18 +134,18 @@ struct QuestModel: Identifiable, Hashable {
     
     // MARK: - PROPERTIES
     
-    let id: UUID
+    let id: String
     let type: QuestType
     let title: String
     let description: String
-    let reward: QuestRewardModel
-    let lastUpdatedDate: Date
+    let reward: LocalRewardModel
+    var lastUpdatedDate: Date
     var status: QuestStatus
     var targetCount: Int
     var currentProgressCount: Int
     var questionType: BattleQuestionType
-    var battleEnemyModel: BattleEnemyModel
-    var gameLevel: GameLevel
+    let battleEnemyModel: BattleEnemyModel
+    let gameLevel: GameLevel
 
     // MARK: - COMPUTED PROPERTIES
 

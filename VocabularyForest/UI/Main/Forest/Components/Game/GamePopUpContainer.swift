@@ -25,6 +25,7 @@ struct GamePopUpContainer<Content: View>: View {
         VStack(spacing: 20) {
             Text(title)
                 .modifier(TitleBackground())
+                .a11yHeader()
             .padding(.bottom, 10)
             content
         }
@@ -45,8 +46,10 @@ struct GamePopUpContainer<Content: View>: View {
                     .resizable()
                     .frame(maxWidth: 36, maxHeight: 36)
                     .offset(x: 12, y: -12)
+                    .accessibilityLabel(String(localized: "a11y_close"))
             }
         }
         .zIndex(4.0)
+        .a11yModal(onEscape: onClose)
     }
 }

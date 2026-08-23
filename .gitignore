@@ -26,4 +26,6 @@ DerivedData/
 .DS_Store
 
 GoogleService-Info.plist
-GoogleService-Info.plist
+
+# Gizli config
+Release.xcconfig

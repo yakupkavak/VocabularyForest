@@ -31,6 +31,7 @@ class NotificationManager: NotificationManagerProtocol {
     
     @Published var notificationsEnabled: Bool = false
     private let center = UNUserNotificationCenter.current()
+    private let logger: AppLoggerProtocol = AppLogger.shared
     private var healthNotificationIDs: [String] {
         return ["health_limit_50","health_limit_20", "health_limit_10", "health_limit_0"]
     }
@@ -85,11 +86,9 @@ class NotificationManager: NotificationManagerProtocol {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         
-        center.add(request) { error in
+        center.add(request) { [weak self] error in
             if let error = error {
-                print("Sağlık bildirimi kurulamadı: \(error.localizedDescription)")
-            } else {
-                print("🏥 Bildirim kuruldu: %\(targetValue) sınırı için \(Int(timeInterval/60)) dakika sonra.")
+                self?.logger.error("Health notification could not be scheduled: \(error.localizedDescription)", category: .ui)
             }
         }
     }
@@ -158,16 +157,16 @@ class NotificationManager: NotificationManagerProtocol {
         }else if description.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty && !example.isEmpty{
             content = askExample(learningWord: learningWord, meaningWord: meaningWord, example: example)
         }else if example.isEmpty && !learningWord.isEmpty && !meaningWord.isEmpty {
-            content = askDescription(learningWord: learningWord, meaningWord: description, description: description) // Düzeltme yapıldı
+            content = askDescription(learningWord: learningWord, meaningWord: meaningWord, description: description)
         }
         
         if let content {
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
             let request = UNNotificationRequest(identifier: bookId, content: content, trigger: trigger)
             let center = UNUserNotificationCenter.current()
-            center.add(request) { error in
+            center.add(request) { [weak self] error in
                 if let error {
-                    print(error.localizedDescription)
+                    self?.logger.error("Book reminder notification could not be scheduled: \(error.localizedDescription)", category: .ui)
                 }
             }
         }
