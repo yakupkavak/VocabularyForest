@@ -56,10 +56,21 @@ private extension ForestTourManager {
         static let zero: CGFloat = 0.0
 
         static let idleTimeMultiplier: Double = 2.0
-        /// Per-frame chase speed; at 60fps this outruns scrollSpeedPerSecond so
-        /// the rabbit keeps its lead while the world scrolls under it.
-        static let walkSpeedPerFrame: CGFloat = 4.0
-        static let arrivalThreshold: CGFloat = 8.0
+        /// The guide should read larger than regular forest animals.
+        static let sizeMultiplier: CGFloat = 1.3
+        /// Per-frame chase speed; at 60fps (144pt/s) this still outruns
+        /// scrollSpeedPerSecond (100pt/s) so the rabbit keeps its lead while
+        /// the world scrolls, without reading as teleporting between stops.
+        static let walkSpeedPerFrame: CGFloat = 2.4
+        /// Ease-out zone before a stop; speed scales down linearly inside it
+        /// so arrival reads as a landing instead of an abrupt halt.
+        static let arrivalEaseDistance: CGFloat = 60.0
+        static let minWalkSpeedPerFrame: CGFloat = 0.6
+        /// Hysteresis pair: the scrolling world drags the anchor a little every
+        /// frame, so without a wide re-start band the rabbit stutter-steps
+        /// between walk and idle whenever the player moves.
+        static let startWalkingDistance: CGFloat = 24.0
+        static let stopWalkingDistance: CGFloat = 4.0
         static let spawnOffscreenOffset: CGFloat = 60.0
         static let anchorGap: CGFloat = 12.0
         static let finishFadeDuration: TimeInterval = 0.5
@@ -77,6 +88,7 @@ final class ForestTourManager {
     private var jumpTextures: [SKTexture] = []
     private var step: ForestTourStep = .inactive
     private var isWalking = false
+    private var pendingSentences: [String] = []
     var onWalkHintChanged: ((HorizontalDirection?) -> Void)?
     var onFinished: (() -> Void)?
 
@@ -117,16 +129,16 @@ extension ForestTourManager: ForestTourManagerProtocol {
     func handleTouch(nodes: [SKNode]) -> Bool {
         switch step {
         case .welcome:
-            advance(to: .board)
+            advanceSentenceOrStep(to: .board)
             return true
         case .board:
-            advance(to: .followGate)
+            advanceSentenceOrStep(to: .followGate)
             return true
         case .gate:
-            advance(to: .followMarket)
+            advanceSentenceOrStep(to: .followMarket)
             return true
         case .market:
-            advance(to: .ready)
+            advanceSentenceOrStep(to: .ready)
             return true
         case .ready:
             if nodes.contains(where: { $0.name == ForestConstant.tourAcceptButtonName }) {
@@ -134,7 +146,12 @@ extension ForestTourManager: ForestTourManagerProtocol {
             }
             return true
         case .followGate, .followMarket:
-            // Walking is the lesson here; let the touch fall through to the player.
+            // First taps page through the hint sentences; after that walking
+            // is the lesson, so let the touch fall through to the player.
+            if !pendingSentences.isEmpty {
+                showNextSentence()
+                return true
+            }
             return false
         case .inactive, .entering, .finished:
             return true
@@ -171,9 +188,10 @@ private extension ForestTourManager {
         let aspectRatio = originalSize.height > Constants.zero
             ? originalSize.width / originalSize.height
             : Constants.defaultAspectRatio
+        let rabbitHeight = ComponentSizeConstant.animalHeight * Constants.sizeMultiplier
         rabbitNode.size = CGSize(
-            width: ComponentSizeConstant.animalHeight * aspectRatio,
-            height: ComponentSizeConstant.animalHeight
+            width: rabbitHeight * aspectRatio,
+            height: rabbitHeight
         )
         rabbitNode.anchorPoint = CGPoint(x: Constants.anchorPointX, y: Constants.anchorPointY)
         rabbitNode.position = CGPoint(
@@ -215,19 +233,34 @@ private extension ForestTourManager {
     func moveTowardAnchor() {
         guard let anchorX else { return }
         let dx = anchorX - rabbitNode.position.x
-        if abs(dx) > Constants.arrivalThreshold {
-            face(direction: dx < Constants.zero ? .left : .right)
-            startWalkAnimationIfNeeded()
-            let stepX = max(-Constants.walkSpeedPerFrame, min(Constants.walkSpeedPerFrame, dx))
-            rabbitNode.position.x += stepX
+        if !isWalking && abs(dx) > Constants.startWalkingDistance {
             isWalking = true
-        } else if isWalking {
-            isWalking = false
-            stopWalkAnimation()
-            faceScreenCenter()
-            if step == .entering {
-                advance(to: .welcome)
+            startWalkAnimationIfNeeded()
+        }
+        if isWalking {
+            face(direction: dx < Constants.zero ? .left : .right)
+            // Linear ease-out: full stride far away, decelerating inside the
+            // arrival zone so the stop reads as a landing, not a teleport.
+            let easedSpeed = min(
+                Constants.walkSpeedPerFrame,
+                max(Constants.minWalkSpeedPerFrame,
+                    Constants.walkSpeedPerFrame * abs(dx) / Constants.arrivalEaseDistance)
+            )
+            rabbitNode.position.x += dx < Constants.zero ? -easedSpeed : easedSpeed
+            if abs(dx) <= Constants.stopWalkingDistance {
+                isWalking = false
+                stopWalkAnimation()
+                faceScreenCenter()
+                if step == .entering {
+                    advance(to: .welcome)
+                }
             }
+        } else {
+            // Standing on scrolling ground: chase the drifting anchor with a
+            // clamped step so the rabbit stays planted at its stop without
+            // ever jumping there in a single frame.
+            let driftX = max(-Constants.walkSpeedPerFrame, min(Constants.walkSpeedPerFrame, dx))
+            rabbitNode.position.x += driftX
         }
     }
 
@@ -251,8 +284,20 @@ private extension ForestTourManager {
 
     // MARK: - STEP MACHINE
 
+    /// Shows the next queued sentence if the current step is still mid-speech,
+    /// otherwise moves the tour forward. Keeps taps advancing one sentence at
+    /// a time instead of dumping the whole paragraph at once.
+    func advanceSentenceOrStep(to nextStep: ForestTourStep) {
+        if pendingSentences.isEmpty {
+            advance(to: nextStep)
+        } else {
+            showNextSentence()
+        }
+    }
+
     func advance(to newStep: ForestTourStep) {
         step = newStep
+        pendingSentences.removeAll()
         removeBubble()
         switch newStep {
         case .welcome:
@@ -283,15 +328,35 @@ private extension ForestTourManager {
     // MARK: - TALK
 
     func talk(_ text: String) {
+        pendingSentences = splitSentences(of: text)
+        showNextSentence()
+    }
+
+    func showNextSentence() {
+        removeBubble()
+        guard !pendingSentences.isEmpty else { return }
+        let sentence = pendingSentences.removeFirst()
         let bubble = ComponentBubble.createTalkBubble(
             parentSize: rabbitNode.size,
             parentXScale: rabbitNode.xScale,
-            text: text,
+            text: sentence,
             width: ComponentBubble.Constants.tourBubbleWidth,
             autoClose: false
         )
         rabbitNode.addChild(bubble)
-        A11yAnnouncer.announce(text)
+        A11yAnnouncer.announce(sentence)
+    }
+
+    /// Locale-aware sentence split so every supported language's tour reads
+    /// one line at a time; falls back to the whole text when no boundary exists.
+    func splitSentences(of text: String) -> [String] {
+        var sentences: [String] = []
+        text.enumerateSubstrings(in: text.startIndex..., options: [.bySentences, .localized]) { substring, _, _, _ in
+            if let sentence = substring?.trimmingCharacters(in: .whitespacesAndNewlines), !sentence.isEmpty {
+                sentences.append(sentence)
+            }
+        }
+        return sentences.isEmpty ? [text] : sentences
     }
 
     func askReadyQuestion() {
