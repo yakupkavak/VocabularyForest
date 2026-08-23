@@ -73,11 +73,15 @@ private extension ForestTourManager {
         static let stopWalkingDistance: CGFloat = 4.0
         static let anchorGap: CGFloat = 12.0
         static let finishFadeDuration: TimeInterval = 0.5
+        /// A follow step completes once the target structure is fully on
+        /// screen plus this fraction of the screen width further in, so the
+        /// arrival registers just past the moment the structure is revealed.
+        static let followArrivalScreenFraction: CGFloat = 0.02
 
         /// Spotlight layering: the dim veil sits above every world node, and
         /// the featured structure, rabbit, and player are raised above it.
         static let dimNodeName = "tourDim"
-        static let dimAlpha: CGFloat = 0.2
+        static let dimAlpha: CGFloat = 0.4
         static let dimZPosition: CGFloat = 50.0
         static let spotlitZPosition: CGFloat = 51.0
     }
@@ -294,15 +298,16 @@ private extension ForestTourManager {
 
     func checkFollowProgress() {
         guard let scene else { return }
+        let arrivalMargin = scene.size.width * Constants.followArrivalScreenFraction
         switch step {
         case .followGate:
             if let gate = scene.childNode(withName: ForestConstant.adventureGateName) as? SKSpriteNode,
-               gate.position.x >= gate.size.width / Constants.halfDivider {
+               gate.position.x >= gate.size.width / Constants.halfDivider + arrivalMargin {
                 advance(to: .gate)
             }
         case .followMarket:
             if let market = scene.childNode(withName: ForestConstant.marketName) as? SKSpriteNode,
-               market.position.x <= scene.size.width - market.size.width / Constants.halfDivider {
+               market.position.x <= scene.size.width - market.size.width / Constants.halfDivider - arrivalMargin {
                 advance(to: .market)
             }
         default:
