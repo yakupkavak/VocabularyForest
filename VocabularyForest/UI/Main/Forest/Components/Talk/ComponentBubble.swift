@@ -98,10 +98,6 @@ struct ComponentBubble {
         /// Negative so the tour bubble hugs the rabbit's head instead of
         /// floating a full body-height above it.
         static let tourBubbleGap: CGFloat = -20.0
-        static let tourQuestionMinHeight: CGFloat = 110.0
-        static let tourAcceptButtonSize: CGFloat = 36.0
-        static let tourQuestionLabelYOffset: CGFloat = 22.0
-        static let tourQuestionButtonYOffset: CGFloat = -14.0
 
         static let initialScale: CGFloat = 0.0
         static let scaleDuration: TimeInterval = 0.2
@@ -312,52 +308,6 @@ struct ComponentBubble {
         if autoClose {
             applyTalkAutoCloseAnimation(to: bubble)
         }
-
-        return bubble
-    }
-
-    /// Guided-tour question bubble: a talk bubble with a confirm button the
-    /// tour advances on. Stays on screen until the button is tapped.
-    static func createTourQuestionBubble(parentSize: CGSize, parentXScale: CGFloat, text: String) -> SKNode {
-        let texture = SKTexture(imageNamed: "speak_ballon")
-        let bubble = SKSpriteNode(texture: texture)
-        bubble.name = Constants.talkBubbleName
-        bubble.zPosition = Constants.defaultZPosition
-
-        let label = createTalkLabel(text: text, maxWidth: Constants.tourBubbleWidth - Constants.talkLabelPadding)
-
-        let dynamicHeight = max(
-            Constants.tourQuestionMinHeight,
-            label.frame.height + Constants.tourAcceptButtonSize + Constants.talkVerticalPadding * Constants.halfDivider
-        )
-        bubble.size = CGSize(width: Constants.tourBubbleWidth, height: dynamicHeight)
-
-        if parentXScale < Constants.zero {
-            bubble.xScale = Constants.flippedScaleX
-        }
-
-        bubble.position = CGPoint(
-            x: Constants.zero,
-            y: parentSize.height + (dynamicHeight / Constants.halfDivider) + Constants.tourBubbleGap
-        )
-        label.position = CGPoint(x: Constants.zero, y: Constants.tourQuestionLabelYOffset)
-        bubble.addChild(label)
-
-        let acceptButton = SKSpriteNode(imageNamed: "accept_button")
-        acceptButton.name = ForestConstant.tourAcceptButtonName
-        acceptButton.size = CGSize(width: Constants.tourAcceptButtonSize, height: Constants.tourAcceptButtonSize)
-        acceptButton.position = CGPoint(x: Constants.zero, y: Constants.tourQuestionButtonYOffset)
-        acceptButton.zPosition = Constants.buttonLabelZPosition
-        bubble.addChild(acceptButton)
-
-        // Widen the tappable area past the icon to keep a comfortable touch target.
-        let hitbox = createInvisibleHitbox(
-            name: ForestConstant.tourAcceptButtonName,
-            width: Constants.hitboxWidth,
-            height: Constants.hitboxHeight,
-            position: acceptButton.position
-        )
-        bubble.addChild(hitbox)
 
         return bubble
     }

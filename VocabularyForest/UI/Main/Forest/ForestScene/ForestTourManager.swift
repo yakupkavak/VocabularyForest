@@ -78,6 +78,12 @@ private extension ForestTourManager {
         /// arrival registers just past the moment the structure is revealed.
         static let followArrivalScreenFraction: CGFloat = 0.02
 
+        /// Ready-step confirm control: a lone tick at the bottom center of
+        /// the screen instead of a button crammed inside the speech bubble.
+        static let acceptButtonImageName = "accept_button"
+        static let readyButtonSize: CGFloat = 56.0
+        static let readyButtonBottomOffset: CGFloat = 90.0
+
         /// Spotlight layering: the dim veil sits above every world node, and
         /// the featured structure, rabbit, and player are raised above it.
         static let dimNodeName = "tourDim"
@@ -438,14 +444,26 @@ private extension ForestTourManager {
     }
 
     func askReadyQuestion() {
-        let text = String(localized: "tour_ready_question")
-        let bubble = ComponentBubble.createTourQuestionBubble(
-            parentSize: rabbitNode.size,
-            parentXScale: rabbitNode.xScale,
-            text: text
+        talk(String(localized: "tour_ready_question"))
+        addReadyButton()
+    }
+
+    func addReadyButton() {
+        guard let scene else { return }
+        let button = SKSpriteNode(imageNamed: Constants.acceptButtonImageName)
+        button.name = ForestConstant.tourAcceptButtonName
+        button.size = CGSize(width: Constants.readyButtonSize, height: Constants.readyButtonSize)
+        button.position = CGPoint(
+            x: scene.size.width / Constants.halfDivider,
+            y: Constants.readyButtonBottomOffset
         )
-        rabbitNode.addChild(bubble)
-        A11yAnnouncer.announce(text)
+        // Above the spotlight veil so the confirm control stays bright.
+        button.zPosition = Constants.spotlitZPosition
+        scene.addChild(button)
+    }
+
+    func removeReadyButton() {
+        scene?.childNode(withName: ForestConstant.tourAcceptButtonName)?.removeFromParent()
     }
 
     func removeBubble() {
@@ -493,6 +511,7 @@ private extension ForestTourManager {
 
     func finishTour() {
         onWalkHintChanged?(nil)
+        removeReadyButton()
         rabbitNode.removeAction(forKey: GameConstant.waitingCharacterAnimation)
         let jump = SKAction.animate(with: jumpTextures, timePerFrame: GameConstant.jumpTimePerFrame)
         let fade = SKAction.fadeOut(withDuration: Constants.finishFadeDuration)
