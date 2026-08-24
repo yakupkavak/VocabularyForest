@@ -249,21 +249,6 @@ extension ForestDataManager {
             let dailyActivities = DailyActivities(context: context)
             dailyActivities.lastUpdatedDate = Date()
             forest.dailyActivities = dailyActivities
-            for sculptureModel in baseSculptureList {
-                let sculpture = Sculpture(context: context)
-                sculpture.id = sculptureModel.id
-                sculpture.assetName = sculptureModel.assetName
-                sculpture.createdDate = sculptureModel.createdDate
-                sculpture.characterName = generateRandomName(type: .sculpture)
-                sculpture.xPosition = sculptureModel.xPosition
-                sculpture.yPosition = sculptureModel.yPosition
-                sculpture.lastUpdatedDate = Date()
-                sculpture.assetSourceString = ImageSourceType.appAssets.rawValue
-                sculpture.posterKey = sculptureModel.assetName
-                sculpture.posterSourceString = ImageSourceType.appAssets.rawValue
-                sculpture.assetReady = true
-                forest.addToSculptures(sculpture)
-            }
             do {
                 try save(context: context)
                 return Resource.success(forest)

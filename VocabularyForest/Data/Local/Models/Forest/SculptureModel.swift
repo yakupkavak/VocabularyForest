@@ -28,28 +28,3 @@ struct SculptureModel: Equatable, ComponentNameable, ComponentModelProtocol {
     var widthRatio: CGFloat? = nil
     var heightRatio: CGFloat? = nil
 }
-
-let baseSculptureList = [
-    SculptureModel(
-        id: UUID(),
-        assetName: "water_statue",
-        createdDate: Date(),
-        characterName: "Peace",
-        assetSource: .appAssets,
-        poster: RewardAssetReference(key: "water_statue", source: .appAssets),
-        xPosition: 0.15,
-        yPosition: 0.4,
-        lastUpdatedDate: Date()
-    ),
-    SculptureModel(
-        id: UUID(),
-        assetName: "grass_statue",
-        createdDate: Date(),
-        characterName: "happiness",
-        assetSource: .appAssets,
-        poster: RewardAssetReference(key: "grass_statue", source: .appAssets),
-        xPosition: 0.03,
-        yPosition: 0.23,
-        lastUpdatedDate: Date()
-    )
-]

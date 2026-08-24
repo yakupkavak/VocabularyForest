@@ -42,8 +42,6 @@ class EnvironmentManager {
     private weak var scene: SKScene?
     let floorNode = SKSpriteNode(imageNamed: "floor")
     private var skyDecor = SKSpriteNode(imageNamed: "sky_decor")
-    private let waterStatue = SKSpriteNode(imageNamed: "water_statue")
-    private let grassStatue = SKSpriteNode(imageNamed: "grass_statue")
     private let menuButton = SKSpriteNode(imageNamed: "menu_button")
     private let forestButton = SKSpriteNode(imageNamed: "forest_button")
     private let scoreLabel = SKLabelNode(fontNamed: "AvenirNext-Bold")
@@ -225,7 +223,7 @@ private extension EnvironmentManager {
     }
 
     func isScrollingNode(_ node: SKNode) -> Bool {
-        node == floorNode || node == waterStatue || node == grassStatue || node == marketNode ||
+        node == floorNode || node == marketNode ||
         node == announcementSignNode || node == adventureGateNode ||
         node.name == "Animal" || node.name == "sculpture" || node.name == "plant" ||
         node.name == ForestConstant.tourRabbitName
