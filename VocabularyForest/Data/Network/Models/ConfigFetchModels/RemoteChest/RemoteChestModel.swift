@@ -17,6 +17,8 @@ struct RemoteChestModel: Decodable {
     let roadColorHex: String?
     let cardGradientHexes: [String]?
     let cardTextColorHex: String?
+    /// Guaranteed S/S+ drop configuration; absent on chests without pity
+    let pity: RemoteChestPity?
 }
 
 struct RemoteChestVisuals: Decodable {

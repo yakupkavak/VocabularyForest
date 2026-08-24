@@ -116,6 +116,7 @@ extension RewardRepository: RewardRepositoryProtocol {
                         model: LocalQuestRewardModel(
                             id: id,
                             category: category,
+                            tier: remoteReward.rewardTier,
                             displayName: displayName,
                             assetName: assetName,
                             imageSource: imageSource,

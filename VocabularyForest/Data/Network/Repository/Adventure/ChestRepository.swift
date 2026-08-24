@@ -18,20 +18,34 @@ enum ChestRepositoryError: Error {
 protocol ChestRepositoryProtocol {
     func getLocalChest(chestId: String) -> LocalChestModel?
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws
+    /// Pity pools reference catalog reward ids; register the catalog once so
+    /// those ids can be resolved into concrete rewards at open time.
+    func registerRewardCatalog(items: [RemoteRewardModel])
     func openChest(chestId: String) async throws -> [LocalRewardModel]
     func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
+    func pityProgress(chestId: String) -> ChestPityProgressModel?
 }
 
 final class ChestRepository {
-    
+
     private let offlineAssetManager: OfflineAssetManagerProtocol
     private let networkManager: APIServiceProtocol
+    private let pityService: ChestPityServiceProtocol
+    private let logger: AppLoggerProtocol
     private var localChestModels: [LocalChestModel]?
     private var chestEconomy: [String: RemoteChestEconomy] = [:]
-    
-    init(assetManager: OfflineAssetManagerProtocol, apiService: APIServiceProtocol) {
+    private var catalogRewardsById: [String: RemoteRewardModel] = [:]
+
+    init(
+        assetManager: OfflineAssetManagerProtocol,
+        apiService: APIServiceProtocol,
+        pityService: ChestPityServiceProtocol,
+        logger: AppLoggerProtocol = AppLogger.shared
+    ) {
         self.offlineAssetManager = assetManager
         self.networkManager = apiService
+        self.pityService = pityService
+        self.logger = logger
     }
     
     // MARK: - Private Downloader
@@ -115,11 +129,27 @@ extension ChestRepository: ChestRepositoryProtocol {
         }catch {
             throw error
         }
+        rewards.append(contentsOf: await pityRewards(for: chest))
         if rewards.isEmpty {
             throw ChestRepositoryError.decodingError
         }else {
             return rewards
         }
+    }
+
+    func registerRewardCatalog(items: [RemoteRewardModel]) {
+        var byId: [String: RemoteRewardModel] = [:]
+        for item in items {
+            if let id = item.id, byId[id] == nil {
+                byId[id] = item
+            }
+        }
+        catalogRewardsById = byId
+    }
+
+    func pityProgress(chestId: String) -> ChestPityProgressModel? {
+        guard let pity = getLocalChest(chestId: chestId)?.pity else { return nil }
+        return pityService.progress(for: pity)
     }
         
     func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
@@ -185,7 +215,8 @@ extension ChestRepository: ChestRepositoryProtocol {
                     backgroundGradientColors: remoteChest.gradientHexBackgroundColors,
                     roadColorHex: remoteChest.roadColorHex,
                     cardGradientHexes: remoteChest.cardGradientHexes,
-                    cardTextColorHex: remoteChest.cardTextColorHex
+                    cardTextColorHex: remoteChest.cardTextColorHex,
+                    pity: convertPity(remoteChest.pity)
                 )
                 localChests.append(localChest)
             }else {
@@ -197,6 +228,46 @@ extension ChestRepository: ChestRepositoryProtocol {
 }
 
 private extension ChestRepository {
+    func convertPity(_ remotePity: RemoteChestPity?) -> LocalChestPityModel? {
+        guard let remotePity,
+              let counterGroup = remotePity.counterGroup,
+              let sThreshold = remotePity.sTier?.threshold, sThreshold > 0,
+              let sPool = remotePity.sTier?.pool,
+              let sPlusThreshold = remotePity.sPlusTier?.threshold, sPlusThreshold > 0,
+              let sPlusPool = remotePity.sPlusTier?.pool else {
+            return nil
+        }
+        return LocalChestPityModel(
+            counterGroup: counterGroup,
+            sTier: LocalChestPityTierModel(threshold: sThreshold, pool: sPool),
+            sPlusTier: LocalChestPityTierModel(threshold: sPlusThreshold, pool: sPlusPool),
+            naturalDropChanceS: remotePity.naturalDropChanceS ?? 0,
+            naturalDropChanceSPlus: remotePity.naturalDropChanceSPlus ?? 0
+        )
+    }
+
+    /// Bonus S/S+ drops granted by the pity system for a single open. The pity
+    /// counter must advance even when a pool reward cannot be resolved, so
+    /// resolution failures are logged and skipped instead of failing the open.
+    func pityRewards(for chest: LocalChestModel) async -> [LocalRewardModel] {
+        guard let pity = chest.pity else { return [] }
+        let decision = pityService.registerOpen(pity: pity)
+        var rewards: [LocalRewardModel] = []
+        for tier in [decision.guaranteedTier, decision.naturalTier].compactMap({ $0 }) {
+            guard let rewardId = pityService.poolRewardId(for: tier, pity: pity),
+                  let remoteReward = catalogRewardsById[rewardId] else {
+                logger.error("Pity reward could not be resolved for chest \(chest.id), tier \(tier.rawValue)", category: .reward)
+                continue
+            }
+            do {
+                rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1))
+            } catch {
+                logger.error("Pity reward processing failed for \(rewardId): \(error.localizedDescription)", category: .reward)
+            }
+        }
+        return rewards
+    }
+
     private func processAndGetLocalReward(from remoteReward: RemoteRewardModel, rewardCount: Int) async throws -> LocalRewardModel {
         var localReward: LocalRewardModel
         
@@ -227,6 +298,7 @@ private extension ChestRepository {
                         model: LocalQuestRewardModel(
                             id: id,
                             category: category,
+                            tier: remoteReward.rewardTier,
                             displayName: displayName,
                             assetName: assetName,
                             imageSource: imageSource,

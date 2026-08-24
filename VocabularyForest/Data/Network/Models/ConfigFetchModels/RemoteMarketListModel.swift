@@ -23,6 +23,8 @@ struct RemoteMarketItemModel: Decodable {
     let id: String?
     let price: RemoteMarketPriceModel?
     let reward: RemoteRewardModel?
+    /// Max purchases per ISO week; nil means unlimited
+    let weeklyPurchaseLimit: Int?
 }
 
 struct RemoteMarketPriceModel: Decodable {

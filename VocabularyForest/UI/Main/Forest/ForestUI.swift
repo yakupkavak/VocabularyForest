@@ -233,6 +233,12 @@ private extension ForestUI {
                     },
                     onChestInfoRequest: { chestId in
                         await viewModel.fetchChestDropInfo(chestId: chestId)
+                    },
+                    pityProgress: { chestId in
+                        viewModel.chestPityProgress(chestId: chestId)
+                    },
+                    weeklyRemaining: { item in
+                        viewModel.remainingWeeklyPurchases(item: item)
                     }
                 )
             } else {
@@ -345,7 +351,14 @@ private extension ForestUI {
             monthlyQuests: viewModel.monthlyQuestList,
             specialQuests: viewModel.specialQuestList
         ) { model in
-            viewModel.claimQuestReward(quest: model)
+            /// Chest quest rewards roll their contents inside the popup, so the
+            /// claim must receive exactly what the popup displayed.
+            PopupManager.shared.show {
+                coordinator.startClaimRewardUI(claimReward: model.reward) { rewards in
+                    viewModel.claimQuestReward(quest: model, rolledRewards: rewards)
+                    PopupManager.shared.dismiss()
+                }
+            }
         }
     }
     

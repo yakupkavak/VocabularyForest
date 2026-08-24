@@ -26,14 +26,14 @@ struct ForestAdventureServiceQuestTrackTests {
         let documentRepository = DocumentaryRepository(directoryURL: tempTestDirectory)
         let assetManager = OfflineAssetManager(directoryURL: tempTestDirectory, userDefaults: userDefaults!)
         let networkManager = MockAPIService()
-        let chestRepository = ChestRepository(assetManager: assetManager, apiService: networkManager)
+        let chestRepository = ChestRepository(assetManager: assetManager, apiService: networkManager, pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
         let rewardRepository = RewardRepository(assetManager: assetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
         let questService = QuestService(forestManager: forestData, rewardRepository: rewardRepository)
         let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)
         let weeklyRewardService = WeeklyRewardService(forestManager: forestData, rewardRepository: rewardRepository)
         let seasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
         let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: seasonProgressStore)
-        let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository)
+        let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository, purchaseLimitStore: MarketPurchaseLimitStore())
         self.sut = ForestAdventureService(
             forestManager: forestData,
             playerManager: playerManager,

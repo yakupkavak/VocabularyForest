@@ -15,6 +15,8 @@ struct LocalRewardModel: Hashable {
 struct LocalQuestRewardModel: Hashable {
     let id: String
     let category: QuestRewardModel
+    /// Economy rarity tier; nil for legacy configs without tier data
+    let tier: RewardTier?
     let displayName: RemoteLocalizedText
     let assetName: String
     let imageSource: ImageSource
@@ -31,6 +33,7 @@ struct LocalQuestRewardModel: Hashable {
     init(
         id: String,
         category: QuestRewardModel,
+        tier: RewardTier? = nil,
         displayName: RemoteLocalizedText,
         assetName: String,
         imageSource: ImageSource,
@@ -46,6 +49,7 @@ struct LocalQuestRewardModel: Hashable {
     ) {
         self.id = id
         self.category = category
+        self.tier = tier
         self.displayName = displayName
         self.assetName = assetName
         self.imageSource = imageSource
@@ -98,6 +102,15 @@ struct RewardAssetReference: Hashable {
 }
 
 extension LocalRewardType {
+    var tier: RewardTier? {
+        switch self {
+        case .standart(let model):
+            model.tier
+        case .chest:
+            nil
+        }
+    }
+
     var posterImage: RewardAssetReference {
         switch self {
         case .standart(let model):

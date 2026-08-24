@@ -43,6 +43,15 @@ struct MarketItemModel: Identifiable, Hashable {
     let id: String
     let price: MarketPriceModel
     let reward: LocalRewardModel
+    /// Max purchases per ISO week; nil means unlimited
+    let weeklyPurchaseLimit: Int?
+
+    init(id: String, price: MarketPriceModel, reward: LocalRewardModel, weeklyPurchaseLimit: Int? = nil) {
+        self.id = id
+        self.price = price
+        self.reward = reward
+        self.weeklyPurchaseLimit = weeklyPurchaseLimit
+    }
 }
 
 struct MarketSectionModel: Identifiable, Hashable {

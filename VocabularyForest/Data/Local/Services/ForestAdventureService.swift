@@ -41,10 +41,12 @@ protocol ForestAdventureServiceProtocol {
     func claimDailySpinReward(model: LocalRewardModel) async throws
     func claimWeeklyReward(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) async throws
     func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws
-    func claimQuestReward(quest: QuestModel) async throws
+    func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel]) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
     func purchaseMarketItem(item: MarketItemModel) async throws
     func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
+    func chestPityProgress(chestId: String) -> ChestPityProgressModel?
+    func remainingWeeklyPurchases(item: MarketItemModel) -> Int?
 }
 
 // MARK: - CONSTANTS
@@ -132,7 +134,16 @@ private extension ForestAdventureService {
         Task {
             do {
             let parameters = await remoteConfigRepository.fetchConfigParameters().data
-                
+
+            /// Pity pools reference catalog reward ids, so the catalog must be
+            /// registered before any chest can be opened.
+            do {
+                let catalog = try await remoteConfigRepository.fetchRewardsCatalog()
+                chestService.registerRewardCatalog(items: catalog.model.items ?? [])
+            } catch {
+                logger.error("Rewards catalog registration failed: \(error.localizedDescription)", category: .sync)
+            }
+
             if chestRewardID == parameters?.model.chestRewardsConfigVersion {
                 if let chests = try await documentRepository.fetchChestConfig().chests {
                     try await chestService.processAndSaveChests(from: chests)
@@ -266,11 +277,25 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
         return try await chestService.fetchChestDropInfo(chestId: chestId)
     }
 
-    func claimQuestReward(quest: QuestModel) async throws {
-        try await rewardRepository.claimLocalReward(reward: quest.reward)
+    func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel]) async throws {
+        /// The claim popup already rolled chest contents; claiming those exact
+        /// rewards keeps what the user saw and what the forest receives identical.
+        /// The empty fallback covers a failed roll so the reward is never lost.
+        let rewards = rolledRewards.isEmpty ? [quest.reward] : rolledRewards
+        for model in rewards {
+            try await rewardRepository.claimLocalReward(reward: model)
+        }
         try questService.claimQuestReward(quest: quest)
         analyticsService.log(.achievementUnlocked(achievementID: quest.id))
-        logGoldRewards([quest.reward], source: AnalyticsGoldSource.quest)
+        logGoldRewards(rewards, source: AnalyticsGoldSource.quest)
+    }
+
+    func chestPityProgress(chestId: String) -> ChestPityProgressModel? {
+        chestService.pityProgress(chestId: chestId)
+    }
+
+    func remainingWeeklyPurchases(item: MarketItemModel) -> Int? {
+        marketService.remainingWeeklyPurchases(item: item)
     }
 }
 

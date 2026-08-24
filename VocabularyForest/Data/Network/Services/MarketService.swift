@@ -14,7 +14,8 @@ enum MarketServiceError: LocalizedError {
     case insufficientDiamond
     case emptyForestData
     case purchaseFailed
-    
+    case weeklyLimitReached
+
     var errorDescription: String? {
         switch self {
         case .emptyMarketList:
@@ -27,6 +28,8 @@ enum MarketServiceError: LocalizedError {
             return String(localized: "Local forest data is not available.")
         case .purchaseFailed:
             return String(localized: "Purchase could not be completed. Please try again.")
+        case .weeklyLimitReached:
+            return String(localized: "Weekly limit reached. This trade resets next week.")
         }
     }
 }
@@ -34,24 +37,32 @@ enum MarketServiceError: LocalizedError {
 protocol MarketServiceProtocol {
     var marketScreenModelPublisher: AnyPublisher<MarketScreenModel?, Never> { get }
     var marketScreenModel: MarketScreenModel? { get }
-    
+
     func convertRemoteToMarketList(list: RemoteMarketListModel) async throws
     func purchaseItem(item: MarketItemModel) async throws
+    /// Purchases left this week for a capped item; nil when the item is uncapped
+    func remainingWeeklyPurchases(item: MarketItemModel) -> Int?
 }
 
 final class MarketService {
-    
+
     // MARK: - PROPERTIES
-    
+
     private let forestManager: ForestDataManagerProtocol
     private let rewardRepository: RewardRepositoryProtocol
+    private let purchaseLimitStore: MarketPurchaseLimitStoreProtocol
     @Published private var screenModel: MarketScreenModel?
-    
+
     // MARK: - INIT
-    
-    init(forestManager: ForestDataManagerProtocol, rewardRepository: RewardRepositoryProtocol) {
+
+    init(
+        forestManager: ForestDataManagerProtocol,
+        rewardRepository: RewardRepositoryProtocol,
+        purchaseLimitStore: MarketPurchaseLimitStoreProtocol
+    ) {
         self.forestManager = forestManager
         self.rewardRepository = rewardRepository
+        self.purchaseLimitStore = purchaseLimitStore
     }
 }
 
@@ -95,7 +106,8 @@ extension MarketService: MarketServiceProtocol {
                     MarketItemModel(
                         id: itemID,
                         price: MarketPriceModel(currency: currency, amount: amount),
-                        reward: localReward
+                        reward: localReward,
+                        weeklyPurchaseLimit: remoteItem.weeklyPurchaseLimit
                     )
                 )
             }
@@ -127,11 +139,19 @@ extension MarketService: MarketServiceProtocol {
         }
     }
     
+    func remainingWeeklyPurchases(item: MarketItemModel) -> Int? {
+        guard let limit = item.weeklyPurchaseLimit else { return nil }
+        return max(0, limit - purchaseLimitStore.purchaseCountThisWeek(itemId: item.id))
+    }
+
     func purchaseItem(item: MarketItemModel) async throws {
         guard let forest = forestManager.fetchSafeForest(contextType: .main).data else {
             throw MarketServiceError.emptyForestData
         }
-        
+        if let remaining = remainingWeeklyPurchases(item: item), remaining <= 0 {
+            throw MarketServiceError.weeklyLimitReached
+        }
+
         switch item.price.currency {
         case .gold:
             guard forest.moneyValue >= item.price.amount else {
@@ -149,6 +169,10 @@ extension MarketService: MarketServiceProtocol {
             guard result.status == .success else {
                 throw result.error ?? MarketServiceError.purchaseFailed
             }
+        }
+
+        if item.weeklyPurchaseLimit != nil {
+            purchaseLimitStore.registerPurchase(itemId: item.id)
         }
     }
 }

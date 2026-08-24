@@ -18,6 +18,8 @@ struct LocalChestModel: Hashable {
     let roadColorHex: String?
     let cardGradientHexes: [String]?
     let cardTextColorHex: String?
+    /// Guaranteed S/S+ drop configuration; nil for chests without pity
+    let pity: LocalChestPityModel?
 
     init(
         id: String,
@@ -29,7 +31,8 @@ struct LocalChestModel: Hashable {
         backgroundGradientColors: [String]?,
         roadColorHex: String? = nil,
         cardGradientHexes: [String]? = nil,
-        cardTextColorHex: String? = nil
+        cardTextColorHex: String? = nil,
+        pity: LocalChestPityModel? = nil
     ) {
         self.id = id
         self.version = version
@@ -41,6 +44,7 @@ struct LocalChestModel: Hashable {
         self.roadColorHex = roadColorHex
         self.cardGradientHexes = cardGradientHexes
         self.cardTextColorHex = cardTextColorHex
+        self.pity = pity
     }
 }
 

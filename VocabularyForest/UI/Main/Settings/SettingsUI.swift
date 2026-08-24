@@ -405,7 +405,7 @@ private struct PolicySheetView: View {
     )
     let offlineAssetManager = OfflineAssetManager()
     let networkManager = APIService(vocabularyBaseURLProvider: VocabularyBaseURLProvider())
-    let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager)
+    let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager, pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
     let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
     let hydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: RemoteConfigRepository(), offlineAssetManager: offlineAssetManager, forestManager: forestData)
     SettingsUI(

@@ -75,7 +75,11 @@ struct MarketUI: View {
     let errorMessage: String?
     let onPurchase: (MarketItemModel) -> Void
     let onChestInfoRequest: (String) async -> [ChestDropInfoModel]?
-    
+    /// Pity counter snapshot per chest id; nil hides the guarantee progress bar
+    var pityProgress: (String) -> ChestPityProgressModel? = { _ in nil }
+    /// Remaining weekly purchases per item; nil means the item is uncapped
+    var weeklyRemaining: (MarketItemModel) -> Int? = { _ in nil }
+
     @Environment(\.safeAreaInsets) private var globalSafeArea
     @State private var infoChest: LocalChestModel?
     @State private var infoDrops: [ChestDropInfoModel]?
@@ -270,7 +274,9 @@ private extension MarketUI {
                             onPurchase: onPurchase,
                             onInfoTap: { chest in
                                 showChestInfo(chest: chest)
-                            }
+                            },
+                            pityProgressModel: chestPityProgress(item: item),
+                            weeklyRemaining: weeklyRemaining(item)
                         )
                     }
                 }
@@ -280,6 +286,11 @@ private extension MarketUI {
         }
     }
     
+    func chestPityProgress(item: MarketItemModel) -> ChestPityProgressModel? {
+        guard case .chest(let chest) = item.reward.reward else { return nil }
+        return pityProgress(chest.id)
+    }
+
     func canAfford(item: MarketItemModel) -> Bool {
         switch item.price.currency {
         case .gold:
@@ -557,18 +568,28 @@ struct MarketItemCard: View {
     let canAfford: Bool
     let onPurchase: (MarketItemModel) -> Void
     var onInfoTap: ((LocalChestModel) -> Void)? = nil
-    
+    var pityProgressModel: ChestPityProgressModel? = nil
+    var weeklyRemaining: Int? = nil
+
     private var style: MarketCardStyle {
         MarketCardStyle(reward: item.reward)
     }
-    
+
     private var chestModel: LocalChestModel? {
         if case .chest(let model) = item.reward.reward {
             return model
         }
         return nil
     }
-    
+
+    private var isWeeklyExhausted: Bool {
+        weeklyRemaining == 0
+    }
+
+    private var isPurchasable: Bool {
+        canAfford && !isWeeklyExhausted
+    }
+
     var body: some View {
         Button {
             onPurchase(item)
@@ -603,6 +624,12 @@ struct MarketItemCard: View {
                             .padding(6)
                     }
                 }
+                .overlay(alignment: .topLeading) {
+                    if let tier = item.reward.reward.tier {
+                        TierBadgeView(tier: tier, fontSize: cardWidth * 0.09)
+                            .padding(6)
+                    }
+                }
                 
                 Text(item.reward.reward.displayName.localized)
                     .scaledFont(size: cardWidth * 0.1, weight: .bold, design: .rounded)
@@ -614,6 +641,14 @@ struct MarketItemCard: View {
                     .frame(height: cardWidth * 0.26)
                 
                 priceTag
+
+                if let pityProgressModel {
+                    pityBar(progress: pityProgressModel)
+                }
+
+                if let weeklyRemaining, let limit = item.weeklyPurchaseLimit {
+                    weeklyLimitTag(remaining: weeklyRemaining, limit: limit)
+                }
             }
             .padding(cardWidth * 0.08)
             .frame(width: cardWidth)
@@ -629,26 +664,26 @@ struct MarketItemCard: View {
                 RoundedRectangle(cornerRadius: cardWidth * 0.12)
                     .stroke(
                         LinearGradient(
-                            colors: [Color.white.opacity(canAfford ? 0.85 : 0.2), Color.white.opacity(canAfford ? 0.3 : 0.1)],
+                            colors: [Color.white.opacity(isPurchasable ? 0.85 : 0.2), Color.white.opacity(isPurchasable ? 0.3 : 0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
                         lineWidth: 2
                     )
             )
-            .shadow(color: style.glowColor.opacity(canAfford ? 0.55 : 0.0), radius: 8, x: 0, y: 4)
-            .opacity(canAfford ? 1.0 : 0.85)
-            .saturation(canAfford ? 1.0 : 0.35)
+            .shadow(color: style.glowColor.opacity(isPurchasable ? 0.55 : 0.0), radius: 8, x: 0, y: 4)
+            .opacity(isPurchasable ? 1.0 : 0.85)
+            .saturation(isPurchasable ? 1.0 : 0.35)
         }
         .buttonStyle(ScaleButtonStyle())
-        .disabled(!canAfford)
+        .disabled(!isPurchasable)
         .a11yTapButton(
             String(
                 format: NSLocalizedString("a11y_market_item", comment: ""),
                 item.reward.reward.displayName.localized,
                 priceA11yText
             ),
-            value: canAfford ? nil : String(localized: "a11y_insufficient_balance"),
+            value: purchaseBlockedA11yText,
             hint: String(localized: "a11y_buy_hint"),
             inputLabels: [item.reward.reward.displayName.localized]
         )
@@ -670,6 +705,72 @@ struct MarketItemCard: View {
         }
     }
     
+    private var purchaseBlockedA11yText: String? {
+        if !canAfford {
+            return String(localized: "a11y_insufficient_balance")
+        }
+        if isWeeklyExhausted {
+            return String(localized: "a11y_weekly_limit_reached")
+        }
+        return nil
+    }
+
+    /// Progress toward the next guaranteed S/S+ drop of this chest's counter
+    /// group; the bar switches to the S+ palette when that milestone is closer.
+    private func pityBar(progress: ChestPityProgressModel) -> some View {
+        let isSPlus = progress.isNextGuaranteeSPlus
+        let tier: RewardTier = isSPlus ? .sPlus : .s
+        let cycleCount = isSPlus ? progress.sPlusCycleCount : progress.sCycleCount
+        let threshold = isSPlus ? progress.sPlusThreshold : progress.sThreshold
+        let fraction = threshold > 0 ? CGFloat(cycleCount) / CGFloat(threshold) : 0
+
+        return VStack(spacing: cardWidth * 0.02) {
+            HStack(spacing: cardWidth * 0.02) {
+                TierBadgeView(tier: tier, fontSize: cardWidth * 0.06)
+                Text("\(cycleCount)/\(threshold)")
+                    .scaledFont(size: cardWidth * 0.07, weight: .bold, design: .rounded)
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText())
+            }
+            GeometryReader { barGeometry in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(Color.black.opacity(0.35))
+                    Capsule()
+                        .fill(tier.badgeColor)
+                        .frame(width: max(barGeometry.size.width * fraction, fraction > 0 ? cardWidth * 0.03 : 0))
+                }
+            }
+            .frame(height: cardWidth * 0.035)
+        }
+        .a11yGroup(String(
+            format: NSLocalizedString("a11y_pity_progress", comment: ""),
+            tier.rawValue,
+            "\(cycleCount)",
+            "\(threshold)"
+        ))
+    }
+
+    private func weeklyLimitTag(remaining: Int, limit: Int) -> some View {
+        HStack(spacing: cardWidth * 0.02) {
+            Image(systemName: "clock.arrow.circlepath")
+                .scaledFont(size: cardWidth * 0.06, weight: .semibold)
+            Text("\(remaining)/\(limit)")
+                .scaledFont(size: cardWidth * 0.07, weight: .bold, design: .rounded)
+                .contentTransition(.numericText())
+        }
+        .foregroundStyle(.white)
+        .padding(.vertical, cardWidth * 0.02)
+        .padding(.horizontal, cardWidth * 0.05)
+        .background(Color.black.opacity(0.35))
+        .clipShape(Capsule())
+        .a11yGroup(String(
+            format: NSLocalizedString("a11y_weekly_limit_remaining", comment: ""),
+            "\(remaining)",
+            "\(limit)"
+        ))
+    }
+
     /// Spoken price ("1500 gold") — the currency is otherwise icon-only.
     private var priceA11yText: String {
         String(

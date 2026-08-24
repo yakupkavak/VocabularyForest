@@ -32,7 +32,7 @@ protocol ForestViewModelProtocol: AnyObject {
     func didCollectWater(amount: Int)
     func fetchForest()
     func refreshForestStatus()
-    func claimQuestReward(quest: QuestModel)
+    func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel])
     func startRain()
     func checkBookCount(type: BattleQuestionType,
                         battleMode: BattleEnemyModel,
@@ -535,11 +535,11 @@ extension ForestViewModel: ForestViewModelProtocol {
         self.componentUUID = nil
     }
     
-    func claimQuestReward(quest: QuestModel) {
+    func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel]) {
         Task { [weak self] in
             guard let self else { return }
             do {
-                try await adventureService.claimQuestReward(quest: quest)
+                try await adventureService.claimQuestReward(quest: quest, rolledRewards: rolledRewards)
                 await MainActor.run {
                     self.fetchForest()
                 }
@@ -547,6 +547,14 @@ extension ForestViewModel: ForestViewModelProtocol {
                 logger.error("Quest reward claim failed: \(error.localizedDescription)", category: .reward)
             }
         }
+    }
+
+    func chestPityProgress(chestId: String) -> ChestPityProgressModel? {
+        adventureService.chestPityProgress(chestId: chestId)
+    }
+
+    func remainingWeeklyPurchases(item: MarketItemModel) -> Int? {
+        adventureService.remainingWeeklyPurchases(item: item)
     }
     
     func claimLocalReward(model: LocalRewardModel, onSuccess: (() -> Void)? = nil) {

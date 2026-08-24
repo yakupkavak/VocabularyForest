@@ -17,6 +17,7 @@ struct ClaimRewardUI: View {
     @ObservedObject var viewModel: ClaimRewardViewModel
     var claimReward: LocalRewardModel
     var onClaim: ([LocalRewardModel]) -> Void
+    @AppStorage(AppStorageNames.isHapticsEnabled.rawValue) private var isHapticsEnabled: Bool = true
     @State private var shakeOffset: CGFloat = 0
     @State private var chestStation: ChestStatus = .close
     @State private var isChestLidOpen = false
@@ -60,8 +61,12 @@ private extension ClaimRewardUI {
     func backgroundSection(size: CGSize) -> some View {
         let sparklePalette = currentSparklePalette()
         let sparkleSpread = isPad ? min(size.width * 0.6, 600) : size.width * 0.9
-        
+
         return ZStack {
+            if let tier = displayedCelebrationTier {
+                celebrationGlow(tier: tier, size: size)
+                    .zIndex(1)
+            }
             SparklesView(
                 spreadDiameter: sparkleSpread,
                 primaryColor: sparklePalette.primary,
@@ -69,7 +74,30 @@ private extension ClaimRewardUI {
             )
             .opacity(0.95)
             .zIndex(2)
+            if displayedCelebrationTier == .sPlus {
+                /// A second, wider sparkle layer makes the S+ moment scream
+                SparklesView(
+                    spreadDiameter: sparkleSpread * 1.4,
+                    primaryColor: .white,
+                    secondaryColor: .tierSPlus
+                )
+                .opacity(0.85)
+                .zIndex(3)
+            }
         }
+    }
+
+    /// Full-screen radial burst behind the reward for S/S+ celebration moments.
+    func celebrationGlow(tier: RewardTier, size: CGSize) -> some View {
+        RadialGradient(
+            colors: [tier.badgeColor.opacity(0.6), .clear],
+            center: .center,
+            startRadius: 0,
+            endRadius: max(size.width, size.height) * 0.55
+        )
+        .ignoresSafeArea()
+        .transition(.opacity)
+        .allowsHitTesting(false)
     }
     
     @ViewBuilder
@@ -98,11 +126,19 @@ private extension ClaimRewardUI {
             RewardImageView(asset: model.posterImage)
                 .scaledToFit()
                 .frame(width: mainImageWidth)
-            Text(LocalizedStringKey(model.displayName.localized))
-                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
-                .foregroundColor(model.textColorHex?.color ?? .white)
-                .shadow(color: .black.opacity(0.3), radius: 5)
+            HStack(spacing: 8) {
+                if let tier = model.tier {
+                    TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
+                }
+                Text(LocalizedStringKey(model.displayName.localized))
+                    .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
+                    .foregroundColor(model.textColorHex?.color ?? .white)
+                    .shadow(color: .black.opacity(0.3), radius: 5)
+            }
             rewardCountText(count: claimReward.rewardCount, fontSize: rewardTextSize * 0.75, color: model.textColorHex?.color ?? .white)
+        }
+        .task {
+            triggerCelebrationIfNeeded(tier: model.tier)
         }
     }
     
@@ -180,14 +216,20 @@ private extension ClaimRewardUI {
             RewardImageView(asset: model.reward.posterImage)
                 .scaledToFit()
                 .frame(width: mainImageWidth)
-            Text(LocalizedStringKey(model.reward.displayName.localized))
-                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
-                .foregroundColor(model.reward.textColorHex?.color ?? .white)
-                .shadow(color: .black.opacity(0.3), radius: 5)
+            HStack(spacing: 8) {
+                if let tier = model.reward.tier {
+                    TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
+                }
+                Text(LocalizedStringKey(model.reward.displayName.localized))
+                    .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
+                    .foregroundColor(model.reward.textColorHex?.color ?? .white)
+                    .shadow(color: .black.opacity(0.3), radius: 5)
+            }
             rewardCountText(count: model.rewardCount, fontSize: rewardTextSize * 0.75, color: model.reward.textColorHex?.color ?? .white)
         }
         .onAppear {
             A11yAnnouncer.announce(String(format: NSLocalizedString("a11y_reward_won", comment: ""), model.reward.displayName.localized))
+            triggerCelebrationIfNeeded(tier: model.reward.tier)
         }
     }
 
@@ -291,8 +333,44 @@ private extension ClaimRewardUI {
         }
     }
     
+    /// Tier of the reward currently on screen when it deserves a celebration
+    /// (S or S+); nil keeps the regular category theme.
+    var displayedCelebrationTier: RewardTier? {
+        switch claimReward.reward {
+        case .standart(let model):
+            guard let tier = model.tier, tier.isCelebrated else { return nil }
+            return tier
+        case .chest:
+            guard chestStation == .open,
+                  let chestRewards = viewModel.chestRewards,
+                  chestRewardIndex < chestRewards.count,
+                  let tier = chestRewards[chestRewardIndex].reward.tier,
+                  tier.isCelebrated else { return nil }
+            return tier
+        }
+    }
+
+    func triggerCelebrationIfNeeded(tier: RewardTier?) {
+        guard let tier, tier.isCelebrated, isHapticsEnabled else { return }
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+        if tier == .sPlus {
+            /// Double burst separates the S+ moment from a regular S drop
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            }
+        }
+    }
+
     func currentSparklePalette() -> SparklePalette {
-        currentRewardTheme().sparklePalette
+        if let tier = displayedCelebrationTier {
+            return SparklePalette(
+                primary: .white,
+                secondary: tier.badgeColor,
+                shadow: tier.badgeColor
+            )
+        }
+        return currentRewardTheme().sparklePalette
     }
     
     func currentRewardTheme() -> RewardTheme {
@@ -340,7 +418,7 @@ private extension ClaimRewardUI {
 #Preview("Chest") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
         ),
         claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))
     ) { _ in }
@@ -349,7 +427,7 @@ private extension ClaimRewardUI {
 #Preview("Cat") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService())
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
         ),
         claimReward: LocalRewardModel(
             rewardCount: 1,

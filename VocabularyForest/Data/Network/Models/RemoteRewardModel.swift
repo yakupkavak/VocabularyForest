@@ -16,6 +16,8 @@ struct RemoteRewardModel: Decodable, Identifiable {
     let id: String?
     let type: String?             // e.g., "chest" or "resource"
     let category: String?         // e.g., "gold", "nature", "water", "diamond"
+    /// Economy rarity tier ("C"/"B"/"A"/"S"/"S+"); absent on legacy configs
+    let tier: String?
     let rewardCount: Int?
     let assetName: String? // Name of the source
     let displayName: RemoteLocalizedText? // Localization key instead of raw text
@@ -50,6 +52,11 @@ extension RemoteRewardModel {
     
     var isChestReward: Bool {
         return (type ?? "resource") == "chest"
+    }
+
+    var rewardTier: RewardTier? {
+        guard let tier else { return nil }
+        return RewardTier.convert(value: tier)
     }
     
     var safeRewardCount: Int {
