@@ -36,7 +36,6 @@ struct ContinueGamePopUp: View {
     // MARK: - PROPERTIES
     
     var titleText: String
-    var descriptionText: String?
     var diamondCost: Int
     var audioService: AudioServiceProtocol
     var onConfirm: () -> Void
@@ -57,12 +56,10 @@ struct ContinueGamePopUp: View {
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 .fontWeight(.bold)
             countdownView
-            if let descriptionText {
-                Text(descriptionText)
-                    .foregroundStyle(.forestText)
-                    .scaledFont(size: Constants.descriptionFontSize)
-                    .multilineTextAlignment(.leading)
-            }
+            Text(String(localized: "continue_game_description"))
+                .foregroundStyle(.forestText)
+                .scaledFont(size: Constants.descriptionFontSize)
+                .multilineTextAlignment(.leading)
             HStack {
                 diamondButton
                 watchAdButton
@@ -180,9 +177,6 @@ private extension ContinueGamePopUp {
         }
         audioService.playSFX(filename: Constants.tickSoundName)
     }
-
-    // Only the explicit dismiss plays the close sound; the confirm paths hand off to
-    // an ad or straight back to the game, where a rustle on top of that just muddies it.
     func dismiss() {
         audioService.playSFX(filename: Constants.closeSoundName)
         onClose()
@@ -193,7 +187,6 @@ private extension ContinueGamePopUp {
 #Preview {
     ContinueGamePopUp(
         titleText: "Continue your journey",
-        descriptionText: "You can continue your game within?",
         diamondCost: 15,
         audioService: ForestAudioService(),
         onConfirm: { },
