@@ -150,6 +150,7 @@ enum BattleUIStation {
     case askQuestion
     case notDetermined
     case checkAnswer
+    case continueOffer
     case gameOver
 }
 

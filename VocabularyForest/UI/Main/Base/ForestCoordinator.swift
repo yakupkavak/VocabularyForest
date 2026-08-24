@@ -115,6 +115,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let questService = resolver.resolve(type: .singleInstance, for: QuestServiceProtocol.self)
         let gameManager = resolver.resolve(type: .singleInstance, for: GameManagerProtocol.self)
         let analyticsService = resolver.resolve(type: .singleInstance, for: AnalyticsServiceProtocol.self)
+        let rewardedAdService = resolver.resolve(type: .singleInstance, for: RewardedAdServiceProtocol.self)
         let viewModel = BattleViewModel(
             coreDataManager: coreData,
             audioService: audioService,
@@ -123,6 +124,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             questService: questService,
             gameManager: gameManager,
             analyticsService: analyticsService,
+            rewardedAdService: rewardedAdService,
         )
         
         self.cachedBattleViewModel = viewModel

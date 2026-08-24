@@ -12,6 +12,7 @@ protocol BattleEnemyManagerProtocol: AnyObject {
     func startIdleAnimation()
     func enemyAtacks(endPointX: CGFloat, hitted: @escaping () -> Void)
     func spawnNextEnemy()
+    func respawnCurrentEnemy()
     func killEnemy(completion: @escaping (Bool) -> Void)
     func setupEnemyManager(models: [EnemyCharacterModel])
 }
@@ -124,6 +125,15 @@ extension BattleEnemyManager: BattleEnemyManagerProtocol {
         }
     }
     
+    /// Puts the current enemy back to its spawn position with a fresh idle loop,
+    /// e.g. after the player continues a lost battle. Textures are already loaded.
+    func respawnCurrentEnemy() {
+        enemyNode.removeAllActions()
+        enemyNode.removeFromParent()
+        setupEnemy()
+        startIdleAnimation()
+    }
+
     func spawnNextEnemy() {
         if let enemyTypes = enemyTypes, let currentEnemyType = currentEnemyType {
             if let currentIndex = enemyTypes.firstIndex(of: currentEnemyType) {

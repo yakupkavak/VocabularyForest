@@ -152,6 +152,12 @@ extension BattleScene: BattleViewModelOutputProcotol {
         touchEnable = false
     }
 
+    func reviveBattle() {
+        playerManager?.revive()
+        enemyManager?.respawnCurrentEnemy()
+        touchEnable = false
+    }
+
     func setupGame(enemyCharacterModels: [EnemyCharacterModel]) {
         enemyManager?.setupEnemyManager(models: enemyCharacterModels)
     }

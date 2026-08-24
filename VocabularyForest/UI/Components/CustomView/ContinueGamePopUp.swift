@@ -117,8 +117,9 @@ private extension ContinueGamePopUp {
 
     var watchAdButton: some View {
         Button {
+            // onClose is intentionally not called: it means "give up". The caller
+            // dismisses the popup by leaving the continue-offer state on success.
             onConfirm()
-            onClose()
         } label: {
             HStack {
                 Image("watch_icon")
@@ -135,7 +136,6 @@ private extension ContinueGamePopUp {
     var diamondButton: some View {
         Button {
             onDiamondContinue()
-            onClose()
         } label: {
             HStack {
                 Image("diamond_icon")

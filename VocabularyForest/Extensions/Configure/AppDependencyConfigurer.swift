@@ -55,6 +55,7 @@ enum AppDependencyConfigurer {
         let rewardNotificationService = RewardNotificationService(forestManager: forestData, adventureRoadService: adventureRoadService)
         let cloudRestorePromptService = CloudRestorePromptService(authManager: authManager, syncManager: cloudSyncManager, forestManager: forestData, assetHydrationService: rewardAssetHydrationService, analyticsService: analyticsService)
         let gameManager = GameManager()
+        let rewardedAdService = InstantGrantRewardedAdService()
         let forestAdventure = ForestAdventureService(forestManager: forestData, playerManager: playerDataManager, coreData: coreData, remoteConfig: remoteConfigRepository, documentRepository: documentRepository, rewardRepository: rewardRepository, questService: questService, dailySpinService: dailySpinService, weeklyRewardService: weeklyRewardService, adventureRoadService: adventureRoadService, marketService: marketService, chestService: chestRepository, gameManager: gameManager, analyticsService: analyticsService)
         coreData.notificationManager = notificationManager
         cloudSyncManager.dataManager = forestData
@@ -76,6 +77,7 @@ enum AppDependencyConfigurer {
         DC.shared.register(type: .singleInstance(forestAdventure), for: ForestAdventureServiceProtocol.self)
         DC.shared.register(type: .singleInstance(remoteConfigRepository), for: RemoteConfigRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(gameManager), for: GameManagerProtocol.self)
+        DC.shared.register(type: .singleInstance(rewardedAdService), for: RewardedAdServiceProtocol.self)
         DC.shared.register(type: .singleInstance(documentRepository), for: DocumentaryRepositoryProtocol.self)
         DC.shared.register(type: .singleInstance(offlineAssetManager), for: OfflineAssetManagerProtocol.self)
         DC.shared.register(type: .singleInstance(chestRepository), for: ChestRepositoryProtocol.self)

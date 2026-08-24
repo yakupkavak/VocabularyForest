@@ -127,6 +127,8 @@ struct BattleUI<ViewModel>: View where ViewModel: BattleViewModelProtocol {
                             Text("wrong")
                                 .onAppear { A11yAnnouncer.announce(String(localized: "a11y_wrong_announce")) }
                         }
+                    case .continueOffer:
+                        continueOfferView
                     case .gameOver:
                         gameOverView
                     }
@@ -279,6 +281,31 @@ private extension BattleUI {
         .padding(.bottom)
     }
     
+    var continueOfferView: some View {
+        ZStack {
+            Color.black.ignoresSafeArea().opacity(0.7).zIndex(2.0)
+            ContinueGamePopUp(
+                titleText: String(localized: "continue_game_title"),
+                diamondCost: viewModel.continueDiamondCost,
+                audioService: viewModel.audioService,
+                onConfirm: {
+                    viewModel.continueWithAd { rewarded in
+                        guard !rewarded else { return }
+                        presentToast(ToastValue(message: String(localized: "ad_not_available_toast")))
+                    }
+                },
+                onDiamondContinue: {
+                    guard !viewModel.continueWithDiamond() else { return }
+                    presentToast(ToastValue(message: String(localized: "insufficient_diamond_toast")))
+                },
+                onClose: { viewModel.declineContinue() },
+                confirmText: String(localized: "continue_watch_ad_button")
+            )
+            .transition(.scale)
+            .zIndex(3.0)
+        }
+    }
+
     var gameOverView: some View {
         ZStack {
             Image("pop_up_background").resizable().a11yDecorative()

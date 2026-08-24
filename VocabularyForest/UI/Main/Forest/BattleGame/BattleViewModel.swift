@@ -22,6 +22,11 @@ protocol BattleViewModelProtocol: ObservableObject, BattleSceneProtocol{
     func checkAnswer(answerNumber: Int)
     func startMagic(magicType: MagicType)
     func abandonGame()
+    func continueWithDiamond() -> Bool
+    func continueWithAd(completion: @escaping (Bool) -> Void)
+    func declineContinue()
+    var continueDiamondCost: Int { get }
+    var audioService: any AudioServiceProtocol { get }
     func nextQuestion()
     func updateAudioSettings(music: Double, sfx: Double, isMuted: Bool)
     func playSoundEffect(name: String)
@@ -50,14 +55,17 @@ protocol BattleViewModelOutputProcotol: AnyObject {
     func startMagic(magic: MagicType)
     func setupGame(enemyCharacterModels: [EnemyCharacterModel])
     func setupNextEnemy()
+    func reviveBattle()
 }
 
 class BattleViewModel: ObservableObject {
     
     // MARK: - DEPENDENCIES
     private let coreData: any CoreDataManagerProtocol
-    private let audioService: any AudioServiceProtocol
+    // Exposed because ContinueGamePopUp plays its own countdown sounds through the shared service
+    let audioService: any AudioServiceProtocol
     private let forestDataManager: any ForestDataManagerProtocol
+    private let rewardedAdService: any RewardedAdServiceProtocol
     private let playerDataManager: any PlayerDataManagerProtocol
     private let questService: any QuestServiceProtocol
     private let gameManager: any GameManagerProtocol
@@ -101,10 +109,12 @@ class BattleViewModel: ObservableObject {
         questService: QuestServiceProtocol,
         gameManager: GameManagerProtocol,
         analyticsService: AnalyticsServiceProtocol = NoopAnalyticsService(),
+        rewardedAdService: RewardedAdServiceProtocol,
     ) {
         self.coreData = coreDataManager
         self.audioService = audioService
         self.forestDataManager = forestDataManager
+        self.rewardedAdService = rewardedAdService
         self.playerDataManager = playerDataManager
         self.questService = questService
         self.gameManager = gameManager
@@ -130,6 +140,11 @@ private extension BattleViewModel {
         static let minGoldPerKill = 40
         static let maxGoldPerKill = 60
         static let dailyKillCountCap = 15
+        static let continueDiamondCost = 25
+    }
+
+    enum AnalyticsItemName {
+        static let battleContinue = "battle_continue"
     }
 }
 
@@ -318,6 +333,15 @@ private extension BattleViewModel {
             prepareEnemyLevel(gameLevel: safeGameLevel, characterModel: nextEnemy)
         }
     }
+
+    /// Resumes a lost battle: the player's progress is kept, only the enemy's
+    /// energy is cleared and both characters respawn at their start positions.
+    func reviveAfterDeath() {
+        enemyAnger?.currentLevel = 0
+        questionStation = .waiting
+        output?.reviveBattle()
+        askQuestion()
+    }
 }
 
 // MARK: - BATTLE VIEW MODEL PROTOCOL
@@ -470,6 +494,44 @@ extension BattleViewModel: BattleViewModelProtocol {
             questionIndex: currentQuestionId
         ))
     }
+
+    var continueDiamondCost: Int {
+        gameManager.currentEconomyConfig()?.battleContinue?.diamondCost ?? EconomyFallback.continueDiamondCost
+    }
+
+    /// Returns false when the balance is insufficient or the spend fails; the offer stays open in that case
+    func continueWithDiamond() -> Bool {
+        let cost = continueDiamondCost
+        guard let forest = forestDataManager.fetchSafeForest(contextType: .main).data,
+              forest.diamondValue >= cost else { return false }
+        guard forestDataManager.updateDiamondValue(diamond: -cost, contextType: .main).status == .success else {
+            return false
+        }
+        analyticsService.log(.virtualCurrencySpent(
+            itemName: AnalyticsItemName.battleContinue,
+            currencyName: AnalyticsVirtualCurrency.diamond,
+            value: cost
+        ))
+        reviveAfterDeath()
+        return true
+    }
+
+    /// Revives only when the ad reports an earned reward; the offer stays open otherwise
+    func continueWithAd(completion: @escaping (Bool) -> Void) {
+        rewardedAdService.showRewardedAd { [weak self] rewarded in
+            guard let self else { return }
+            if rewarded {
+                reviveAfterDeath()
+            }
+            completion(rewarded)
+        }
+    }
+
+    func declineContinue() {
+        gameStatus.userWon = false
+        uiStation = .gameOver
+        logLevelEnd(isWon: false)
+    }
     
     func nextQuestion() {
         questionStation = .waiting
@@ -549,9 +611,9 @@ extension BattleViewModel: BattleSceneProtocol {
         nextEnemy()
     }
     func playerDead() {
-        gameStatus.userWon = false
-        uiStation = .gameOver
-        logLevelEnd(isWon: false)
+        // The run is not over yet: offer a paid/ad continue first.
+        // The defeat is only committed in declineContinue().
+        uiStation = .continueOffer
     }
     func playerWon() {
         grantKillGold()

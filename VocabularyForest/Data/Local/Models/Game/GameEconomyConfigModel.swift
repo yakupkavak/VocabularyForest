@@ -12,6 +12,7 @@ struct GameEconomyConfigModel: Decodable {
     let season: String?
     let killCap: GameKillCapModel?
     let progressionTargets: GameProgressionTargetsModel?
+    let battleContinue: GameBattleContinueModel?
 }
 
 struct GameKillCapModel: Decodable {
@@ -25,4 +26,8 @@ struct GameProgressionTargetsModel: Decodable {
     let rainCost: Int?
     let rainDecayPerHour: Int?
     let dailyQuestCompletionRateForRain: Double?
+}
+
+struct GameBattleContinueModel: Decodable {
+    let diamondCost: Int?
 }

@@ -17,6 +17,7 @@ protocol GamePlayerManagerProtocol: AnyObject {
     func stopWalking()
     func stopPhysicalMovement()
     func die(completion: @escaping () -> Void)
+    func revive()
     func startAttack(completion: @escaping () -> Void)
 }
 
@@ -170,5 +171,11 @@ class GamePlayerManager: GamePlayerManagerProtocol {
             playerNode.texture = dieTextures.last
         }
         playerNode.run(SKAction.sequence([animate,diePosition, fadeOut, dieAction]))
+    }
+
+    func revive() {
+        // die() fades the node out before removing it; restore visibility before respawning
+        playerNode.alpha = 1.0
+        setupPlayer()
     }
 }
