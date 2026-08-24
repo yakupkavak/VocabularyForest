@@ -72,6 +72,7 @@ enum AnalyticsGoldSource {
     static let adventureRoad = "adventure_road"
     static let quest = "quest"
     static let market = "market"
+    static let package = "package"
 }
 
 enum AnalyticsEvent {
@@ -105,6 +106,7 @@ enum AnalyticsEvent {
     case adventureRewardClaimed(milestoneID: String, seasonID: String)
     case chestOpened(chestID: String)
     case marketItemPurchased(itemID: String, price: Int)
+    case packagePurchased(productID: String)
     case cloudSyncCompleted(result: CloudSyncResult, trigger: CloudSyncTrigger)
     case cloudRestorePromptShown
     case cloudRestorePromptResult(choice: CloudRestoreChoice)
@@ -138,6 +140,7 @@ private extension AnalyticsEvent {
         static let adventureRewardClaimed = "adventure_reward_claimed"
         static let chestOpened = "chest_opened"
         static let marketItemPurchased = "market_item_purchased"
+        static let packagePurchased = "package_purchased"
         static let cloudSyncCompleted = "cloud_sync_completed"
         static let cloudRestorePromptShown = "cloud_restore_prompt_shown"
         static let cloudRestorePromptResult = "cloud_restore_prompt_result"
@@ -339,6 +342,11 @@ extension AnalyticsEvent {
                 name: Constants.marketItemPurchased,
                 parameters: [AnalyticsParameterItemID: itemID,
                              AnalyticsParameterPrice: price]
+            )
+        case let .packagePurchased(productID):
+            return AnalyticsEventDescriptor(
+                name: Constants.packagePurchased,
+                parameters: [AnalyticsParameterItemID: productID]
             )
         case let .cloudSyncCompleted(result, trigger):
             return AnalyticsEventDescriptor(

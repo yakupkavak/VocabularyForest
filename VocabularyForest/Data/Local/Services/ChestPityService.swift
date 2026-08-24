@@ -66,6 +66,46 @@ extension ChestPityCounterStore: ChestPityCounterStoreProtocol {
     }
 }
 
+// MARK: - FOREST COUNTER STORE
+
+/// Persists pity counters on the Forest entity so they ride the regular
+/// forest cloud sync (same LWW flow as the gold/diamond balances). Counter
+/// groups the config may introduce before the client knows them fall back
+/// to the local-only UserDefaults store.
+final class ForestChestPityCounterStore {
+
+    // MARK: - PROPERTIES
+
+    private let forestManager: ForestDataManagerProtocol
+    private let fallbackStore: ChestPityCounterStoreProtocol
+
+    // MARK: - INIT
+
+    init(forestManager: ForestDataManagerProtocol, fallbackStore: ChestPityCounterStoreProtocol) {
+        self.forestManager = forestManager
+        self.fallbackStore = fallbackStore
+    }
+}
+
+// MARK: - PROTOCOL CONFORMANCE
+
+extension ForestChestPityCounterStore: ChestPityCounterStoreProtocol {
+    func openCount(group: String) -> Int {
+        guard let counter = ChestPityCounterField(rawValue: group) else {
+            return fallbackStore.openCount(group: group)
+        }
+        return forestManager.fetchPityOpenCount(counter: counter, contextType: .background)
+    }
+
+    func setOpenCount(_ count: Int, group: String) {
+        guard let counter = ChestPityCounterField(rawValue: group) else {
+            fallbackStore.setOpenCount(count, group: group)
+            return
+        }
+        _ = forestManager.updatePityOpenCount(counter: counter, value: count, contextType: .background)
+    }
+}
+
 // MARK: - PITY SERVICE
 
 // MARK: - CONSTANTS

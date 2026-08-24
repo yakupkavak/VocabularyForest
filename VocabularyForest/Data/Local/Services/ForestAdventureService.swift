@@ -47,6 +47,7 @@ protocol ForestAdventureServiceProtocol {
     func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
     func chestPityProgress(chestId: String) -> ChestPityProgressModel?
     func remainingWeeklyPurchases(item: MarketItemModel) -> Int?
+    func purchasePackage(_ package: MarketPackageModel) async throws -> [LocalRewardModel]
 }
 
 // MARK: - CONSTANTS
@@ -77,6 +78,7 @@ class ForestAdventureService {
     private let weeklyRewardService: WeeklyRewardServiceProtocol
     private let adventureRoadService: AdventureRoadServiceProtocol
     private let marketService: MarketServiceProtocol
+    private let packageService: PackageServiceProtocol
     private let chestService: ChestRepositoryProtocol
     private let gameManager: GameManagerProtocol
     private let logger: AppLoggerProtocol
@@ -97,6 +99,7 @@ class ForestAdventureService {
         weeklyRewardService: WeeklyRewardServiceProtocol,
         adventureRoadService: AdventureRoadServiceProtocol,
         marketService: MarketServiceProtocol,
+        packageService: PackageServiceProtocol,
         chestService: ChestRepositoryProtocol,
         gameManager: GameManagerProtocol,
         logger: AppLoggerProtocol = AppLogger.shared,
@@ -113,6 +116,7 @@ class ForestAdventureService {
         self.weeklyRewardService = weeklyRewardService
         self.adventureRoadService = adventureRoadService
         self.marketService = marketService
+        self.packageService = packageService
         self.chestService = chestService
         self.gameManager = gameManager
         self.logger = logger
@@ -170,10 +174,12 @@ private extension ForestAdventureService {
                 /// Return from local
                 let response = try await documentRepository.fetchMarketConfig()
                 try await marketService.convertRemoteToMarketList(list: response)
+                await packageService.convertRemotePackages(list: response)
             } else if let marketVersion = parameters?.model.marketConfigVersion {
                 UserDefaults.standard.set(marketVersion, forKey: DefaultsKeys.marketConfig)
                 let config = try await remoteConfigRepository.fetchMarketConfig()
                 try await marketService.convertRemoteToMarketList(list: config.model)
+                await packageService.convertRemotePackages(list: config.model)
                 try await documentRepository.saveMarketConfig(data: config.rawData)
             }
             if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
@@ -288,6 +294,13 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
         try questService.claimQuestReward(quest: quest)
         analyticsService.log(.achievementUnlocked(achievementID: quest.id))
         logGoldRewards(rewards, source: AnalyticsGoldSource.quest)
+    }
+
+    func purchasePackage(_ package: MarketPackageModel) async throws -> [LocalRewardModel] {
+        let granted = try await packageService.purchasePackage(package)
+        analyticsService.log(.packagePurchased(productID: package.productId))
+        logGoldRewards(granted, source: AnalyticsGoldSource.package)
+        return granted
     }
 
     func chestPityProgress(chestId: String) -> ChestPityProgressModel? {

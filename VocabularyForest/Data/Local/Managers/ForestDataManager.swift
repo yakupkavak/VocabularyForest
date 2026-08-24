@@ -61,8 +61,8 @@ extension ForestDataManager {
     enum ForestConstants {
         static let initialLandHealthPercent = Int16(100)
         static let initialRainValue = Int16(0)
-        static let initialMoneyValue = Int16(0)
-        static let initialDiamond = Int16(0)
+        static let initialMoneyValue = Int32(0)
+        static let initialDiamond = Int32(0)
     }
 }
 
@@ -106,6 +106,8 @@ protocol ForestDataManagerProtocol: AnyObject {
     func updateWeeklyStreak(day: Int, time: Date, contextType: ForestDataManager.ContextType) throws
     func updateClaimedAdventureTier(track: AdventureMemoryTrack, wordCount: Int, time: Date, contextType: ForestDataManager.ContextType) throws
     func registerKillGold(minGold: Int, maxGold: Int, dailyCap: Int, contextType: ForestDataManager.ContextType) throws -> Int
+    func fetchPityOpenCount(counter: ChestPityCounterField, contextType: ForestDataManager.ContextType) -> Int
+    func updatePityOpenCount(counter: ChestPityCounterField, value: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool>
 }
 
 class ForestDataManager: ForestDataManagerProtocol {
@@ -444,13 +446,13 @@ extension ForestDataManager {
                 forest.addToSculptures(sculpture)
 
             case .gold:
-                forest.moneyValue += Int16(model.rewardCount)
+                forest.moneyValue = Self.clampedBalance(forest.moneyValue, adding: model.rewardCount)
                 
             case .water:
                 forest.rainValue += Int16(model.rewardCount)
                 
             case .diamond:
-                forest.diamondValue += Int16(model.rewardCount)
+                forest.diamondValue = Self.clampedBalance(forest.diamondValue, adding: model.rewardCount)
             }
             
             forest.lastUpdatedDate = Date()
@@ -504,8 +506,11 @@ extension ForestDataManager {
             let newForest = Forest(context: context)
             newForest.forestId = safeForest.forestId
             newForest.ownerId = ownerId
-            newForest.moneyValue = Int16(safeForest.moneyValue)
-            newForest.diamondValue = Int16(safeForest.diamondValue)
+            newForest.moneyValue = Int32(clamping: safeForest.moneyValue)
+            newForest.diamondValue = Int32(clamping: safeForest.diamondValue)
+            newForest.pityNatureOpenCount = Int32(clamping: safeForest.pityNatureOpenCount)
+            newForest.pityAntiqueOpenCount = Int32(clamping: safeForest.pityAntiqueOpenCount)
+            newForest.pityGeneralOpenCount = Int32(clamping: safeForest.pityGeneralOpenCount)
             newForest.rainValue = Int16(safeForest.rainValue)
             newForest.landHealthPercent = Int16(safeForest.landHealthPercent)
             newForest.landStatus = safeForest.landStatus
@@ -620,10 +625,13 @@ extension ForestDataManager {
             // Remote timestamps are written as-is on purpose: refreshing them here would
             // make the next delta sync push the same data straight back to the cloud.
             if let metadata = changes.metadata {
-                forest.moneyValue = Int16(metadata.moneyValue)
-                forest.diamondValue = Int16(metadata.diamondValue)
+                forest.moneyValue = Int32(clamping: metadata.moneyValue)
+                forest.diamondValue = Int32(clamping: metadata.diamondValue)
                 forest.rainValue = Int16(metadata.rainValue)
                 forest.landHealthPercent = Int16(metadata.landHealthPercent)
+                forest.pityNatureOpenCount = Int32(clamping: metadata.pityNatureOpenCount)
+                forest.pityAntiqueOpenCount = Int32(clamping: metadata.pityAntiqueOpenCount)
+                forest.pityGeneralOpenCount = Int32(clamping: metadata.pityGeneralOpenCount)
                 forest.lastUpdatedDate = metadata.lastUpdatedDate
             }
 
@@ -835,7 +843,7 @@ extension ForestDataManager {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
-            forest.moneyValue += Int16(money)
+            forest.moneyValue = Self.clampedBalance(forest.moneyValue, adding: money)
             forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
@@ -853,7 +861,7 @@ extension ForestDataManager {
             guard let forest = getCurrentForest(context: context) else {
                 return Resource.error(error: ForestError.saveError)
             }
-            forest.diamondValue += Int16(diamond)
+            forest.diamondValue = Self.clampedBalance(forest.diamondValue, adding: diamond)
             forest.lastUpdatedDate = Date()
             do {
                 try save(context: context)
@@ -865,6 +873,53 @@ extension ForestDataManager {
         }
     }
     
+    /// Balances are stored as Int32; clamping keeps large package purchases and
+    /// long-term hoarding from overflowing, and the zero floor guards against
+    /// double-spend races driving a balance negative.
+    private static func clampedBalance(_ current: Int32, adding delta: Int) -> Int32 {
+        Int32(clamping: max(0, Int(current) + delta))
+    }
+
+    func fetchPityOpenCount(counter: ChestPityCounterField, contextType: ForestDataManager.ContextType) -> Int {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else { return 0 }
+            switch counter {
+            case .nature:
+                return Int(forest.pityNatureOpenCount)
+            case .antique:
+                return Int(forest.pityAntiqueOpenCount)
+            case .general:
+                return Int(forest.pityGeneralOpenCount)
+            }
+        }
+    }
+
+    func updatePityOpenCount(counter: ChestPityCounterField, value: Int, contextType: ForestDataManager.ContextType) -> Resource<Bool> {
+        let context = getContext(for: contextType)
+        return context.performAndWait {
+            guard let forest = getCurrentForest(context: context) else {
+                return Resource.error(error: ForestError.saveError)
+            }
+            let clamped = Int32(clamping: max(0, value))
+            switch counter {
+            case .nature:
+                forest.pityNatureOpenCount = clamped
+            case .antique:
+                forest.pityAntiqueOpenCount = clamped
+            case .general:
+                forest.pityGeneralOpenCount = clamped
+            }
+            forest.lastUpdatedDate = Date()
+            do {
+                try save(context: context)
+            } catch {
+                return Resource.error(error: error)
+            }
+            return Resource.success(true)
+        }
+    }
+
     func updateDailySpinTime(time: Date, contextType: ForestDataManager.ContextType) throws {
         let context = getContext(for: contextType)
         return try context.performAndWait {
@@ -935,7 +990,7 @@ extension ForestDataManager {
             let grantedGold = Int.random(in: minGold...safeMax)
             activities.dailyKillGoldCount += 1
             activities.lastUpdatedDate = now
-            forest.moneyValue += Int16(grantedGold)
+            forest.moneyValue = Self.clampedBalance(forest.moneyValue, adding: grantedGold)
             forest.lastUpdatedDate = now
             try save(context: context)
             return grantedGold

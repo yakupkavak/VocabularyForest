@@ -14,6 +14,10 @@ struct SafeForestModel: Sendable {
     let moneyValue: Int
     let diamondValue: Int
     let landHealthPercent: Int
+    /// Chest pity open counters, synced on the main forest document like the balances
+    let pityNatureOpenCount: Int
+    let pityAntiqueOpenCount: Int
+    let pityGeneralOpenCount: Int
     let landStatus: Bool
     let isRaining: Bool
     let lastRainUpdateDate: Date?

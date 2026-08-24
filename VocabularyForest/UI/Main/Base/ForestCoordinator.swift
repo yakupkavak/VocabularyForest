@@ -80,6 +80,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
         let weeklyRewardService = resolver.resolve(type: .singleInstance, for: WeeklyRewardServiceProtocol.self)
         let adventureRoadService = resolver.resolve(type: .singleInstance, for: AdventureRoadServiceProtocol.self)
         let marketService = resolver.resolve(type: .singleInstance, for: MarketServiceProtocol.self)
+        let packageService = resolver.resolve(type: .singleInstance, for: PackageServiceProtocol.self)
         let assetHydrationService = resolver.resolve(type: .singleInstance, for: RewardAssetHydrationServiceProtocol.self)
         let viewModel = ForestViewModel(
             audioService: audioService,
@@ -94,6 +95,7 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
             weeklyRewardService: weeklyRewardService,
             adventureRoadService: adventureRoadService,
             marketService: marketService,
+            packageService: packageService,
             assetHydrationService: assetHydrationService
         )
 
@@ -269,7 +271,8 @@ final class VocabularyForestCoordinator: VocabularyForestCoordinatorProtocol, Ob
     
     func startClaimRewardUI(claimReward: LocalRewardModel, onClaim: @escaping ([LocalRewardModel]) -> Void) -> AnyView {
         let chestRepository = resolver.resolve(type: .singleInstance, for: ChestRepositoryProtocol.self)
-        let viewModel = ClaimRewardViewModel(chestManager: chestRepository)
+        let audioService = resolver.resolve(type: .singleInstance, for: AudioServiceProtocol.self)
+        let viewModel = ClaimRewardViewModel(chestManager: chestRepository, audioService: audioService)
         return AnyView(ClaimRewardUI(viewModel: viewModel, claimReward: claimReward, onClaim: onClaim))
     }
 }

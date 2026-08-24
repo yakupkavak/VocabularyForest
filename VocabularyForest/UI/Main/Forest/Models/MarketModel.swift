@@ -64,3 +64,18 @@ struct MarketScreenModel {
     let title: String
     let sections: [MarketSectionModel]
 }
+
+struct MarketPackageModel: Identifiable, Hashable {
+    let id: String
+    let productId: String
+    let displayName: String
+    /// Localized price string provided by StoreKit
+    let displayPrice: String
+    let contents: [LocalRewardModel]
+}
+
+struct MarketPackageSectionModel: Hashable {
+    let id: String
+    let title: String
+    let items: [MarketPackageModel]
+}

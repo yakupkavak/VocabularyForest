@@ -72,9 +72,13 @@ class ForestAudioService: NSObject, AudioServiceProtocol {
     
     func playSFX(filename: String) {
         if isMuted || currentSFXVolume <= 0 { return }
-        
-        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else { return }
-        
+
+        // mp3 first so a designer-provided mp3 wins over a bundled m4a placeholder
+        let candidateExtensions = ["mp3", "m4a", "wav"]
+        guard let url = candidateExtensions
+            .compactMap({ Bundle.main.url(forResource: filename, withExtension: $0) })
+            .first else { return }
+
         do {
             sfxPlayer = try AVAudioPlayer(contentsOf: url)
             sfxPlayer?.volume = currentSFXVolume

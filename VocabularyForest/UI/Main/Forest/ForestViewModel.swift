@@ -61,6 +61,7 @@ class ForestViewModel: BaseViewModel {
     private let weeklyRewardService: WeeklyRewardServiceProtocol
     private let adventureRoadService: AdventureRoadServiceProtocol
     private let marketService: MarketServiceProtocol
+    private let packageService: PackageServiceProtocol
     private let assetHydrationService: RewardAssetHydrationServiceProtocol
 
     // MARK: - PROPERTIES
@@ -79,6 +80,7 @@ class ForestViewModel: BaseViewModel {
     @Published var dailySpinModelVersion = UUID()
     @Published var adventureRoadScreenModel: AdventureRoadScreenModel? = nil
     @Published var marketScreenModel: MarketScreenModel? = nil
+    @Published var marketPackages: MarketPackageSectionModel? = nil
     @Published var marketErrorMessage: String? = nil
     @Published private(set) var isDailySpinClaimable = false
     private var nextDailySpinTime: Date? = nil
@@ -117,6 +119,7 @@ class ForestViewModel: BaseViewModel {
         weeklyRewardService: WeeklyRewardServiceProtocol,
         adventureRoadService: AdventureRoadServiceProtocol,
         marketService: MarketServiceProtocol,
+        packageService: PackageServiceProtocol,
         assetHydrationService: RewardAssetHydrationServiceProtocol,
         logger: AppLoggerProtocol = AppLogger.shared
     ) {
@@ -132,6 +135,7 @@ class ForestViewModel: BaseViewModel {
         self.weeklyRewardService = weeklyRewardService
         self.adventureRoadService = adventureRoadService
         self.marketService = marketService
+        self.packageService = packageService
         self.assetHydrationService = assetHydrationService
         self.logger = logger
         super.init()
@@ -607,6 +611,21 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
+    func purchasePackage(_ package: MarketPackageModel, onSuccess: @escaping ([LocalRewardModel]) -> Void) {
+        Task { @MainActor in
+            do {
+                let granted = try await adventureService.purchasePackage(package)
+                marketErrorMessage = nil
+                fetchForest()
+                onSuccess(granted)
+            } catch StorePurchaseError.purchaseCancelled {
+                // The user backed out of the payment sheet; not an error state
+            } catch {
+                marketErrorMessage = error.localizedDescription
+            }
+        }
+    }
+
     func purchaseMarketItem(item: MarketItemModel, onSuccess: @escaping () -> Void) {
         Task { @MainActor in
             do {
@@ -833,6 +852,11 @@ private extension ForestViewModel {
             .sink { [weak self] model in
                 guard let self else { return }
                 marketScreenModel = model
+            }.store(in: &adventureCancellable)
+        packageService.packageSectionPublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] section in
+                guard let self else { return }
+                marketPackages = section
             }.store(in: &adventureCancellable)
     }
     

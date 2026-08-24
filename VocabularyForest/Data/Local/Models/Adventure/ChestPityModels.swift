@@ -7,6 +7,15 @@
 
 import Foundation
 
+/// CoreData/Firestore-backed pity counters. The raw values are the config's
+/// `counterGroup` strings and double as the Firestore field name suffixes,
+/// so they must stay identical on Android.
+enum ChestPityCounterField: String {
+    case nature
+    case antique
+    case general
+}
+
 /// Validated pity configuration carried on a `LocalChestModel`.
 struct LocalChestPityModel: Hashable {
     let counterGroup: String

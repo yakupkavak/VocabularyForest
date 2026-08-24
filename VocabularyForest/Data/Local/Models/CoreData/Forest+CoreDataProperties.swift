@@ -21,9 +21,12 @@ extension Forest {
     @NSManaged public var forestId: UUID
     @NSManaged public var ownerId: String?
     @NSManaged public var rainValue: Int16
-    @NSManaged public var moneyValue: Int16
-    @NSManaged public var diamondValue: Int16
+    @NSManaged public var moneyValue: Int32
+    @NSManaged public var diamondValue: Int32
     @NSManaged public var landHealthPercent: Int16
+    @NSManaged public var pityNatureOpenCount: Int32
+    @NSManaged public var pityAntiqueOpenCount: Int32
+    @NSManaged public var pityGeneralOpenCount: Int32
     @NSManaged public var landStatus: Bool
     @NSManaged public var isRaining: Bool
     @NSManaged public var lastRainUpdateDate: Date?
@@ -95,6 +98,9 @@ extension Forest: ConvertSafeModel {
                 moneyValue: Int(moneyValue),
                 diamondValue: Int(diamondValue),
                 landHealthPercent: Int(landHealthPercent),
+                pityNatureOpenCount: Int(pityNatureOpenCount),
+                pityAntiqueOpenCount: Int(pityAntiqueOpenCount),
+                pityGeneralOpenCount: Int(pityGeneralOpenCount),
                 landStatus: landStatus,
                 isRaining: isRaining,
                 lastRainUpdateDate: lastRainUpdateDate,

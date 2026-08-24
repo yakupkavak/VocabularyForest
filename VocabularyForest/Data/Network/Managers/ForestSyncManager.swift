@@ -142,6 +142,9 @@ extension ForestSyncManager: ForestSyncManagerProtocol {
                 moneyValue: metadata?.moneyValue ?? 0,
                 diamondValue: metadata?.diamondValue ?? 0,
                 landHealthPercent: metadata?.landHealthPercent ?? 100,
+                pityNatureOpenCount: metadata?.pityNatureOpenCount ?? 0,
+                pityAntiqueOpenCount: metadata?.pityAntiqueOpenCount ?? 0,
+                pityGeneralOpenCount: metadata?.pityGeneralOpenCount ?? 0,
                 landStatus: localForest?.landStatus ?? true,
                 isRaining: localForest?.isRaining ?? false,
                 lastRainUpdateDate: localForest?.lastRainUpdateDate,
@@ -524,6 +527,9 @@ private extension ForestSyncManager {
             diamondValue: forest.diamondValue,
             rainValue: forest.rainValue,
             landHealthPercent: forest.landHealthPercent,
+            pityNatureOpenCount: forest.pityNatureOpenCount,
+            pityAntiqueOpenCount: forest.pityAntiqueOpenCount,
+            pityGeneralOpenCount: forest.pityGeneralOpenCount,
             lastUpdatedDate: forest.lastUpdatedDate
         )
         let metadataResolution = conflictResolver.resolve(local: localMetadata, remote: pull.metadata, lastSyncDate: lastSyncDate)

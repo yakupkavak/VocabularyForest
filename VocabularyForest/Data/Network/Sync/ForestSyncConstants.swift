@@ -47,6 +47,9 @@ enum ForestSyncConstants {
     static let diamondValueField = "diamondValue"
     static let rainValueField = "rainValue"
     static let landHealthPercentField = "landHealthPercent"
+    static let pityNatureOpenCountField = "pityNatureOpenCount"
+    static let pityAntiqueOpenCountField = "pityAntiqueOpenCount"
+    static let pityGeneralOpenCountField = "pityGeneralOpenCount"
 
     static let titleField = "title"
     static let descriptionField = "description"

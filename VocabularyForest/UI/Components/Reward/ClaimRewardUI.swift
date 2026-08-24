@@ -351,7 +351,9 @@ private extension ClaimRewardUI {
     }
 
     func triggerCelebrationIfNeeded(tier: RewardTier?) {
-        guard let tier, tier.isCelebrated, isHapticsEnabled else { return }
+        guard let tier, tier.isCelebrated else { return }
+        viewModel.playCelebrationSound(tier: tier)
+        guard isHapticsEnabled else { return }
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
         if tier == .sPlus {
@@ -418,7 +420,8 @@ private extension ClaimRewardUI {
 #Preview("Chest") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller())),
+            audioService: ForestAudioService()
         ),
         claimReward: LocalRewardModel(rewardCount: 1, reward: .chest(model: LocalChestModel(id: "", version: 1, displayName: .mock(), closeLocalImagePath: RewardAssetReference(key: "close_gold_chest", source: .appAssets), openLocalImagePath: RewardAssetReference(key: "open_gold_chest", source: .appAssets), textHexColor: nil, backgroundGradientColors: nil)))
     ) { _ in }
@@ -427,7 +430,8 @@ private extension ClaimRewardUI {
 #Preview("Cat") {
     ClaimRewardUI(
         viewModel: ClaimRewardViewModel(
-            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller()))
+            chestManager: ChestRepository(assetManager: OfflineAssetManager(), apiService: APIService(), pityService: ChestPityService(counterStore: ChestPityCounterStore(), randomRoller: SystemRandomRoller())),
+            audioService: ForestAudioService()
         ),
         claimReward: LocalRewardModel(
             rewardCount: 1,

@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+// MARK: - CONSTANTS
+
+private extension MarketUI {
+    enum Constants {
+        /// The bundle shelf renders right below this section (plan: "Sandıklar → Hazır Paketler")
+        static let chestsSectionId = "market-section-chests"
+    }
+}
+
 // MARK: - CARD STYLE
 
 /// Maps the reward content to a vivid color palette per category
@@ -79,6 +88,9 @@ struct MarketUI: View {
     var pityProgress: (String) -> ChestPityProgressModel? = { _ in nil }
     /// Remaining weekly purchases per item; nil means the item is uncapped
     var weeklyRemaining: (MarketItemModel) -> Int? = { _ in nil }
+    /// IAP bundles; nil hides the section (e.g. store not configured yet)
+    var packages: MarketPackageSectionModel? = nil
+    var onPackagePurchase: (MarketPackageModel) -> Void = { _ in }
 
     @Environment(\.safeAreaInsets) private var globalSafeArea
     @State private var infoChest: LocalChestModel?
@@ -112,6 +124,9 @@ struct MarketUI: View {
                         }
                         
                         LazyVStack(alignment: .leading, spacing: width * 0.05) {
+                            if shouldLeadWithPackages, let packages {
+                                packagesSectionView(section: packages, cardWidth: cardWidth, width: width, horizontalPadding: horizontalPadding)
+                            }
                             ForEach(screenModel.sections) { section in
                                 sectionView(
                                     section: section,
@@ -119,6 +134,9 @@ struct MarketUI: View {
                                     width: width,
                                     horizontalPadding: horizontalPadding
                                 )
+                                if section.id == Constants.chestsSectionId, let packages {
+                                    packagesSectionView(section: packages, cardWidth: cardWidth, width: width, horizontalPadding: horizontalPadding)
+                                }
                             }
                         }
                     }
@@ -286,6 +304,44 @@ private extension MarketUI {
         }
     }
     
+    /// Packages belong under the chest shelf; when the config carries no chest
+    /// section they open the market instead of disappearing.
+    var shouldLeadWithPackages: Bool {
+        packages != nil && !screenModel.sections.contains { $0.id == Constants.chestsSectionId }
+    }
+
+    func packagesSectionView(section: MarketPackageSectionModel, cardWidth: CGFloat, width: CGFloat, horizontalPadding: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: width * 0.025) {
+            ZStack {
+                Image("title_header")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: width * 0.1)
+                    .a11yDecorative()
+
+                Text(section.title)
+                    .scaledFont(size: width * 0.042, weight: .bold, design: .rounded)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.45), radius: 1, x: 0, y: 1)
+            }
+            .padding(.leading, horizontalPadding)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: width * 0.03) {
+                    ForEach(section.items) { package in
+                        MarketPackageCard(
+                            package: package,
+                            cardWidth: cardWidth,
+                            onPurchase: onPackagePurchase
+                        )
+                    }
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, horizontalPadding)
+            }
+        }
+    }
+
     func chestPityProgress(item: MarketItemModel) -> ChestPityProgressModel? {
         guard case .chest(let chest) = item.reward.reward else { return nil }
         return pityProgress(chest.id)
@@ -802,6 +858,128 @@ struct MarketItemCard: View {
             Capsule()
                 .stroke(Color.white.opacity(0.35), lineWidth: 1)
         )
+    }
+}
+
+// MARK: - MARKET PACKAGE CARD
+
+/// IAP bundle card; the price comes localized from StoreKit and the purchase
+/// runs through the App Store sheet, so there is no affordability state.
+struct MarketPackageCard: View {
+
+    let package: MarketPackageModel
+    let cardWidth: CGFloat
+    let onPurchase: (MarketPackageModel) -> Void
+
+    private var primaryContent: LocalRewardModel? {
+        package.contents.first
+    }
+
+    var body: some View {
+        Button {
+            onPurchase(package)
+        } label: {
+            VStack(spacing: cardWidth * 0.06) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: cardWidth * 0.11)
+                        .fill(
+                            RadialGradient(
+                                colors: [Color.white.opacity(0.45), Color.white.opacity(0.1)],
+                                center: .center,
+                                startRadius: 4,
+                                endRadius: cardWidth * 0.6
+                            )
+                        )
+                        .frame(height: cardWidth * 0.72)
+
+                    if let primaryContent {
+                        RewardImageView(asset: primaryContent.reward.posterImage)
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: cardWidth * 0.62)
+                            .padding(cardWidth * 0.06)
+                            .shadow(color: .black.opacity(0.35), radius: 3, x: 0, y: 2)
+                    }
+                }
+
+                Text(package.displayName)
+                    .scaledFont(size: cardWidth * 0.1, weight: .bold, design: .rounded)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.4), radius: 1, x: 0, y: 1)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.5)
+                    .frame(height: cardWidth * 0.26)
+
+                contentsSummary
+
+                priceTag
+            }
+            .padding(cardWidth * 0.08)
+            .frame(width: cardWidth)
+            .background(
+                LinearGradient(
+                    colors: [.tierS, .tierSPlus],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .cornerRadius(cardWidth * 0.12)
+            .overlay(
+                RoundedRectangle(cornerRadius: cardWidth * 0.12)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.85), Color.white.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2
+                    )
+            )
+            .shadow(color: Color.tierS.opacity(0.55), radius: 8, x: 0, y: 4)
+        }
+        .buttonStyle(ScaleButtonStyle())
+        .a11yTapButton(
+            String(
+                format: NSLocalizedString("a11y_package_item", comment: ""),
+                package.displayName,
+                package.displayPrice
+            ),
+            hint: String(localized: "a11y_buy_hint"),
+            inputLabels: [package.displayName]
+        )
+    }
+
+    /// Compact "icon xN" rows so the whole bundle is readable at a glance
+    private var contentsSummary: some View {
+        VStack(alignment: .leading, spacing: cardWidth * 0.02) {
+            ForEach(Array(package.contents.prefix(3).enumerated()), id: \.offset) { _, content in
+                HStack(spacing: cardWidth * 0.03) {
+                    RewardImageView(asset: content.reward.posterImage)
+                        .scaledToFit()
+                        .frame(width: cardWidth * 0.11, height: cardWidth * 0.11)
+                    Text("x\(content.rewardCount)")
+                        .scaledFont(size: cardWidth * 0.08, weight: .bold, design: .rounded)
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var priceTag: some View {
+        Text(package.displayPrice)
+            .scaledFont(size: cardWidth * 0.11, weight: .black, design: .rounded)
+            .foregroundStyle(.white)
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
+            .padding(.vertical, cardWidth * 0.04)
+            .frame(maxWidth: .infinity)
+            .background(Color.black.opacity(0.35))
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(Color.white.opacity(0.35), lineWidth: 1)
+            )
     }
 }
 

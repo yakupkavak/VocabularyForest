@@ -239,6 +239,16 @@ private extension ForestUI {
                     },
                     weeklyRemaining: { item in
                         viewModel.remainingWeeklyPurchases(item: item)
+                    },
+                    packages: viewModel.marketPackages,
+                    onPackagePurchase: { package in
+                        viewModel.purchasePackage(package) { rewards in
+                            PopupManager.shared.show {
+                                PackageRewardsUI(rewards: rewards) {
+                                    PopupManager.shared.dismiss()
+                                }
+                            }
+                        }
                     }
                 )
             } else {

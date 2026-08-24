@@ -31,5 +31,9 @@ struct ForestMetadataUpdate {
     let diamondValue: Int
     let rainValue: Int
     let landHealthPercent: Int
+    /// Chest pity open counters ride along with the balances under the same LWW timestamp
+    let pityNatureOpenCount: Int
+    let pityAntiqueOpenCount: Int
+    let pityGeneralOpenCount: Int
     let lastUpdatedDate: Date
 }

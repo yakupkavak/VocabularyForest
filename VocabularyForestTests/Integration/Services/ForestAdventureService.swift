@@ -34,6 +34,7 @@ struct ForestAdventureServiceQuestTrackTests {
         let seasonProgressStore = AdventureRoadSeasonProgressStore(coreDataManager: coreData, forestDataManager: forestData)
         let adventureRoadService = AdventureRoadService(forestManager: forestData, rewardRepository: rewardRepository, seasonProgressStore: seasonProgressStore)
         let marketService = MarketService(forestManager: forestData, rewardRepository: rewardRepository, purchaseLimitStore: MarketPurchaseLimitStore())
+        let packageService = PackageService(storeService: StoreKitPurchaseService(), rewardRepository: rewardRepository, chestRepository: chestRepository)
         self.sut = ForestAdventureService(
             forestManager: forestData,
             playerManager: playerManager,
@@ -46,6 +47,7 @@ struct ForestAdventureServiceQuestTrackTests {
             weeklyRewardService: weeklyRewardService,
             adventureRoadService: adventureRoadService,
             marketService: marketService,
+            packageService: packageService,
             chestService: chestRepository,
             gameManager: GameManager()
         )

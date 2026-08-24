@@ -102,6 +102,9 @@ extension ForestSyncMapper {
             ForestSyncConstants.diamondValueField: metadata.diamondValue,
             ForestSyncConstants.rainValueField: metadata.rainValue,
             ForestSyncConstants.landHealthPercentField: metadata.landHealthPercent,
+            ForestSyncConstants.pityNatureOpenCountField: metadata.pityNatureOpenCount,
+            ForestSyncConstants.pityAntiqueOpenCountField: metadata.pityAntiqueOpenCount,
+            ForestSyncConstants.pityGeneralOpenCountField: metadata.pityGeneralOpenCount,
             ForestSyncConstants.lastUpdatedDateField: metadata.lastUpdatedDate
         ]
     }
@@ -253,6 +256,9 @@ extension ForestSyncMapper {
             diamondValue: data[ForestSyncConstants.diamondValueField] as? Int ?? 0,
             rainValue: data[ForestSyncConstants.rainValueField] as? Int ?? 0,
             landHealthPercent: data[ForestSyncConstants.landHealthPercentField] as? Int ?? 100,
+            pityNatureOpenCount: data[ForestSyncConstants.pityNatureOpenCountField] as? Int ?? 0,
+            pityAntiqueOpenCount: data[ForestSyncConstants.pityAntiqueOpenCountField] as? Int ?? 0,
+            pityGeneralOpenCount: data[ForestSyncConstants.pityGeneralOpenCountField] as? Int ?? 0,
             lastUpdatedDate: lastUpdatedDate
         )
     }
