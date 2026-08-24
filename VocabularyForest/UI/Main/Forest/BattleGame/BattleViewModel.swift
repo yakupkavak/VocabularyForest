@@ -82,6 +82,7 @@ class BattleViewModel: ObservableObject {
     private var currentEnemyIndex = 0
     private var gameLevel: GameLevel? = nil
     private var questionType: BattleQuestionType? = nil
+    private var hasOfferedContinue = false
     private var battleMode: BattleEnemyModel? = nil
     weak var output: BattleViewModelOutputProcotol?
     
@@ -316,6 +317,7 @@ private extension BattleViewModel {
         answerBooks = []
         currentQuestionId = 0
         currentEnemyIndex = 0
+        hasOfferedContinue = false
         currentQuestion = nil
         errorModel = nil
         questionStation = .notDetermined
@@ -611,6 +613,13 @@ extension BattleViewModel: BattleSceneProtocol {
         nextEnemy()
     }
     func playerDead() {
+        // The continue offer is a one-shot per game: only the first death shows
+        // the popup, a second death is a definitive defeat.
+        guard !hasOfferedContinue else {
+            declineContinue()
+            return
+        }
+        hasOfferedContinue = true
         // The run is not over yet: offer a paid/ad continue first.
         // The defeat is only committed in declineContinue().
         uiStation = .continueOffer
