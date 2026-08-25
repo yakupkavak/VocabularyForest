@@ -107,6 +107,7 @@ enum AnalyticsEvent {
     case chestOpened(chestID: String)
     case marketItemPurchased(itemID: String, price: Int)
     case packagePurchased(productID: String)
+    case remoteConfigLoadFailed(configKey: String, reason: String, detail: String)
     case cloudSyncCompleted(result: CloudSyncResult, trigger: CloudSyncTrigger)
     case cloudRestorePromptShown
     case cloudRestorePromptResult(choice: CloudRestoreChoice)
@@ -141,6 +142,7 @@ private extension AnalyticsEvent {
         static let chestOpened = "chest_opened"
         static let marketItemPurchased = "market_item_purchased"
         static let packagePurchased = "package_purchased"
+        static let remoteConfigLoadFailed = "remote_config_load_failed"
         static let cloudSyncCompleted = "cloud_sync_completed"
         static let cloudRestorePromptShown = "cloud_restore_prompt_shown"
         static let cloudRestorePromptResult = "cloud_restore_prompt_result"
@@ -169,6 +171,8 @@ private extension AnalyticsEvent {
         static let milestoneID = "milestone_id"
         static let seasonID = "season_id"
         static let chestID = "chest_id"
+        static let configKey = "config_key"
+        static let errorDetail = "error_detail"
         static let result = "result"
         static let trigger = "trigger"
         static let choice = "choice"
@@ -347,6 +351,13 @@ extension AnalyticsEvent {
             return AnalyticsEventDescriptor(
                 name: Constants.packagePurchased,
                 parameters: [AnalyticsParameterItemID: productID]
+            )
+        case let .remoteConfigLoadFailed(configKey, reason, detail):
+            return AnalyticsEventDescriptor(
+                name: Constants.remoteConfigLoadFailed,
+                parameters: [Constants.configKey: configKey,
+                             Constants.reason: reason,
+                             Constants.errorDetail: detail]
             )
         case let .cloudSyncCompleted(result, trigger):
             return AnalyticsEventDescriptor(

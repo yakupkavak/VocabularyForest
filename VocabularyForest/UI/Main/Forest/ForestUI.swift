@@ -253,6 +253,12 @@ private extension ForestUI {
                 )
             } else {
                 ProgressView()
+                    .onAppear {
+                        presentConfigErrorIfNeeded()
+                    }
+                    .onChange(of: viewModel.configLoadFailure) { _ in
+                        presentConfigErrorIfNeeded()
+                    }
             }
         }
     }
@@ -621,6 +627,29 @@ private extension ForestUI {
     func exitForest() {
         viewModel.stopGameMusic()
         router.navigateToRoot()
+    }
+
+    /// The market has no data and the config load failed: close the loading
+    /// state and surface the connection-error popup instead of an endless spinner.
+    func presentConfigErrorIfNeeded() {
+        guard uiState == .market,
+              viewModel.marketScreenModel == nil,
+              viewModel.configLoadFailure != nil else { return }
+        uiState = .empty
+        let cooldown = viewModel.armConfigRetryCooldown()
+        PopupManager.shared.show {
+            ConnectionErrorPopUp(
+                cooldownSeconds: cooldown,
+                audioService: viewModel.audioService,
+                onRetry: {
+                    viewModel.retryConfigLoad()
+                    PopupManager.shared.dismiss()
+                },
+                onClose: {
+                    PopupManager.shared.dismiss()
+                }
+            )
+        }
     }
 }
 

@@ -45,12 +45,22 @@ protocol ForestViewModelProtocol: AnyObject {
     func fetchAdventureRoadData()
 }
 
+// MARK: - CONSTANTS
+
+private extension ForestViewModel {
+    enum Constants {
+        static let configRetryBaseCooldown: TimeInterval = 5
+        static let configRetryCooldownMultiplier: Double = 2
+        static let configRetryMaxCooldown: TimeInterval = 60
+    }
+}
+
 // MARK: - VIEW MODEL
 
 class ForestViewModel: BaseViewModel {
-    
+
     private let coreDataManager: CoreDataManagerProtocol
-    private let audioService: AudioServiceProtocol
+    let audioService: AudioServiceProtocol
     private let forestDataManager: ForestDataManagerProtocol
     private let forestEntityService: ForestEntityServiceProtocol
     private let adventureService: ForestAdventureServiceProtocol
@@ -82,6 +92,7 @@ class ForestViewModel: BaseViewModel {
     @Published var marketScreenModel: MarketScreenModel? = nil
     @Published var marketPackages: MarketPackageSectionModel? = nil
     @Published var marketErrorMessage: String? = nil
+    @Published var configLoadFailure: ConfigLoadFailure? = nil
     @Published private(set) var isDailySpinClaimable = false
     private var nextDailySpinTime: Date? = nil
     private var animalList: [AnimalModel] = []
@@ -103,6 +114,8 @@ class ForestViewModel: BaseViewModel {
     private var questCancellable = Set<AnyCancellable>()
     private var adventureCancellable = Set<AnyCancellable>()
     private var hydrationCancellable = Set<AnyCancellable>()
+    private var configRetryAttempts: Int = 0
+    private var configRetryAvailableAt: Date = .distantPast
 
     // MARK: - INIT
     
@@ -461,6 +474,32 @@ extension ForestViewModel {
                     rainTimeCancellable?.cancel()
                 }
             }
+    }
+}
+
+// MARK: - CONFIG RETRY HELPERS
+
+extension ForestViewModel {
+
+    /// Returns the seconds the user must wait before the retry button unlocks.
+    /// When the previous cooldown has elapsed it arms the next, longer one
+    /// (5s, 10s, 20s, ... capped at 60s); otherwise it returns the remainder.
+    func armConfigRetryCooldown() -> Int {
+        let remaining = configRetryAvailableAt.timeIntervalSinceNow
+        if remaining > 0 {
+            return Int(remaining.rounded(.up))
+        }
+        let delay = min(
+            Constants.configRetryBaseCooldown * pow(Constants.configRetryCooldownMultiplier, Double(configRetryAttempts)),
+            Constants.configRetryMaxCooldown
+        )
+        configRetryAttempts += 1
+        configRetryAvailableAt = Date().addingTimeInterval(delay)
+        return Int(delay)
+    }
+
+    func retryConfigLoad() {
+        adventureService.retryConfigSetup()
     }
 }
 
@@ -848,6 +887,15 @@ private extension ForestViewModel {
     }
 
     func bindMarket() {
+        adventureService.configLoadFailurePublisher.receive(on: DispatchQueue.main)
+            .sink { [weak self] failure in
+                guard let self else { return }
+                configLoadFailure = failure
+                if failure == nil {
+                    configRetryAttempts = 0
+                    configRetryAvailableAt = .distantPast
+                }
+            }.store(in: &adventureCancellable)
         marketService.marketScreenModelPublisher.receive(on: DispatchQueue.main)
             .sink { [weak self] model in
                 guard let self else { return }

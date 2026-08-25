@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import FirebaseFirestore
 import FirebaseAuth
 import CoreData
@@ -38,6 +39,9 @@ enum ForestAdventureError: LocalizedError {
 // MARK: - PROTOCOL
 
 protocol ForestAdventureServiceProtocol {
+    /// Emits the first failure of the latest config setup run, nil once a run succeeds.
+    var configLoadFailurePublisher: AnyPublisher<ConfigLoadFailure?, Never> { get }
+    func retryConfigSetup()
     func claimDailySpinReward(model: LocalRewardModel) async throws
     func claimWeeklyReward(models: [LocalRewardModel], weeklyModel: WeeklyDailyCardModel) async throws
     func claimAdventureReward(models: [LocalRewardModel], milestone: AdventureMilestoneModel) async throws
@@ -86,6 +90,8 @@ class ForestAdventureService {
     private let db = Firestore.firestore()
     private var questCacheList: [QuestModel]? = nil
     private var dailySpinCacheList: [DailySpinModel]? = nil
+    private let configLoadFailureSubject = CurrentValueSubject<ConfigLoadFailure?, Never>(nil)
+    private var isConfigSetupRunning = false
     
     init(
         forestManager: ForestDataManagerProtocol,
@@ -127,6 +133,16 @@ class ForestAdventureService {
 
 private extension ForestAdventureService {
     func setupParameters() {
+        Task {
+            await runConfigSetup()
+        }
+    }
+
+    func runConfigSetup() async {
+        guard !isConfigSetupRunning else { return }
+        isConfigSetupRunning = true
+        defer { isConfigSetupRunning = false }
+
         let adventureRoadID = UserDefaults.standard.string(forKey: DefaultsKeys.adventureRoadRewards)
         let marketID = UserDefaults.standard.string(forKey: DefaultsKeys.marketConfig)
         let dailySpinID = UserDefaults.standard.string(forKey: DefaultsKeys.dailySpinRewards)
@@ -134,100 +150,142 @@ private extension ForestAdventureService {
         let weeklyID = UserDefaults.standard.string(forKey: DefaultsKeys.weeklyRewards)
         let gameEconomyID = UserDefaults.standard.string(forKey: DefaultsKeys.gameEconomyConfig)
         let chestRewardID = UserDefaults.standard.string(forKey: DefaultsKeys.chestRewardConfig)
-        
-        Task {
-            do {
-            let parameters = await remoteConfigRepository.fetchConfigParameters().data
 
-            /// Pity pools reference catalog reward ids, so the catalog must be
-            /// registered before any chest can be opened.
-            do {
-                let catalog = try await remoteConfigRepository.fetchRewardsCatalog()
-                chestService.registerRewardCatalog(items: catalog.model.items ?? [])
-            } catch {
-                logger.error("Rewards catalog registration failed: \(error.localizedDescription)", category: .sync)
+        var runFailure: ConfigLoadFailure? = nil
+
+        func record(_ section: RemoteConfigSection, _ error: Error) {
+            let failure = ConfigLoadFailure(section: section, error: error)
+            analyticsService.log(.remoteConfigLoadFailed(
+                configKey: failure.section.rawValue,
+                reason: failure.reason.rawValue,
+                detail: failure.detail
+            ))
+            logger.error("Remote config load failed for \(failure.section.rawValue) [\(failure.reason.rawValue)]: \(failure.detail)", category: .sync)
+            /// The popup shows one failure at a time; keep the first so it names the root cause.
+            if runFailure == nil {
+                runFailure = failure
+                configLoadFailureSubject.send(failure)
             }
+        }
 
-            if chestRewardID == parameters?.model.chestRewardsConfigVersion {
+        func load(_ section: RemoteConfigSection, work: () async throws -> Void) async {
+            do {
+                try await work()
+            } catch {
+                record(section, error)
+            }
+        }
+
+        let parametersResource = await remoteConfigRepository.fetchConfigParameters()
+        let parameters = parametersResource.data
+        if parameters == nil {
+            record(.configParameters, parametersResource.error ?? RemoteConfigError.fetchFailed)
+        }
+
+        /// Pity pools reference catalog reward ids, so the catalog must be
+        /// registered before any chest can be opened.
+        await load(.rewardsCatalog) {
+            let catalog = try await remoteConfigRepository.fetchRewardsCatalog()
+            chestService.registerRewardCatalog(items: catalog.model.items ?? [])
+        }
+
+        /// When the parameter list itself could not be fetched, every section falls
+        /// back to the local copy so cached data still opens the screens.
+        /// Version ids are persisted only after a section is fully saved; persisting
+        /// earlier would make a failed fetch look up to date and block retries.
+        await load(.chest) {
+            if parameters == nil || chestRewardID == parameters?.model.chestRewardsConfigVersion {
                 if let chests = try await documentRepository.fetchChestConfig().chests {
                     try await chestService.processAndSaveChests(from: chests)
                 }
             } else if let chestRewardVersion = parameters?.model.chestRewardsConfigVersion {
-                UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
                 let config = try await remoteConfigRepository.fetchChestConfig()
                 if let chests = config.model.chests {
                     try await chestService.processAndSaveChests(from: chests)
                     try await documentRepository.saveChestConfig(data: config.rawData)
+                    UserDefaults.standard.set(chestRewardVersion, forKey: DefaultsKeys.chestRewardConfig)
                 }
             }
-            if adventureRoadID == parameters?.model.adventureRoadConfigVersion {
+        }
+        await load(.adventureRoad) {
+            if parameters == nil || adventureRoadID == parameters?.model.adventureRoadConfigVersion {
                 /// Return from local
                 let response = try await documentRepository.fetchAdventureRoadConfig()
                 try await adventureRoadService.convertRemoteToAdventureList(list: response)
             } else if let adventureVersion = parameters?.model.adventureRoadConfigVersion {
-                UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
                 let config = try await remoteConfigRepository.fetchAdventureRoadConfig()
                 try await adventureRoadService.convertRemoteToAdventureList(list: config.model)
                 try await documentRepository.saveAdventureRoadConfig(data: config.rawData)
+                UserDefaults.standard.set(adventureVersion, forKey: DefaultsKeys.adventureRoadRewards)
             }
-            if marketID == parameters?.model.marketConfigVersion {
+        }
+        await load(.market) {
+            if parameters == nil || marketID == parameters?.model.marketConfigVersion {
                 /// Return from local
                 let response = try await documentRepository.fetchMarketConfig()
                 try await marketService.convertRemoteToMarketList(list: response)
                 await packageService.convertRemotePackages(list: response)
             } else if let marketVersion = parameters?.model.marketConfigVersion {
-                UserDefaults.standard.set(marketVersion, forKey: DefaultsKeys.marketConfig)
                 let config = try await remoteConfigRepository.fetchMarketConfig()
                 try await marketService.convertRemoteToMarketList(list: config.model)
                 await packageService.convertRemotePackages(list: config.model)
                 try await documentRepository.saveMarketConfig(data: config.rawData)
+                UserDefaults.standard.set(marketVersion, forKey: DefaultsKeys.marketConfig)
             }
-            if dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
+        }
+        await load(.dailySpin) {
+            if parameters == nil || dailySpinID == parameters?.model.dailySpinRewardsConfigVersion {
                 let response = try await documentRepository.fetchDailySpinModels()
                 try await dailySpinService.convertRemoteToDailySpinList(list: response)
             } else if let dailySpinVersion = parameters?.model.dailySpinRewardsConfigVersion {
-                UserDefaults.standard.set(dailySpinVersion, forKey: DefaultsKeys.dailySpinRewards)
                 let spinRewards = try await remoteConfigRepository.fetchDailySpinRewards()
                 try await dailySpinService.convertRemoteToDailySpinList(list: spinRewards.model)
                 try await documentRepository.saveDailySpinRewards(data: spinRewards.rawData)
+                UserDefaults.standard.set(dailySpinVersion, forKey: DefaultsKeys.dailySpinRewards)
             }
-            
-            if questsID == parameters?.model.questsConfigVersion {
+        }
+        await load(.quests) {
+            if parameters == nil || questsID == parameters?.model.questsConfigVersion {
                 /// Return from local
                 let response = try await documentRepository.fetchQuestsConfig()
                 await questService.convertRemoteToCacheQuest(list: response)
-                
-            }else if let questsVersion = parameters?.model.questsConfigVersion {
-                UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
-                if let remoteResponse = await remoteConfigRepository.fetchQuestsConfig().data {
-                    await questService.convertRemoteToCacheQuest(list: remoteResponse.model)
-                    try await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
+            } else if let questsVersion = parameters?.model.questsConfigVersion {
+                let resource = await remoteConfigRepository.fetchQuestsConfig()
+                guard let remoteResponse = resource.data else {
+                    throw resource.error ?? RemoteConfigError.decodeFailed
                 }
+                await questService.convertRemoteToCacheQuest(list: remoteResponse.model)
+                try await documentRepository.saveQuestsConfig(data: remoteResponse.rawData)
+                UserDefaults.standard.set(questsVersion, forKey: DefaultsKeys.questsConfig)
             }
-            if weeklyID == parameters?.model.weeklyRewardsConfigVersion {
+        }
+        await load(.weeklyRewards) {
+            if parameters == nil || weeklyID == parameters?.model.weeklyRewardsConfigVersion {
                 /// Return from local
                 let response = try await documentRepository.fetchWeeklyRewards()
                 try await weeklyRewardService.convertRemoteToWeeklyList(list: response)
             } else if let weeklyVersion = parameters?.model.weeklyRewardsConfigVersion {
-                UserDefaults.standard.set(weeklyVersion, forKey: DefaultsKeys.weeklyRewards)
                 let weeklyRewards = try await remoteConfigRepository.fetchWeeklyRewards()
                 try await weeklyRewardService.convertRemoteToWeeklyList(list: weeklyRewards.model)
                 try await documentRepository.saveWeeklyRewards(data: weeklyRewards.rawData)
+                UserDefaults.standard.set(weeklyVersion, forKey: DefaultsKeys.weeklyRewards)
             }
-            if gameEconomyID == parameters?.model.gameEconomyConfigVersion {
+        }
+        await load(.gameEconomy) {
+            if parameters == nil || gameEconomyID == parameters?.model.gameEconomyConfigVersion {
                 /// Return from local
                 let config = try await documentRepository.fetchGameEconomyConfig()
                 gameManager.applyEconomyConfig(config)
             } else if let gameEconomyVersion = parameters?.model.gameEconomyConfigVersion {
-                UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
                 let config = try await remoteConfigRepository.fetchGameEconomyConfig()
                 gameManager.applyEconomyConfig(config.model)
                 try await documentRepository.saveGameEconomyConfig(data: config.rawData)
+                UserDefaults.standard.set(gameEconomyVersion, forKey: DefaultsKeys.gameEconomyConfig)
             }
-            }
-            catch {
-                logger.error("Remote config parameter setup failed: \(error.localizedDescription)", category: .sync)
-            }
+        }
+
+        if runFailure == nil && configLoadFailureSubject.value != nil {
+            configLoadFailureSubject.send(nil)
         }
     }
 }
@@ -235,6 +293,14 @@ private extension ForestAdventureService {
 // MARK: - QUEST HELPERS
 
 extension ForestAdventureService: ForestAdventureServiceProtocol {
+    var configLoadFailurePublisher: AnyPublisher<ConfigLoadFailure?, Never> {
+        configLoadFailureSubject.eraseToAnyPublisher()
+    }
+
+    func retryConfigSetup() {
+        setupParameters()
+    }
+
     func claimDailySpinReward(model: LocalRewardModel) async throws {
         /// Lock the spin with network time first so the reward can not be claimed without a saved lock
         try await dailySpinService.claimDailySpinReward()
