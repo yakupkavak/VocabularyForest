@@ -44,8 +44,27 @@ class BookcaseFeedViewModel: ObservableObject {
                 filterBookcases(searchText: newSearchText)
             }
             .store(in: &cancellables)
+        // Packet downloads and syncs save on the background context; the root screen's
+        // onAppear is not guaranteed to re-fire on pop, so refresh on relevant saves.
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] notification in
+                guard let self, Self.containsBookcaseChanges(notification) else { return }
+                fetchBookcases()
+            }
+            .store(in: &cancellables)
     }
-    
+
+    private static func containsBookcaseChanges(_ notification: Notification) -> Bool {
+        guard let userInfo = notification.userInfo else { return false }
+        let changeKeys = [NSInsertedObjectsKey, NSUpdatedObjectsKey, NSDeletedObjectsKey]
+        return changeKeys.contains { key in
+            guard let objects = userInfo[key] as? Set<NSManagedObject> else { return false }
+            // Type checks only: these objects may belong to another context's queue.
+            return objects.contains { $0 is Bookcase || $0 is Book }
+        }
+    }
+
     private func filterBookcases(searchText: String) {
         if searchText.isEmpty {
             self.bookcases = self.allBookcases

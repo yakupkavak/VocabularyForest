@@ -14,6 +14,7 @@ private extension ForestInfoUI {
         static let rowSpacing: CGFloat = 24
         static let iconWidth: CGFloat = 32
         static let rainIconWidth: CGFloat = 44
+        static let rainIconHeight: CGFloat = 44
         /// Every row reserves the widest icon's width so the texts stay aligned.
         static let iconSlotWidth: CGFloat = 44
         static let titleFontSize: CGFloat = 15
@@ -100,7 +101,8 @@ private extension ForestInfoUI {
 
     /// Outlined drop whose fill height mirrors how full the rain tank is.
     func rainIcon(filledRatio: CGFloat) -> some View {
-        Image(systemName: "drop").resizable().scaledToFit().frame(width: Constants.rainIconWidth).foregroundStyle(.brown700).overlay {
+        // Fix both dimensions: with only a width the drop collapses when the row proposes a short height.
+        Image(systemName: "drop").resizable().scaledToFit().frame(width: Constants.rainIconWidth, height: Constants.rainIconHeight).foregroundStyle(.brown700).overlay {
             Image(systemName: "drop.fill").resizable().scaledToFit().foregroundStyle(.brown700).mask {
                 GeometryReader { geo in
                     Rectangle().frame(height: geo.size.height * filledRatio)

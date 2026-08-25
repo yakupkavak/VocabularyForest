@@ -761,7 +761,8 @@ extension CoreDataManager {
                 let list = try context.performAndWait {
                     try context.fetch(request)
                 }
-                let bookcases = try list.map( { try $0.safeObject(context: context) })
+                // One record with missing fields must not blank the whole list.
+                let bookcases = list.compactMap { try? $0.safeObject(context: context) }
                 return bookcases
             } catch {
                 return nil

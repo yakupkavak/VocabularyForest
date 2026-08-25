@@ -110,25 +110,30 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
             switch result {
             case .success(let requestResult):
                 coreDataService.importBookcase(requestResult, overwrite: true, contextType: .background) { result in
-                    switch result {
-                    case .success(_):
-                        self.downloadState = .success
-                        self.analyticsService.log(.packetDownloadCompleted(
-                            packetID: path,
-                            wordCount: requestResult.wordCount ?? requestResult.words?.count ?? 0
-                        ))
-                        self.analyticsService.log(.bookcaseCreated(
-                            languagePair: "\(requestResult.sourceLanguage ?? "")_\(requestResult.targetLanguage ?? "")",
-                            source: .packet
-                        ))
-                    case .failure(let failure):
-                        switch failure {
-                        case .alreadyExist:
-                            self.downloadState = .error("Bu isim kullanılıyor. İsmini değiştir ya da silmelisin")
-                            self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.alreadyExist))
-                        case .missingRequiredFields:
-                            self.downloadState = .error("Bilinmeyen bir hata oluştu")
-                            self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.missingFields))
+                    // The import completion runs on the background context's queue;
+                    // @Published state and notifications must be touched on main.
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let bookcase):
+                            self.setDefaultBookcaseIfNoneSelected(bookcase)
+                            self.downloadState = .success
+                            self.analyticsService.log(.packetDownloadCompleted(
+                                packetID: path,
+                                wordCount: requestResult.wordCount ?? requestResult.words?.count ?? 0
+                            ))
+                            self.analyticsService.log(.bookcaseCreated(
+                                languagePair: "\(requestResult.sourceLanguage ?? "")_\(requestResult.targetLanguage ?? "")",
+                                source: .packet
+                            ))
+                        case .failure(let failure):
+                            switch failure {
+                            case .alreadyExist:
+                                self.downloadState = .error("Bu isim kullanılıyor. İsmini değiştir ya da silmelisin")
+                                self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.alreadyExist))
+                            case .missingRequiredFields:
+                                self.downloadState = .error("Bilinmeyen bir hata oluştu")
+                                self.analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.missingFields))
+                            }
                         }
                     }
                 }
@@ -137,6 +142,14 @@ class BookcasePacketsViewModel: NSObject, BookcasePacketsViewModelProtocol {
                 analyticsService.log(.packetDownloadFailed(packetID: path, reason: AnalyticsFailureReason.network))
             }
         }
+    }
+
+    /// The very first downloaded packet becomes the default bookcase so the
+    /// create-book screen doesn't open with "no bookcase selected".
+    private func setDefaultBookcaseIfNoneSelected(_ bookcase: Bookcase) {
+        guard UserDefaults.standard.string(forKey: BookcaseConstants.bookcase) == nil else { return }
+        guard let model = try? bookcase.safeObject(context: coreDataService.backgroundContext) else { return }
+        setBookcaseDefault(bookcase: model)
     }
 
     // MARK: - ADMOB HELPERS
