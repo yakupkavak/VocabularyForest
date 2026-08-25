@@ -678,7 +678,7 @@ extension ForestViewModel: ForestViewModelProtocol {
         }
     }
     
-    func fetchChestDropInfo(chestId: String) async -> [ChestDropInfoModel]? {
+    func fetchChestDropInfo(chestId: String) async -> ChestInfoModel? {
         do {
             return try await adventureService.fetchChestDropInfo(chestId: chestId)
         } catch {

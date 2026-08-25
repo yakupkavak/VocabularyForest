@@ -53,6 +53,20 @@ enum ChestStatus {
     case close
 }
 
+/// Rewards guaranteed by the pity system at a fixed open count,
+/// surfaced at the top of the chest info popup
+struct ChestPityInfoModel: Hashable {
+    let tier: RewardTier
+    let threshold: Int
+    let rewards: [LocalRewardModel]
+}
+
+/// Everything the chest info popup renders: possible drops plus pity guarantees
+struct ChestInfoModel: Hashable {
+    let drops: [ChestDropInfoModel]
+    let pityGuarantees: [ChestPityInfoModel]
+}
+
 /// A single possible drop of a chest, used to inform the user before purchase
 struct ChestDropInfoModel: Identifiable, Hashable {
     let id: String

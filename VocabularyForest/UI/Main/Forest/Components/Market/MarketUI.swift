@@ -83,7 +83,7 @@ struct MarketUI: View {
     let diamondBalance: Int
     let errorMessage: String?
     let onPurchase: (MarketItemModel) -> Void
-    let onChestInfoRequest: (String) async -> [ChestDropInfoModel]?
+    let onChestInfoRequest: (String) async -> ChestInfoModel?
     /// Pity counter snapshot per chest id; nil hides the guarantee progress bar
     var pityProgress: (String) -> ChestPityProgressModel? = { _ in nil }
     /// Remaining weekly purchases per item; nil means the item is uncapped
@@ -94,8 +94,9 @@ struct MarketUI: View {
 
     @Environment(\.safeAreaInsets) private var globalSafeArea
     @State private var infoChest: LocalChestModel?
-    @State private var infoDrops: [ChestDropInfoModel]?
+    @State private var chestInfo: ChestInfoModel?
     @State private var isLoadingInfo = false
+    @State private var isShowingPackages = false
     
     // MARK: - UI
     
@@ -146,6 +147,11 @@ struct MarketUI: View {
                 
                 if infoChest != nil || isLoadingInfo {
                     chestInfoOverlay(width: width, height: height)
+                        .zIndex(2)
+                }
+
+                if isShowingPackages, let packages {
+                    packagesOverlay(section: packages, width: width, height: height)
                         .zIndex(2)
                 }
             }
@@ -221,25 +227,38 @@ private extension MarketUI {
     }
     
     func balanceBadge(currency: MarketCurrency, amount: Int, width: CGFloat) -> some View {
-        HStack(spacing: width * 0.015) {
-            Image(currency.iconName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: width * 0.045, height: width * 0.045)
-            Text("\(amount)")
-                .scaledFont(size: width * 0.035, weight: .bold, design: .rounded)
-                .foregroundStyle(.white)
-                .contentTransition(.numericText())
+        Button {
+            guard packages != nil else { return }
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                isShowingPackages = true
+            }
+        } label: {
+            HStack(spacing: width * 0.015) {
+                Image(currency.iconName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: width * 0.045, height: width * 0.045)
+                Text("\(amount)")
+                    .scaledFont(size: width * 0.035, weight: .bold, design: .rounded)
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText())
+                if packages != nil {
+                    Image(systemName: "plus.circle.fill")
+                        .scaledFont(size: width * 0.04, weight: .bold)
+                        .foregroundStyle(.white, Color.white.opacity(0.25))
+                }
+            }
+            .padding(.vertical, width * 0.018)
+            .padding(.horizontal, width * 0.03)
+            .background(Color.black.opacity(0.32))
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(Color.white.opacity(0.35), lineWidth: 1)
+            )
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: amount)
         }
-        .padding(.vertical, width * 0.018)
-        .padding(.horizontal, width * 0.03)
-        .background(Color.black.opacity(0.32))
-        .clipShape(Capsule())
-        .overlay(
-            Capsule()
-                .stroke(Color.white.opacity(0.35), lineWidth: 1)
-        )
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: amount)
+        .disabled(packages == nil)
         .a11yGroup(String(
             format: NSLocalizedString(
                 currency == .gold ? "a11y_balance_gold" : "a11y_balance_diamond",
@@ -247,6 +266,7 @@ private extension MarketUI {
             ),
             "\(amount)"
         ))
+        .accessibilityHint(packages != nil ? String(localized: "a11y_open_packages") : "")
     }
     
     func errorBanner(message: String, width: CGFloat) -> some View {
@@ -282,6 +302,9 @@ private extension MarketUI {
             .padding(.leading, horizontalPadding)
             
             /// Full-width scroll with edge padding so the last card is not clipped by the section inset
+            /// Any capped item makes every sibling reserve the tag row so the
+            /// cards of one shelf stay the same height (e.g. gold vs diamond)
+            let sectionHasWeeklyCap = section.items.contains { $0.weeklyPurchaseLimit != nil }
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: width * 0.03) {
                     ForEach(section.items) { item in
@@ -294,7 +317,8 @@ private extension MarketUI {
                                 showChestInfo(chest: chest)
                             },
                             pityProgressModel: chestPityProgress(item: item),
-                            weeklyRemaining: weeklyRemaining(item)
+                            weeklyRemaining: weeklyRemaining(item),
+                            reservesWeeklySlot: sectionHasWeeklyCap
                         )
                     }
                 }
@@ -359,24 +383,24 @@ private extension MarketUI {
     func showChestInfo(chest: LocalChestModel) {
         isLoadingInfo = true
         infoChest = chest
-        infoDrops = nil
+        chestInfo = nil
         Task {
-            let drops = await onChestInfoRequest(chest.id)
+            let info = await onChestInfoRequest(chest.id)
             await MainActor.run {
                 isLoadingInfo = false
-                if let drops {
-                    infoDrops = drops
+                if let info {
+                    chestInfo = info
                 } else {
                     infoChest = nil
                 }
             }
         }
     }
-    
+
     func dismissChestInfo() {
         withAnimation(.easeOut(duration: 0.2)) {
             infoChest = nil
-            infoDrops = nil
+            chestInfo = nil
             isLoadingInfo = false
         }
     }
@@ -397,7 +421,7 @@ private extension MarketUI {
             if let chest = infoChest {
                 ChestDropInfoCard(
                     chest: chest,
-                    drops: infoDrops,
+                    info: chestInfo,
                     maxWidth: min(width * 0.85, 420),
                     maxHeight: height * 0.7,
                     onClose: { dismissChestInfo() }
@@ -409,7 +433,84 @@ private extension MarketUI {
                     .scaleEffect(1.4)
             }
         }
-        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: infoDrops)
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: chestInfo)
+    }
+
+    /// Currency bundles popup opened from the "+" on the balance badges
+    func packagesOverlay(section: MarketPackageSectionModel, width: CGFloat, height: CGFloat) -> some View {
+        ZStack {
+            Color.black.opacity(0.65)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    dismissPackages()
+                }
+
+            VStack(spacing: 0) {
+                ZStack {
+                    Image("title_header")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: width * 0.12)
+                        .a11yDecorative()
+
+                    Text(section.title)
+                        .scaledFont(size: width * 0.048, weight: .heavy, design: .rounded)
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(0.5), radius: 2, x: 0, y: 2)
+                }
+                .padding(.top, 18)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(spacing: width * 0.03) {
+                        ForEach(section.items) { package in
+                            MarketPackageCard(
+                                package: package,
+                                cardWidth: min(width * 0.34, 160),
+                                onPurchase: { package in
+                                    dismissPackages()
+                                    onPackagePurchase(package)
+                                }
+                            )
+                        }
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                }
+            }
+            .frame(maxWidth: min(width * 0.9, 460))
+            .background(Color(red: 0.13, green: 0.3, blue: 0.2))
+            .cornerRadius(22)
+            .overlay(
+                RoundedRectangle(cornerRadius: 22)
+                    .stroke(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.6), Color.white.opacity(0.15)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2
+                    )
+            )
+            .shadow(color: .black.opacity(0.5), radius: 18, x: 0, y: 10)
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    dismissPackages()
+                } label: {
+                    Image("close_button")
+                        .resizable()
+                        .frame(width: 36, height: 36)
+                        .offset(x: 12, y: -12)
+                }
+                .accessibilityLabel(String(localized: "a11y_close"))
+            }
+            .transition(.scale(scale: 0.85).combined(with: .opacity))
+        }
+    }
+
+    func dismissPackages() {
+        withAnimation(.easeOut(duration: 0.2)) {
+            isShowingPackages = false
+        }
     }
 }
 
@@ -418,17 +519,17 @@ private extension MarketUI {
 private struct ChestDropInfoCard: View {
     
     let chest: LocalChestModel
-    let drops: [ChestDropInfoModel]?
+    let info: ChestInfoModel?
     let maxWidth: CGFloat
     let maxHeight: CGFloat
     let onClose: () -> Void
-    
+
     private var guaranteedDrops: [ChestDropInfoModel] {
-        drops?.filter { $0.chancePercent == nil } ?? []
+        info?.drops.filter { $0.chancePercent == nil } ?? []
     }
-    
+
     private var randomDrops: [ChestDropInfoModel] {
-        drops?.filter { $0.chancePercent != nil } ?? []
+        info?.drops.filter { $0.chancePercent != nil } ?? []
     }
     
     private var headerGradientColors: [Color] {
@@ -442,9 +543,12 @@ private struct ChestDropInfoCard: View {
         VStack(spacing: 0) {
             headerSection
             
-            if let drops, !drops.isEmpty {
+            if let info, !info.drops.isEmpty {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 14) {
+                        ForEach(info.pityGuarantees, id: \.tier) { guarantee in
+                            pitySection(guarantee: guarantee)
+                        }
                         if !guaranteedDrops.isEmpty {
                             dropSection(
                                 title: String(localized: "Garantili Ödüller"),
@@ -530,6 +634,67 @@ private struct ChestDropInfoCard: View {
         )
     }
     
+    /// Pity promise shown before the drop tables: which rewards become a
+    /// certainty and after how many opens.
+    private func pitySection(guarantee: ChestPityInfoModel) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                TierBadgeView(tier: guarantee.tier, fontSize: 12)
+                Text(String(
+                    format: NSLocalizedString("chest_pity_guarantee_title", comment: ""),
+                    guarantee.threshold
+                ))
+                .scaledFont(size: 14, weight: .bold, design: .rounded)
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.leading)
+            }
+            .a11yGroup()
+
+            VStack(spacing: 6) {
+                ForEach(Array(guarantee.rewards.enumerated()), id: \.offset) { _, reward in
+                    pityRewardRow(reward: reward, tier: guarantee.tier)
+                }
+            }
+        }
+        .padding(10)
+        .background(guarantee.tier.badgeColor.opacity(0.22))
+        .cornerRadius(14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(guarantee.tier.badgeColor.opacity(0.6), lineWidth: 1)
+        )
+    }
+
+    private func pityRewardRow(reward: LocalRewardModel, tier: RewardTier) -> some View {
+        HStack(spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.white.opacity(0.14))
+                    .frame(width: 44, height: 44)
+
+                RewardImageView(asset: reward.reward.posterImage)
+                    .scaledToFit()
+                    .frame(width: 34, height: 34)
+                    .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+            }
+
+            Text(reward.reward.displayName.localized)
+                .scaledFont(size: 14, weight: .bold, design: .rounded)
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+
+            Spacer(minLength: 4)
+
+            TierBadgeView(tier: reward.reward.tier ?? tier, fontSize: 11)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .background(Color.white.opacity(0.08))
+        .cornerRadius(12)
+        .a11yGroup()
+    }
+
     private func dropSection(title: String, icon: String, iconColor: Color, drops: [ChestDropInfoModel]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
@@ -576,7 +741,11 @@ private struct ChestDropInfoCard: View {
             }
             
             Spacer(minLength: 4)
-            
+
+            if let tier = drop.reward.reward.tier {
+                TierBadgeView(tier: tier, fontSize: 11)
+            }
+
             chanceBadge(percent: drop.chancePercent)
         }
         .padding(.vertical, 6)
@@ -626,6 +795,8 @@ struct MarketItemCard: View {
     var onInfoTap: ((LocalChestModel) -> Void)? = nil
     var pityProgressModel: ChestPityProgressModel? = nil
     var weeklyRemaining: Int? = nil
+    /// Keeps uncapped cards the same height as capped siblings in one shelf
+    var reservesWeeklySlot: Bool = false
 
     private var style: MarketCardStyle {
         MarketCardStyle(reward: item.reward)
@@ -704,6 +875,9 @@ struct MarketItemCard: View {
 
                 if let weeklyRemaining, let limit = item.weeklyPurchaseLimit {
                     weeklyLimitTag(remaining: weeklyRemaining, limit: limit)
+                } else if reservesWeeklySlot {
+                    weeklyLimitTag(remaining: 0, limit: 0)
+                        .hidden()
                 }
             }
             .padding(cardWidth * 0.08)
@@ -720,16 +894,14 @@ struct MarketItemCard: View {
                 RoundedRectangle(cornerRadius: cardWidth * 0.12)
                     .stroke(
                         LinearGradient(
-                            colors: [Color.white.opacity(isPurchasable ? 0.85 : 0.2), Color.white.opacity(isPurchasable ? 0.3 : 0.1)],
+                            colors: [Color.white.opacity(0.85), Color.white.opacity(0.3)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
                         lineWidth: 2
                     )
             )
-            .shadow(color: style.glowColor.opacity(isPurchasable ? 0.55 : 0.0), radius: 8, x: 0, y: 4)
-            .opacity(isPurchasable ? 1.0 : 0.85)
-            .saturation(isPurchasable ? 1.0 : 0.35)
+            .shadow(color: style.glowColor.opacity(0.55), radius: 8, x: 0, y: 4)
         }
         .buttonStyle(ScaleButtonStyle())
         .disabled(!isPurchasable)
@@ -858,6 +1030,10 @@ struct MarketItemCard: View {
             Capsule()
                 .stroke(Color.white.opacity(0.35), lineWidth: 1)
         )
+        /// The card keeps its full colors when unavailable; only the price
+        /// fades, so the blocked state stays readable without dulling the art.
+        .opacity(isPurchasable ? 1.0 : 0.85)
+        .saturation(isPurchasable ? 1.0 : 0.35)
     }
 }
 

@@ -22,7 +22,7 @@ protocol ChestRepositoryProtocol {
     /// those ids can be resolved into concrete rewards at open time.
     func registerRewardCatalog(items: [RemoteRewardModel])
     func openChest(chestId: String) async throws -> [LocalRewardModel]
-    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
+    func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel
     func pityProgress(chestId: String) -> ChestPityProgressModel?
 }
 
@@ -152,7 +152,7 @@ extension ChestRepository: ChestRepositoryProtocol {
         return pityService.progress(for: pity)
     }
         
-    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
+    func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel {
         guard let economy = chestEconomy[chestId] else { throw ChestRepositoryError.invalidChestId }
         
         var infoList: [ChestDropInfoModel] = []
@@ -190,7 +190,10 @@ extension ChestRepository: ChestRepositoryProtocol {
         }
         
         guard !infoList.isEmpty else { throw ChestRepositoryError.chestListEmpty }
-        return infoList
+        return ChestInfoModel(
+            drops: infoList,
+            pityGuarantees: await pityGuaranteeInfo(for: getLocalChest(chestId: chestId))
+        )
     }
     
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws {
@@ -266,6 +269,33 @@ private extension ChestRepository {
             }
         }
         return rewards
+    }
+
+    /// Resolves the pity pools into concrete rewards for the info popup. The
+    /// popup stays useful even when single pool entries fail to resolve, so
+    /// failures are logged and skipped instead of failing the whole fetch.
+    private func pityGuaranteeInfo(for chest: LocalChestModel?) async -> [ChestPityInfoModel] {
+        guard let chest, let pity = chest.pity else { return [] }
+        var guarantees: [ChestPityInfoModel] = []
+        let tierConfigs: [(RewardTier, LocalChestPityTierModel)] = [(.s, pity.sTier), (.sPlus, pity.sPlusTier)]
+        for (tier, config) in tierConfigs {
+            var rewards: [LocalRewardModel] = []
+            for rewardId in config.pool {
+                guard let remoteReward = catalogRewardsById[rewardId] else {
+                    logger.error("Pity pool reward could not be resolved for chest \(chest.id): \(rewardId)", category: .reward)
+                    continue
+                }
+                do {
+                    rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1))
+                } catch {
+                    logger.error("Pity pool reward processing failed for \(rewardId): \(error.localizedDescription)", category: .reward)
+                }
+            }
+            if !rewards.isEmpty {
+                guarantees.append(ChestPityInfoModel(tier: tier, threshold: config.threshold, rewards: rewards))
+            }
+        }
+        return guarantees
     }
 
     private func processAndGetLocalReward(from remoteReward: RemoteRewardModel, rewardCount: Int) async throws -> LocalRewardModel {

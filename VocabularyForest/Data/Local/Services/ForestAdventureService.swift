@@ -48,7 +48,7 @@ protocol ForestAdventureServiceProtocol {
     func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel]) async throws
     func claimLocalReward(model: LocalRewardModel) async throws
     func purchaseMarketItem(item: MarketItemModel) async throws
-    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel]
+    func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel
     func chestPityProgress(chestId: String) -> ChestPityProgressModel?
     func remainingWeeklyPurchases(item: MarketItemModel) -> Int?
     func purchasePackage(_ package: MarketPackageModel) async throws -> [LocalRewardModel]
@@ -344,7 +344,7 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
         ))
     }
 
-    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] {
+    func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel {
         analyticsService.log(.chestOpened(chestID: chestId))
         return try await chestService.fetchChestDropInfo(chestId: chestId)
     }

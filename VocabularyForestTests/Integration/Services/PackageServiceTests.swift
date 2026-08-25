@@ -44,7 +44,7 @@ final class MockChestRepository: ChestRepositoryProtocol {
         openChestCallCount += 1
         return openChestResult
     }
-    func fetchChestDropInfo(chestId: String) async throws -> [ChestDropInfoModel] { [] }
+    func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel { ChestInfoModel(drops: [], pityGuarantees: []) }
     func pityProgress(chestId: String) -> ChestPityProgressModel? { nil }
 }
 

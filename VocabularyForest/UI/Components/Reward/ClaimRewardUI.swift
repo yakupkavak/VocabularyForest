@@ -123,18 +123,16 @@ private extension ClaimRewardUI {
         let rewardTextSize: CGFloat = isPad ? 40 : 32
         
         return VStack {
+            if let tier = model.tier {
+                TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
+            }
             RewardImageView(asset: model.posterImage)
                 .scaledToFit()
                 .frame(width: mainImageWidth)
-            HStack(spacing: 8) {
-                if let tier = model.tier {
-                    TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
-                }
-                Text(LocalizedStringKey(model.displayName.localized))
-                    .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
-                    .foregroundColor(model.textColorHex?.color ?? .white)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-            }
+            Text(LocalizedStringKey(model.displayName.localized))
+                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
+                .foregroundColor(model.textColorHex?.color ?? .white)
+                .shadow(color: .black.opacity(0.3), radius: 5)
             rewardCountText(count: claimReward.rewardCount, fontSize: rewardTextSize * 0.75, color: model.textColorHex?.color ?? .white)
         }
         .task {
@@ -213,18 +211,16 @@ private extension ClaimRewardUI {
         let rewardTextSize: CGFloat = isPad ? 40 : 32
         
         return VStack {
+            if let tier = model.reward.tier {
+                TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
+            }
             RewardImageView(asset: model.reward.posterImage)
                 .scaledToFit()
                 .frame(width: mainImageWidth)
-            HStack(spacing: 8) {
-                if let tier = model.reward.tier {
-                    TierBadgeView(tier: tier, fontSize: rewardTextSize * 0.5)
-                }
-                Text(LocalizedStringKey(model.reward.displayName.localized))
-                    .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
-                    .foregroundColor(model.reward.textColorHex?.color ?? .white)
-                    .shadow(color: .black.opacity(0.3), radius: 5)
-            }
+            Text(LocalizedStringKey(model.reward.displayName.localized))
+                .scaledFont(size: rewardTextSize, weight: .medium, design: .rounded)
+                .foregroundColor(model.reward.textColorHex?.color ?? .white)
+                .shadow(color: .black.opacity(0.3), radius: 5)
             rewardCountText(count: model.rewardCount, fontSize: rewardTextSize * 0.75, color: model.reward.textColorHex?.color ?? .white)
         }
         .onAppear {
