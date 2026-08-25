@@ -119,6 +119,15 @@ struct ForestUI: View {
                     Color.black.ignoresSafeArea(.all).opacity(0.7).zIndex(1.1)
                 }
                 userMenu.zIndex(5.0).accessibilityAddTraits(.isModal)
+                    .onAppear {
+                        presentConfigErrorIfNeeded()
+                    }
+                    .onChange(of: uiState) { _ in
+                        presentConfigErrorIfNeeded()
+                    }
+                    .onChange(of: viewModel.configLoadFailure) { _ in
+                        presentConfigErrorIfNeeded()
+                    }
             }
             
             if viewModel.showRainButton {
@@ -253,16 +262,10 @@ private extension ForestUI {
                 )
             } else {
                 ProgressView()
-                    .onAppear {
-                        presentConfigErrorIfNeeded()
-                    }
-                    .onChange(of: viewModel.configLoadFailure) { _ in
-                        presentConfigErrorIfNeeded()
-                    }
             }
         }
     }
-    
+
     var dailySpinView: some View {
         VStack {
             DailySpinUI(
@@ -629,12 +632,34 @@ private extension ForestUI {
         router.navigateToRoot()
     }
 
-    /// The market has no data and the config load failed: close the loading
-    /// state and surface the connection-error popup instead of an endless spinner.
+    /// Whether the currently open screen depends on remote config data that
+    /// has not arrived, so an endless loading/empty state would be shown.
+    func isConfigDataMissing(for state: ForestUIState) -> Bool {
+        switch state {
+        case .market:
+            return viewModel.marketScreenModel == nil
+        case .dailySpin:
+            return viewModel.dailySpinModels.isEmpty
+        case .dailyTrack:
+            return viewModel.weeklyDailyCards.isEmpty
+        case .userRoad:
+            return viewModel.adventureRoadScreenModel == nil
+        case .quest:
+            return viewModel.dailyQuestList.isEmpty
+                && viewModel.weeklyQuestList.isEmpty
+                && viewModel.monthlyQuestList.isEmpty
+                && viewModel.specialQuestList.isEmpty
+        default:
+            return false
+        }
+    }
+
+    /// The open screen has no config data and the config load failed: close the
+    /// screen and surface the connection-error popup instead of an endless
+    /// loading/empty state.
     func presentConfigErrorIfNeeded() {
-        guard uiState == .market,
-              viewModel.marketScreenModel == nil,
-              viewModel.configLoadFailure != nil else { return }
+        guard viewModel.configLoadFailure != nil,
+              isConfigDataMissing(for: uiState) else { return }
         uiState = .empty
         let cooldown = viewModel.armConfigRetryCooldown()
         PopupManager.shared.show {
