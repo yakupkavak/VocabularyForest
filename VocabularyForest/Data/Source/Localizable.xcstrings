@@ -15944,7 +15944,6 @@
       }
     },
     "Daily Spin preview data could not be loaded." : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

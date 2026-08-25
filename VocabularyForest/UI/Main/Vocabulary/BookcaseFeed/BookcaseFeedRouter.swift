@@ -26,6 +26,7 @@ final class BookcaseRouter: ObservableObject {
     }
     
     func navigateBack() {
+        guard !navPath.isEmpty else { return }
         navPath.removeLast()
     }
     

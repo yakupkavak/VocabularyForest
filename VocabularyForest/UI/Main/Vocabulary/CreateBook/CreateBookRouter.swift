@@ -26,6 +26,7 @@ final class CreateBookRouter: ObservableObject {
     }
     
     func navigateBack() {
+        guard !navPath.isEmpty else { return }
         navPath.removeLast()
     }
     
