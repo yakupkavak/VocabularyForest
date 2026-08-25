@@ -32,20 +32,26 @@ final class ChestRepository {
     private let networkManager: APIServiceProtocol
     private let pityService: ChestPityServiceProtocol
     private let logger: AppLoggerProtocol
+    private let analyticsService: AnalyticsServiceProtocol?
     private var localChestModels: [LocalChestModel]?
     private var chestEconomy: [String: RemoteChestEconomy] = [:]
     private var catalogRewardsById: [String: RemoteRewardModel] = [:]
+    /// Drop info is static per config version; caching it makes reopening the
+    /// info popup instant instead of re-resolving every reward asset.
+    private var chestInfoCache: [String: ChestInfoModel] = [:]
 
     init(
         assetManager: OfflineAssetManagerProtocol,
         apiService: APIServiceProtocol,
         pityService: ChestPityServiceProtocol,
-        logger: AppLoggerProtocol = AppLogger.shared
+        logger: AppLoggerProtocol = AppLogger.shared,
+        analyticsService: AnalyticsServiceProtocol? = nil
     ) {
         self.offlineAssetManager = assetManager
         self.networkManager = apiService
         self.pityService = pityService
         self.logger = logger
+        self.analyticsService = analyticsService
     }
     
     // MARK: - Private Downloader
@@ -95,6 +101,7 @@ extension ChestRepository: ChestRepositoryProtocol {
         guard let chest = localChestModels.first(where: { model in
             model.id == chestId
         }) else { throw ChestRepositoryError.invalidChestId }
+        analyticsService?.log(.chestOpened(chestID: chestId))
         let economy = chestEconomy[chest.id]
         var rewards: [LocalRewardModel] = []
         do {
@@ -153,8 +160,11 @@ extension ChestRepository: ChestRepositoryProtocol {
     }
         
     func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel {
+        if let cached = chestInfoCache[chestId] {
+            return cached
+        }
         guard let economy = chestEconomy[chestId] else { throw ChestRepositoryError.invalidChestId }
-        
+
         var infoList: [ChestDropInfoModel] = []
         
         if let guaranteed = economy.guaranteedDrops {
@@ -190,15 +200,19 @@ extension ChestRepository: ChestRepositoryProtocol {
         }
         
         guard !infoList.isEmpty else { throw ChestRepositoryError.chestListEmpty }
-        return ChestInfoModel(
+        let info = ChestInfoModel(
             drops: infoList,
             pityGuarantees: await pityGuaranteeInfo(for: getLocalChest(chestId: chestId))
         )
+        chestInfoCache[chestId] = info
+        return info
     }
     
     func processAndSaveChests(from remoteChests: [RemoteChestModel]) async throws {
+        /// A new config version may change drops, so the cached info is stale.
+        chestInfoCache = [:]
         var localChests: [LocalChestModel] = []
-        
+
         for remoteChest in remoteChests {
             if let id = remoteChest.id, let version = remoteChest.version, let chestName = remoteChest.chestName, let version = remoteChest.version, let visuals = remoteChest.visuals, let economy = remoteChest.economy, let closedImagePath = visuals.closedImagePath, let openImagePath = visuals.openImagePath {
                 chestEconomy[id] = economy
@@ -257,15 +271,30 @@ private extension ChestRepository {
         let decision = pityService.registerOpen(pity: pity)
         var rewards: [LocalRewardModel] = []
         for tier in [decision.guaranteedTier, decision.naturalTier].compactMap({ $0 }) {
-            guard let rewardId = pityService.poolRewardId(for: tier, pity: pity),
-                  let remoteReward = catalogRewardsById[rewardId] else {
-                logger.error("Pity reward could not be resolved for chest \(chest.id), tier \(tier.rawValue)", category: .reward)
-                continue
+            /// The rolled pick goes first, but a guarantee must not be lost to a
+            /// single unresolvable pool entry, so the rest of the pool backs it up.
+            let pool = tier == .sPlus ? pity.sPlusTier.pool : pity.sTier.pool
+            var candidates = pool.shuffled()
+            if let rolled = pityService.poolRewardId(for: tier, pity: pity) {
+                candidates.removeAll { $0 == rolled }
+                candidates.insert(rolled, at: 0)
             }
-            do {
-                rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1))
-            } catch {
-                logger.error("Pity reward processing failed for \(rewardId): \(error.localizedDescription)", category: .reward)
+            var granted = false
+            for rewardId in candidates {
+                guard let remoteReward = catalogRewardsById[rewardId] else {
+                    logger.error("Pity pool reward missing from catalog for chest \(chest.id): \(rewardId)", category: .reward)
+                    continue
+                }
+                do {
+                    rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1))
+                    granted = true
+                    break
+                } catch {
+                    logger.error("Pity reward processing failed for \(rewardId): \(error.localizedDescription)", category: .reward)
+                }
+            }
+            if !granted {
+                logger.error("Pity guarantee lost: no pool reward resolved for chest \(chest.id), tier \(tier.rawValue)", category: .reward)
             }
         }
         return rewards
@@ -286,7 +315,9 @@ private extension ChestRepository {
                     continue
                 }
                 do {
-                    rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1))
+                    /// Info rows must list the promise even while an asset is not
+                    /// yet uploaded; the image view falls back to a placeholder.
+                    rewards.append(try await processAndGetLocalReward(from: remoteReward, rewardCount: 1, allowMissingAsset: true))
                 } catch {
                     logger.error("Pity pool reward processing failed for \(rewardId): \(error.localizedDescription)", category: .reward)
                 }
@@ -298,7 +329,7 @@ private extension ChestRepository {
         return guarantees
     }
 
-    private func processAndGetLocalReward(from remoteReward: RemoteRewardModel, rewardCount: Int) async throws -> LocalRewardModel {
+    private func processAndGetLocalReward(from remoteReward: RemoteRewardModel, rewardCount: Int, allowMissingAsset: Bool = false) async throws -> LocalRewardModel {
         var localReward: LocalRewardModel
         
         if let id = remoteReward.id, let type = remoteReward.type, let displayName = remoteReward.displayName, let imageSource = remoteReward.imageSource, let assetName = remoteReward.assetName {
@@ -317,7 +348,11 @@ private extension ChestRepository {
                       let version = remoteReward.remoteAssetVersion else {
                     throw RewardRepositoryError.emptyRemotePath
                 }
-                try await downloadAndSaveImageIfNeeded(remotePath: posterIconPath, localKey: posterName, version: version)
+                do {
+                    try await downloadAndSaveImageIfNeeded(remotePath: posterIconPath, localKey: posterName, version: version)
+                } catch where allowMissingAsset {
+                    logger.error("Poster download failed for \(posterName), showing placeholder: \(error.localizedDescription)", category: .reward)
+                }
                 posterImage = RewardAssetReference(key: posterName, source: .offlineStorage)
             }
             

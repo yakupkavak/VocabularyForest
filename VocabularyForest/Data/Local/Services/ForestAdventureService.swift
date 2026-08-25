@@ -345,8 +345,9 @@ extension ForestAdventureService: ForestAdventureServiceProtocol {
     }
 
     func fetchChestDropInfo(chestId: String) async throws -> ChestInfoModel {
-        analyticsService.log(.chestOpened(chestID: chestId))
-        return try await chestService.fetchChestDropInfo(chestId: chestId)
+        /// Viewing the drop table is not an open; chest_opened is logged by the
+        /// chest repository when a chest is actually opened.
+        try await chestService.fetchChestDropInfo(chestId: chestId)
     }
 
     func claimQuestReward(quest: QuestModel, rolledRewards: [LocalRewardModel]) async throws {

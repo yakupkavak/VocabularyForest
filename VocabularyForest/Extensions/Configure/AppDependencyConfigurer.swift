@@ -47,7 +47,7 @@ enum AppDependencyConfigurer {
             counterStore: ForestChestPityCounterStore(forestManager: forestData, fallbackStore: ChestPityCounterStore()),
             randomRoller: SystemRandomRoller()
         )
-        let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager, pityService: chestPityService)
+        let chestRepository = ChestRepository(assetManager: offlineAssetManager, apiService: networkManager, pityService: chestPityService, analyticsService: analyticsService)
         let rewardRepository = RewardRepository(assetManager: offlineAssetManager, apiService: networkManager, chestRepository: chestRepository, forestManager: forestData)
         let rewardAssetHydrationService = RewardAssetHydrationService(assetDownloader: rewardRepository, remoteConfigRepository: remoteConfigRepository, offlineAssetManager: offlineAssetManager, forestManager: forestData)
         let dailySpinService = DailySpinService(forestManager: forestData, rewardRepository: rewardRepository)

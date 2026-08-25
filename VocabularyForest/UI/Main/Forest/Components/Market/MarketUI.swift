@@ -95,6 +95,8 @@ struct MarketUI: View {
     @Environment(\.safeAreaInsets) private var globalSafeArea
     @State private var infoChest: LocalChestModel?
     @State private var chestInfo: ChestInfoModel?
+    /// Once fetched, reopening the same chest's info shows instantly.
+    @State private var chestInfoCache: [String: ChestInfoModel] = [:]
     @State private var isLoadingInfo = false
     @State private var isShowingPackages = false
     
@@ -381,8 +383,13 @@ private extension MarketUI {
     }
     
     func showChestInfo(chest: LocalChestModel) {
-        isLoadingInfo = true
         infoChest = chest
+        if let cached = chestInfoCache[chest.id] {
+            chestInfo = cached
+            isLoadingInfo = false
+            return
+        }
+        isLoadingInfo = true
         chestInfo = nil
         Task {
             let info = await onChestInfoRequest(chest.id)
@@ -390,6 +397,7 @@ private extension MarketUI {
                 isLoadingInfo = false
                 if let info {
                     chestInfo = info
+                    chestInfoCache[chest.id] = info
                 } else {
                     infoChest = nil
                 }
