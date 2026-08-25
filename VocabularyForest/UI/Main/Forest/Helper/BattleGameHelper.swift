@@ -18,5 +18,6 @@ func calculateMinBookCount(
         totalCorrectBook += characterModel.isBoss ? gameLevel.bossLevel : gameLevel.enemyLevel
         totalWrongBook += gameLevel.playerLevel
     }
+    totalWrongBook += gameLevel.playerLevel
     return totalCorrectBook + totalWrongBook + 1
 }
