@@ -973,7 +973,7 @@ struct MarketItemCard: View {
                     Capsule()
                         .fill(Color.black.opacity(0.35))
                     Capsule()
-                        .fill(tier.badgeColor)
+                        .fill(tier.celebrationColor)
                         .frame(width: max(barGeometry.size.width * fraction, fraction > 0 ? cardWidth * 0.03 : 0))
                 }
             }
@@ -1102,7 +1102,7 @@ struct MarketPackageCard: View {
             .frame(width: cardWidth)
             .background(
                 LinearGradient(
-                    colors: [.tierS, .tierSPlus],
+                    colors: [.tierS, .premiumAmber],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )

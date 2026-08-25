@@ -79,7 +79,7 @@ private extension ClaimRewardUI {
                 SparklesView(
                     spreadDiameter: sparkleSpread * 1.4,
                     primaryColor: .white,
-                    secondaryColor: .tierSPlus
+                    secondaryColor: .tierSPlusAccent
                 )
                 .opacity(0.85)
                 .zIndex(3)
@@ -90,7 +90,7 @@ private extension ClaimRewardUI {
     /// Full-screen radial burst behind the reward for S/S+ celebration moments.
     func celebrationGlow(tier: RewardTier, size: CGSize) -> some View {
         RadialGradient(
-            colors: [tier.badgeColor.opacity(0.6), .clear],
+            colors: [tier.celebrationColor.opacity(0.6), .clear],
             center: .center,
             startRadius: 0,
             endRadius: max(size.width, size.height) * 0.55
@@ -364,8 +364,8 @@ private extension ClaimRewardUI {
         if let tier = displayedCelebrationTier {
             return SparklePalette(
                 primary: .white,
-                secondary: tier.badgeColor,
-                shadow: tier.badgeColor
+                secondary: tier.celebrationColor,
+                shadow: tier.celebrationColor
             )
         }
         return currentRewardTheme().sparklePalette

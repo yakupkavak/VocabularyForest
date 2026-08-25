@@ -109,7 +109,7 @@ private extension PackageRewardsUI {
                 .padding(.vertical, isPad ? 24 : 20)
                 .frame(maxWidth: isPad ? 400 : .infinity)
                 .background(
-                    LinearGradient(colors: [.tierS, .tierSPlus], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    LinearGradient(colors: [.tierS, .premiumAmber], startPoint: .topLeading, endPoint: .bottomTrailing)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 25))
                 .shadow(color: Color.tierS.opacity(0.5), radius: 10, x: 0, y: 10)
